@@ -85,6 +85,7 @@ setGeneric("getParameter", function(object, type, index, index2) {
   standardGeneric("getParameter")
 })
 
+
 setMethod("getParameter", signature=c("parameters", "character", "integer"), definition=function(object, type, index) {
   return(getParameter(object, type=type, index=index, index2=integer()))
 })
@@ -121,7 +122,7 @@ setGeneric("addParameter", function(object, parameter) {
 })
 
 setMethod("addParameter", signature=c("parameters", "parameter"), definition=function(object, parameter) {
-  if (!(object %>% hasParameter(parameter))) {
+  if (!(object %>% hasParameter(parameter) %>% length() > 0)) {
     object@list <- c(object@list, parameter)
     return(object)
   }
@@ -135,7 +136,7 @@ setMethod("addParameter", signature=c("parameters", "parameter"), definition=fun
 #' 
 #' @param object generic object
 #' @param parameter parameter to check
-#' @return logical value
+#' @return the parameter that matches
 #' @export
 hasParameter <- function(object, parameter) {
   stop("No default function is provided")
@@ -146,13 +147,13 @@ setGeneric("hasParameter", function(object, parameter) {
 })
 
 setMethod("hasParameter", signature=c("parameters", "theta"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="theta", index=parameter@index) %>% length() > 0)
+  return(object %>% getParameter(type="theta", index=parameter@index))
 })
 
 setMethod("hasParameter", signature=c("parameters", "omega"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="omega", index=parameter@index) %>% length() > 0)
+  return(object %>% getParameter(type="omega", index=parameter@index, index2=parameter@index2))
 })
 
 setMethod("hasParameter", signature=c("parameters", "sigma"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="sigma", index=parameter@index) %>% length() > 0)
+  return(object %>% getParameter(type="sigma", index=parameter@index, index2=parameter@index2))
 })
