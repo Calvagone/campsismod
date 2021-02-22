@@ -48,7 +48,7 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #' Write generic object.
 #' 
 #' @param object generic object
-#' @param file path where to write the file
+#' @param file path of the output dir or ZIP filename
 #' @param ... extra arguments
 #' @export
 write <- function(object, file, ...) {
@@ -60,8 +60,25 @@ setGeneric("write", function(object, file, ...) {
 })
 
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
-  # object@list
-  return(object)
+  code <- object@code
+  parameters <- object@parameters
+  theta <- parameters %>% filter(type="theta")
+  omega <- parameters %>% filter(type="omega")
+  sigma <- parameters %>% filter(type="sigma")
+  
+  if (zip) {
+    
+  } else {
+    if (dir.exists(file)) {
+      # do nothing
+    } else {
+      dir.create(file)
+    }
+    theta %>% write(file=file.path(file, "theta.csv"))
+    omega %>% write(file=file.path(file, "omega.csv"))
+    sigma %>% write(file=file.path(file, "sigma.csv"))
+    write.table(x=code, file=file.path(file, "model.mod"), row.names=FALSE, col.names=FALSE, quote=FALSE)
+  }
 })
 
 s4ToDataframe <- function(object) {
@@ -109,7 +126,7 @@ dataframeToParameter <- function(row, type) {
   } else if(type=="omega" | type=="sigma") {
     param <- new("omega", name=row$name, index=row$index, index2=row$index2, suffix=row$suffix, fix=row$fix, value=row$value)
   } else {
-    stop(paste0("type must be one of: theta, omega pr sigma"))
+    stop(paste0("type must be one of: theta, omega or sigma"))
   }
   return(param)
 }

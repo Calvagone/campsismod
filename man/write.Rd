@@ -9,7 +9,7 @@ write(object, file, ...)
 \arguments{
 \item{object}{generic object}
 
-\item{file}{path where to write the file}
+\item{file}{path of the output dir or ZIP filename}
 
 \item{...}{extra arguments}
 }

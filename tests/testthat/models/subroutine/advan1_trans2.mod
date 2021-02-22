@@ -1,0 +1,17 @@
+$PROBLEM 1-compartment model
+$INPUT
+$DATA dataset.csv IGNORE=I
+$SUBROUTINE ADVAN1 TRANS2
+$PK
+ CL = THETA(1) * EXP(ETA(1))
+ V = THETA(2) * EXP(ETA(2))
+ S1 = V
+$ERROR 
+ CP = F
+ OBS_CP = CP *(1+EPS(1))
+ Y = OBS_CP
+$THETA 5     ; CL 
+$THETA 80    ; V 
+$OMEGA 0.025 ; CL
+$OMEGA 0.025 ; V
+$SIGMA 0.025 ; PROP

@@ -173,8 +173,8 @@ setGeneric("getName", function(object) {
 
 getBestName <- function(prefix, name, suffix, index) {
   retValue <- ""
-  if (length(name)==0) {
-    if (length(suffix)==0) {
+  if (length(name)==0 || is.na(name)) {
+    if (length(suffix)==0 || is.na(suffix)) {
       retValue <- paste0(prefix, "_", index)
     } else {
       retValue <- paste0(prefix, "_", suffix)
