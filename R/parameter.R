@@ -39,6 +39,9 @@ addError <- function(error, errors) {
   }
 }
 
+#' Parameter class.
+#' 
+#' @export
 setClass(
   "parameter",
   representation(
@@ -51,6 +54,9 @@ setClass(
   validity = checkParameter
 )
 
+#' Single array parameter class.
+#' 
+#' @export
 setClass(
   "single_array_parameter",
   representation(
@@ -59,6 +65,9 @@ setClass(
   contains = "parameter"
 )
 
+#' Theta parameter class.
+#' 
+#' @export
 setClass(
   "theta",
   representation(
@@ -67,6 +76,9 @@ setClass(
   contains = "single_array_parameter"
 )
 
+#' Double array parameter class.
+#' 
+#' @export
 setClass(
   "double_array_parameter",
   representation(
@@ -76,6 +88,9 @@ setClass(
   contains = "single_array_parameter"
 )
 
+#' Omega parameter class.
+#' 
+#' @export
 setClass(
   "omega",
   representation(
@@ -84,6 +99,9 @@ setClass(
   contains = "double_array_parameter"
 )
 
+#' Sigma parameter class.
+#' 
+#' @export
 setClass(
   "sigma",
   representation(
