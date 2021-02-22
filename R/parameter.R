@@ -2,15 +2,14 @@
 checkParameter <- function(object) {
   errors <- character()
   
+  # Optional
+  errors <- addError(checkLength(object, "name"), errors)
+  
   # Mandatory
   errors <- addError(checkLength(object, "index"), errors)
   errors <- addError(checkLength(object, "fix"), errors)
   errors <- addError(checkLength(object, "value"), errors)
-  
-  # Optional
-  errors <- addError(checkLengthOptional(object, "name"), errors)
-  errors <- addError(checkLengthOptional(object, "suffix"), errors)
-  
+
   if (length(errors) == 0) TRUE else errors
 }
 
@@ -19,14 +18,6 @@ checkLength <- function(object, slot, expected=1) {
   error <- NULL
   if (lengthSlot != expected) {
     error <- paste0(slot, " is length ", lengthSlot, ". Should be ", expected)
-  }
-  return(error)
-}
-
-checkLengthOptional <- function(x, slot, expected=1) {
-  error <- NULL
-  if (!is.null(checkLength(x, slot, expected=0))) {
-    error <- checkLength(x, slot, expected=1)
   }
   return(error)
 }
@@ -45,11 +36,10 @@ addError <- function(error, errors) {
 setClass(
   "parameter",
   representation(
-    name = "character",   # Optional, either name is provided or suffix
+    name = "character",   # Optional
     index = "integer",    # Mandatory
-    suffix = "character", # Optional, either name is provided or suffix
-    fix = "logical",      # Mandatory
-    value = "numeric"     # Mandatory
+    value = "numeric",    # Mandatory
+    fix = "logical"       # Mandatory
   ),
   validity = checkParameter
 )
@@ -171,29 +161,25 @@ setGeneric("getName", function(object) {
   standardGeneric("getName")
 })
 
-getBestName <- function(prefix, name, suffix, index) {
+getBestName <- function(prefix, name, index) {
   retValue <- ""
   if (length(name)==0 || is.na(name)) {
-    if (length(suffix)==0 || is.na(suffix)) {
-      retValue <- paste0(prefix, "_", index)
-    } else {
-      retValue <- paste0(prefix, "_", suffix)
-    }
+    retValue <- paste0(prefix, "_", index)
   } else {
-    retValue <- name
+    retValue <- paste0(prefix, "_", name)
   }
   return(retValue)
 }
 
 setMethod("getName", signature=c("theta"), definition=function(object) {
-  return(getBestName("THETA", object@name, object@suffix, object@index))
+  return(getBestName("THETA", object@name, object@index))
 })
 
 setMethod("getName", signature=c("omega"), definition=function(object) {
-  return(getBestName("ETA", object@name, object@suffix, object@index))
+  return(getBestName("ETA", object@name, object@index))
 })
 
 setMethod("getName", signature=c("sigma"), definition=function(object) {
-  return(getBestName("EPS", object@name, object@suffix, object@index))
+  return(getBestName("EPS", object@name, object@index))
 })
 

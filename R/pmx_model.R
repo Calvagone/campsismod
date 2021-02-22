@@ -122,9 +122,9 @@ dataframeToParameter <- function(row, type) {
   param <- NULL
   
   if (type=="theta") {
-    param <- new("theta", name=row$name, index=row$index, suffix=row$suffix, fix=row$fix, value=row$value)
+    param <- new("theta", name=row$name, index=row$index, value=row$value, fix=row$fix)
   } else if(type=="omega" | type=="sigma") {
-    param <- new("omega", name=row$name, index=row$index, index2=row$index2, suffix=row$suffix, fix=row$fix, value=row$value)
+    param <- new("omega", name=row$name, index=row$index, index2=row$index2, value=row$value, fix=row$fix)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }

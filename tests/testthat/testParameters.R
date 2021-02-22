@@ -4,16 +4,16 @@ library(testthat)
 context("Test all methods from the parameters class")
 
 testFolder <<- ""
-testFolder <<- "C:/prj/pmxmod/tests/testthat/"
+#testFolder <<- "C:/prj/pmxmod/tests/testthat/"
 
 test_that("Write/Read THETA's", {
   
   file <- paste0(testFolder, "write/", "thetas.csv")
   
   # Read THETA's
-  theta1 <- new("theta", name="THETA_CL", index=as.integer(1), suffix="CL", fix=TRUE, value=5)
-  theta2 <- new("theta", name="THETA_KA", index=as.integer(2), suffix="KA", fix=TRUE, value=1)
-  theta3 <- new("theta", name="THETA_V", index=as.integer(3), suffix="V", fix=TRUE, value=80)
+  theta1 <- new("theta", name="CL", index=as.integer(1), value=5, fix=TRUE)
+  theta2 <- new("theta", name="KA", index=as.integer(2), value=1, fix=TRUE)
+  theta3 <- new("theta", name="V", index=as.integer(3),  value=80, fix=TRUE)
   thetas <- new("parameters", list=c(theta1, theta2, theta3))
   thetas %>% write(file=file)
   
