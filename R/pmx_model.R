@@ -114,26 +114,66 @@ setGeneric("read", function(file, ...) {
   standardGeneric("read")
 })
 
-setMethod("read", signature=c("character"), definition=function(file, ...) {
-  return("TODO")
-})
-
 dataframeToParameter <- function(row, type) {
   param <- NULL
   
   if (type=="theta") {
-    param <- new("theta", name=row$name, index=row$index, value=row$value, fix=row$fix)
+    param <- new("theta", name=as.character(row$name), index=row$index, value=row$value, fix=row$fix)
   } else if(type=="omega" | type=="sigma") {
-    param <- new("omega", name=row$name, index=row$index, index2=row$index2, value=row$value, fix=row$fix)
+    param <- new(type, name=as.character(row$name), index=row$index, index2=row$index2, value=row$value, fix=row$fix)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }
   return(param)
 }
 
-setMethod("read", signature=c("character"), definition=function(file, type) {
-  df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
-  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
-  attributes(list) <- NULL
-  retValue <- new("parameters", list=list)
+setMethod("read", signature=c("character"), definition=function(file, type=NULL) {
+  
+  # Must be a call for reading CSV parameter file
+  if (!is.null(type) && type %in% c("theta", "omega", "sigma")) {
+    df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
+    list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
+    attributes(list) <- NULL
+    return(new("parameters", list=list))
+  
+  # Else it must be a PMX model (folder or zip file)
+  } else {
+    folder <- NULL
+    if (dir.exists(file)) {
+      folder <- file
+    } else if (file.exists(file)) {
+      
+    } else {
+      stop("file is not a ZIP file nor a valid folder")
+    }
+    
+    modelPath <- file.path(folder, "model.mod")
+    thetaPath <- file.path(folder, "theta.csv")
+    omegaPath <- file.path(folder, "omega.csv")
+    sigmaPath <- file.path(folder, "sigma.csv")
+    
+    if (!file.exists(modelPath)) {
+      stop(paste0("Model file couln't be found."))
+    }
+    if (!file.exists(thetaPath)) {
+      stop(paste0("Theta file couln't be found."))
+    }
+    if (!file.exists(omegaPath)) {
+      stop(paste0("Omega file couln't be found."))
+    }
+    if (!file.exists(sigmaPath)) {
+      stop(paste0("Sigma file couln't be found."))
+    }
+    
+    code <- read.table(file=modelPath, sep="@")[,1]
+    theta <- read(file=thetaPath, type="theta")
+    omega <- read(file=omegaPath, type="omega")
+    sigma <- read(file=sigmaPath, type="sigma")
+    
+    list <- c(theta@list, omega@list, sigma@list)
+    attributes(list) <- NULL
+    
+    return(new("pmx_model", code=code, parameters=new("parameters", list=list)))
+  }
+  
 })
