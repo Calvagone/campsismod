@@ -2,7 +2,7 @@
 % Please edit documentation in R/pmx_model.R
 \name{write}
 \alias{write}
-\title{Write}
+\title{Write generic object.}
 \usage{
 write(object, file, ...)
 }
@@ -14,5 +14,5 @@ write(object, file, ...)
 \item{...}{extra arguments}
 }
 \description{
-Write
+Write generic object.
 }

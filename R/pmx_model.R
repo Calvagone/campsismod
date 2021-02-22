@@ -45,7 +45,7 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-#' Write
+#' Write generic object.
 #' 
 #' @param object generic object
 #' @param file path where to write the file
@@ -78,4 +78,45 @@ parametersToDataframe <- function(object) {
 setMethod("write", signature=c("parameters", "character"), definition=function(object, file) {
   df <- parametersToDataframe(object)
   write.csv(df, file=file, row.names=FALSE)
+})
+
+#_______________________________________________________________________________
+#----                                 read                                  ----
+#_______________________________________________________________________________
+
+#' Read generic object.
+#' 
+#' @param file path where to read the file
+#' @param ... extra arguments
+#' @export
+read <- function(file, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("read", function(file, ...) {
+  standardGeneric("read")
+})
+
+setMethod("read", signature=c("character"), definition=function(file, ...) {
+  return("TODO")
+})
+
+dataframeToParameter <- function(row, type) {
+  param <- NULL
+  
+  if (type=="theta") {
+    param <- new("theta", name=row$name, index=row$index, suffix=row$suffix, fix=row$fix, value=row$value)
+  } else if(type=="omega" | type=="sigma") {
+    param <- new("omega", name=row$name, index=row$index, index2=row$index2, suffix=row$suffix, fix=row$fix, value=row$value)
+  } else {
+    stop(paste0("type must be one of: theta, omega pr sigma"))
+  }
+  return(param)
+}
+
+setMethod("read", signature=c("character"), definition=function(file, type) {
+  df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
+  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
+  attributes(list) <- NULL
+  retValue <- new("parameters", list=list)
 })
