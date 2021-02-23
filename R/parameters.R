@@ -218,3 +218,53 @@ setMethod("hasParameter", signature=c("parameters", "omega"), definition=functio
 setMethod("hasParameter", signature=c("parameters", "sigma"), definition=function(object, parameter) {
   return(object %>% getParameter(type="sigma", index=parameter@index, index2=parameter@index2))
 })
+
+#_______________________________________________________________________________
+#----                             fixOmega                                  ----
+#_______________________________________________________________________________
+
+#' Fix omega matrix for SAME OMEGA parameters that have NA values due to imperfections in Pharmpy import.
+#' 
+#' @param object generic object
+#' @return the parameter that matches
+#' @export
+fixOmega <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("fixOmega", function(object) {
+  standardGeneric("fixOmega")
+})
+
+setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
+  # First order parameters
+  tmp <- object %>% order()
+
+  # We need at least to elements
+  if (length(tmp@list) < 2) {
+    return(object)
+  }
+
+  parameters <- new("parameters", list=list())
+  
+  # Fix NA problems
+  # .x is the accumulating value
+  # .y is element in the list
+  purrr::accumulate(.x=tmp@list, .f=function(.x, .y) {
+    xIsOmega <- (class(.x) %>% as.character())=="omega"
+    yIsOmega <- (class(.y) %>% as.character())=="omega"
+    if (xIsOmega && yIsOmega) {
+      if (is.na(.y@value)) {
+        .y@value <- .x@value
+      }
+      if (is.na(.y@fix)) {
+        .y@fix <- .x@fix
+      }
+    }
+    parameters <<- parameters %>% addParameter(.y)
+    return(.y)
+  }, .init=tmp@list[[1]])
+  
+  return(parameters %>% clean())
+})
+
