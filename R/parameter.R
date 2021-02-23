@@ -141,7 +141,7 @@ setMethod("getNONMEMName", signature=c("omega"), definition=function(object) {
 })
 
 setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
-  return(paste0("OMEGA(", object@index, ",", object@index2, ")"))
+  return(paste0("SIGMA(", object@index, ",", object@index2, ")"))
 })
 
 #_______________________________________________________________________________

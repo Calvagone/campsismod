@@ -31,6 +31,18 @@ test_that("isDial method", {
   expect_false(isDiag(omega1_2))
 })
 
+test_that("getNONMEMName method", {
+  
+  theta1 <- new("theta", name="CL", index=as.integer(1), fix=TRUE, value=as.numeric(NA))
+  expect_equal(theta1 %>% getNONMEMName(), "THETA(1)")
+  
+  omega1_2 <- new("omega", name="CL", index=as.integer(1), index2=as.integer(2), fix=TRUE, value=as.numeric(NA))
+  expect_equal(omega1_2 %>% getNONMEMName(), "OMEGA(1,2)")
+  
+  sigma1_2 <- new("sigma", name="CL", index=as.integer(1), index2=as.integer(2), fix=TRUE, value=as.numeric(NA))
+  expect_equal(sigma1_2 %>% getNONMEMName(), "SIGMA(1,2)")
+})
+
 
 
 
