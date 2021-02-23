@@ -12,7 +12,7 @@ hasParameter(object, parameter)
 \item{parameter}{parameter to check}
 }
 \value{
-logical value
+the parameter that matches
 }
 \description{
 Check if list has given parameter.

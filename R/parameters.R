@@ -1,4 +1,6 @@
-
+#' Parameters class.
+#' 
+#' @export
 setClass(
   "parameters",
   representation(
@@ -26,6 +28,65 @@ setGeneric("filter", function(object, type) {
 
 setMethod("filter", signature=c("parameters", "character"), definition=function(object, type) {
   object@list <- object@list %>% purrr::keep(~as.character(class(.x))==type)
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                                  order                                ----
+#_______________________________________________________________________________
+
+#' Order.
+#' 
+#' @param object generic object
+#' @return ordered object
+#' @export
+order <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("order", function(object) {
+  standardGeneric("order")
+})
+
+setMethod("order", signature=c("parameters"), definition=function(object) {
+  types <- object@list %>% purrr::map_chr(~as.character(class(.x)))
+  indexes1 <- object@list %>% purrr::map_int(~.x@index)
+  indexes2 <- object@list %>% purrr::map_int(.f=function(.x){
+    if("index2" %in% slotNames(.x)) {
+      return(.x@index2)
+    } else {
+      return(as.integer(0))
+    }
+  })
+  
+  # Reorder
+  types <- factor(types, levels=c("theta", "omega", "sigma"), labels=c("theta", "omega", "sigma"))
+  order <- base::order(types, indexes1, indexes2)
+  
+  # Apply result to original list
+  object@list <- object@list[order]
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                                 clean                                ----
+#_______________________________________________________________________________
+
+#' Clean
+#' 
+#' @param object generic object
+#' @return cleaned object
+#' @export
+clean <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("clean", function(object) {
+  standardGeneric("clean")
+})
+
+setMethod("clean", signature=c("parameters"), definition=function(object) {
+  attributes(object@list) <- NULL
   return(object)
 })
 

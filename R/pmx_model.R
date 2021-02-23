@@ -94,6 +94,12 @@ parametersToDataframe <- function(object) {
 
 setMethod("write", signature=c("parameters", "character"), definition=function(object, file) {
   df <- parametersToDataframe(object)
+  
+  # Order columns in CSV files
+  cols <- c("name", "index", "index2", "value", "fix")
+  colnames <- factor(colnames(df), levels=cols, labels=cols)
+  df <- df[, base::order(colnames)]
+  
   write.csv(df, file=file, row.names=FALSE)
 })
 
@@ -171,9 +177,8 @@ setMethod("read", signature=c("character"), definition=function(file, type=NULL)
     sigma <- read(file=sigmaPath, type="sigma")
     
     list <- c(theta@list, omega@list, sigma@list)
-    attributes(list) <- NULL
-    
-    return(new("pmx_model", code=code, parameters=new("parameters", list=list)))
+
+    return(new("pmx_model", code=code, parameters=new("parameters", list=list) %>% clean()))
   }
   
 })
