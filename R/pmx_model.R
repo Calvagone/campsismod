@@ -2,7 +2,7 @@
 setClass(
   "pmx_model",
   representation(
-    code = "character",       # Mandatory
+    records = "records",      # Mandatory
     parameters = "parameters" # Mandatory    
   )
 )
@@ -45,22 +45,8 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-#' Write generic object.
-#' 
-#' @param object generic object
-#' @param file path of the output dir or ZIP filename
-#' @param ... extra arguments
-#' @export
-write <- function(object, file, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("write", function(object, file, ...) {
-  standardGeneric("write")
-})
-
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
-  code <- object@code
+  records <- object@records
   parameters <- object@parameters
   theta <- parameters %>% filter(type="theta")
   omega <- parameters %>% filter(type="omega")
@@ -74,10 +60,10 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     } else {
       dir.create(file)
     }
+    records %>% write(file=file.path(file, "model.mod"))
     theta %>% write(file=file.path(file, "theta.csv"))
     omega %>% write(file=file.path(file, "omega.csv"))
     sigma %>% write(file=file.path(file, "sigma.csv"))
-    write.table(x=code, file=file.path(file, "model.mod"), row.names=FALSE, col.names=FALSE, quote=FALSE)
   }
 })
 
@@ -106,19 +92,6 @@ setMethod("write", signature=c("parameters", "character"), definition=function(o
 #_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
-
-#' Read generic object.
-#' 
-#' @param file path where to read the file
-#' @param ... extra arguments
-#' @export
-read <- function(file, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("read", function(file, ...) {
-  standardGeneric("read")
-})
 
 dataframeToParameter <- function(row, type) {
   param <- NULL

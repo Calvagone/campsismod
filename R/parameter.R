@@ -148,19 +148,6 @@ setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
-#' Get name in model code.
-#' 
-#' @param object generic object
-#' @return name
-#' @export
-getName <- function(object) {
-  stop("No default function is provided")
-}
-
-setGeneric("getName", function(object) {
-  standardGeneric("getName")
-})
-
 getBestName <- function(prefix, name, index) {
   retValue <- ""
   if (length(name)==0 || is.na(name)) {

@@ -1,5 +1,15 @@
 Package: pmxmod
 Type: Package
+Collate:
+    'generic.R'
+    'special_operators.R'
+    'parameter.R'
+    'parameters.R'
+    'record.R'
+    'records.R'
+    'pmx_model.R'
+    'rxode_model.R'
+    'rxode_conversion.R'
 Title: Pmxmod library
 Version: 0.1
 Authors@R: c(
