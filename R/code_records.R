@@ -1,6 +1,6 @@
 
 setClass(
-  "records",
+  "code_records",
   representation(
     list = "list"
   )
@@ -24,7 +24,7 @@ setGeneric("getRecord", function(object, recordType) {
   standardGeneric("getRecord")
 })
 
-setMethod("getRecord", signature=c("records", "character"), definition=function(object, recordType) {
+setMethod("getRecord", signature=c("code_records", "character"), definition=function(object, recordType) {
   record <- object@list %>% purrr::keep(~(.x %>% getName()==recordType))
   if (length(record) >= 1) {
     record <- record[[1]]
@@ -49,7 +49,7 @@ setGeneric("addRecord", function(object, record) {
   standardGeneric("addRecord")
 })
 
-setMethod("addRecord", signature=c("records", "record"), definition=function(object, record) {
+setMethod("addRecord", signature=c("code_records", "code_record"), definition=function(object, record) {
   object@list <- c(object@list, record)
   return(object)
 })
@@ -58,7 +58,7 @@ setMethod("addRecord", signature=c("records", "record"), definition=function(obj
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-setMethod("write", signature=c("records", "character"), definition=function(object, file) {
+setMethod("write", signature=c("code_records", "character"), definition=function(object, file) {
   code <- NULL
   for (record in object@list) {
     code <- c(code, paste0("[", record %>% getName(), "]"))
@@ -79,7 +79,7 @@ setMethod("write", signature=c("records", "character"), definition=function(obje
 #' @export
 read.model <- function(file) {
   allLines <- read.table(file=file, sep="@")[,1]
-  records <- new("records", list=list())
+  records <- new("code_records", list=list())
   prevRecordIndex <- 1
   
   for (index in seq_along(allLines)) {

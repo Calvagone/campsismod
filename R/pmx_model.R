@@ -2,7 +2,7 @@
 setClass(
   "pmx_model",
   representation(
-    records = "records",      # Mandatory
+    model = "code_records",      # Mandatory
     parameters = "parameters" # Mandatory    
   )
 )
@@ -46,7 +46,7 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #_______________________________________________________________________________
 
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
-  records <- object@records
+  model <- object@model
   parameters <- object@parameters
   theta <- parameters %>% filter(type="theta")
   omega <- parameters %>% filter(type="omega")
@@ -60,7 +60,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     } else {
       dir.create(file)
     }
-    records %>% write(file=file.path(file, "model.mod"))
+    model %>% write(file=file.path(file, "model.mod"))
     theta %>% write(file=file.path(file, "theta.csv"))
     omega %>% write(file=file.path(file, "omega.csv"))
     sigma %>% write(file=file.path(file, "sigma.csv"))
@@ -106,52 +106,60 @@ dataframeToParameter <- function(row, type) {
   return(param)
 }
 
-setMethod("read", signature=c("character"), definition=function(file, type=NULL) {
-  
-  # Must be a call for reading CSV parameter file
-  if (!is.null(type) && type %in% c("theta", "omega", "sigma")) {
-    df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
-    list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
-    attributes(list) <- NULL
-    return(new("parameters", list=list))
-  
-  # Else it must be a PMX model (folder or zip file)
+#' Read PMX model file.
+#' 
+#' @param file path to folder or path to zipped project
+#' @return a PMX model
+#' @export
+read.pmxmod <- function(file) {
+  folder <- NULL
+  if (dir.exists(file)) {
+    folder <- file
+  } else if (file.exists(file)) {
+    
   } else {
-    folder <- NULL
-    if (dir.exists(file)) {
-      folder <- file
-    } else if (file.exists(file)) {
-      
-    } else {
-      stop("file is not a ZIP file nor a valid folder")
-    }
-    
-    modelPath <- file.path(folder, "model.mod")
-    thetaPath <- file.path(folder, "theta.csv")
-    omegaPath <- file.path(folder, "omega.csv")
-    sigmaPath <- file.path(folder, "sigma.csv")
-    
-    if (!file.exists(modelPath)) {
-      stop(paste0("Model file couln't be found."))
-    }
-    if (!file.exists(thetaPath)) {
-      stop(paste0("Theta file couln't be found."))
-    }
-    if (!file.exists(omegaPath)) {
-      stop(paste0("Omega file couln't be found."))
-    }
-    if (!file.exists(sigmaPath)) {
-      stop(paste0("Sigma file couln't be found."))
-    }
-    
-    code <- read.table(file=modelPath, sep="@")[,1]
-    theta <- read(file=thetaPath, type="theta")
-    omega <- read(file=omegaPath, type="omega")
-    sigma <- read(file=sigmaPath, type="sigma")
-    
-    list <- c(theta@list, omega@list, sigma@list)
-
-    return(new("pmx_model", code=code, parameters=new("parameters", list=list) %>% clean()))
+    stop("file is not a ZIP file nor a valid folder")
   }
   
-})
+  modelPath <- file.path(folder, "model.mod")
+  thetaPath <- file.path(folder, "theta.csv")
+  omegaPath <- file.path(folder, "omega.csv")
+  sigmaPath <- file.path(folder, "sigma.csv")
+  
+  if (!file.exists(modelPath)) {
+    stop(paste0("Model file couln't be found."))
+  }
+  if (!file.exists(thetaPath)) {
+    stop(paste0("Theta file couln't be found."))
+  }
+  if (!file.exists(omegaPath)) {
+    stop(paste0("Omega file couln't be found."))
+  }
+  if (!file.exists(sigmaPath)) {
+    stop(paste0("Sigma file couln't be found."))
+  }
+  
+  model <- read.model(file=modelPath)
+  theta <- read.parameter(file=thetaPath, type="theta")
+  omega <- read.parameter(file=omegaPath, type="omega")
+  sigma <- read.parameter(file=sigmaPath, type="sigma")
+  
+  list <- c(theta@list, omega@list, sigma@list)
+  
+  return(new("pmx_model", model=model, parameters=new("parameters", list=list) %>% clean()))
+}
+
+#' Read parameter file.
+#' 
+#' @param file path to folder or path to zipped project
+#' @param type parameter type: 'theta', 'omega' or 'sigma'
+#' @return a PMX model
+#' @export
+read.parameter <- function(file, type) {
+  assertthat::assert_that(type %in% c("theta", "omega", "sigma"),
+                          msg="Type must be one of these: 'theta', 'omega' or 'sigma'")
+  df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
+  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
+  attributes(list) <- NULL
+  return(new("parameters", list=list))
+}

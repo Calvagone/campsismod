@@ -1,6 +1,6 @@
 
 setClass(
-  "record",
+  "code_record",
   representation(
     code = "character"
   )
@@ -13,7 +13,7 @@ setClass(
   "pk_record",
   representation(
   ),
-  contains = "record"
+  contains = "code_record"
 )
 
 #' PRED record class.
@@ -23,7 +23,7 @@ setClass(
   "pred_record",
   representation(
   ),
-  contains = "record"
+  contains = "code_record"
 )
 
 #' DES record class.
@@ -33,7 +33,7 @@ setClass(
   "des_record",
   representation(
   ),
-  contains = "record"
+  contains = "code_record"
 )
 
 #' ERROR record class.
@@ -43,7 +43,7 @@ setClass(
   "error_record",
   representation(
   ),
-  contains = "record"
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
