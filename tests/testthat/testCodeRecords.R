@@ -4,7 +4,6 @@ library(testthat)
 context("Test all methods from the code records class")
 
 testFolder <<- ""
-testFolder <<- "C:/prj/pmxmod/tests/testthat/"
 
 test_that("Add and get methods", {
   
@@ -29,5 +28,5 @@ test_that("Write/Read methods", {
   # Read model
   model2 <- read.model(file=paste0(testFolder, "write/records/records1.mod"))
   
-  expect_equal(model, model)
+  expect_equal(model1, model2)
 })

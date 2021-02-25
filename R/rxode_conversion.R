@@ -1,4 +1,19 @@
 
+
+#' Get code for RxODE.
+#' 
+#' @param pmxmod PMX model
+#' @return code for RxODE
+#' @export
+rxodeCode <- function(pmxmod) {
+  model <- pmxmod@model
+  code <- NULL
+  for (record in model@list) {
+    code <- c(code, record@code)
+  }
+  return(code)
+}
+
 #' Get the parameters vector for RxODE.
 #' 
 #' @param pmxmod PMX model
