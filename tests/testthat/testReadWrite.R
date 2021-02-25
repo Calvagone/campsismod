@@ -9,16 +9,12 @@ advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))
 }
 
-modelPath <- function(advan, trans) {
-  return(paste0(testFolder, "models/subroutine/", advanFilename(advan, trans, ext=".mod")))
-}
-
 writePath <- function(advan, trans) {
   return(paste0(testFolder, "write/models/", advanFilename(advan, trans, ext="")))
 }
 
 generateModel <- function(advan, trans) {
-  pmxtran <- pmxtran::importNONMEM(modelPath(advan, trans))
+  pmxtran <- pmxtran::importNONMEM(pmxtran::getNONMEMModelTemplate(advan, trans))
   pmxmod <- pmxtran::toPmxModel(pmxtran)
   return(pmxmod)
 }
