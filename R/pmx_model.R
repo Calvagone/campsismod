@@ -1,4 +1,7 @@
 
+#' PMX model class.
+#' 
+#' @export
 setClass(
   "pmx_model",
   representation(
@@ -129,6 +132,20 @@ read.parameter <- function(file, type) {
   attributes(list) <- NULL
   return(new("parameters", list=list))
 }
+
+#_______________________________________________________________________________
+#----                           export_type                                 ----
+#_______________________________________________________________________________
+
+#' RxODE export type class.
+#' 
+#' @export
+setClass(
+  "rxode_type",
+  representation(
+  ),
+  contains="export_type" 
+)
 
 #_______________________________________________________________________________
 #----                                export                                 ----

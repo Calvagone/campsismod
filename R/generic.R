@@ -55,8 +55,11 @@ setGeneric("read", function(file, ...) {
 #----                           export_type                                 ----
 #_______________________________________________________________________________
 
+#' Export type class.
+#' 
+#' @export
 setClass(
-  "rxode_type",
+  "export_type",
   representation(
   )
 )
