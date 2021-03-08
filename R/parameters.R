@@ -1,12 +1,20 @@
-#' Parameters class.
-#' 
+
 #' @export
 setClass(
   "parameters",
   representation(
-    list = "list"
-  )
+  ),
+  contains = "pmx_list"
 )
+
+#' 
+#' Create a list of parameters.
+#' 
+#' @return an empty list of parameters  
+#' @export
+Parameters <- function() {
+  return(new("parameters"))
+}
 
 #_______________________________________________________________________________
 #----                                 filter                                ----
@@ -162,61 +170,6 @@ setMethod("getParameter", signature=c("parameters", "character", "integer", "int
     parameter <- parameter[[1]]
   }
   return(parameter)
-})
-
-#_______________________________________________________________________________
-#----                         addParameter                                  ----
-#_______________________________________________________________________________
-
-#' Add a parameter in list.
-#' 
-#' @param object generic object
-#' @param parameter parameter to add
-#' @return filtered object
-#' @export
-addParameter <- function(object, parameter) {
-  stop("No default function is provided")
-}
-
-setGeneric("addParameter", function(object, parameter) {
-  standardGeneric("addParameter")
-})
-
-setMethod("addParameter", signature=c("parameters", "parameter"), definition=function(object, parameter) {
-  if (!(object %>% hasParameter(parameter) %>% length() > 0)) {
-    object@list <- c(object@list, parameter)
-    return(object)
-  }
-})
-
-#_______________________________________________________________________________
-#----                          hasParameter                                 ----
-#_______________________________________________________________________________
-
-#' Check if list has given parameter.
-#' 
-#' @param object generic object
-#' @param parameter parameter to check
-#' @return the parameter that matches
-#' @export
-hasParameter <- function(object, parameter) {
-  stop("No default function is provided")
-}
-
-setGeneric("hasParameter", function(object, parameter) {
-  standardGeneric("hasParameter")
-})
-
-setMethod("hasParameter", signature=c("parameters", "theta"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="theta", index=parameter@index))
-})
-
-setMethod("hasParameter", signature=c("parameters", "omega"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="omega", index=parameter@index, index2=parameter@index2))
-})
-
-setMethod("hasParameter", signature=c("parameters", "sigma"), definition=function(object, parameter) {
-  return(object %>% getParameter(type="sigma", index=parameter@index, index2=parameter@index2))
 })
 
 #_______________________________________________________________________________

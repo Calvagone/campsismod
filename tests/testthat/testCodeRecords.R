@@ -7,20 +7,20 @@ testFolder <<- ""
 
 test_that("Add and get methods", {
   
-  model <- new("code_records",  list=list()) 
-  model <- model %>% addRecord(new("pk_record", code=""))
-  model <- model %>% addRecord(new("error_record", code=""))
+  model <- CodeRecords()
+  model <- model %>% add(PkRecord(code=""))
+  model <- model %>% add(ErrorRecord(code=""))
   
-  expect_true(model %>% getRecord("PK") %>% length() > 0)
-  expect_true(model %>% getRecord("ERROR") %>% length() > 0)
-  expect_true(model %>% getRecord("DES") %>% length() == 0)
+  expect_true(model %>% getByName("PK") %>% length() > 0)
+  expect_true(model %>% getByName("ERROR") %>% length() > 0)
+  expect_true(model %>% getByName("DES") %>% length() == 0)
 })
 
 test_that("Write/Read methods", {
   
-  model1 <- new("code_records",  list=list()) 
-  model1 <- model1 %>% addRecord(new("pk_record", code=c("A=1", "B=2")))
-  model1 <- model1 %>% addRecord(new("error_record", code=c("C=3")))
+  model1 <- CodeRecords()
+  model1 <- model1 %>% add(PkRecord(code=c("A=1", "B=2")))
+  model1 <- model1 %>% add(ErrorRecord(code=c("C=3")))
   
   # Write model
   model1 %>% write(file=paste0(testFolder, "write/records/records1.mod"))

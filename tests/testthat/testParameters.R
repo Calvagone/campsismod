@@ -10,11 +10,11 @@ test_that("Write/Read THETA's", {
   file <- paste0(testFolder, "write/", "thetas.csv")
   
   # Read THETA's
-  theta1 <- new("theta", name="CL", index=as.integer(1), value=5, fix=TRUE)
+  theta1 <- Theta(name="CL", index=1, value=5, fix=TRUE)
+  theta2 <- Theta(name="KA", index=2, value=1, fix=TRUE)
+  theta3 <- Theta(name="V", index=3,  value=80, fix=TRUE)
   
-  theta2 <- new("theta", name="KA", index=as.integer(2), value=1, fix=TRUE)
-  theta3 <- new("theta", name="V", index=as.integer(3),  value=80, fix=TRUE)
-  thetas <- new("parameters", list=c(theta1, theta2, theta3))
+  thetas <- Parameters() %>% add(theta1) %>% add(theta2) %>% add(theta3)
   thetas %>% write(file=file)
   
   # Write THETA's
@@ -27,31 +27,32 @@ test_that("Write/Read THETA's", {
 
 test_that("Has/Add parameter method", {
   
-  theta1 <- new("theta", name="CL", index=as.integer(1), value=5, fix=TRUE)
-  theta2 <- new("theta", name="KA", index=as.integer(2), value=1, fix=TRUE)
-  thetas <- new("parameters", list=c(theta1, theta2))
+  theta1 <- Theta(name="CL", index=1, value=5, fix=TRUE)
+  theta2 <- Theta(name="KA", index=2, value=1, fix=TRUE)
+  thetas <- Parameters() %>% add(theta1) %>% add(theta2)
 
-  expect_true(thetas %>% hasParameter(new("theta", name="CL", index=as.integer(1), value=5, fix=TRUE)) %>% length() > 0)
-  expect_false(thetas %>% hasParameter(new("theta", name="V", index=as.integer(3), value=80, fix=TRUE)) %>% length() > 0)
+  expect_true(thetas %>% contains(Theta(name="CL", index=1)))
+  expect_false(thetas %>% contains(Theta(name="V", index=3)))
   
-  thetas <- thetas %>% addParameter(new("theta", name="V", index=as.integer(3), value=80, fix=TRUE))
-  expect_true(thetas %>% hasParameter(new("theta", name="V", index=as.integer(3), value=80, fix=TRUE)) %>% length() > 0)
+  thetas <- thetas %>% add(Theta(name="V", index=3))
+  expect_true(thetas %>% contains(Theta(name="V", index=3)))
 })
 
 
 test_that("Order parameters method", {
   
-  sigma1 <- new("sigma", name=as.character(NA), index=as.integer(1), index2=as.integer(1), value=1, fix=TRUE)
-  omega2 <- new("omega", name=as.character(NA), index=as.integer(2), index2=as.integer(2), value=1, fix=TRUE)
-  omega1 <- new("omega", name=as.character(NA), index=as.integer(1), index2=as.integer(1), value=1, fix=TRUE)
-  theta2 <- new("theta", name=as.character(NA), index=as.integer(2), value=1, fix=TRUE)
-  theta1 <- new("theta", name=as.character(NA), index=as.integer(1), value=1, fix=TRUE)
+  sigma1 <- Sigma(index=1, index2=1, value=1)
+  omega2 <- Omega(index=2, index2=2, value=1)
+  omega1 <- Omega(index=1, index2=1, value=1)
+  theta2 <- Theta(index=2, value=1)
+  theta1 <- Theta(index=1, value=1)
   
-  params <- new("parameters", list=c(sigma1, omega2, omega1, theta2, theta1))
+  params <- Parameters() %>% add(sigma1) %>% add(omega2) %>% add(omega1) %>% add(theta2) %>% add(theta1)
   
   orderedParams <- params %>% order()
   
-  expect_equal(orderedParams, new("parameters", list=c(theta1, theta2, omega1, omega2, sigma1)))
+  expectedParams <- Parameters() %>% add(theta1) %>% add(theta2) %>% add(omega1) %>% add(omega2) %>% add(sigma1)
+  expect_equal(orderedParams, expectedParams)
   
 })
 

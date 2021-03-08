@@ -1,33 +1,8 @@
 
 checkParameter <- function(object) {
-  errors <- character()
-  
-  # Optional
-  errors <- addError(checkLength(object, "name"), errors)
-  
-  # Mandatory
-  errors <- addError(checkLength(object, "index"), errors)
-  errors <- addError(checkLength(object, "fix"), errors)
-  errors <- addError(checkLength(object, "value"), errors)
-
-  if (length(errors) == 0) TRUE else errors
-}
-
-checkLength <- function(object, slot, expected=1) {
-  lengthSlot <- length(eval(parse(text = paste0("object@", slot))))
-  error <- NULL
-  if (lengthSlot != expected) {
-    error <- paste0(slot, " is length ", lengthSlot, ". Should be ", expected)
-  }
-  return(error)
-}
-
-addError <- function(error, errors) {
-  if (is.null(error)) {
-    return(errors)
-  } else {
-    return(c(errors, error))
-  }
+  check1 <- expectOneForAll(object, c("name", "index", "fix", "value"))
+  check2 <- if(is.na(object@name) && is.na(object@index)) {"Name and index slots can't be both NA"} else {character()} 
+  return(c(check1, check2))
 }
 
 #' Parameter class.
@@ -36,11 +11,13 @@ addError <- function(error, errors) {
 setClass(
   "parameter",
   representation(
-    name = "character",   # Optional
-    index = "integer",    # Mandatory
-    value = "numeric",    # Mandatory
-    fix = "logical"       # Mandatory
+    name = "character",
+    index = "integer",
+    value = "numeric",
+    fix = "logical"
   ),
+  contains = "pmx_element",
+  prototype = prototype(name=as.character(NA), value=as.numeric(NA), fix=FALSE),
   validity = checkParameter
 )
 
@@ -51,19 +28,7 @@ setClass(
   "single_array_parameter",
   representation(
   ),
-  validity = checkParameter,
   contains = "parameter"
-)
-
-#' Theta parameter class.
-#' 
-#' @export
-setClass(
-  "theta",
-  representation(
-  ),
-  validity = checkParameter,
-  contains = "single_array_parameter"
 )
 
 #' Double array parameter class.
@@ -74,9 +39,40 @@ setClass(
   representation(
     index2 = "integer"
   ),
-  validity = checkParameter,
   contains = "single_array_parameter"
 )
+
+#_______________________________________________________________________________
+#----                                theta                                  ----
+#_______________________________________________________________________________
+
+
+#' Theta parameter class.
+#' 
+#' @export
+setClass(
+  "theta",
+  representation(
+  ),
+  contains = "single_array_parameter"
+)
+
+#' 
+#' Create a THETA parameter.
+#' 
+#' @param name parameter name, e.g. CL (prefix THETA will be added automatically)
+#' @param index parameter index
+#' @param value parameter value
+#' @param fix parameter was fixed in estimation, logical value
+#' @return a THETA parameter  
+#' @export
+Theta <- function(name=NA, index, value=NA, fix=FALSE) {
+  return(new("theta", name=as.character(name), index=as.integer(index), value=as.numeric(value), fix=fix))
+}
+
+#_______________________________________________________________________________
+#----                                omega                                  ----
+#_______________________________________________________________________________
 
 #' Omega parameter class.
 #' 
@@ -85,9 +81,26 @@ setClass(
   "omega",
   representation(
   ),
-  validity = checkParameter,
   contains = "double_array_parameter"
 )
+
+#' 
+#' Create an OMEGA parameter.
+#' 
+#' @param name parameter name, e.g. CL (prefix OMEGA will be added automatically)
+#' @param index parameter index
+#' @param index2 second parameter index
+#' @param value parameter value
+#' @param fix parameter was fixed in estimation, logical value
+#' @return an OMEGA parameter  
+#' @export
+Omega <- function(name=NA, index, index2, value=NA, fix=FALSE) {
+  return(new("omega", name=as.character(name), index=as.integer(index), index2=as.integer(index2), value=as.numeric(value), fix=fix))
+}
+
+#_______________________________________________________________________________
+#----                                sigma                                  ----
+#_______________________________________________________________________________
 
 #' Sigma parameter class.
 #' 
@@ -96,15 +109,32 @@ setClass(
   "sigma",
   representation(
   ),
-  validity = checkParameter,
   contains = "double_array_parameter"
 )
+
+#' 
+#' Create a SIGMA parameter.
+#' 
+#' @param name parameter name, e.g. CL (prefix SIGMA will be added automatically)
+#' @param index parameter index
+#' @param index2 second parameter index
+#' @param value parameter value
+#' @param fix parameter was fixed in estimation, logical value
+#' @return a SIGMA parameter  
+#' @export
+Sigma <- function(name=NA, index, index2, value=NA, fix=FALSE) {
+  return(new("sigma", name=as.character(name), index=as.integer(index), index2=as.integer(index2), value=as.numeric(value), fix=fix))
+}
 
 #_______________________________________________________________________________
 #----                               isDiag                                  ----
 #_______________________________________________________________________________
 
-
+#' Is diagonal.
+#' 
+#' @param object generic object
+#' @return logical value
+#' @export
 isDiag <- function(object) TRUE
 
 setGeneric("isDiag", function(object) {
@@ -148,25 +178,27 @@ setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
-getBestName <- function(prefix, name, index) {
-  retValue <- ""
-  if (length(name)==0 || is.na(name)) {
-    retValue <- paste0(prefix, "_", index)
+setMethod("getName", signature=c("theta"), definition=function(x) {
+  if (is.na(x@name)) {
+    return(paste0("THETA", "_", x@index))
   } else {
-    retValue <- paste0(prefix, "_", name)
+    return(paste0("THETA", "_", x@name))
   }
-  return(retValue)
-}
-
-setMethod("getName", signature=c("theta"), definition=function(object) {
-  return(getBestName("THETA", object@name, object@index))
 })
 
-setMethod("getName", signature=c("omega"), definition=function(object) {
-  return(getBestName("ETA", object@name, object@index))
+setMethod("getName", signature=c("omega"), definition=function(x) {
+  if (is.na(x@name)) {
+    return(paste0("OMEGA", "_", x@index, "_", x@index2))
+  } else {
+    return(paste0("OMEGA", "_", x@name))
+  }
 })
 
-setMethod("getName", signature=c("sigma"), definition=function(object) {
-  return(getBestName("EPS", object@name, object@index))
+setMethod("getName", signature=c("sigma"), definition=function(x) {
+  if (is.na(x@name)) {
+    return(paste0("SIGMA", "_", x@index, "_", x@index2))
+  } else {
+    return(paste0("SIGMA", "_", x@name))
+  }
 })
 

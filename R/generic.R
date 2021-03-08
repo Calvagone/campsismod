@@ -1,22 +1,5 @@
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
-#_______________________________________________________________________________
-
-#' Get name in model code.
-#' 
-#' @param object generic object
-#' @return name
-#' @export
-getName <- function(object) {
-  stop("No default function is provided")
-}
-
-setGeneric("getName", function(object) {
-  standardGeneric("getName")
-})
-
-#_______________________________________________________________________________
 #----                                 write                                 ----
 #_______________________________________________________________________________
 

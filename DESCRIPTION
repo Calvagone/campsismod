@@ -1,8 +1,11 @@
 Package: pmxmod
 Type: Package
 Collate:
-    'generic.R'
     'special_operators.R'
+    'check.R'
+    'generic.R'
+    'generic_element_list.R'
+    'generic_list.R'
     'parameter.R'
     'parameters.R'
     'code_record.R'
