@@ -32,7 +32,7 @@ rxodeParams <- function(pmxmod) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
       retValue[i] <- param@value
-      names[i] <- param %>% getName()
+      names[i] <- param %>% getNameInModel()
     }
   }
   names(retValue) <- names
@@ -87,7 +87,7 @@ rxodeMatrix <- function(pmxmod, type="omega") {
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " matrix"))
     } else {
-      names[i] <- param %>% getName()
+      names[i] <- param %>% getNameInModel()
     }
   }
   rownames(matrix) <- names
