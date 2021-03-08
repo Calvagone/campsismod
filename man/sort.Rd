@@ -10,6 +10,8 @@ sort(x, decreasing = FALSE, ...)
 \item{x}{list object}
 
 \item{decreasing}{increasing or decreasing order}
+
+\item{...}{extra arguments}
 }
 \value{
 same list but ordered

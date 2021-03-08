@@ -1,6 +1,8 @@
 Package: pmxmod
 Type: Package
 Collate:
+    'data.R'
+    'model_library.R'
     'special_operators.R'
     'check.R'
     'generic.R'

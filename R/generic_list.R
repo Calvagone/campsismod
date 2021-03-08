@@ -185,6 +185,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 #' 
 #' @param x list object
 #' @param decreasing increasing or decreasing order
+#' @param ... extra arguments
 #' @return same list but ordered
 #' @export
 sort <- function(x, decreasing = FALSE, ...) {
