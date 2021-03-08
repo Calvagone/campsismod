@@ -4,7 +4,7 @@
 \alias{ErrorRecord}
 \title{Create ERROR code record.}
 \usage{
-ErrorRecord(code)
+ErrorRecord(code = character())
 }
 \arguments{
 \item{code}{code record}

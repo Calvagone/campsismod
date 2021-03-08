@@ -4,7 +4,7 @@
 \alias{DesRecord}
 \title{Create DES code record.}
 \usage{
-DesRecord(code)
+DesRecord(code = character())
 }
 \arguments{
 \item{code}{code record}

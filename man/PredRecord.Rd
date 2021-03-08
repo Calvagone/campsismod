@@ -4,7 +4,7 @@
 \alias{PredRecord}
 \title{Create PRED code record.}
 \usage{
-PredRecord(code)
+PredRecord(code = character())
 }
 \arguments{
 \item{code}{code record}

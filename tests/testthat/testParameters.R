@@ -25,7 +25,7 @@ test_that("Write/Read THETA's", {
 })
 
 
-test_that("Has/Add parameter method", {
+test_that("Add/contains methods", {
   
   theta1 <- Theta(name="CL", index=1, value=5, fix=TRUE)
   theta2 <- Theta(name="KA", index=2, value=1, fix=TRUE)
@@ -38,8 +38,23 @@ test_that("Has/Add parameter method", {
   expect_true(thetas %>% contains(Theta(name="V", index=3)))
 })
 
+test_that("GetByIndex method", {
+  
+  p <- Parameters()
+  p <- p %>% add(Theta(index=1))
+  p <- p %>% add(Theta(index=2))
+  p <- p %>% add(Theta(index=3))
+  p <- p %>% add(Omega(index=1, index2=1))
+  p <- p %>% add(Omega(index=2, index2=2))
+  p <- p %>% add(Sigma(index=1, index2=1))
 
-test_that("Order parameters method", {
+  expect_equal(p %>% getByIndex(Theta(index=3)), Theta(index=3))
+  expect_equal(p %>% getByIndex(Omega(index=1, index2=1)), Omega(index=1, index2=1))
+  expect_equal(p %>% getByIndex(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
+})
+
+
+test_that("Sort method", {
   
   sigma1 <- Sigma(index=1, index2=1, value=1)
   omega2 <- Omega(index=2, index2=2, value=1)
@@ -49,7 +64,7 @@ test_that("Order parameters method", {
   
   params <- Parameters() %>% add(sigma1) %>% add(omega2) %>% add(omega1) %>% add(theta2) %>% add(theta1)
   
-  orderedParams <- params %>% order()
+  orderedParams <- params %>% sort()
   
   expectedParams <- Parameters() %>% add(theta1) %>% add(theta2) %>% add(omega1) %>% add(omega2) %>% add(sigma1)
   expect_equal(orderedParams, expectedParams)

@@ -29,7 +29,7 @@ setClass(
 #' 
 #' @param code code record
 #' @export
-PkRecord <- function(code) {
+PkRecord <- function(code=character()) {
   return(new("pk_record", code=code))
 }
 
@@ -50,7 +50,7 @@ setClass(
 #' 
 #' @param code code record
 #' @export
-PredRecord <- function(code) {
+PredRecord <- function(code=character()) {
   return(new("pred_record", code=code))
 }
 
@@ -71,7 +71,7 @@ setClass(
 #' 
 #' @param code code record
 #' @export
-DesRecord <- function(code) {
+DesRecord <- function(code=character()) {
   return(new("des_record", code=code))
 }
 
@@ -93,7 +93,7 @@ setClass(
 #' 
 #' @param code code record
 #' @export
-ErrorRecord <- function(code) {
+ErrorRecord <- function(code=character()) {
   return(new("error_record", code=code))
 }
 

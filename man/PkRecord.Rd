@@ -4,7 +4,7 @@
 \alias{PkRecord}
 \title{Create PK code record.}
 \usage{
-PkRecord(code)
+PkRecord(code = character())
 }
 \arguments{
 \item{code}{code record}

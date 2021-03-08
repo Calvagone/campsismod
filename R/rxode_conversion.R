@@ -27,7 +27,7 @@ rxodeParams <- function(pmxmod) {
   names <- rep("", maxIndex)
   
   for (i in seq_len(maxIndex)) {
-    param <- params %>% getParameter(type=type, index=i)
+    param <- params %>% getByIndex(type=type, index=i)
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
@@ -55,9 +55,9 @@ rxodeMatrix <- function(pmxmod, type="omega") {
   
   for (i in seq_len(maxIndex)) {
     for (j in seq_len(maxIndex)) {
-      param <- params %>% getParameter(type=type, index=i, index2=j)
+      param <- params %>% getByIndex(type=type, index=i, index2=j)
       if (length(param) == 0) {
-        param <- params %>% getParameter(type=type, index=j, index2=i)
+        param <- params %>% getByIndex(type=type, index=j, index2=i)
       }
       if (length(param) == 0) {
         matrix[i, j] <- 0
@@ -67,7 +67,7 @@ rxodeMatrix <- function(pmxmod, type="omega") {
     } 
   }
   for (i in seq_len(maxIndex)) {
-    param <- params %>% getParameter(type=type, index=i, index2=i)
+    param <- params %>% getByIndex(type=type, index=i, index2=i)
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " matrix"))
     } else {

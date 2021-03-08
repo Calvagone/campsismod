@@ -40,26 +40,13 @@ setMethod("filter", signature=c("parameters", "character"), definition=function(
 })
 
 #_______________________________________________________________________________
-#----                                  order                                ----
+#----                                  sort                                 ----
 #_______________________________________________________________________________
 
-#' Order.
-#' 
-#' @param object generic object
-#' @return ordered object
-#' @export
-order <- function(object) {
-  stop("No default function is provided")
-}
-
-setGeneric("order", function(object) {
-  standardGeneric("order")
-})
-
-setMethod("order", signature=c("parameters"), definition=function(object) {
-  types <- object@list %>% purrr::map_chr(~as.character(class(.x)))
-  indexes1 <- object@list %>% purrr::map_int(~.x@index)
-  indexes2 <- object@list %>% purrr::map_int(.f=function(.x){
+setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=FALSE, ...) {
+  types <- x@list %>% purrr::map_chr(~as.character(class(.x)))
+  indexes1 <- x@list %>% purrr::map_int(~.x@index)
+  indexes2 <- x@list %>% purrr::map_int(.f=function(.x){
     if("index2" %in% slotNames(.x)) {
       return(.x@index2)
     } else {
@@ -69,11 +56,11 @@ setMethod("order", signature=c("parameters"), definition=function(object) {
   
   # Reorder
   types <- factor(types, levels=c("theta", "omega", "sigma"), labels=c("theta", "omega", "sigma"))
-  order <- base::order(types, indexes1, indexes2)
+  order <- order(types, indexes1, indexes2)
   
   # Apply result to original list
-  object@list <- object@list[order]
-  return(object)
+  x@list <- x@list[order]
+  return(x)
 })
 
 #_______________________________________________________________________________
@@ -120,51 +107,29 @@ setMethod("maxIndex", signature=c("parameters", "character"), definition=functio
 })
 
 #_______________________________________________________________________________
-#----                             getParameter                              ----
+#----                             getByIndex                              ----
 #_______________________________________________________________________________
 
-#' Get parameter function (single index).
+#' Get parameter by index (single index).
 #' 
-#' @param object generic object
-#' @param type parameter type: theta
-#' @param index first index
-#' @return filtered object
+#' @param object list of parameters
+#' @param parameter to search for
+#' @return parameter that matches
 #' @export
-getParameter <- function(object, type, index) {
+getByIndex <- function(object, parameter) {
   stop("No default function is provided")
 }
 
-#' Get parameter function (double index).
-#' 
-#' @param object generic object
-#' @param type parameter type: omega or sigma
-#' @param index first index
-#' @param index2 second index
-#' @return filtered object
-#' @export
-getParameter <- function(object, type, index, index2) {
-  stop("No default function is provided")
-}
-
-setGeneric("getParameter", function(object, type, index) {
-  standardGeneric("getParameter")
+setGeneric("getByIndex", function(object, parameter) {
+  standardGeneric("getByIndex")
 })
 
-setGeneric("getParameter", function(object, type, index, index2) {
-  standardGeneric("getParameter")
-})
-
-
-setMethod("getParameter", signature=c("parameters", "character", "integer"), definition=function(object, type, index) {
-  return(getParameter(object, type=type, index=index, index2=integer()))
-})
-
-setMethod("getParameter", signature=c("parameters", "character", "integer", "integer"), definition=function(object, type, index, index2) {
-  subList <- object %>% filter(type=type)
-  if (type=="theta") {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==index))
+setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, parameter) {
+  subList <- object %>% filter(type=as.character(class(parameter)))
+  if (is(parameter, "theta")) {
+    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index))
   } else {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==index)&(.x@index2==index2))
+    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index)&(.x@index2==parameter@index2))
   }
   if (length(parameter) >= 1) {
     parameter <- parameter[[1]]
