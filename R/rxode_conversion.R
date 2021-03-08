@@ -23,7 +23,13 @@ rxodeParams <- function(pmxmod) {
   type <- "theta"
   params <- pmxmod@parameters
   maxIndex <- params %>% maxIndex(type=type)
-  retValue <- rep(NA, maxIndex)
+  
+  # Careful, as.numeric(NA) is important...
+  # If values are all integers, RxODE gives a strange error message:
+  # Error in rxSolveSEXP(object, .ctl, .nms, .xtra, params, events, inits,  : 
+  # when specifying 'thetaMat', 'omega', or 'sigma' the parameters cannot be a 'data.frame'/'matrix'
+  
+  retValue <- rep(as.numeric(NA), maxIndex)
   names <- rep("", maxIndex)
   
   for (i in seq_len(maxIndex)) {
