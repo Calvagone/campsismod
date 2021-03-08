@@ -1,12 +1,10 @@
 
 checkParameter <- function(object) {
   check1 <- expectOneForAll(object, c("name", "index", "fix", "value"))
-  check2 <- if(is.na(object@name) && is.na(object@index)) {"Name and index slots can't be both NA"} else {character()} 
+  check2 <- if (is.na(object@index)) {"Index can't be NA"} else {character()} 
   return(c(check1, check2))
 }
 
-#' Parameter class.
-#' 
 #' @export
 setClass(
   "parameter",
@@ -21,8 +19,6 @@ setClass(
   validity = checkParameter
 )
 
-#' Single array parameter class.
-#' 
 #' @export
 setClass(
   "single_array_parameter",
@@ -31,15 +27,19 @@ setClass(
   contains = "parameter"
 )
 
-#' Double array parameter class.
-#' 
+checkDoubleArrayParameter <- function(object) {
+  check <- if (is.na(object@index2)) {"Index2 can't be NA"} else {character()} 
+  return(check)
+}
+
 #' @export
 setClass(
   "double_array_parameter",
   representation(
     index2 = "integer"
   ),
-  contains = "single_array_parameter"
+  contains = "single_array_parameter",
+  validity = checkDoubleArrayParameter
 )
 
 #_______________________________________________________________________________
@@ -199,6 +199,53 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
     return(paste0("SIGMA", "_", x@index, "_", x@index2))
   } else {
     return(paste0("SIGMA", "_", x@name))
+  }
+})
+
+#_______________________________________________________________________________
+#----                         getNameInModel                                ----
+#_______________________________________________________________________________
+
+#' Get name of parameter in the PMX model.
+#' 
+#' @param x element to know the name
+#' @return the name of this element
+#' @export
+getNameInModel <- function(x) {
+  stop("No default function is provided")
+}
+
+setGeneric("getNameInModel", function(x) {
+  standardGeneric("getNameInModel")
+})
+
+setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
+  if (is.na(x@name)) {
+    return(paste0("THETA", "_", x@index))
+  } else {
+    return(paste0("THETA", "_", x@name))
+  }
+})
+
+setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
+  if (is.na(x@name)) {
+    if (x@index != x@index2) {
+      stop("You should not call this method with different indexes!")
+    }
+    return(paste0("ETA", "_", x@index))
+  } else {
+    return(paste0("ETA", "_", x@name))
+  }
+})
+
+setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
+  if (is.na(x@name)) {
+    if (x@index != x@index2) {
+      stop("You should not call this method with different indexes!")
+    }
+    return(paste0("EPS", "_", x@index))
+  } else {
+    return(paste0("EPS", "_", x@name))
   }
 })
 

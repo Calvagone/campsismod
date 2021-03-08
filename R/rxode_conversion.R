@@ -27,7 +27,7 @@ rxodeParams <- function(pmxmod) {
   names <- rep("", maxIndex)
   
   for (i in seq_len(maxIndex)) {
-    param <- params %>% getByIndex(type=type, index=i)
+    param <- params %>% getByIndex(Theta(index=i))
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
@@ -53,11 +53,25 @@ rxodeMatrix <- function(pmxmod, type="omega") {
   matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
   names <- rep("", maxIndex)
   
+  if (type=="omega") {
+    mockParam1 <- Omega(index=1, index2=1)
+    mockParam2 <- Omega(index=1, index2=1)
+  } else {
+    mockParam1 <- Sigma(index=1, index2=1)
+    mockParam2 <- Sigma(index=1, index2=1)
+  }
+  
   for (i in seq_len(maxIndex)) {
+    mockParam1@index <- i
+    mockParam2@index2 <- i
+    
     for (j in seq_len(maxIndex)) {
-      param <- params %>% getByIndex(type=type, index=i, index2=j)
+      mockParam2@index <- j
+      mockParam1@index2 <- j
+      
+      param <- params %>% getByIndex(mockParam1)
       if (length(param) == 0) {
-        param <- params %>% getByIndex(type=type, index=j, index2=i)
+        param <- params %>% getByIndex(mockParam2)
       }
       if (length(param) == 0) {
         matrix[i, j] <- 0
@@ -67,7 +81,9 @@ rxodeMatrix <- function(pmxmod, type="omega") {
     } 
   }
   for (i in seq_len(maxIndex)) {
-    param <- params %>% getByIndex(type=type, index=i, index2=i)
+    mockParam1@index <- i
+    mockParam1@index2 <- i
+    param <- params %>% getByIndex(mockParam1)
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " matrix"))
     } else {

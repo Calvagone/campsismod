@@ -43,6 +43,14 @@ test_that("getNONMEMName method", {
   expect_equal(sigma1_2 %>% getNONMEMName(), "SIGMA(1,2)")
 })
 
+test_that("OMEGA index2 can't be NA", {
+  # Missing index2 argument
+  expect_error(Omega(index=1))
+  
+  # Missing index2 argument
+  expect_error(Omega(index=1, index2=NA))
+})
+
 
 
 

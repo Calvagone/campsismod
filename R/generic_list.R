@@ -181,6 +181,20 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 
 # Reuse base::sort(x, decreasing = FALSE, ...) definition
 
+#' Sort the specified list.
+#' 
+#' @param x list object
+#' @param decreasing increasing or decreasing order
+#' @return same list but ordered
+#' @export
+sort <- function(x, decreasing = FALSE, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("sort", function(x, decreasing = FALSE, ...) {
+  standardGeneric("sort")
+})
+
 #_______________________________________________________________________________
 #----                       default (ABSTRACT)                              ----
 #_______________________________________________________________________________
