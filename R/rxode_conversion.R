@@ -55,6 +55,9 @@ rxodeParams <- function(pmxmod) {
 rxodeMatrix <- function(pmxmod, type="omega") {
   
   params <- pmxmod@parameters
+  if (params %>% length()==0) {
+    return(NULL)
+  }
   maxIndex <- params %>% maxIndex(type=type)
   matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
   names <- rep("", maxIndex)
