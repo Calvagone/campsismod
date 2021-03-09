@@ -30,31 +30,20 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
       dir.create(file)
     }
     model %>% write(file=file.path(file, "model.mod"))
-    theta %>% write(file=file.path(file, "theta.csv"))
-    omega %>% write(file=file.path(file, "omega.csv"))
-    sigma %>% write(file=file.path(file, "sigma.csv"))
+    theta %>% write(file=file.path(file, "theta.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
+    omega %>% write(file=file.path(file, "omega.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical()))
+    sigma %>% write(file=file.path(file, "sigma.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical()))
   }
 })
 
-s4ToDataframe <- function(object) {
-  names <- slotNames(object)
-  list <- lapply(names, function(name) slot(object, name))
-  as.data.frame(setNames(list, names))
-}
-
-parametersToDataframe <- function(object) {
-  retValue <- purrr::map_df(object@list, .f=s4ToDataframe)
-  return(retValue)
-}
-
-setMethod("write", signature=c("parameters", "character"), definition=function(object, file) {
-  df <- parametersToDataframe(object)
-  
-  # Order columns in CSV files
-  cols <- c("name", "index", "index2", "value", "fix")
-  colnames <- factor(colnames(df), levels=cols, labels=cols)
-  df <- df[, base::order(colnames)]
-  
+setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {
+  df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  if (nrow(df)==0) {
+    df <- list(...)$defaultDf
+  }
   write.csv(df, file=file, row.names=FALSE)
 })
 

@@ -51,6 +51,13 @@ test_that("OMEGA index2 can't be NA", {
   expect_error(Omega(index=1, index2=NA))
 })
 
+test_that("As.data.frame method", {
+  theta1 <- Theta(name="CL", index=1)
+  df <- theta1 %>% as.data.frame(row.names=character(), optional=F)
+  
+  expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), fix=FALSE), df)
+})
+
 
 
 

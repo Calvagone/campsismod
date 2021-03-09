@@ -127,6 +127,37 @@ Sigma <- function(name=NA, index, index2, value=NA, fix=FALSE) {
 }
 
 #_______________________________________________________________________________
+#----                           as.data.frame                               ----
+#_______________________________________________________________________________
+
+#' As data frame method.
+#'
+#' @param x generic object
+#' @param row.names row names
+#' @param optional optional
+#' @return data frame
+#' @export
+as.data.frame <- function(x, row.names=NULL, optional=FALSE, ...) {
+  base::as.data.frame(x, row.names=row.names, optional=optional, ...)
+}
+
+setGeneric("as.data.frame", function(x, row.names=NULL, optional=FALSE, ...) {
+  standardGeneric("as.data.frame")
+})
+
+setMethod("as.data.frame", signature("theta", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
+  return(data.frame(name=x@name, index=x@index, value=x@value, fix=x@fix))
+})
+
+setMethod("as.data.frame", signature("omega", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
+  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix))
+})
+
+setMethod("as.data.frame", signature("sigma", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
+  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix))
+})
+
+#_______________________________________________________________________________
 #----                               isDiag                                  ----
 #_______________________________________________________________________________
 
