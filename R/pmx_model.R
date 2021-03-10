@@ -17,9 +17,9 @@ setClass(
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
   model <- object@model
   parameters <- object@parameters
-  theta <- parameters %>% filter(type="theta")
-  omega <- parameters %>% filter(type="omega")
-  sigma <- parameters %>% filter(type="sigma")
+  theta <- parameters %>% select("theta")
+  omega <- parameters %>% select("omega")
+  sigma <- parameters %>% select("sigma")
   
   if (zip) {
     

@@ -17,24 +17,16 @@ Parameters <- function() {
 }
 
 #_______________________________________________________________________________
-#----                                 filter                                ----
+#----                                 select                                ----
 #_______________________________________________________________________________
 
-#' Filter.
-#' 
-#' @param object generic object
-#' @param type parameter type: theta, omega or sigma
-#' @return filtered object
-#' @export
-filter <- function(object, type) {
-  stop("No default function is provided")
-}
-
-setGeneric("filter", function(object, type) {
-  standardGeneric("filter")
-})
-
-setMethod("filter", signature=c("parameters", "character"), definition=function(object, type) {
+setMethod("select", signature=c("parameters"), definition=function(object, ...) {
+  args <- list(...)
+  msg <- "Please select one of those parameter types: 'theta', 'omega' or 'sigma'"
+  assertthat::assert_that(length(args) > 0, msg=msg)
+  type <- args[[1]]
+  assertthat::assert_that(type %in% c("theta", "omega", "sigma"), msg=msg)
+  
   object@list <- object@list %>% purrr::keep(~as.character(class(.x))==type)
   return(object)
 })
@@ -103,7 +95,7 @@ setGeneric("maxIndex", function(object, type) {
 })
 
 setMethod("maxIndex", signature=c("parameters", "character"), definition=function(object, type) {
-  return((object %>% filter(type=type))@list %>% purrr::map_int(~.x@index) %>% max())
+  return((object %>% select(type))@list %>% purrr::map_int(~.x@index) %>% max())
 })
 
 #_______________________________________________________________________________
@@ -125,7 +117,7 @@ setGeneric("getByIndex", function(object, parameter) {
 })
 
 setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, parameter) {
-  subList <- object %>% filter(type=as.character(class(parameter)))
+  subList <- object %>% select(as.character(class(parameter)))
   if (is(parameter, "theta")) {
     parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index))
   } else {

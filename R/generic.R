@@ -64,3 +64,25 @@ export <- function(object, dest) {
 setGeneric("export", function(object, dest) {
   standardGeneric("export")
 })
+
+#_______________________________________________________________________________
+#----                                 select                                ----
+#_______________________________________________________________________________
+
+#' Select.
+#' 
+#' @param object generic object
+#' @param ... arguments to select
+#' @return filtered object
+#' @export
+select <- function(object, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("select", function(object, ...) {
+  standardGeneric("select")
+})
+
+setMethod("select", signature=c("data.frame"), definition=function(object, ...) {
+  return(return(dplyr::select(.data=object, ...)))
+})

@@ -38,8 +38,7 @@ test_that("Add/contains methods", {
   expect_true(thetas %>% contains(Theta(name="V", index=3)))
 })
 
-test_that("GetByIndex method", {
-  
+test_that("GetByIndex, select method", {
   p <- Parameters()
   p <- p %>% add(Theta(index=1))
   p <- p %>% add(Theta(index=2))
@@ -51,6 +50,14 @@ test_that("GetByIndex method", {
   expect_equal(p %>% getByIndex(Theta(index=3)), Theta(index=3))
   expect_equal(p %>% getByIndex(Omega(index=1, index2=1)), Omega(index=1, index2=1))
   expect_equal(p %>% getByIndex(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
+  
+  p <- p %>% select("theta")
+  expect_equal(p %>% length(), 3)
+  
+  # Check there is no conflict with dplyr::select
+  df <- data.frame(ID=c(1,2,3), ID2=c(3,4,5))
+  df <- df %>% select(ID)
+  expect_false("ID2" %in% colnames(df))
 })
 
 
