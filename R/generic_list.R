@@ -2,6 +2,10 @@
 #----                         pmx_list class                             ----
 #_______________________________________________________________________________
 
+validatePmxList <- function(object) {
+  return(expectOneForAll(object, c("type")))
+}
+
 #' 
 #' PMX list class.
 #' 
@@ -9,9 +13,11 @@
 setClass(
   "pmx_list",
   representation(
-    list="list"
+    list="list",
+    type="character" # Interface / Main class type
   ),
-  prototype=prototype(list=list())
+  prototype=prototype(list=list()),
+  validity= validatePmxList
 )
 
 #_______________________________________________________________________________
@@ -34,11 +40,22 @@ setGeneric("add", function(object, x) {
 
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   if (validObject(x)) {
-    if (object %>% contains(x)) {
-      stop(paste("Element", x %>% getName(), "is already present."))
+    if (!is(x, object@type)) {
+      stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
+    
+    } else if(object %>% contains(x)) {
+      stop(paste0("Element '", x %>% getName(), "' is already present."))
+    
     } else {
       object@list <- c(object@list, x)
     }
+  }
+  return(object)
+})
+
+setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
+  for (element in x) {
+    object <- object %>% add(x)
   }
   return(object)
 })

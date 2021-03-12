@@ -3,7 +3,8 @@ setClass(
   "code_records",
   representation(
   ),
-  contains = "pmx_list"
+  contains = "pmx_list",
+  prototype = prototype(type="code_record")
 )
 
 #' 

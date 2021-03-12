@@ -4,7 +4,8 @@ setClass(
   "parameters",
   representation(
   ),
-  contains = "pmx_list"
+  contains = "pmx_list",
+  prototype = prototype(type="parameter")
 )
 
 #' 

@@ -16,6 +16,11 @@ test_that("Add and get methods", {
   expect_true(model %>% getByName("DES") %>% length() == 0)
 })
 
+test_that("Add not record objects", {
+  model <- CodeRecords()
+  expect_error(model %>% add(Theta(index=1))) # Element 'THETA_1' does not extend type 'code_record'.
+})
+
 test_that("Write/Read methods", {
   
   model1 <- CodeRecords()
