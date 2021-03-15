@@ -33,9 +33,9 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     theta %>% write(file=file.path(file, "theta.csv"),
                     defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
     omega %>% write(file=file.path(file, "omega.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical()))
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
     sigma %>% write(file=file.path(file, "sigma.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical()))
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
   }
 })
 
@@ -57,7 +57,7 @@ dataframeToParameter <- function(row, type) {
   if (type=="theta") {
     param <- new("theta", name=as.character(row$name), index=row$index, value=row$value, fix=row$fix)
   } else if(type=="omega" | type=="sigma") {
-    param <- new(type, name=as.character(row$name), index=row$index, index2=row$index2, value=row$value, fix=row$fix)
+    param <- new(type, name=as.character(row$name), index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }

@@ -1,4 +1,8 @@
 
+#_______________________________________________________________________________
+#----                          parameters class                             ----
+#_______________________________________________________________________________
+
 #' @export
 setClass(
   "parameters",
@@ -177,5 +181,18 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
   }, .init=tmp@list[[1]])
   
   return(parameters %>% clean())
+})
+
+#_______________________________________________________________________________
+#----                            standardise                                ----
+#_______________________________________________________________________________
+
+setMethod("standardise", signature=c("parameters"), definition=function(object, ...) {
+  list <- object@list %>% purrr::map(.f=function(param) {
+    return(param %>% standardise())
+  })
+  retValue <- Parameters()
+  retValue <- retValue %>% add(list)
+  return(retValue)
 })
 

@@ -54,7 +54,9 @@ rxodeParams <- function(pmxmod) {
 #' @export
 rxodeMatrix <- function(pmxmod, type="omega") {
   
-  params <- pmxmod@parameters
+  # Make sure parameters are standardised
+  params <- pmxmod@parameters %>% standardise()
+  
   if (params %>% select(type) %>% length()==0) {
     return(matrix(data = numeric(0)))
   }

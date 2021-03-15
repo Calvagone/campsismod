@@ -4,7 +4,7 @@
 \alias{Omega}
 \title{Create an OMEGA parameter.}
 \usage{
-Omega(name = NA, index, index2, value = NA, fix = FALSE)
+Omega(name = NA, index, index2, value = NA, fix = FALSE, type = NULL)
 }
 \arguments{
 \item{name}{parameter name, e.g. CL (prefix OMEGA will be added automatically)}
@@ -16,6 +16,8 @@ Omega(name = NA, index, index2, value = NA, fix = FALSE)
 \item{value}{parameter value}
 
 \item{fix}{parameter was fixed in estimation, logical value}
+
+\item{type}{variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'}
 }
 \value{
 an OMEGA parameter

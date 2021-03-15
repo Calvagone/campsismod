@@ -1,3 +1,3 @@
-"name","index","index2","value","fix"
-NA,1,1,0.025,FALSE
-NA,2,2,0.025,FALSE
+"name","index","index2","value","fix","type"
+NA,1,1,0.025,FALSE,"var"
+NA,2,2,0.025,FALSE,"var"

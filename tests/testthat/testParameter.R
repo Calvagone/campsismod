@@ -58,6 +58,27 @@ test_that("As.data.frame method", {
   expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), fix=FALSE), df)
 })
 
+test_that("Standardise method", {
+  
+  # Type not valid
+  expect_error(Omega(index=1, index2=1, value=117, type="cv%%"))
+  
+  # Value in CV%
+  omega <- Omega(index=1, index2=1, value=117, type="cv%")
+  omega_ <- omega %>% standardise()
+  expect_equal(round(omega_@value, 2), 0.86)
+  
+  # Value in CV
+  omega <- Omega(index=1, index2=1, value=1.17, type="cv")
+  omega_ <- omega %>% standardise()
+  expect_equal(round(omega_@value, 2), 0.86)
+  
+  # Value in sd
+  omega <- Omega(index=1, index2=1, value=0.2, type="sd")
+  omega_ <- omega %>% standardise()
+  expect_equal(omega_@value, 0.04)
+})
+
 
 
 

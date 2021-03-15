@@ -4,7 +4,7 @@
 \alias{Sigma}
 \title{Create a SIGMA parameter.}
 \usage{
-Sigma(name = NA, index, index2, value = NA, fix = FALSE)
+Sigma(name = NA, index, index2, value = NA, fix = FALSE, type = NULL)
 }
 \arguments{
 \item{name}{parameter name, e.g. CL (prefix SIGMA will be added automatically)}
@@ -16,6 +16,8 @@ Sigma(name = NA, index, index2, value = NA, fix = FALSE)
 \item{value}{parameter value}
 
 \item{fix}{parameter was fixed in estimation, logical value}
+
+\item{type}{variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'}
 }
 \value{
 a SIGMA parameter

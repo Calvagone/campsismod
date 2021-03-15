@@ -77,5 +77,3 @@ test_that("Sort method", {
   expect_equal(orderedParams, expectedParams)
   
 })
-
-

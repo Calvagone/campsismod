@@ -86,3 +86,22 @@ setGeneric("select", function(object, ...) {
 setMethod("select", signature=c("data.frame"), definition=function(object, ...) {
   return(return(dplyr::select(.data=object, ...)))
 })
+
+#_______________________________________________________________________________
+#----                            standardise                                ----
+#_______________________________________________________________________________
+
+#' Standardise.
+#' 
+#' @param object generic object
+#' @param ... arguments needed for standardisation
+#' @return standardised object
+#' @export
+standardise <- function(object, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("standardise", function(object, ...) {
+  standardGeneric("standardise")
+})
+
