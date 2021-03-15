@@ -192,7 +192,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
     return(param %>% standardise())
   })
   retValue <- Parameters()
-  retValue <- retValue %>% add(list)
+  retValue@list <- list
   return(retValue)
 })
 
