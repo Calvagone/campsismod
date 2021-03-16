@@ -12,6 +12,8 @@ as.data.frame(x, row.names = NULL, optional = FALSE, ...)
 \item{row.names}{row names}
 
 \item{optional}{optional}
+
+\item{...}{extra arguments}
 }
 \value{
 data frame

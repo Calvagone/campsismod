@@ -1,3 +1,6 @@
+#_______________________________________________________________________________
+#----                       code_record class                               ----
+#_______________________________________________________________________________
 
 checkCodeRecord <- function(object) {
   return(expectZeroOrMore(object, "code"))
@@ -117,3 +120,12 @@ setMethod("getName", signature=c("error_record"), definition=function(x) {
   return("ERROR")
 })
 
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+
+setMethod("show", signature=c("code_record"), definition=function(object) {
+  cat("[", object %>% getName(), "]\n", sep="")
+  cat(object@code, sep="\n")
+})

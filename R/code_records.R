@@ -17,20 +17,6 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
-#----                                 write                                 ----
-#_______________________________________________________________________________
-
-setMethod("write", signature=c("code_records", "character"), definition=function(object, file) {
-  code <- NULL
-  for (record in object@list) {
-    code <- c(code, paste0("[", record %>% getName(), "]"))
-    code <- c(code, record@code)
-    code <- c(code, "") # write.table will add a new line
-  }
-  write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
-})
-
-#_______________________________________________________________________________
 #----                                read.model                             ----
 #_______________________________________________________________________________
 
@@ -68,5 +54,31 @@ isRecordDelimiter <- function(line) {
 getRecordDelimiter <- function(line) {
   return(gsub("\\[(.*)\\]","\\1", line))
 }
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+
+setMethod("show", signature=c("code_records"), definition=function(object) {
+  for (record in object@list) {
+    show(record)
+    print("")
+  }
+})
+
+#_______________________________________________________________________________
+#----                                 write                                 ----
+#_______________________________________________________________________________
+
+setMethod("write", signature=c("code_records", "character"), definition=function(object, file) {
+  code <- NULL
+  for (record in object@list) {
+    code <- c(code, paste0("[", record %>% getName(), "]"))
+    code <- c(code, record@code)
+    code <- c(code, "") # write.table will add a new line
+  }
+  write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+})
 
 

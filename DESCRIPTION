@@ -3,6 +3,7 @@ Type: Package
 Collate:
     'data.R'
     'model_library.R'
+    'utilities.R'
     'special_operators.R'
     'check.R'
     'generic.R'

@@ -125,7 +125,8 @@ read.parameter <- function(file, type) {
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
+setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, ...) {
+  zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   model <- object@model
   parameters <- object@parameters
   theta <- parameters %>% select("theta")
@@ -148,6 +149,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     sigma %>% write(file=file.path(file, "sigma.csv"),
                     defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
   }
+  return(TRUE)
 })
 
 setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {

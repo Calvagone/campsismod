@@ -179,6 +179,7 @@ Sigma <- function(name=NA, index, index2, value=NA, fix=FALSE, type=NULL) {
 #' @param x generic object
 #' @param row.names row names
 #' @param optional optional
+#' @param ... extra arguments
 #' @return data frame
 #' @export
 as.data.frame <- function(x, row.names=NULL, optional=FALSE, ...) {
@@ -364,3 +365,10 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
   return(retValue)
 })
 
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("parameter"), definition=function(object) {
+  print(object %>% as.data.frame(row.names=character(), optional=FALSE))
+})

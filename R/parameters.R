@@ -185,6 +185,22 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("parameters"), definition=function(object) {
+  thetas <- object %>% select("theta")
+  omegas <- object %>% select("omega")
+  sigmas <- object %>% select("sigma")
+  print("THETA's:")
+  print(purrr::map_df(thetas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+  print("OMEGA's:")
+  print(purrr::map_df(omegas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+  print("SIGMA's:")
+  print(purrr::map_df(sigmas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+})
+
+#_______________________________________________________________________________
 #----                                  sort                                 ----
 #_______________________________________________________________________________
 
