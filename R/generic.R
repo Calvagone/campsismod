@@ -94,7 +94,7 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 #' Standardise.
 #' 
 #' @param object generic object
-#' @param ... arguments needed for standardisation
+#' @param ... extra arguments needed for standardisation
 #' @return standardised object
 #' @export
 standardise <- function(object, ...) {
@@ -103,5 +103,24 @@ standardise <- function(object, ...) {
 
 setGeneric("standardise", function(object, ...) {
   standardGeneric("standardise")
+})
+
+#_______________________________________________________________________________
+#----                              disable                                  ----
+#_______________________________________________________________________________
+
+#' Disable.
+#' 
+#' @param object generic object
+#' @param x what needs to be disabled
+#' @param ... extra arguments needed for disabling
+#' @return standardised object
+#' @export
+disable <- function(object, x, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("disable", function(object, x, ...) {
+  standardGeneric("disable")
 })
 

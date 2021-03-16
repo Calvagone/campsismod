@@ -11,40 +11,39 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                                 write                                 ----
+#----                              disable                                  ----
 #_______________________________________________________________________________
 
-setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
-  model <- object@model
-  parameters <- object@parameters
-  theta <- parameters %>% select("theta")
-  omega <- parameters %>% select("omega")
-  sigma <- parameters %>% select("sigma")
-  
-  if (zip) {
-    
-  } else {
-    if (dir.exists(file)) {
-      # do nothing
-    } else {
-      dir.create(file)
-    }
-    model %>% write(file=file.path(file, "model.mod"))
-    theta %>% write(file=file.path(file, "theta.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
-    omega %>% write(file=file.path(file, "omega.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
-    sigma %>% write(file=file.path(file, "sigma.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
-  }
+setMethod("disable", signature=c("pmx_model", "character"), definition=function(object, x, ...) {
+  object@parameters <- object@parameters %>% disable(x=x, ...)
+  return(object)
 })
 
-setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {
-  df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
-  if (nrow(df)==0) {
-    df <- list(...)$defaultDf
+#_______________________________________________________________________________
+#----                           export_type                                 ----
+#_______________________________________________________________________________
+
+#' RxODE export type class.
+#' 
+#' @export
+setClass(
+  "rxode_type",
+  representation(
+  ),
+  contains="export_type" 
+)
+
+#_______________________________________________________________________________
+#----                                export                                 ----
+#_______________________________________________________________________________
+
+
+setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest) {
+  if (dest=="RxODE") {
+    return(object %>% export(new("rxode_type")))
+  } else {
+    stop("Only RxODE is supported for now")
   }
-  write.csv(df, file=file, row.names=FALSE)
 })
 
 #_______________________________________________________________________________
@@ -123,28 +122,38 @@ read.parameter <- function(file, type) {
 }
 
 #_______________________________________________________________________________
-#----                           export_type                                 ----
+#----                                 write                                 ----
 #_______________________________________________________________________________
 
-#' RxODE export type class.
-#' 
-#' @export
-setClass(
-  "rxode_type",
-  representation(
-  ),
-  contains="export_type" 
-)
-
-#_______________________________________________________________________________
-#----                                export                                 ----
-#_______________________________________________________________________________
-
-
-setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest) {
-  if (dest=="RxODE") {
-    return(object %>% export(new("rxode_type")))
+setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, zip=TRUE) {
+  model <- object@model
+  parameters <- object@parameters
+  theta <- parameters %>% select("theta")
+  omega <- parameters %>% select("omega")
+  sigma <- parameters %>% select("sigma")
+  
+  if (zip) {
+    
   } else {
-    stop("Only RxODE is supported for now")
+    if (dir.exists(file)) {
+      # do nothing
+    } else {
+      dir.create(file)
+    }
+    model %>% write(file=file.path(file, "model.mod"))
+    theta %>% write(file=file.path(file, "theta.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
+    omega %>% write(file=file.path(file, "omega.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
+    sigma %>% write(file=file.path(file, "sigma.csv"),
+                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
   }
+})
+
+setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {
+  df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  if (nrow(df)==0) {
+    df <- list(...)$defaultDf
+  }
+  write.csv(df, file=file, row.names=FALSE)
 })

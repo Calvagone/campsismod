@@ -77,3 +77,22 @@ test_that("Sort method", {
   expect_equal(orderedParams, expectedParams)
   
 })
+
+test_that("Disable method", {
+  
+  model <- getNONMEMModelTemplate(4,4)
+  
+  model <- model %>% disable("IIV")
+  expect_equal((model@parameters %>% getByName("OMEGA_1_1"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_2_2"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_3_3"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_4_4"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_5_5"))@value, 0)
+  expect_equal((model@parameters %>% getByName("SIGMA_1_1"))@value, 0.025)
+  
+  model <- model %>% disable("RUV")
+  expect_equal((model@parameters %>% getByName("SIGMA_1_1"))@value, 0)
+  
+  # Error: Erreur : Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'
+  expect_error(model %>% disable("IOV"))
+})

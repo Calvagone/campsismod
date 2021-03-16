@@ -22,45 +22,6 @@ Parameters <- function() {
 }
 
 #_______________________________________________________________________________
-#----                                 select                                ----
-#_______________________________________________________________________________
-
-setMethod("select", signature=c("parameters"), definition=function(object, ...) {
-  args <- list(...)
-  msg <- "Please select one of those parameter types: 'theta', 'omega' or 'sigma'"
-  assertthat::assert_that(length(args) > 0, msg=msg)
-  type <- args[[1]]
-  assertthat::assert_that(type %in% c("theta", "omega", "sigma"), msg=msg)
-  
-  object@list <- object@list %>% purrr::keep(~as.character(class(.x))==type)
-  return(object)
-})
-
-#_______________________________________________________________________________
-#----                                  sort                                 ----
-#_______________________________________________________________________________
-
-setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=FALSE, ...) {
-  types <- x@list %>% purrr::map_chr(~as.character(class(.x)))
-  indexes1 <- x@list %>% purrr::map_int(~.x@index)
-  indexes2 <- x@list %>% purrr::map_int(.f=function(.x){
-    if("index2" %in% slotNames(.x)) {
-      return(.x@index2)
-    } else {
-      return(as.integer(0))
-    }
-  })
-  
-  # Reorder
-  types <- factor(types, levels=c("theta", "omega", "sigma"), labels=c("theta", "omega", "sigma"))
-  order <- order(types, indexes1, indexes2)
-  
-  # Apply result to original list
-  x@list <- x@list[order]
-  return(x)
-})
-
-#_______________________________________________________________________________
 #----                                 clean                                ----
 #_______________________________________________________________________________
 
@@ -82,56 +43,30 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
   return(object)
 })
 
-
 #_______________________________________________________________________________
-#----                                maxIndex                               ----
-#_______________________________________________________________________________
-
-#' Max index.
-#' 
-#' @param object generic object
-#' @param type parameter type: theta, omega or sigma
-#' @return filtered object
-#' @export
-maxIndex <- function(object, type) object
-
-setGeneric("maxIndex", function(object, type) {
-  standardGeneric("maxIndex")
-})
-
-setMethod("maxIndex", signature=c("parameters", "character"), definition=function(object, type) {
-  return((object %>% select(type))@list %>% purrr::map_int(~.x@index) %>% max())
-})
-
-#_______________________________________________________________________________
-#----                             getByIndex                              ----
+#----                              disable                                  ----
 #_______________________________________________________________________________
 
-#' Get parameter by index (single index).
-#' 
-#' @param object list of parameters
-#' @param parameter to search for
-#' @return parameter that matches
-#' @export
-getByIndex <- function(object, parameter) {
-  stop("No default function is provided")
-}
-
-setGeneric("getByIndex", function(object, parameter) {
-  standardGeneric("getByIndex")
-})
-
-setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, parameter) {
-  subList <- object %>% select(as.character(class(parameter)))
-  if (is(parameter, "theta")) {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index))
-  } else {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index)&(.x@index2==parameter@index2))
+setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
+  msg <- "Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'"
+  variabilities <- c("IIV", "RUV")
+  assertthat::assert_that(all(x %in% variabilities), msg=msg)
+  
+  # Disable IIV
+  if ("IIV" %in% x) {
+    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
+      param@value <- 0
+      object <<- object %>% replace(param)
+    })
   }
-  if (length(parameter) >= 1) {
-    parameter <- parameter[[1]]
+  # Disable RUV
+  if ("RUV" %in% x) {
+    (object%>% select("sigma"))@list %>% purrr::map(.f=function(param) {
+      param@value <- 0
+      object <<- object %>% replace(param)
+    })
   }
-  return(parameter)
+  return(object)
 })
 
 #_______________________________________________________________________________
@@ -184,6 +119,96 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
+#----                             getByIndex                              ----
+#_______________________________________________________________________________
+
+#' Get parameter by index (single index).
+#' 
+#' @param object list of parameters
+#' @param parameter to search for
+#' @return parameter that matches
+#' @export
+getByIndex <- function(object, parameter) {
+  stop("No default function is provided")
+}
+
+setGeneric("getByIndex", function(object, parameter) {
+  standardGeneric("getByIndex")
+})
+
+setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, parameter) {
+  subList <- object %>% select(as.character(class(parameter)))
+  if (is(parameter, "theta")) {
+    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index))
+  } else {
+    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index)&(.x@index2==parameter@index2))
+  }
+  if (length(parameter) >= 1) {
+    parameter <- parameter[[1]]
+  }
+  return(parameter)
+})
+
+#_______________________________________________________________________________
+#----                                maxIndex                               ----
+#_______________________________________________________________________________
+
+#' Max index.
+#' 
+#' @param object generic object
+#' @param type parameter type: theta, omega or sigma
+#' @return filtered object
+#' @export
+maxIndex <- function(object, type) object
+
+setGeneric("maxIndex", function(object, type) {
+  standardGeneric("maxIndex")
+})
+
+setMethod("maxIndex", signature=c("parameters", "character"), definition=function(object, type) {
+  return((object %>% select(type))@list %>% purrr::map_int(~.x@index) %>% max())
+})
+
+#_______________________________________________________________________________
+#----                                 select                                ----
+#_______________________________________________________________________________
+
+setMethod("select", signature=c("parameters"), definition=function(object, ...) {
+  args <- list(...)
+  msg <- "Please select one of those parameter types: 'theta', 'omega' or 'sigma'"
+  assertthat::assert_that(length(args) > 0, msg=msg)
+  type <- args[[1]]
+  assertthat::assert_that(type %in% c("theta", "omega", "sigma"), msg=msg)
+  
+  object@list <- object@list %>% purrr::keep(~as.character(class(.x))==type)
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                                  sort                                 ----
+#_______________________________________________________________________________
+
+setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=FALSE, ...) {
+  types <- x@list %>% purrr::map_chr(~as.character(class(.x)))
+  indexes1 <- x@list %>% purrr::map_int(~.x@index)
+  indexes2 <- x@list %>% purrr::map_int(.f=function(.x){
+    if("index2" %in% slotNames(.x)) {
+      return(.x@index2)
+    } else {
+      return(as.integer(0))
+    }
+  })
+  
+  # Reorder
+  types <- factor(types, levels=c("theta", "omega", "sigma"), labels=c("theta", "omega", "sigma"))
+  order <- order(types, indexes1, indexes2)
+  
+  # Apply result to original list
+  x@list <- x@list[order]
+  return(x)
+})
+
+#_______________________________________________________________________________
 #----                            standardise                                ----
 #_______________________________________________________________________________
 
@@ -195,4 +220,3 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
   retValue@list <- list
   return(retValue)
 })
-
