@@ -88,7 +88,7 @@ setGeneric("fixOmega", function(object) {
 
 setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
   # First order parameters
-  tmp <- object %>% order()
+  tmp <- object %>% sort()
 
   # We need at least to elements
   if (length(tmp@list) < 2) {
@@ -111,7 +111,7 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
         .y@fix <- .x@fix
       }
     }
-    parameters <<- parameters %>% addParameter(.y)
+    parameters <<- parameters %>% add(.y)
     return(.y)
   }, .init=tmp@list[[1]])
   
