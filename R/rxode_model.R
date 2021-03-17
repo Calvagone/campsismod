@@ -13,7 +13,7 @@ setClass(
 #----                                export                                 ----
 #_______________________________________________________________________________
 
-setMethod("export", signature=c("pmx_model", "rxode_type"), definition=function(object, dest) {
+setMethod("export", signature=c("pmx_model", "rxode_type"), definition=function(object, dest, ...) {
   return(
     new(
       "rxode_model",
