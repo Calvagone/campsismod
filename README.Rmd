@@ -32,6 +32,12 @@ model <- getNONMEMModelTemplate(advan=4, trans=4)
 show(model)
 ```
 
+Show all methods than can be called on the parameters object:
+
+```{r}
+methods(class=class(model@parameters))
+```
+
 Retrieve parameter by index:
 
 ```{r}

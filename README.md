@@ -71,6 +71,17 @@ show(model)
     ##   name index index2 value   fix type
     ## 1 <NA>     1      1 0.025 FALSE  var
 
+Show all methods than can be called on the parameters object:
+
+``` r
+methods(class=class(model@parameters))
+```
+
+    ##  [1] add         clean       contains    disable     fixOmega    getByIndex 
+    ##  [7] getByName   getNames    indexOf     length      maxIndex    replace    
+    ## [13] select      show        sort        standardise write      
+    ## see '?methods' for accessing help and source code
+
 Retrieve parameter by index:
 
 ``` r
