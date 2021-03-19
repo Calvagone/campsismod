@@ -68,10 +68,30 @@ setMethod("show", signature=c("code_records"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
+#----                                  sort                                 ----
+#_______________________________________________________________________________
+
+setMethod("sort", signature=c("code_records"), definition=function(x, decreasing=FALSE, ...) {
+  names <- x@list %>% purrr::map_chr(~.x %>% getName())
+
+  # Reorder
+  names <- factor(names, levels=c("PK", "PRED", "DES", "ERROR"), labels=c("PK", "PRED", "DES", "ERROR"))
+  order <- order(names)
+  
+  # Apply result to original list
+  x@list <- x@list[order]
+  return(x)
+})
+
+#_______________________________________________________________________________
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file) {
+  # First sort code records
+  object <- object %>% sort()
+  
+  # Write code record
   code <- NULL
   for (record in object@list) {
     code <- c(code, paste0("[", record %>% getName(), "]"))

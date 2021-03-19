@@ -35,3 +35,18 @@ test_that("Write/Read methods", {
   
   expect_equal(model1, model2)
 })
+
+test_that("Sort methods", {
+  
+  model <- CodeRecords()
+  model <- model %>% add(DesRecord())
+  model <- model %>% add(ErrorRecord())
+  model <- model %>% add(PkRecord())
+  
+  expectedModel <- CodeRecords()
+  expectedModel <- expectedModel %>% add(PkRecord())
+  expectedModel <- expectedModel %>% add(DesRecord())
+  expectedModel <- expectedModel %>% add(ErrorRecord())
+  
+  expect_equal(model %>% sort(), expectedModel)
+})
