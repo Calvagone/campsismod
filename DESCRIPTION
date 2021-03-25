@@ -9,6 +9,8 @@ Collate:
     'generic.R'
     'generic_element_list.R'
     'generic_list.R'
+    'compartment.R'
+    'compartments.R'
     'parameter.R'
     'parameters.R'
     'code_record.R'
