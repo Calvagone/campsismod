@@ -4,10 +4,10 @@
 \alias{rxodeCode}
 \title{Get code for RxODE.}
 \usage{
-rxodeCode(pmxmod)
+rxodeCode(model)
 }
 \arguments{
-\item{pmxmod}{PMX model}
+\item{model}{PMX model}
 }
 \value{
 code for RxODE

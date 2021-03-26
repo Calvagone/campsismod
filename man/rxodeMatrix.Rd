@@ -4,10 +4,10 @@
 \alias{rxodeMatrix}
 \title{Get the matrix for RxODE.}
 \usage{
-rxodeMatrix(pmxmod, type = "omega")
+rxodeMatrix(model, type = "omega")
 }
 \arguments{
-\item{pmxmod}{PMX model}
+\item{model}{PMX model}
 
 \item{type}{either omega or sigma}
 }

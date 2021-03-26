@@ -4,10 +4,10 @@
 \alias{rxodeParams}
 \title{Get the parameters vector for RxODE.}
 \usage{
-rxodeParams(pmxmod)
+rxodeParams(model)
 }
 \arguments{
-\item{pmxmod}{PMX model}
+\item{model}{PMX model}
 }
 \value{
 named vector with THETA values

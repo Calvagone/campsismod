@@ -2,13 +2,25 @@
 
 #' Get code for RxODE.
 #' 
-#' @param pmxmod PMX model
+#' @param model PMX model
 #' @return code for RxODE
 #' @export
-rxodeCode <- function(pmxmod) {
-  model <- pmxmod@model
+rxodeCode <- function(model) {
+  records <- model@model
+  characteristics <- model@compartments@characteristics
+  
+  if (characteristics %>% length() > 0) {
+    desRecord <- records %>% getByName("DES")
+    if (length(desRecord) == 0) {
+      stop("Not able to add compartment characteristics for RxODE: no DES block")
+    }
+    for (characteristic in characteristics@list) {
+      desRecord@code <- c(desRecord@code, characteristic %>% toString(model=model))
+    }
+    records <- records %>% replace(desRecord)
+  }
   code <- NULL
-  for (record in model@list) {
+  for (record in records@list) {
     code <- c(code, record@code)
   }
   return(code)
@@ -16,12 +28,12 @@ rxodeCode <- function(pmxmod) {
 
 #' Get the parameters vector for RxODE.
 #' 
-#' @param pmxmod PMX model
+#' @param model PMX model
 #' @return named vector with THETA values
 #' @export
-rxodeParams <- function(pmxmod) {
+rxodeParams <- function(model) {
   type <- "theta"
-  params <- pmxmod@parameters
+  params <- model@parameters
   maxIndex <- params %>% maxIndex(type=type)
   
   # Careful, as.numeric(NA) is important...
@@ -48,14 +60,14 @@ rxodeParams <- function(pmxmod) {
 
 #' Get the matrix for RxODE.
 #' 
-#' @param pmxmod PMX model
+#' @param model PMX model
 #' @param type either omega or sigma
 #' @return named matrix
 #' @export
-rxodeMatrix <- function(pmxmod, type="omega") {
+rxodeMatrix <- function(model, type="omega") {
   
   # Make sure parameters are standardised
-  params <- pmxmod@parameters %>% standardise()
+  params <- model@parameters %>% standardise()
   
   if (params %>% select(type) %>% length()==0) {
     return(matrix(data = numeric(0)))
