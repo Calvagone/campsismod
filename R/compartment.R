@@ -39,3 +39,11 @@ setMethod("getName", signature=c("compartment"), definition=function(x) {
   }
 })
 
+#_______________________________________________________________________________
+#----                               show                                    ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("compartment"), definition=function(object) {
+  cat(paste0(object %>% getName(), " (index: ", object@index, ")"))
+})
+

@@ -108,6 +108,23 @@ setGeneric("standardise", function(object, ...) {
 })
 
 #_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' ToString generic method
+#' 
+#' @param object generic object
+#' @return character value/vector
+#' @export
+toString <- function(object, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("toString", function(object, ...) {
+  standardGeneric("toString")
+})
+
+#_______________________________________________________________________________
 #----                                 write                                 ----
 #_______________________________________________________________________________
 

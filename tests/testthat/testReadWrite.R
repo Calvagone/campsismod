@@ -35,3 +35,20 @@ test_that("Write/Read ADVAN1 TRANS1", {
   expect_equal(pmxmod@model, pmxmod2@model)
   expect_equal(pmxmod@parameters, pmxmod2@parameters)
 })
+
+test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics", {
+  model <- getNONMEMModelTemplate(4, 4)
+  
+  # 2-hour lag time
+  model <- model %>% add(CompartmentLagTime(1, "2"))
+  
+  # write
+  pmxmod %>% write(file=writePath(advan, trans), zip=FALSE)
+  
+  # read
+  pmxmod2 <- read.pmxmod(file=writePath(advan, trans))
+  
+  # Check equality  
+  expect_equal(pmxmod@model, pmxmod2@model)
+  expect_equal(pmxmod@parameters, pmxmod2@parameters)
+})

@@ -17,10 +17,21 @@ setClass(
 #_______________________________________________________________________________
 
 setMethod("getByIndex", signature=c("compartment_characteristics", "compartment_characteristic"), definition=function(object, x) {
-  retValue <- object@list %>% purrr::keep(~(.x@index==x@index & as.character(class(.x))==as.character(class(x))))
+  retValue <- object@list %>% purrr::keep(~(.x@compartment==x@compartment & as.character(class(.x))==as.character(class(x))))
   
   if (length(retValue) > 0) {
     retValue <- retValue[[1]]
   }
   return(retValue)
+})
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("compartment_characteristics"), definition=function(object) {
+  for (element in object@list) {
+    show(element)
+    print("")
+  }
 })

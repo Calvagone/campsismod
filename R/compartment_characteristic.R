@@ -13,7 +13,7 @@ validateCompartmentCharacteristic <- function(object) {
 setClass(
   "compartment_characteristic",
   representation(
-    compartment = "compartment",
+    compartment = "integer",
     rhs = "character"
   ),
   contains="pmx_element",
@@ -34,4 +34,20 @@ getPrefix <- function(object) {
 
 setGeneric("getPrefix", function(object) {
   standardGeneric("getPrefix")
+})
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+setMethod("toString", signature = c("compartment_characteristic"), definition = function(object) {
+  return(paste0(object %>% getPrefix(), "(", object %>% getName(), ") = ", object@rhs))
+})
+
+#_______________________________________________________________________________
+#----                               show                                    ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("compartment_characteristic"), definition=function(object) {
+  cat(object %>% toString())
 })

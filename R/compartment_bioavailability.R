@@ -19,12 +19,12 @@ setClass(
 #'
 #' Create a bioavailability for the specified compartment.
 #'
-#' @param compartment compartment
+#' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
 #' @return bioavailability
 #' @export
 CompartmentBioavailability <- function(compartment, rhs) {
-  return(new("compartment_bioavailability", compartment=compartment, rhs=rhs))
+  return(new("compartment_bioavailability", compartment=as.integer(compartment), rhs=rhs))
 }
 
 #_______________________________________________________________________________
@@ -33,7 +33,7 @@ CompartmentBioavailability <- function(compartment, rhs) {
 
 
 setMethod("getName", signature = c("compartment_bioavailability"), definition = function(x) {
-  return(paste0("BIOAVAILABILITY [", "CMT=", x@compartment@index, "]"))
+  return(paste0("BIOAVAILABILITY [", "CMT=", x@compartment, "]"))
 })
 
 #_______________________________________________________________________________

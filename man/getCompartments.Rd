@@ -2,16 +2,18 @@
 % Please edit documentation in R/code_records.R
 \name{getCompartments}
 \alias{getCompartments}
-\title{Get all compartments from model.}
+\title{Get all compartments from model.
+Only for model instantiation. Not exported.}
 \usage{
-getCompartments(object)
+getCompartments(model)
 }
 \arguments{
-\item{object}{generic object}
+\item{model}{model}
 }
 \value{
-a list of compartments
+compartments object
 }
 \description{
 Get all compartments from model.
+Only for model instantiation. Not exported.
 }

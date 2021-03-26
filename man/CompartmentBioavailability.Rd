@@ -7,7 +7,7 @@
 CompartmentBioavailability(compartment, rhs)
 }
 \arguments{
-\item{compartment}{compartment}
+\item{compartment}{compartment index}
 
 \item{rhs}{right-hand side part of the equation}
 }

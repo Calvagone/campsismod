@@ -12,6 +12,22 @@ setClass(
 )
 
 #_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+setMethod("add", signature=c("pmx_model", "compartment_characteristic"), definition=function(object, x) {
+  compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
+  if (length(compartment) == 0) {
+    stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
+  }
+  
+  # Add characteristic (delegate to add method in compartments class)
+  object@compartments <- object@compartments %>% add(x) 
+  
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
@@ -104,7 +120,9 @@ read.pmxmod <- function(file) {
   
   list <- c(theta@list, omega@list, sigma@list)
   
-  return(new("pmx_model", model=model, parameters=new("parameters", list=list) %>% clean()))
+  return(new("pmx_model", model=model,
+             parameters=new("parameters", list=list) %>% clean(),
+             compartments=model %>% getCompartments()))
 }
 
 #' Read parameter file.

@@ -21,42 +21,37 @@ CodeRecords <- function() {
 #_______________________________________________________________________________
 
 #' Get all compartments from model.
+#' Only for model instantiation. Not exported.
 #' 
-#' @param object generic object
-#' @return a list of compartments
-#' @export
-getCompartments <- function(object) {
-  stop("No default function is provided")
-}
-
-setGeneric("getCompartments", function(object) {
-  standardGeneric("getCompartments")
-})
-
-setMethod("getCompartments", signature=c("code_records"), definition=function(object) {
-  desRecord <- object %>% getByName("DES")
+#' @param model model
+#' @return compartments object
+getCompartments <- function(model) {
+  assertthat::assert_that(is(model, "pmx_model"), msg="model is not a PMX model")
+  desRecord <- model@model %>% getByName("DES")
   retValue <- Compartments()
-  
   if (length(desRecord) == 0) {
     return(retValue)
   }
   code <- desRecord@code
+  odeCounter <- 0
+  
   for (index in seq_along(code)) {
     line <- code[index]
     if (isODE(line)) {
+      odeCounter <- odeCounter + 1
       name <- getODEName(line)
       if (startsWith(name, prefix="A_")) {
         name <- gsub("^A_", "", name)
-        if (name == as.character(index)) {
+        if (name == as.character(odeCounter)) {
           name <- NA
         }
       }
-      compartment <- Compartment(index=index, name=name)
+      compartment <- Compartment(index=odeCounter, name=name)
       retValue <- retValue %>% add(compartment)
     }
   }
   return(retValue)
-})
+}
 
 #_______________________________________________________________________________
 #----                                read.model                             ----
@@ -93,6 +88,14 @@ read.model <- function(file) {
   
   
   return(records)
+}
+
+#' Extract all compartment characteristics from the DES record.
+#' 
+#' @param record DES record
+#' @return a list
+extractCharacteristicsFromDesRecord <- function(record) {
+  
 }
 
 isRecordDelimiter <- function(line) {
@@ -135,10 +138,27 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-setMethod("write", signature=c("code_records", "character"), definition=function(object, file) {
+setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
   # First sort code records
   object <- object %>% sort()
   
+  # The model is needed to get the characteristics
+  model <- processExtraArg(args=list(...), name="model")
+  if (is.null(model)) {
+    warning("model not provided, compartment characteristics will not be persisted")
+  } else {
+    characteristics <- model@compartments@characteristics
+  }
+  
+  # Adding characteristics to DES record
+  desRecord <- object %>% getByName("DES")
+  if (!is.null(desRecord)) {
+    for (characteristic in characteristics@list) {
+      desRecord@code <- c(desRecord@code, characteristic %>% toString())
+    }
+    object <- object %>% replace(desRecord)
+  }
+
   # Write code record
   code <- NULL
   for (record in object@list) {

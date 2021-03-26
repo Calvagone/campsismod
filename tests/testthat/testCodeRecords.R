@@ -54,7 +54,7 @@ test_that("Sort methods", {
 test_that("getCompartments method is working well", {
   
   model <- getNONMEMModelTemplate(1,1)
-  compartments <- model@model %>% getCompartments()
+  compartments <- model@compartments
   compartment1 <- compartments %>% getByIndex(Compartment(index=1))
   compartment2 <- compartments %>% getByIndex(Compartment(index=2))
   

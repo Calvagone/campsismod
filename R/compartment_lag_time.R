@@ -19,12 +19,12 @@ setClass(
 #'
 #' Create a lag time for the specified compartment.
 #'
-#' @param compartment compartment number
+#' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
 #' @return lag time
 #' @export
 CompartmentLagTime <- function(compartment, rhs) {
-  return(new("compartment_lag_time", compartment=compartment, rhs=rhs))
+  return(new("compartment_lag_time", compartment=as.integer(compartment), rhs=rhs))
 }
 
 #_______________________________________________________________________________
@@ -33,13 +33,13 @@ CompartmentLagTime <- function(compartment, rhs) {
 
 
 setMethod("getName", signature = c("compartment_lag_time"), definition = function(x) {
-  return(paste0("LAG_TIME [", "CMT=", x@compartment@index, "]"))
+  return(paste0("LAG_TIME [", "CMT=", x@compartment, "]"))
 })
 
 #_______________________________________________________________________________
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
-setMethod("getPrefix", signature = c("compartment_bioavailability"), definition = function(object) {
+setMethod("getPrefix", signature = c("compartment_lag_time"), definition = function(object) {
   return("lag")
 })

@@ -7,7 +7,7 @@
 CompartmentInfusionDuration(compartment, rhs, rate = FALSE)
 }
 \arguments{
-\item{compartment}{compartment}
+\item{compartment}{compartment index}
 
 \item{rhs}{right-hand side part of the equation}
 

@@ -7,7 +7,7 @@
 CompartmentLagTime(compartment, rhs)
 }
 \arguments{
-\item{compartment}{compartment number}
+\item{compartment}{compartment index}
 
 \item{rhs}{right-hand side part of the equation}
 }

@@ -22,6 +22,15 @@ Compartments <- function() {
 }
 
 #_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+setMethod("add", signature = c("compartments", "compartment_characteristic"), definition = function(object, x) {
+  object@characteristics <- object@characteristics %>% add(x) 
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
 
@@ -32,5 +41,17 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
     retValue <- retValue[[1]]
   }
   return(retValue)
+})
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("compartments"), definition=function(object) {
+  for (element in object@list) {
+    show(element)
+    print("")
+  }
+  show(object@characteristics)
 })
 
