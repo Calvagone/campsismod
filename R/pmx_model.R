@@ -5,8 +5,9 @@
 setClass(
   "pmx_model",
   representation(
-    model = "code_records",      # Mandatory
-    parameters = "parameters" # Mandatory    
+    model = "code_records",
+    parameters = "parameters",
+    compartments = "compartments"
   )
 )
 

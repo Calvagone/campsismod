@@ -6,9 +6,10 @@
 setClass(
   "compartments",
   representation(
+    characteristics="compartment_characteristics"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="compartment")
+  prototype = prototype(type="compartment", characteristics=new("compartment_characteristics"))
 )
 
 #' 
@@ -32,3 +33,4 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
   }
   return(retValue)
 })
+

@@ -69,9 +69,10 @@ setMethod("getCompartments", signature=c("code_records"), definition=function(ob
 #' @export
 read.model <- function(file) {
   allLines <- read.table(file=file, sep="@")[,1]
-  records <- new("code_records", list=list())
-  prevRecordIndex <- 1
+  records <- CodeRecords()
   
+  # Reading all records
+  prevRecordIndex <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
     if (isRecordDelimiter(line)) {
@@ -86,6 +87,11 @@ read.model <- function(file) {
   }
   # Filling last record
   records@list[[length(records@list)]]@code <- allLines[(prevRecordIndex + 1):length(allLines)]
+  
+  # Reading DES record
+  desRecord <- records %>% getByName("DES")
+  
+  
   return(records)
 }
 

@@ -26,7 +26,7 @@ processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
 #' @export
 isODE <- function(x) {
   x <- trim(x)
-  odePattern <- "^d/dt\\(.*\\)"
+  odePattern <- "^d/dt\\(.*\\).*="
   return(grepl(pattern=odePattern, x=x, ignore.case=TRUE))
 }
 

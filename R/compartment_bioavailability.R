@@ -1,0 +1,45 @@
+
+#_______________________________________________________________________________
+#----                   compartment_bioavailability class                   ----
+#_______________________________________________________________________________
+
+validateBioavailability <- function(object) {
+  return(TRUE)
+}
+
+#' @export
+setClass(
+  "compartment_bioavailability",
+  representation(
+  ),
+  contains = "compartment_characteristic",
+  validity=validateBioavailability
+)
+
+#'
+#' Create a bioavailability for the specified compartment.
+#'
+#' @param compartment compartment
+#' @param rhs right-hand side part of the equation
+#' @return bioavailability
+#' @export
+CompartmentBioavailability <- function(compartment, rhs) {
+  return(new("compartment_bioavailability", compartment=compartment, rhs=rhs))
+}
+
+#_______________________________________________________________________________
+#----                              getName                                  ----
+#_______________________________________________________________________________
+
+
+setMethod("getName", signature = c("compartment_bioavailability"), definition = function(x) {
+  return(paste0("BIOAVAILABILITY [", "CMT=", x@compartment@index, "]"))
+})
+
+#_______________________________________________________________________________
+#----                             getPrefix                                ----
+#_______________________________________________________________________________
+
+setMethod("getPrefix", signature = c("compartment_bioavailability"), definition = function(object) {
+  return("f")
+})
