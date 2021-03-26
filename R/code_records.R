@@ -114,7 +114,7 @@ getRecordDelimiter <- function(line) {
 setMethod("show", signature=c("code_records"), definition=function(object) {
   for (record in object@list) {
     show(record)
-    print("")
+    cat("\n")
   }
 })
 

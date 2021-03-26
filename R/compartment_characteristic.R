@@ -37,17 +37,9 @@ setGeneric("getPrefix", function(object) {
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
-#_______________________________________________________________________________
-
-setMethod("toString", signature = c("compartment_characteristic"), definition = function(object) {
-  return(paste0(object %>% getPrefix(), "(", object %>% getName(), ") = ", object@rhs))
-})
-
-#_______________________________________________________________________________
 #----                               show                                    ----
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment_characteristic"), definition=function(object) {
-  cat(object %>% toString())
+  cat(object %>% getName())
 })

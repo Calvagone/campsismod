@@ -33,7 +33,7 @@ CompartmentLagTime <- function(compartment, rhs) {
 
 
 setMethod("getName", signature = c("compartment_lag_time"), definition = function(x) {
-  return(paste0("LAG_TIME [", "CMT=", x@compartment, "]"))
+  return(paste0("LAG_TIME (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________

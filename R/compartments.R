@@ -50,8 +50,13 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
 setMethod("show", signature=c("compartments"), definition=function(object) {
   for (element in object@list) {
     show(element)
-    print("")
+    cat("\n")
   }
-  show(object@characteristics)
+  if (object@characteristics %>% length() == 0) {
+    cat("No compartment characteristic")
+  } else {
+    cat("Compartment characteristics:\n")
+    show(object@characteristics)
+  }
 })
 

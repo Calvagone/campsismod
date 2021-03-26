@@ -32,6 +32,6 @@ setMethod("getByIndex", signature=c("compartment_characteristics", "compartment_
 setMethod("show", signature=c("compartment_characteristics"), definition=function(object) {
   for (element in object@list) {
     show(element)
-    print("")
+    cat("\n")
   }
 })

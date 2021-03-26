@@ -34,7 +34,7 @@ CompartmentInfusionDuration <- function(compartment, rhs, rate=FALSE) {
 #_______________________________________________________________________________
 
 setMethod("getName", signature = c("compartment_infusion_duration"), definition = function(x) {
-  return(paste0("INFUSION_DURATION [", "CMT=", x@compartment, "]"))
+  return(paste0("INFUSION_DURATION (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
