@@ -1,37 +1,21 @@
 
 #_______________________________________________________________________________
-#----                                 write                                 ----
+#----                              disable                                  ----
 #_______________________________________________________________________________
 
-#' Write generic object.
+#' Disable.
 #' 
 #' @param object generic object
-#' @param file path of the output dir or ZIP filename
-#' @param ... extra arguments
+#' @param x what needs to be disabled
+#' @param ... extra arguments needed for disabling
+#' @return standardised object
 #' @export
-write <- function(object, file, ...) {
+disable <- function(object, x, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("write", function(object, file, ...) {
-  standardGeneric("write")
-})
-
-#_______________________________________________________________________________
-#----                                 read                                  ----
-#_______________________________________________________________________________
-
-#' Read generic object.
-#' 
-#' @param file path where to read the file
-#' @param ... extra arguments
-#' @export
-read <- function(file, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("read", function(file, ...) {
-  standardGeneric("read")
+setGeneric("disable", function(object, x, ...) {
+  standardGeneric("disable")
 })
 
 #_______________________________________________________________________________
@@ -64,6 +48,23 @@ export <- function(object, dest, ...) {
 
 setGeneric("export", function(object, dest, ...) {
   standardGeneric("export")
+})
+
+#_______________________________________________________________________________
+#----                                 read                                  ----
+#_______________________________________________________________________________
+
+#' Read generic object.
+#' 
+#' @param file path where to read the file
+#' @param ... extra arguments
+#' @export
+read <- function(file, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("read", function(file, ...) {
+  standardGeneric("read")
 })
 
 #_______________________________________________________________________________
@@ -107,21 +108,19 @@ setGeneric("standardise", function(object, ...) {
 })
 
 #_______________________________________________________________________________
-#----                              disable                                  ----
+#----                                 write                                 ----
 #_______________________________________________________________________________
 
-#' Disable.
+#' Write generic object.
 #' 
 #' @param object generic object
-#' @param x what needs to be disabled
-#' @param ... extra arguments needed for disabling
-#' @return standardised object
+#' @param file path of the output dir or ZIP filename
+#' @param ... extra arguments
 #' @export
-disable <- function(object, x, ...) {
+write <- function(object, file, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("disable", function(object, x, ...) {
-  standardGeneric("disable")
+setGeneric("write", function(object, file, ...) {
+  standardGeneric("write")
 })
-

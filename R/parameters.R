@@ -122,31 +122,18 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
 #----                             getByIndex                              ----
 #_______________________________________________________________________________
 
-#' Get parameter by index (single index).
-#' 
-#' @param object list of parameters
-#' @param parameter to search for
-#' @return parameter that matches
-#' @export
-getByIndex <- function(object, parameter) {
-  stop("No default function is provided")
-}
 
-setGeneric("getByIndex", function(object, parameter) {
-  standardGeneric("getByIndex")
-})
-
-setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, parameter) {
-  subList <- object %>% select(as.character(class(parameter)))
-  if (is(parameter, "theta")) {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index))
+setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, x) {
+  subList <- object %>% select(as.character(class(x)))
+  if (is(x, "theta")) {
+    retValue <- subList@list %>% purrr::keep(~(.x@index==x@index))
   } else {
-    parameter <- subList@list %>% purrr::keep(~(.x@index==parameter@index)&(.x@index2==parameter@index2))
+    retValue <- subList@list %>% purrr::keep(~(.x@index==x@index)&(.x@index2==x@index2))
   }
-  if (length(parameter) >= 1) {
-    parameter <- parameter[[1]]
+  if (length(retValue) > 0) {
+    retValue <- retValue[[1]]
   }
-  return(parameter)
+  return(retValue)
 })
 
 #_______________________________________________________________________________

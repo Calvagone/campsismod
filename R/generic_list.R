@@ -193,6 +193,24 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
+#----                        getByIndex (ABSTRACT)                          ----
+#_______________________________________________________________________________
+
+#' Get element by index.
+#' 
+#' @param object list object
+#' @param x something to search for, either indexed element or index itself
+#' @return element from the list whose index matches with provided index
+#' @export
+getByIndex <- function(object, x) {
+  stop("No default function is provided")
+}
+
+setGeneric("getByIndex", function(object, x) {
+  standardGeneric("getByIndex")
+})
+
+#_______________________________________________________________________________
 #----                         sort (ABSTRACT)                               ----
 #_______________________________________________________________________________
 

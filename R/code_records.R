@@ -17,6 +17,48 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
+#----                          getCompartments                              ----
+#_______________________________________________________________________________
+
+#' Get all compartments from model.
+#' 
+#' @param object generic object
+#' @return a list of compartments
+#' @export
+getCompartments <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("getCompartments", function(object) {
+  standardGeneric("getCompartments")
+})
+
+setMethod("getCompartments", signature=c("code_records"), definition=function(object) {
+  desRecord <- object %>% getByName("DES")
+  retValue <- Compartments()
+  
+  if (length(desRecord) == 0) {
+    return(retValue)
+  }
+  code <- desRecord@code
+  for (index in seq_along(code)) {
+    line <- code[index]
+    if (isODE(line)) {
+      name <- getODEName(line)
+      if (startsWith(name, prefix="A_")) {
+        name <- gsub("^A_", "", name)
+        if (name == as.character(index)) {
+          name <- NA
+        }
+      }
+      compartment <- Compartment(index=index, name=name)
+      retValue <- retValue %>% add(compartment)
+    }
+  }
+  return(retValue)
+})
+
+#_______________________________________________________________________________
 #----                                read.model                             ----
 #_______________________________________________________________________________
 

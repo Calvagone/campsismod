@@ -23,8 +23,8 @@ setClass(
 #' 
 #' @return an empty list of compartments  
 #' @export
-Compartments <- function() {
-  return(new("compartments"))
+Compartment <- function(index, name=NA) {
+  return(new("compartment", index=as.integer(index), name=as.character(name)))
 }
 
 #_______________________________________________________________________________

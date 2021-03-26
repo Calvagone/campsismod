@@ -50,3 +50,15 @@ test_that("Sort methods", {
   
   expect_equal(model %>% sort(), expectedModel)
 })
+
+test_that("getCompartments method is working well", {
+  
+  model <- getNONMEMModelTemplate(1,1)
+  compartments <- model@model %>% getCompartments()
+  compartment1 <- compartments %>% getByIndex(Compartment(index=1))
+  compartment2 <- compartments %>% getByIndex(Compartment(index=2))
+  
+  expect_equal(compartments %>% length(), 2)
+  expect_equal(compartment1 %>% getName(), "CENTRAL")
+  expect_equal(compartment2 %>% getName(), "OUTPUT")
+})

@@ -19,3 +19,16 @@ setClass(
 Compartments <- function() {
   return(new("compartments"))
 }
+
+#_______________________________________________________________________________
+#----                             getByIndex                                ----
+#_______________________________________________________________________________
+
+setMethod("getByIndex", signature=c("compartments", "compartment"), definition=function(object, x) {
+  retValue <- object@list %>% purrr::keep(~(.x@index==x@index))
+  
+  if (length(retValue) > 0) {
+    retValue <- retValue[[1]]
+  }
+  return(retValue)
+})
