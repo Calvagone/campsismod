@@ -20,37 +20,83 @@ CodeRecords <- function() {
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
-#' Get all compartments from model.
+#' Detect all compartments from model code records.
 #' Only for model instantiation. Not exported.
+#'
+#' @param records code records
+#' @return a list of 2 args: first argument is the DES record without characteristics,
+#' second argument is the compartments object
 #' 
-#' @param model model
-#' @return compartments object
-getCompartments <- function(model) {
-  assertthat::assert_that(is(model, "pmx_model"), msg="model is not a PMX model")
-  desRecord <- model@model %>% getByName("DES")
+getCompartments <- function(records) {
+  assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
+  desRecord <- records %>% getByName("DES")
   retValue <- Compartments()
   if (length(desRecord) == 0) {
-    return(retValue)
+    list(desRecord, retValue)
   }
   code <- desRecord@code
   odeCounter <- 0
+  updatedRecord <- new("des_record")
   
   for (index in seq_along(code)) {
     line <- code[index]
     if (isODE(line)) {
       odeCounter <- odeCounter + 1
-      name <- getODEName(line)
+      name <- extractTextBetweenBrackets(line)
       if (startsWith(name, prefix="A_")) {
         name <- gsub("^A_", "", name)
         if (name == as.character(odeCounter)) {
           name <- NA
         }
+      } else {
+        stop(paste0("Compartment ", name, " does not start with 'A_'"))
       }
       compartment <- Compartment(index=odeCounter, name=name)
       retValue <- retValue %>% add(compartment)
+      updatedRecord@code <- c(updatedRecord@code, line)
+    
+    } else if (isBioavailibility(line)) {
+      retValue <- addCharacteristic(line, CompartmentBioavailability(0, rhs=""), retValue)
+      
+    } else if (isLagTime(line)) {
+      retValue <- addCharacteristic(line, CompartmentLagTime(0, rhs=""), retValue)
+    
+    } else if (isInfusionDuration(line)) {
+      retValue <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=FALSE), retValue)
+    
+    } else if (isRate(line)) {
+      retValue <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=TRUE), retValue)
+    
+    } else {
+      updatedRecord@code <- c(updatedRecord@code, line)
     }
   }
-  return(retValue)
+  return(list(updatedRecord, retValue))
+}
+
+#' Add characteristic to compartment list.
+#'
+#' @param line line record
+#' @param emptyCharacteristic empty characteristic, to be completed
+#' @param compartments compartments object
+#' @return updated compartments object
+#' 
+addCharacteristic <- function(line, emptyCharacteristic, compartments) {
+  cmtName <- extractTextBetweenBrackets(line)
+  compartment <- compartments %>% getByName(cmtName)
+  
+  if (length(compartment) == 0) {
+    stop(paste0("Characteristic compartment undefined: '", cmtName, "'"))
+  }
+  rhs <- strsplit(x=line, split="=")[[1]]
+  # Remove lhs and collapse (in case of several =)
+  rhs <- paste0(rhs[-1], collapse="=") 
+  
+  characteristic <- emptyCharacteristic
+  characteristic@compartment <- compartment@index
+  characteristic@rhs <- rhs
+  
+  return(compartments %>% add(characteristic))
 }
 
 #_______________________________________________________________________________
@@ -145,16 +191,16 @@ setMethod("write", signature=c("code_records", "character"), definition=function
   # The model is needed to get the characteristics
   model <- processExtraArg(args=list(...), name="model")
   if (is.null(model)) {
-    warning("model not provided, compartment characteristics will not be persisted")
+    warning("model not provided, compartment characteristics will be lost")
   } else {
     characteristics <- model@compartments@characteristics
   }
   
   # Adding characteristics to DES record
   desRecord <- object %>% getByName("DES")
-  if (!is.null(desRecord)) {
+  if (!is.null(desRecord) && !is.null(model)) {
     for (characteristic in characteristics@list) {
-      desRecord@code <- c(desRecord@code, characteristic %>% toString())
+      desRecord@code <- c(desRecord@code, characteristic %>% toString(model=model))
     }
     object <- object %>% replace(desRecord)
   }

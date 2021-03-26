@@ -43,3 +43,14 @@ setGeneric("getPrefix", function(object) {
 setMethod("show", signature=c("compartment_characteristic"), definition=function(object) {
   cat(object %>% getName())
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+setMethod("toString", signature=c("compartment_characteristic"), definition=function(object, ...) {
+  model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
+  compartmentIndex <- object@compartment
+  compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+  return(paste0(object %>% getPrefix(), "(", compartment %>% getName(), ")=", object@rhs))
+})

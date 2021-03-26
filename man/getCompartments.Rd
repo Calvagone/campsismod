@@ -2,18 +2,19 @@
 % Please edit documentation in R/code_records.R
 \name{getCompartments}
 \alias{getCompartments}
-\title{Get all compartments from model.
+\title{Detect all compartments from model code records.
 Only for model instantiation. Not exported.}
 \usage{
-getCompartments(model)
+getCompartments(records)
 }
 \arguments{
-\item{model}{model}
+\item{records}{code records}
 }
 \value{
-compartments object
+a list of 2 args: first argument is the DES record without characteristics,
+second argument is the compartments object
 }
 \description{
-Get all compartments from model.
+Detect all compartments from model code records.
 Only for model instantiation. Not exported.
 }

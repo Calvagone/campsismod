@@ -4,7 +4,6 @@ library(testthat)
 context("Test read/write methods on PMX model")
 
 testFolder <<- ""
-testFolder <<- "C:/prj/pmxmod/tests/testthat/"
 
 advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))
@@ -14,41 +13,38 @@ writePath <- function(advan, trans) {
   return(paste0(testFolder, "write/models/", advanFilename(advan, trans, ext="")))
 }
 
-generateModel <- function(advan, trans) {
-  pmxtran <- pmxtran::importNONMEM(pmxtran::getNONMEMModelTemplate(advan, trans))
-  pmxmod <- pmxtran::toPmxModel(pmxtran)
-  return(pmxmod)
-}
-
 test_that("Write/Read ADVAN1 TRANS1", {
   advan <- 1
   trans <- 1
-  pmxmod <- generateModel(advan, trans)
+  model <- getNONMEMModelTemplate(advan, trans)
   
   # write
-  pmxmod %>% write(file=writePath(advan, trans), zip=FALSE)
+  model %>% write(file=writePath(advan, trans))
   
   # read
-  pmxmod2 <- read.pmxmod(file=writePath(advan, trans))
+  model2 <- read.pmxmod(file=writePath(advan, trans))
 
   # Check equality  
-  expect_equal(pmxmod@model, pmxmod2@model)
-  expect_equal(pmxmod@parameters, pmxmod2@parameters)
+  expect_equal(model, model2)
 })
 
 test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics", {
-  model <- getNONMEMModelTemplate(4, 4)
+  advan <- 4
+  trans <- 4
+  model <- getNONMEMModelTemplate(advan, trans)
   
-  # 2-hour lag time
-  model <- model %>% add(CompartmentLagTime(1, "2"))
+  # Add a few characteristics
+  model <- model %>% add(CompartmentLagTime(1, "ALAG1"))
+  model <- model %>% add(CompartmentBioavailability(1, "F1"))
+  model <- model %>% add(CompartmentInfusionDuration(1, "D1"))
+  model <- model %>% add(CompartmentInfusionDuration(2, "R2", rate=TRUE))
   
-  # write
-  pmxmod %>% write(file=writePath(advan, trans), zip=FALSE)
+  # Write
+  model %>% write(file=writePath(advan, trans))
   
-  # read
-  pmxmod2 <- read.pmxmod(file=writePath(advan, trans))
+  # Read
+  model2 <- read.pmxmod(file=writePath(advan, trans))
   
   # Check equality  
-  expect_equal(pmxmod@model, pmxmod2@model)
-  expect_equal(pmxmod@parameters, pmxmod2@parameters)
+  expect_equal(model, model2)
 })

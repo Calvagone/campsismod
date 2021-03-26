@@ -113,16 +113,23 @@ read.pmxmod <- function(file) {
     stop(paste0("Sigma file couln't be found."))
   }
   
-  model <- read.model(file=modelPath)
+  records <- read.model(file=modelPath)
   theta <- read.parameter(file=thetaPath, type="theta")
   omega <- read.parameter(file=omegaPath, type="omega")
   sigma <- read.parameter(file=sigmaPath, type="sigma")
   
-  list <- c(theta@list, omega@list, sigma@list)
+  paramsList <- c(theta@list, omega@list, sigma@list)
+  returnedList <- records %>% getCompartments()
   
-  return(new("pmx_model", model=model,
-             parameters=new("parameters", list=list) %>% clean(),
-             compartments=model %>% getCompartments()))
+  updatedDesRecord <- returnedList[[1]]
+  compartments <- returnedList[[2]]
+  if (length(updatedDesRecord) > 0) {
+    records <- records %>% replace(updatedDesRecord)
+  }
+  
+  return(new("pmx_model", model=records,
+             parameters=new("parameters", list=paramsList) %>% clean(),
+             compartments=compartments))
 }
 
 #' Read parameter file.
@@ -146,7 +153,7 @@ read.parameter <- function(file, type) {
 
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, ...) {
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
-  model <- object@model
+  records <- object@model
   parameters <- object@parameters
   theta <- parameters %>% select("theta")
   omega <- parameters %>% select("omega")
@@ -160,7 +167,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     } else {
       dir.create(file)
     }
-    model %>% write(file=file.path(file, "model.mod"))
+    records %>% write(file=file.path(file, "model.mod"), model=object)
     theta %>% write(file=file.path(file, "theta.csv"),
                     defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
     omega %>% write(file=file.path(file, "omega.csv"),

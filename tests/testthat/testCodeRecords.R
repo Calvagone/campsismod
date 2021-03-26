@@ -28,7 +28,8 @@ test_that("Write/Read methods", {
   model1 <- model1 %>% add(ErrorRecord(code=c("C=3")))
   
   # Write model
-  model1 %>% write(file=paste0(testFolder, "write/records/records1.mod"))
+  # Warning is well provided: model not provided, compartment characteristics will be lost
+  expect_warning(model1 %>% write(file=paste0(testFolder, "write/records/records1.mod")))
   
   # Read model
   model2 <- read.model(file=paste0(testFolder, "write/records/records1.mod"))
@@ -59,6 +60,6 @@ test_that("getCompartments method is working well", {
   compartment2 <- compartments %>% getByIndex(Compartment(index=2))
   
   expect_equal(compartments %>% length(), 2)
-  expect_equal(compartment1 %>% getName(), "CENTRAL")
-  expect_equal(compartment2 %>% getName(), "OUTPUT")
+  expect_equal(compartment1@name, "CENTRAL")
+  expect_equal(compartment2@name, "OUTPUT")
 })
