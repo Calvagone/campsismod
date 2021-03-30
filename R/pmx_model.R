@@ -50,6 +50,16 @@ setClass(
   contains="export_type" 
 )
 
+#' Mrgsolve export type class.
+#' 
+#' @export
+setClass(
+  "mrgsolve_type",
+  representation(
+  ),
+  contains="export_type" 
+)
+
 #_______________________________________________________________________________
 #----                                export                                 ----
 #_______________________________________________________________________________
@@ -58,8 +68,10 @@ setClass(
 setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest) {
   if (dest=="RxODE") {
     return(object %>% export(new("rxode_type")))
+  } else if (dest=="mrgsolve") {
+    return(object %>% export(new("mrgsolve_type")))
   } else {
-    stop("Only RxODE is supported for now")
+    stop("Only RxODE and mrgsolve are supported for now")
   }
 })
 

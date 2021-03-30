@@ -23,6 +23,8 @@ Collate:
     'pmx_model.R'
     'rxode_model.R'
     'rxode_conversion.R'
+    'mrgsolve_model.R'
+    'mrgsolve_conversion.R'
 Title: Pmxmod library
 Version: 0.1
 Authors@R: c(
