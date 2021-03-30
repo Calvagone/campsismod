@@ -40,3 +40,7 @@ test_that("extractTextBetweenBrackets method is working well", {
   expect_error(extractTextBetweenBrackets(c("d/dt(A_DEPOT)=-KA*A_DEPOT", "X=1")))
 })
 
+test_that("isEquation is working well", {
+  expect_true(isEquation("V3=THETA_V3*VDBW"))
+  expect_false(isEquation("if (OCC == 1) VIS1=1"))
+})

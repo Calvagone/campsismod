@@ -4,12 +4,14 @@
 \alias{mrgsolveBlock}
 \title{Convert code record for mrgsolve.}
 \usage{
-mrgsolveBlock(record, init = NULL)
+mrgsolveBlock(record, init = NULL, capture = FALSE)
 }
 \arguments{
 \item{record}{code record}
 
 \item{init}{name of mrgsolve block}
+
+\item{capture}{'capture' instead of 'double'}
 }
 \value{
 translated record for mrgsolve

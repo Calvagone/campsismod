@@ -28,6 +28,18 @@ isODE <- function(x) {
   return(grepl(pattern="^d/dt.*\\(.*\\).*=", x=trim(x), ignore.case=TRUE))
 }
 
+#' Say if line in record is an equation not.
+#' 
+#' @param x character value
+#' @return logical value
+#' @export
+isEquation <- function(x) {
+  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  parts <- strsplit(x, split="=")[[1]]
+  variable <- parts[1] %>% trim()
+  return(grepl(pattern="^[a-zA-Z_][a-zA-Z0-9_]*$", x=variable))
+}
+
 #' Say if line(s) in record is/are lag times.
 #' 
 #' @param x character vector
@@ -77,6 +89,20 @@ extractTextBetweenBrackets <- function(x) {
     stop(paste0("No parentheses found in ", x))
   }
   return(retValue[1] %>% trim())
+}
+
+#' Extract right-hand side expression.
+#' 
+#' @param x character value
+#' @return right-hand side expressionn
+#' @importFrom assertthat assert_that
+#' @export
+extractRhs <- function(x) {
+  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  rhs <- strsplit(x=x, split="=")[[1]]
+  # Remove lhs and collapse (in case of several =)
+  rhs <- paste0(rhs[-1], collapse="=")
+  return(rhs)
 }
 
 #' Trim character vector. Remove all leading and trailing spaces.

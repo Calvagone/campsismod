@@ -6,10 +6,10 @@
 #' @export
 mrgsolveParam <- function(model) {
   params <- rxodeParams(model)
-  retValue <- "[PARAM]"
+  retValue <- "[PARAM] @annotated"
   for (index in seq_len(length(params))) {
     param <- params[index]
-    retValue <- retValue %>% append(paste0(names(param), " : ", as.numeric(param)))
+    retValue <- retValue %>% append(paste0(names(param), " : ", as.numeric(param), " : ", names(param)))
   }
   return(retValue)
 }
@@ -21,9 +21,9 @@ mrgsolveParam <- function(model) {
 #' @export
 mrgsolveCompartment <- function(model) {
   compartments <- model@compartments
-  retValue <- "[CMT]"
+  retValue <- "[CMT] @annotated"
   for (compartment in compartments@list) {
-    retValue <- retValue %>% append(compartment %>% getName())
+    retValue <- retValue %>% append(paste0(compartment %>% getName(), " : ", compartment@name))
   }
   return(retValue)
 }
@@ -37,14 +37,15 @@ mrgsolveCompartment <- function(model) {
 mrgsolveMatrix <- function(model, type="omega") {
   matrix <- rxodeMatrix(model, type=type)
   if (type=="omega") {
-    retValue <- "[OMEGA]"
+    retValue <- "[OMEGA] @annotated @block"
   } else {
-    retValue <- "[SIGMA]"
+    retValue <- "[SIGMA] @annotated @block"
   }
   names <- row.names(matrix)
   for (rowIndex in seq_len(nrow(matrix))) {
     retValue <- retValue %>% append(paste0(names[rowIndex], " : ",
-                                    paste0(matrix[rowIndex, seq_len(rowIndex)], collapse=" ")))
+                                    paste0(matrix[rowIndex, seq_len(rowIndex)], collapse=" "), " : ",
+                                    names[rowIndex]))
   }  
   return(retValue)
 }
@@ -65,15 +66,29 @@ mrgsolveMain <- function(model) {
 #' 
 #' @param record code record
 #' @param init name of mrgsolve block
+#' @param capture 'capture' instead of 'double'
 #' @return translated record for mrgsolve
 #' @export
-mrgsolveBlock <- function(record, init=NULL) {
+mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
   if (length(record) == 0) {
     return(retValue)
   }
   for (index in seq_len(length(record@code))) {
     line <- record@code[index]
+    if (isODE(line)) {
+      name <- extractTextBetweenBrackets(line)
+      rhs <- extractRhs(line)
+      line <- paste0("dxdt_", name, "=", rhs, ";")
+    } else if (isEquation(line)) {
+      if (capture) {
+        line <- paste0("capture ", line, ";")
+      } else {
+        line <- paste0("double ", line, ";")
+      }
+    } else {
+      line <- paste0(line, ";")
+    }
     retValue <- retValue %>% append(line)
   }
   return(retValue)
@@ -88,10 +103,19 @@ mrgsolveOde <- function(model) {
   records <- model@model
   characteristics <- model@compartments@characteristics
   desRecord <- records %>% getByName("DES")
-  errorRecord <- records %>% getByName("ERROR")
-
   retValue <- mrgsolveBlock(desRecord, init="[ODE]")
-  retValue <- retValue %>% append(mrgsolveBlock(errorRecord))
-  
+  return(retValue)
+}
+
+#' Get the TABLE block for mrgsolve.
+#'
+#' @param model PMX model
+#' @return TABLE block
+#' @export
+mrgsolveTable <- function(model) {
+  records <- model@model
+  characteristics <- model@compartments@characteristics
+  errorRecord <- records %>% getByName("ERROR")
+  retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)
 }

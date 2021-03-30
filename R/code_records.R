@@ -88,13 +88,9 @@ addCharacteristic <- function(line, emptyCharacteristic, compartments) {
   if (length(compartment) == 0) {
     stop(paste0("Characteristic compartment undefined: '", cmtName, "'"))
   }
-  rhs <- strsplit(x=line, split="=")[[1]]
-  # Remove lhs and collapse (in case of several =)
-  rhs <- paste0(rhs[-1], collapse="=") 
-  
   characteristic <- emptyCharacteristic
   characteristic@compartment <- compartment@index
-  characteristic@rhs <- rhs
+  characteristic@rhs <- extractRhs(line)
   
   return(compartments %>% add(characteristic))
 }
