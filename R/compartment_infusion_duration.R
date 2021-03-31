@@ -41,10 +41,19 @@ setMethod("getName", signature = c("compartment_infusion_duration"), definition 
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
-setMethod("getPrefix", signature = c("compartment_infusion_duration"), definition = function(object) {
-  if (object@rate) {
-    return("rate")
+setMethod("getPrefix", signature = c("compartment_infusion_duration"), definition = function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
+  if (dest=="mrgsolve") {
+    if (object@rate) {
+      return("R")
+    } else {
+      return("D")
+    }
   } else {
-    return("dur")
+    if (object@rate) {
+      return("rate")
+    } else {
+      return("dur")
+    }
   }
 })

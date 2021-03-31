@@ -40,6 +40,11 @@ setMethod("getName", signature = c("compartment_lag_time"), definition = functio
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
-setMethod("getPrefix", signature = c("compartment_lag_time"), definition = function(object) {
-  return("lag")
+setMethod("getPrefix", signature = c("compartment_lag_time"), definition = function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
+  if (dest=="mrgsolve") {
+    return("ALAG")
+  } else {
+    return("lag")
+  }
 })

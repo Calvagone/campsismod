@@ -21,18 +21,19 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                              getPrefix                                ----
+#----                            getPrefix                                  ----
 #_______________________________________________________________________________
 
 #' Get prefix.
 #' 
 #' @param object generic object
+#' @param ... e.g. dest='mrgsolve'
 #' @export
-getPrefix <- function(object) {
+getPrefix <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("getPrefix", function(object) {
+setGeneric("getPrefix", function(object, ...) {
   standardGeneric("getPrefix")
 })
 

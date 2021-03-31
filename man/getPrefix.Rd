@@ -4,10 +4,12 @@
 \alias{getPrefix}
 \title{Get prefix.}
 \usage{
-getPrefix(object)
+getPrefix(object, ...)
 }
 \arguments{
 \item{object}{generic object}
+
+\item{...}{e.g. dest='mrgsolve'}
 }
 \description{
 Get prefix.

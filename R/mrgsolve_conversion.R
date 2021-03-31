@@ -57,9 +57,19 @@ mrgsolveMatrix <- function(model, type="omega") {
 #' @export
 mrgsolveMain <- function(model) {
   records <- model@model
+  characteristics <- model@compartments@characteristics
   retValue <- "[MAIN]"
   record <- records %>% getByName("PK")
-  return(mrgsolveBlock(record, init="[MAIN]"))
+  retValue <- mrgsolveBlock(record, init="[MAIN]")
+  if (characteristics %>% length() > 0) {
+    for (characteristic in characteristics@list) {
+      compartmentIndex <- characteristic@compartment
+      compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+      equation <- paste0(characteristic %>% getPrefix(dest="mrgsolve"), "_", compartment %>% getName(), "=", characteristic@rhs)
+      retValue <- retValue %>% append(equation)
+    }
+  }
+  return(retValue)
 }
 
 #' Convert code record for mrgsolve.
@@ -101,7 +111,6 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 #' @export
 mrgsolveOde <- function(model) {
   records <- model@model
-  characteristics <- model@compartments@characteristics
   desRecord <- records %>% getByName("DES")
   retValue <- mrgsolveBlock(desRecord, init="[ODE]")
   return(retValue)

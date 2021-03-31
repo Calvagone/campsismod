@@ -5,6 +5,9 @@ context("Test the conversion to mrgsolve")
 
 test_that("Export method works", {
   model <- getNONMEMModelTemplate(4,4)
+  model <- model %>% add(CompartmentBioavailability(compartment=1, rhs="0.75"))
+  model <- model %>% add(CompartmentLagTime(compartment=2, rhs="2"))
+  model <- model %>% add(CompartmentInfusionDuration(compartment=2, rhs="2"))
   mrgsolve <- model %>% export(dest="mrgsolve")
   param <-
     c(
@@ -32,7 +35,10 @@ test_that("Export method works", {
       "double V2=THETA_3*exp(ETA_3);",
       "double V3=THETA_4*exp(ETA_4);",
       "double Q=THETA_5*exp(ETA_5);",
-      "double S2=V2;"
+      "double S2=V2;",
+      "F_A_DEPOT=0.75",
+      "ALAG_A_CENTRAL=2",
+      "D_A_CENTRAL=2"
     )
   expect_equal(mrgsolve@main[-1], main)
 })
