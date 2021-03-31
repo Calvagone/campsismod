@@ -65,7 +65,7 @@ mrgsolveMain <- function(model) {
     for (characteristic in characteristics@list) {
       compartmentIndex <- characteristic@compartment
       compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
-      equation <- paste0(characteristic %>% getPrefix(dest="mrgsolve"), "_", compartment %>% getName(), "=", characteristic@rhs)
+      equation <- paste0(characteristic %>% getPrefix(dest="mrgsolve"), "_", compartment %>% getName(), "=", characteristic@rhs, ";")
       retValue <- retValue %>% append(equation)
     }
   }

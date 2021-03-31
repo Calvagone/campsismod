@@ -36,9 +36,9 @@ test_that("Export method works", {
       "double V3=THETA_4*exp(ETA_4);",
       "double Q=THETA_5*exp(ETA_5);",
       "double S2=V2;",
-      "F_A_DEPOT=0.75",
-      "ALAG_A_CENTRAL=2",
-      "D_A_CENTRAL=2"
+      "F_A_DEPOT=0.75;",
+      "ALAG_A_CENTRAL=2;",
+      "D_A_CENTRAL=2;"
     )
   expect_equal(mrgsolve@main[-1], main)
 })
