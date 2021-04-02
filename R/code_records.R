@@ -30,9 +30,9 @@ CodeRecords <- function() {
 getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
   desRecord <- records %>% getByName("DES")
-  retValue <- Compartments()
+  compartments <- Compartments()
   if (length(desRecord) == 0) {
-    list(desRecord, retValue)
+    return(list(desRecord, compartments))
   }
   code <- desRecord@code
   odeCounter <- 0
@@ -52,26 +52,26 @@ getCompartments <- function(records) {
         stop(paste0("Compartment ", name, " does not start with 'A_'"))
       }
       compartment <- Compartment(index=odeCounter, name=name)
-      retValue <- retValue %>% add(compartment)
+      compartments <- compartments %>% add(compartment)
       updatedRecord@code <- c(updatedRecord@code, line)
     
     } else if (isBioavailibility(line)) {
-      retValue <- addCharacteristic(line, CompartmentBioavailability(0, rhs=""), retValue)
+      compartments <- addCharacteristic(line, CompartmentBioavailability(0, rhs=""), compartments)
       
     } else if (isLagTime(line)) {
-      retValue <- addCharacteristic(line, CompartmentLagTime(0, rhs=""), retValue)
+      compartments <- addCharacteristic(line, CompartmentLagTime(0, rhs=""), compartments)
     
     } else if (isInfusionDuration(line)) {
-      retValue <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=FALSE), retValue)
+      compartments <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=FALSE), compartments)
     
     } else if (isRate(line)) {
-      retValue <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=TRUE), retValue)
+      compartments <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=TRUE), compartments)
     
     } else {
       updatedRecord@code <- c(updatedRecord@code, line)
     }
   }
-  return(list(updatedRecord, retValue))
+  return(list(updatedRecord, compartments))
 }
 
 #' Add characteristic to compartment list.
