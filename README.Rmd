@@ -51,11 +51,11 @@ show(omega)
 Retrieve parameter by name:
 
 ```{r}
-sigma <- model@parameters %>% getByName("SIGMA_1_1")
-show(sigma)
+theta <- model@parameters %>% getByName("THETA_KA")
+show(theta)
 ```
 
-Select parameter by type:
+Select parameters by type:
 
 ```{r}
 thetas <- model@parameters %>% select("theta")
