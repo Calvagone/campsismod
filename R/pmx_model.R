@@ -79,19 +79,6 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
-dataframeToParameter <- function(row, type) {
-  param <- NULL
-  
-  if (type=="theta") {
-    param <- new("theta", name=as.character(row$name), index=row$index, value=row$value, fix=row$fix)
-  } else if(type=="omega" | type=="sigma") {
-    param <- new(type, name=as.character(row$name), index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type)
-  } else {
-    stop(paste0("type must be one of: theta, omega or sigma"))
-  }
-  return(param)
-}
-
 #' Read PMX model file.
 #' 
 #' @param file path to folder or path to zipped project
@@ -108,31 +95,15 @@ read.pmxmod <- function(file) {
   }
   
   modelPath <- file.path(folder, "model.mod")
-  thetaPath <- file.path(folder, "theta.csv")
-  omegaPath <- file.path(folder, "omega.csv")
-  sigmaPath <- file.path(folder, "sigma.csv")
   
   if (!file.exists(modelPath)) {
     stop(paste0("Model file couln't be found."))
   }
-  if (!file.exists(thetaPath)) {
-    stop(paste0("Theta file couln't be found."))
-  }
-  if (!file.exists(omegaPath)) {
-    stop(paste0("Omega file couln't be found."))
-  }
-  if (!file.exists(sigmaPath)) {
-    stop(paste0("Sigma file couln't be found."))
-  }
   
   records <- read.model(file=modelPath)
-  theta <- read.parameter(file=thetaPath, type="theta")
-  omega <- read.parameter(file=omegaPath, type="omega")
-  sigma <- read.parameter(file=sigmaPath, type="sigma")
+  parameters <- read.allparameters(folder=folder)
   
-  model <- new("pmx_model", model=records,
-      parameters=new("parameters", list=c(theta@list, omega@list, sigma@list)) %>% clean(),
-      compartments=Compartments())
+  model <- new("pmx_model", model=records, parameters=parameters, compartments=Compartments())
   return(model %>% updateCompartments())
 }
 
@@ -157,21 +128,6 @@ updateCompartments <- function(model) {
   model@model <- records
   model@compartments <- compartments
   return(model)
-}
-
-#' Read parameter file.
-#' 
-#' @param file path to folder or path to zipped project
-#' @param type parameter type: 'theta', 'omega' or 'sigma'
-#' @return a PMX model
-#' @export
-read.parameter <- function(file, type) {
-  assertthat::assert_that(type %in% c("theta", "omega", "sigma"),
-                          msg="Type must be one of these: 'theta', 'omega' or 'sigma'")
-  df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
-  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
-  attributes(list) <- NULL
-  return(new("parameters", list=list))
 }
 
 #_______________________________________________________________________________

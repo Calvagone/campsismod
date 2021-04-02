@@ -18,7 +18,7 @@ test_that("Write/Read THETA's", {
   thetas %>% write(file=file)
   
   # Write THETA's
-  thetas2 <- read.parameter(paste0(file, "theta.csv"), type="theta")
+  thetas2 <- read.parameters(paste0(file, "theta.csv"), type="theta")
   
   # Check we can retrieve the exact same list
   expect_equal(thetas, thetas2)
