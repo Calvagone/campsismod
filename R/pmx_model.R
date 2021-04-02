@@ -130,7 +130,23 @@ read.pmxmod <- function(file) {
   omega <- read.parameter(file=omegaPath, type="omega")
   sigma <- read.parameter(file=sigmaPath, type="sigma")
   
-  paramsList <- c(theta@list, omega@list, sigma@list)
+  model <- new("pmx_model", model=records,
+      parameters=new("parameters", list=c(theta@list, omega@list, sigma@list)) %>% clean(),
+      compartments=Compartments())
+  return(model %>% updateCompartments())
+}
+
+#' Update compartments list from the persisted records.
+#' Exported especially for package pmxtran. However, this method should not be called.
+#' 
+#' @param model PMX model
+#' @return an updated PMX model, with an updated compartments list
+#' @export
+updateCompartments <- function(model) {
+  if (!is(model, "pmx_model")) {
+    stop("model is not a PMX model")   
+  }
+  records <- model@model
   returnedList <- records %>% getCompartments()
   
   updatedDesRecord <- returnedList[[1]]
@@ -138,10 +154,9 @@ read.pmxmod <- function(file) {
   if (length(updatedDesRecord) > 0) {
     records <- records %>% replace(updatedDesRecord)
   }
-  
-  return(new("pmx_model", model=records,
-             parameters=new("parameters", list=paramsList) %>% clean(),
-             compartments=compartments))
+  model@model <- records
+  model@compartments <- compartments
+  return(model)
 }
 
 #' Read parameter file.
