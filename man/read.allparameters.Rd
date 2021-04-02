@@ -8,11 +8,9 @@ read.allparameters(folder)
 }
 \arguments{
 \item{folder}{path to folder or path to zipped project}
-
-\item{type}{parameter type: 'theta', 'omega' or 'sigma'}
 }
 \value{
-a PMX model
+parameters object
 }
 \description{
 Read all parameters files at once.

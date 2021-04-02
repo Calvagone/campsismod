@@ -189,16 +189,31 @@ read.parameters <- function(file, type) {
   return(new("parameters", list=list))
 }
 
+#' Read variance-covariance file.
+#' 
+#' @param file path to CSV file
+#' @return variance-covariance matrix
+#' @importFrom assertthat assert_that
+#' @export
+read.varcov <- function(file) {
+  dataframe <- read.csv(file=file)
+  row.names(dataframe) <- dataframe$X
+  matrix <- dataframe %>% select(-X) %>% as.matrix()
+  assertthat::assert_that(all(rownames(matrix)==colnames(matrix)), 
+      msg="Row names are different than column names in variance-covariance matrix")
+  return(matrix)
+}
+
 #' Read all parameters files at once.
 #' 
 #' @param folder path to folder or path to zipped project
-#' @param type parameter type: 'theta', 'omega' or 'sigma'
-#' @return a PMX model
+#' @return parameters object
 #' @export
 read.allparameters <- function(folder) {
   thetaPath <- file.path(folder, "theta.csv")
   omegaPath <- file.path(folder, "omega.csv")
   sigmaPath <- file.path(folder, "sigma.csv")
+  varcovPath <- file.path(folder, "varcov.csv")
   
   if (!file.exists(thetaPath)) {
     stop(paste0("Theta file couln't be found."))
@@ -209,12 +224,16 @@ read.allparameters <- function(folder) {
   if (!file.exists(sigmaPath)) {
     stop(paste0("Sigma file couln't be found."))
   }
-  
+
   theta <- read.parameters(file=thetaPath, type="theta")
   omega <- read.parameters(file=omegaPath, type="omega")
   sigma <- read.parameters(file=sigmaPath, type="sigma")
   
   parameters <- new("parameters", list=c(theta@list, omega@list, sigma@list)) %>% clean()
+  if (file.exists(varcovPath)) {
+    varcov <- read.varcov(varcovPath)
+    parameters@varcov <- varcov
+  }
   return(parameters)
 }
 
