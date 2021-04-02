@@ -7,9 +7,10 @@
 setClass(
   "parameters",
   representation(
+    varcov = "matrix"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="parameter")
+  prototype = prototype(type="parameter", varcov=matrix(numeric(0), nrow=0, ncol=0))
 )
 
 #' 
@@ -222,4 +223,50 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
   retValue <- Parameters()
   retValue@list <- list
   return(retValue)
+})
+
+#_______________________________________________________________________________
+#----                                 write                                 ----
+#_______________________________________________________________________________
+
+#' Write subset of parameters (theta, omega or sigma).
+#' 
+#' @param object subset of parameters
+#' @param file filename
+#' @return TRUE if success
+writeParameters <- function(object, file, ...) {
+  df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  if (nrow(df)==0) {
+    df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
+  }
+  write.csv(df, file=file, row.names=FALSE)
+  return(TRUE)
+}
+
+#' Write variance-covariance matrix.
+#' 
+#' @param object matrix
+#' @param file filename
+#' @return TRUE if success
+writeVarcov <- function(object, file, ...) {
+  write.csv(object, file=file)
+  return(TRUE)
+}
+
+setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {
+  theta <- object %>% select("theta")
+  omega <- object %>% select("omega")
+  sigma <- object %>% select("sigma")
+  varcov <- object@varcov
+  
+  theta %>% writeParameters(file=file.path(file, "theta.csv"),
+                  defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
+  omega %>% writeParameters(file=file.path(file, "omega.csv"),
+                  defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
+  sigma %>% writeParameters(file=file.path(file, "sigma.csv"),
+                  defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
+  
+  if (length(varcov) > 0) {
+    varcov %>% writeVarcov(file=file.path(file, "varcov.csv"))
+  }
 })

@@ -7,7 +7,7 @@ testFolder <<- ""
 
 test_that("Write/Read THETA's", {
   
-  file <- paste0(testFolder, "write/", "thetas.csv")
+  file <- paste0(testFolder, "write/parameters/")
   
   # Read THETA's
   theta1 <- Theta(name="CL", index=1, value=5, fix=TRUE)
@@ -18,7 +18,7 @@ test_that("Write/Read THETA's", {
   thetas %>% write(file=file)
   
   # Write THETA's
-  thetas2 <- read.parameter(file, type="theta")
+  thetas2 <- read.parameter(paste0(file, "theta.csv"), type="theta")
   
   # Check we can retrieve the exact same list
   expect_equal(thetas, thetas2)
@@ -83,15 +83,15 @@ test_that("Disable method", {
   model <- getNONMEMModelTemplate(4,4)
   
   model <- model %>% disable("IIV")
-  expect_equal((model@parameters %>% getByName("OMEGA_1_1"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_2_2"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_3_3"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_4_4"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_5_5"))@value, 0)
-  expect_equal((model@parameters %>% getByName("SIGMA_1_1"))@value, 0.025)
+  expect_equal((model@parameters %>% getByName("OMEGA_KA"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_CL"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_V2"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_V3"))@value, 0)
+  expect_equal((model@parameters %>% getByName("OMEGA_Q"))@value, 0)
+  expect_equal((model@parameters %>% getByName("SIGMA_PROP"))@value, 0.025)
   
   model <- model %>% disable("RUV")
-  expect_equal((model@parameters %>% getByName("SIGMA_1_1"))@value, 0)
+  expect_equal((model@parameters %>% getByName("SIGMA_PROP"))@value, 0)
   
   # Error: Erreur : Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'
   expect_error(model %>% disable("IOV"))

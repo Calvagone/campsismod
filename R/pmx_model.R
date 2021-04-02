@@ -182,10 +182,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters
-  theta <- parameters %>% select("theta")
-  omega <- parameters %>% select("omega")
-  sigma <- parameters %>% select("sigma")
-  
+
   if (zip) {
     
   } else {
@@ -195,20 +192,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
       dir.create(file)
     }
     records %>% write(file=file.path(file, "model.mod"), model=object)
-    theta %>% write(file=file.path(file, "theta.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
-    omega %>% write(file=file.path(file, "omega.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
-    sigma %>% write(file=file.path(file, "sigma.csv"),
-                    defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
+    parameters %>% write(file=file)
   }
   return(TRUE)
-})
-
-setMethod("write", signature=c("parameters", "character"), definition=function(object, file, ...) {
-  df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
-  if (nrow(df)==0) {
-    df <- list(...)$defaultDf
-  }
-  write.csv(df, file=file, row.names=FALSE)
 })

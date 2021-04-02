@@ -1,7 +1,7 @@
 [PK]
-KA=THETA_1*exp(ETA_1)
-K=THETA_2*exp(ETA_2)
-V=THETA_3*exp(ETA_3)
+KA=THETA_KA*exp(ETA_KA)
+K=THETA_K*exp(ETA_K)
+V=THETA_V*exp(ETA_V)
 S2=V
 
 [DES]
@@ -12,6 +12,6 @@ F=A_CENTRAL/S2
 
 [ERROR]
 CP=F
-OBS_CP=CP*(EPS_1 + 1)
+OBS_CP=CP*(EPS_PROP + 1)
 Y=OBS_CP
 

@@ -1,5 +1,5 @@
 "name","index","value","fix"
-NA,1,0.0625,FALSE
-NA,2,80,FALSE
-NA,3,0.05,FALSE
-NA,4,0.2,FALSE
+"K",1,0.0625,FALSE
+"V",2,80,FALSE
+"K12",3,0.05,FALSE
+"K21",4,0.2,FALSE

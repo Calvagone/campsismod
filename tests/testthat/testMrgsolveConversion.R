@@ -11,11 +11,11 @@ test_that("Export method works", {
   mrgsolve <- model %>% export(dest="mrgsolve")
   param <-
     c(
-      "THETA_1 : 1 : THETA_1",
-      "THETA_2 : 5 : THETA_2",
-      "THETA_3 : 80 : THETA_3",
-      "THETA_4 : 20 : THETA_4",
-      "THETA_5 : 4 : THETA_5"
+      "THETA_KA : 1 : THETA_KA",
+      "THETA_CL : 5 : THETA_CL",
+      "THETA_V2 : 80 : THETA_V2",
+      "THETA_V3 : 20 : THETA_V3",
+      "THETA_Q : 4 : THETA_Q"
     )
   expect_equal(mrgsolve@param[-1], param)
   
@@ -30,11 +30,11 @@ test_that("Export method works", {
   
   main <-
     c(
-      "double KA=THETA_1*exp(ETA_1);",
-      "double CL=THETA_2*exp(ETA_2);",
-      "double V2=THETA_3*exp(ETA_3);",
-      "double V3=THETA_4*exp(ETA_4);",
-      "double Q=THETA_5*exp(ETA_5);",
+      "double KA=THETA_KA*exp(ETA_KA);",
+      "double CL=THETA_CL*exp(ETA_CL);",
+      "double V2=THETA_V2*exp(ETA_V2);",
+      "double V3=THETA_V3*exp(ETA_V3);",
+      "double Q=THETA_Q*exp(ETA_Q);",
       "double S2=V2;",
       "F_A_DEPOT=0.75;",
       "ALAG_A_CENTRAL=2;",
@@ -47,5 +47,5 @@ test_that("ToString method works", {
   model <- getNONMEMModelTemplate(4,4)
   mrgsolve <- model %>% export(dest="mrgsolve")
   cppFileContent <- mrgsolve %>% toString()
-  expect_equal(nchar(cppFileContent), 894) # Just to not have an empty test...
+  expect_equal(nchar(cppFileContent), 927) # Just to not have an empty test...
 })
