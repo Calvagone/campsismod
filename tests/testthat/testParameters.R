@@ -78,7 +78,7 @@ test_that("Sort method", {
   
 })
 
-test_that("Disable method", {
+test_that("Disable method (IIV/RUV)", {
   
   model <- getNONMEMModelTemplate(4,4)
   
@@ -95,4 +95,13 @@ test_that("Disable method", {
   
   # Error: Erreur : Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'
   expect_error(model %>% disable("IOV"))
+})
+
+test_that("Disable method (VARCOV)", {
+  
+  model <- model_library$my_model1
+  expect_equal(model@parameters@varcov %>% length(), 49) # 7*7 matrix
+  
+  model <- model %>% disable("VARCOV")
+  expect_equal(model@parameters@varcov %>% length(), 0)
 })

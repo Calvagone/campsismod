@@ -49,8 +49,8 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
 #_______________________________________________________________________________
 
 setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
-  msg <- "Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'"
-  variabilities <- c("IIV", "RUV")
+  msg <- "Only these 3 variabilities can be disabled for now: 'IIV', 'RUV', 'VARCOV'"
+  variabilities <- c("IIV", "RUV", "VARCOV")
   assertthat::assert_that(all(x %in% variabilities), msg=msg)
   
   # Disable IIV
@@ -67,6 +67,11 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
       object <<- object %>% replace(param)
     })
   }
+  # Disable VARCOV (variance covariance matrix)
+  if ("VARCOV" %in% x) {
+    object@varcov <- matrix(numeric(0), ncol=0, nrow=0)
+  }
+  
   return(object)
 })
 
@@ -96,7 +101,10 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
     return(object)
   }
 
-  parameters <- new("parameters", list=list())
+  # Copy object and clear list of parameters
+  parameters <- object
+  parameters@list <- list()
+  
   
   # Fix NA problems
   # .x is the accumulating value
@@ -266,6 +274,13 @@ setMethod("show", signature=c("parameters"), definition=function(object) {
   print(purrr::map_df(omegas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
   cat("SIGMA's:\n")
   print(purrr::map_df(sigmas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+  
+  if (object@varcov %>% length() == 0) {
+    cat("No variance-covariance matrix\n")
+  } else {
+    cat("Variance-covariance matrix:\n")
+    show(object@varcov)
+  }
 })
 
 #_______________________________________________________________________________
