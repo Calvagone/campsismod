@@ -42,7 +42,7 @@ setGeneric("getPrefix", function(object, ...) {
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment_characteristic"), definition=function(object) {
-  cat(object %>% getName())
+  cat(paste0(object %>% getName(), ": ", object@rhs))
 })
 
 #_______________________________________________________________________________
