@@ -5,9 +5,9 @@ context("Test the conversion to mrgsolve")
 
 test_that("Export method works", {
   model <- getNONMEMModelTemplate(4,4)
-  model <- model %>% add(CompartmentBioavailability(compartment=1, rhs="0.75"))
-  model <- model %>% add(CompartmentLagTime(compartment=2, rhs="2"))
-  model <- model %>% add(CompartmentInfusionDuration(compartment=2, rhs="2"))
+  model <- model %>% add(Bioavailability(compartment=1, rhs="0.75"))
+  model <- model %>% add(LagTime(compartment=2, rhs="2"))
+  model <- model %>% add(InfusionDuration(compartment=2, rhs="2"))
   mrgsolve <- model %>% export(dest="mrgsolve")
   param <-
     c(

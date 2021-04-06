@@ -23,7 +23,7 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return bioavailability
 #' @export
-CompartmentBioavailability <- function(compartment, rhs) {
+Bioavailability <- function(compartment, rhs) {
   return(new("compartment_bioavailability", compartment=as.integer(compartment), rhs=rhs))
 }
 

@@ -56,16 +56,16 @@ getCompartments <- function(records) {
       updatedRecord@code <- c(updatedRecord@code, line)
     
     } else if (isBioavailibility(line)) {
-      compartments <- addCharacteristic(line, CompartmentBioavailability(0, rhs=""), compartments)
+      compartments <- addCharacteristic(line, Bioavailability(0, rhs=""), compartments)
       
     } else if (isLagTime(line)) {
-      compartments <- addCharacteristic(line, CompartmentLagTime(0, rhs=""), compartments)
+      compartments <- addCharacteristic(line, LagTime(0, rhs=""), compartments)
     
     } else if (isInfusionDuration(line)) {
-      compartments <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=FALSE), compartments)
+      compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=FALSE), compartments)
     
     } else if (isRate(line)) {
-      compartments <- addCharacteristic(line, CompartmentInfusionDuration(0, rhs="", rate=TRUE), compartments)
+      compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=TRUE), compartments)
     
     } else {
       updatedRecord@code <- c(updatedRecord@code, line)

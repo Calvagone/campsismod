@@ -25,7 +25,7 @@ setClass(
 #' @param rate logical value, TRUE if distribution is a rate, FALSE if it is an infusion
 #' @return details about infusion duration/rate
 #' @export
-CompartmentInfusionDuration <- function(compartment, rhs, rate=FALSE) {
+InfusionDuration <- function(compartment, rhs, rate=FALSE) {
   return(new("compartment_infusion_duration", compartment=as.integer(compartment), rhs=rhs, rate=rate))
 }
 
