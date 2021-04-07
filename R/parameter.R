@@ -108,14 +108,21 @@ Theta <- function(name=NA, index, value=NA, fix=FALSE) {
 #----                                omega                                  ----
 #_______________________________________________________________________________
 
+validateOmega <- function(object) {
+  return(expectOne(object, "same"))
+}
+
 #' Omega parameter class.
 #' 
 #' @export
 setClass(
   "omega",
   representation(
+    same = "logical"
   ),
-  contains = "double_array_parameter"
+  contains = "double_array_parameter",
+  prototype = prototype(same=as.logical(NA)),
+  validity = validateOmega
 )
 
 #' 
@@ -127,14 +134,15 @@ setClass(
 #' @param value parameter value
 #' @param fix parameter was fixed in estimation, logical value
 #' @param type variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'
+#' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for to 'SAME' OMEGA's
 #' @return an OMEGA parameter  
 #' @export
-Omega <- function(name=NA, index, index2, value=NA, fix=FALSE, type=NULL) {
+Omega <- function(name=NA, index, index2, value=NA, fix=FALSE, type=NULL, same=NA) {
   if (is.null(type)) {
     type <- if (index==index2) {"var"} else {"covar"}
   }
   return(new("omega", name=as.character(name), index=as.integer(index), index2=as.integer(index2),
-             value=as.numeric(value), fix=fix, type=type))
+             value=as.numeric(value), fix=fix, type=type, same=as.logical(same)))
 }
 
 #_______________________________________________________________________________
@@ -194,7 +202,11 @@ setMethod("as.data.frame", signature("theta", "character", "logical"), function(
   return(data.frame(name=x@name, index=x@index, value=x@value, fix=x@fix))
 })
 
-setMethod("as.data.frame", signature("double_array_parameter", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
+setMethod("as.data.frame", signature("omega", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
+  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type, same=x@same))
+})
+
+setMethod("as.data.frame", signature("sigma", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
   return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type))
 })
 

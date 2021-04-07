@@ -100,11 +100,13 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
   if (length(tmp@list) < 2) {
     return(object)
   }
-
-  # Copy object and clear list of parameters
-  parameters <- object
-  parameters@list <- list()
   
+  # Checking all 'same' are NA's
+  sameVector <- (tmp %>% select("omega"))@list %>% purrr::map_lgl(.f=~.x@same)
+  assertthat::assert_that(all(is.na(sameVector)), msg="all 'same' must be NA")
+
+    # Copy object and clear list of parameters
+  parameters <- Parameters()
   
   # Fix NA problems
   # .x is the accumulating value
@@ -115,15 +117,21 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
     if (xIsOmega && yIsOmega) {
       if (is.na(.y@value)) {
         .y@value <- .x@value
+        .y@same <- TRUE
+        if (is.na(.x@same)) {
+          .x@same <- FALSE
+          parameters <<- parameters %>% replace(.x)
+        }
       }
       if (is.na(.y@fix)) {
         .y@fix <- .x@fix
       }
     }
+     
     parameters <<- parameters %>% add(.y)
     return(.y)
   }, .init=tmp@list[[1]])
-  
+
   return(parameters %>% clean())
 })
 
@@ -171,11 +179,14 @@ setMethod("maxIndex", signature=c("parameters", "character"), definition=functio
 
 dataframeToParameter <- function(row, type) {
   param <- NULL
-  
+  name <- ifelse(is.null(row$name), NA, row$name) # Optional
   if (type=="theta") {
-    param <- new("theta", name=as.character(row$name), index=row$index, value=row$value, fix=row$fix)
-  } else if(type=="omega" | type=="sigma") {
-    param <- new(type, name=as.character(row$name), index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type)
+    param <- Theta(name=name, index=row$index, value=row$value, fix=row$fix)
+  } else if(type=="omega") {
+    same <- ifelse(is.null(row$same), NA, row$same) # Optional
+    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, same=same)
+  } else if(type=="sigma") {
+    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }
@@ -329,8 +340,13 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' @param object subset of parameters
 #' @param file filename
 #' @return TRUE if success
+#' @importFrom dplyr select_if
 writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  
+  # Get rid of column if all NA
+  df <- df %>% dplyr::select_if(.predicate=~!(is.logical(.x) && all(is.na(.x))))
+
   if (nrow(df)==0) {
     df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
   }

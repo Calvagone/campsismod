@@ -105,3 +105,19 @@ test_that("Disable method (VARCOV)", {
   model <- model %>% disable("VARCOV")
   expect_equal(model@parameters@varcov %>% length(), 0)
 })
+
+test_that("Fix omega method is working", {
+  
+  model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_not_fixed"))
+  model@parameters <- model@parameters %>% fixOmega()
+  
+  expected <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  expect_equal(model, expected)
+})
+
+test_that("Name column is optional", {
+  
+  model <- read.pmxmod(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
+  names <- (model@parameters %>% select("theta"))@list %>% purrr::map_chr(.f=~.x@name)
+  expect_true(all(is.na(names)))
+})
