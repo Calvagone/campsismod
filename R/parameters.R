@@ -49,8 +49,8 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
 #_______________________________________________________________________________
 
 setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
-  msg <- "Only these 3 variabilities can be disabled for now: 'IIV', 'RUV', 'VARCOV'"
-  variabilities <- c("IIV", "RUV", "VARCOV")
+  msg <- "Only these 4 variabilities can be disabled: 'IIV', 'IOV', 'RUV', 'VARCOV'"
+  variabilities <- c("IIV", "IOV", "RUV", "VARCOV")
   assertthat::assert_that(all(x %in% variabilities), msg=msg)
   
   # Disable IIV
@@ -60,6 +60,17 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
       object <<- object %>% replace(param)
     })
   }
+  
+  # Disable IOV (note that IOV is a subset of IIV)
+  if ("IOV" %in% x) {
+    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
+      if (!is.na(param@same)) {
+        param@value <- 0
+        object <<- object %>% replace(param)
+      }
+    })
+  }
+  
   # Disable RUV
   if ("RUV" %in% x) {
     (object%>% select("sigma"))@list %>% purrr::map(.f=function(param) {

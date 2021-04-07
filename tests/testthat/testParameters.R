@@ -93,8 +93,7 @@ test_that("Disable method (IIV/RUV)", {
   model <- model %>% disable("RUV")
   expect_equal((model@parameters %>% getByName("SIGMA_PROP"))@value, 0)
   
-  # Error: Erreur : Only these 2 variabilities can be disabled for now: 'IIV', 'RUV'
-  expect_error(model %>% disable("IOV"))
+  expect_error(model %>% disable("SOMETHING"))
 })
 
 test_that("Disable method (VARCOV)", {
@@ -104,6 +103,20 @@ test_that("Disable method (VARCOV)", {
   
   model <- model %>% disable("VARCOV")
   expect_equal(model@parameters@varcov %>% length(), 0)
+})
+
+test_that("Disable method (IOV)", {
+  model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  model <- model %>% disable("IOV")
+  
+  omega4 <- model@parameters %>% getByIndex(Omega(index=4, index2=4))
+  expect_true(omega4@value != 0)
+  
+  omega5 <- model@parameters %>% getByIndex(Omega(index=5, index2=5))
+  expect_true(omega5@value == 0)
+  
+  omega6 <- model@parameters %>% getByIndex(Omega(index=6, index2=6))
+  expect_true(omega6@value == 0)
 })
 
 test_that("Fix omega method is working", {
