@@ -105,6 +105,23 @@ test_that("Disable method (VARCOV)", {
   expect_equal(model@parameters@varcov %>% length(), 0)
 })
 
+test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
+  
+  model <- model_library$my_model1
+  expect_equal(model@parameters@varcov %>% length(), 49) # 7*7 matrix
+  
+  model <- model %>% disable("VARCOV_OMEGA")
+  expect_equal(model@parameters@varcov %>% length(), 25) # 2 OMEGA's removed
+  
+  model <- model %>% disable("VARCOV_SIGMA")
+  expect_equal(model@parameters@varcov %>% length(), 16) # 1 SIGMA removed
+  
+  # All at once
+  model <- model_library$my_model1
+  model <- model %>% disable(c("VARCOV_OMEGA", "VARCOV_SIGMA"))
+  expect_equal(model@parameters@varcov %>% length(), 16)
+})
+
 test_that("Disable method (IOV)", {
   model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
   model <- model %>% disable("IOV")

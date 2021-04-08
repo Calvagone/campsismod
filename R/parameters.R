@@ -49,8 +49,9 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
 #_______________________________________________________________________________
 
 setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
-  msg <- "Only these 4 variabilities can be disabled: 'IIV', 'IOV', 'RUV', 'VARCOV'"
-  variabilities <- c("IIV", "IOV", "RUV", "VARCOV")
+  variabilities <- c("IIV", "IOV", "RUV", "VARCOV", "VARCOV_OMEGA", "VARCOV_SIGMA")
+  msg <- paste0("Only these variabilities can be disabled: ", paste0("'", variabilities, "'", collapse=", "))
+  assertthat::assert_that(list(...) %>% length()==0, msg="Extra arguments are not accepted")
   assertthat::assert_that(all(x %in% variabilities), msg=msg)
   
   # Disable IIV
@@ -78,9 +79,30 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
       object <<- object %>% replace(param)
     })
   }
+  
   # Disable VARCOV (variance covariance matrix)
   if ("VARCOV" %in% x) {
     object@varcov <- matrix(numeric(0), ncol=0, nrow=0)
+  }
+  
+  # Disable all omegas or sigmas in varcov
+  varcovOmega <- "VARCOV_OMEGA" %in% x
+  varcovSigma <- "VARCOV_SIGMA" %in% x
+  if (varcovOmega || varcovSigma) {
+
+    # Retrieve varcov parameters
+    varcovParams <- colnames(object@varcov) %>% purrr::map(.f=function(.x) {
+      return(object %>% getByName(.x))
+    })
+    
+    # Remove these params if condition is met
+    varcovParams %>% purrr::map(.f=function(.x) {
+      if ((is(.x, "omega") && varcovOmega) || (is(.x, "sigma") && varcovSigma)) {
+        index <- which(colnames(object@varcov) == .x %>% getName())
+        object@varcov <<- object@varcov[-index, ]
+        object@varcov <<- object@varcov[, -index]
+      }
+    })
   }
   
   return(object)
