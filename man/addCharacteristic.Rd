@@ -2,7 +2,7 @@
 % Please edit documentation in R/code_records.R
 \name{addCharacteristic}
 \alias{addCharacteristic}
-\title{Add characteristic to compartment list.}
+\title{Add characteristic to compartments object.}
 \usage{
 addCharacteristic(line, emptyCharacteristic, compartments)
 }
@@ -17,5 +17,5 @@ addCharacteristic(line, emptyCharacteristic, compartments)
 updated compartments object
 }
 \description{
-Add characteristic to compartment list.
+Add characteristic to compartments object.
 }

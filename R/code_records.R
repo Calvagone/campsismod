@@ -53,7 +53,7 @@ getCompartments <- function(records) {
       }
       compartment <- Compartment(index=odeCounter, name=name)
       compartments <- compartments %>% add(compartment)
-      updatedRecord@code <- c(updatedRecord@code, line)
+      updatedRecord@code <- updatedRecord@code %>% append(line)
     
     } else if (isBioavailibility(line)) {
       compartments <- addCharacteristic(line, Bioavailability(0, rhs=""), compartments)
@@ -67,6 +67,9 @@ getCompartments <- function(records) {
     } else if (isRate(line)) {
       compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=TRUE), compartments)
     
+    } else if (isInitialCondition(line)) {
+      compartments <- addCharacteristic(line, InitialCondition(0, rhs=""), compartments)
+        
     } else {
       updatedRecord@code <- c(updatedRecord@code, line)
     }
@@ -74,7 +77,7 @@ getCompartments <- function(records) {
   return(list(updatedRecord, compartments))
 }
 
-#' Add characteristic to compartment list.
+#' Add characteristic to compartments object.
 #'
 #' @param line line record
 #' @param emptyCharacteristic empty characteristic, to be completed
@@ -93,6 +96,27 @@ addCharacteristic <- function(line, emptyCharacteristic, compartments) {
   characteristic@rhs <- extractRhs(line)
   
   return(compartments %>% add(characteristic))
+}
+
+#' Add initial condition to compartments object.
+#'
+#' @param line line record
+#' @param emptyCondition empty condition, to be completed
+#' @param compartments compartments object
+#' @return updated compartments object
+#' 
+addInitialCondition <- function(line, emptyCondition, compartments) {
+  cmtName <- getInitialConditionCmt(line)
+  compartment <- compartments %>% getByName(cmtName)
+  
+  if (length(compartment) == 0) {
+    stop(paste0("Initial condition compartment undefined: '", cmtName, "'"))
+  }
+  condition <- emptyCondition
+  condition@compartment <- compartment@index
+  condition@rhs <- extractRhs(line)
+  
+  return(compartments %>% add(condition))
 }
 
 #_______________________________________________________________________________
@@ -187,16 +211,20 @@ setMethod("write", signature=c("code_records", "character"), definition=function
   # The model is needed to get the characteristics
   model <- processExtraArg(args=list(...), name="model")
   if (is.null(model)) {
-    warning("model not provided, compartment characteristics will be lost")
+    warning("model not provided, compartment characteristics and initial conditions will be lost")
   } else {
     characteristics <- model@compartments@characteristics
+    initial_conditions <- model@compartments@initial_conditions
   }
   
   # Adding characteristics to DES record
   desRecord <- object %>% getByName("DES")
   if (!is.null(desRecord) && !is.null(model)) {
     for (characteristic in characteristics@list) {
-      desRecord@code <- c(desRecord@code, characteristic %>% toString(model=model))
+      desRecord@code <- desRecord@code %>% append(characteristic %>% toString(model=model))
+    }
+    for (initial_condition in initial_conditions@list) {
+      desRecord@code <- desRecord@code %>% append(initial_condition %>% toString(model=model))
     }
     object <- object %>% replace(desRecord)
   }
@@ -204,9 +232,9 @@ setMethod("write", signature=c("code_records", "character"), definition=function
   # Write code record
   code <- NULL
   for (record in object@list) {
-    code <- c(code, paste0("[", record %>% getName(), "]"))
-    code <- c(code, record@code)
-    code <- c(code, "") # write.table will add a new line
+    code <- code %>% append(paste0("[", record %>% getName(), "]"))
+    code <- code %>% append(record@code)
+    code <- code %>% append("") # write.table will add a new line
   }
   write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
 })

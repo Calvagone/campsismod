@@ -8,14 +8,18 @@
 rxodeCode <- function(model) {
   records <- model@model
   characteristics <- model@compartments@characteristics
+  initial_conditions <- model@compartments@initial_conditions
   
-  if (characteristics %>% length() > 0) {
+  if (characteristics %>% length() > 0 || initial_conditions %>% length() > 0) {
     desRecord <- records %>% getByName("DES")
     if (length(desRecord) == 0) {
-      stop("Not able to add compartment characteristics for RxODE: no DES block")
+      stop("Not able to add compartment characteristics or initial conditions for RxODE: no DES block")
     }
     for (characteristic in characteristics@list) {
-      desRecord@code <- c(desRecord@code, characteristic %>% toString(model=model))
+      desRecord@code <- desRecord@code %>% append(characteristic %>% toString(model=model))
+    }
+    for (initial_condition in initial_conditions@list) {
+      desRecord@code <- desRecord@code %>% append(initial_condition %>% toString(model=model, dest="RxODE"))
     }
     records <- records %>% replace(desRecord)
   }

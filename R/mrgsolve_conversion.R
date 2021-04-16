@@ -58,6 +58,7 @@ mrgsolveMatrix <- function(model, type="omega") {
 mrgsolveMain <- function(model) {
   records <- model@model
   characteristics <- model@compartments@characteristics
+  initial_conditions <- model@compartments@initial_conditions
   retValue <- "[MAIN]"
   record <- records %>% getByName("PK")
   retValue <- mrgsolveBlock(record, init="[MAIN]")
@@ -66,6 +67,12 @@ mrgsolveMain <- function(model) {
       compartmentIndex <- characteristic@compartment
       compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
       equation <- paste0(characteristic %>% getPrefix(dest="mrgsolve"), "_", compartment %>% getName(), "=", characteristic@rhs, ";")
+      retValue <- retValue %>% append(equation)
+    }
+  }
+  if (initial_conditions %>% length() > 0) {
+    for (initial_condition in initial_conditions@list) {
+      equation <- paste0(initial_condition %>% toString(model=model, dest="mrgsolve"), ";")
       retValue <- retValue %>% append(equation)
     }
   }

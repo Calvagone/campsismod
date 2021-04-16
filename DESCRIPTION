@@ -10,6 +10,8 @@ Collate:
     'generic_element_list.R'
     'generic_list.R'
     'compartment.R'
+    'compartment_initial_condition.R'
+    'compartment_initial_conditions.R'
     'compartment_characteristic.R'
     'compartment_characteristics.R'
     'compartment_bioavailability.R'

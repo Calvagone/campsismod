@@ -44,3 +44,15 @@ test_that("isEquation is working well", {
   expect_true(isEquation("V3=THETA_V3*VDBW"))
   expect_false(isEquation("if (OCC == 1) VIS1=1"))
 })
+
+test_that("isInitialCondition is working well", {
+  expect_true(isInitialCondition("A_Gluc_X1(0) = X"))
+  expect_true(isInitialCondition("A_Gluc_X1( 0 ) = X"))
+  expect_true(isInitialCondition("A_Gluc_X1 ( 0 ) = X"))
+  expect_false(isInitialCondition("A_Gluc_X1(85) = X"))
+})
+
+test_that("getInitialConditionCmt is working well", {
+  expect_equal(getInitialConditionCmt("A_Gluc_X1(0) = X"), "A_Gluc_X1")
+  expect_equal(getInitialConditionCmt(" A_Gluc_X1 (0 ) = X"), "A_Gluc_X1")
+})

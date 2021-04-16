@@ -6,10 +6,12 @@
 setClass(
   "compartments",
   representation(
-    characteristics="compartment_characteristics"
+    characteristics="compartment_characteristics",
+    initial_conditions="compartment_initial_conditions"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="compartment", characteristics=new("compartment_characteristics"))
+  prototype = prototype(type="compartment", characteristics=new("compartment_characteristics"),
+                        initial_conditions=new("compartment_initial_conditions"))
 )
 
 #' 
@@ -27,6 +29,11 @@ Compartments <- function() {
 
 setMethod("add", signature = c("compartments", "compartment_characteristic"), definition = function(object, x) {
   object@characteristics <- object@characteristics %>% add(x) 
+  return(object)
+})
+
+setMethod("add", signature = c("compartments", "compartment_initial_condition"), definition = function(object, x) {
+  object@initial_conditions <- object@initial_conditions %>% add(x) 
   return(object)
 })
 
@@ -57,6 +64,12 @@ setMethod("show", signature=c("compartments"), definition=function(object) {
   } else {
     cat("Compartment characteristics:\n")
     show(object@characteristics)
+  }
+  if (object@initial_conditions %>% length() == 0) {
+    cat("No initial conditions")
+  } else {
+    cat("Initial conditions:\n")
+    show(object@initial_conditions)
   }
 })
 

@@ -76,6 +76,25 @@ isRate <- function(x) {
   return(grepl(pattern="^rate\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
+#' Say if line(s) in record is/are initial conditions.
+#' 
+#' @param x character vector
+#' @return logical vector
+#' @export
+isInitialCondition <- function(x) {
+  return(grepl(pattern="^[a-z_][a-z0-9_]+\\s*\\(\\s*0\\s*\\)\\s*=", x=trim(x), ignore.case=TRUE))
+}
+
+#' Get initial condition compartment.
+#' Assumes x is an initial condition (isInitialCondition already called).
+#' 
+#' @param x character vector
+#' @return logical vector
+#' @export
+getInitialConditionCmt <- function(x) {
+  return(gsub(pattern="([a-z_][a-z0-9_]+)(\\s*\\(\\s*0\\s*\\)\\s*=.*)", replacement="\\1", x=trim(x), ignore.case=TRUE))
+}
+
 #' Extract text between brackets.
 #' 
 #' @param x character value

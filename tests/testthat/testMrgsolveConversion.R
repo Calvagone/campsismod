@@ -8,6 +8,8 @@ test_that("Export method works", {
   model <- model %>% add(Bioavailability(compartment=1, rhs="0.75"))
   model <- model %>% add(LagTime(compartment=2, rhs="2"))
   model <- model %>% add(InfusionDuration(compartment=2, rhs="2"))
+  model <- model %>% add(InitialCondition(compartment=2, rhs="50"))
+  
   mrgsolve <- model %>% export(dest="mrgsolve")
   param <-
     c(
@@ -38,7 +40,8 @@ test_that("Export method works", {
       "double S2=V2;",
       "F_A_DEPOT=0.75;",
       "ALAG_A_CENTRAL=2;",
-      "D_A_CENTRAL=2;"
+      "D_A_CENTRAL=2;",
+      "A_CENTRAL_0=50;"
     )
   expect_equal(mrgsolve@main[-1], main)
 })

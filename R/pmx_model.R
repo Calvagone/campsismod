@@ -27,6 +27,18 @@ setMethod("add", signature=c("pmx_model", "compartment_characteristic"), definit
   return(object)
 })
 
+setMethod("add", signature=c("pmx_model", "compartment_initial_condition"), definition=function(object, x) {
+  compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
+  if (length(compartment) == 0) {
+    stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
+  }
+  
+  # Add initial condition (delegate to add method in compartments class)
+  object@compartments <- object@compartments %>% add(x) 
+  
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
