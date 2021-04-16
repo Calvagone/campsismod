@@ -28,7 +28,7 @@ test_that("Write/Read ADVAN1 TRANS1", {
   expect_equal(model, model2)
 })
 
-test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics", {
+test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initial conditions", {
   advan <- 4
   trans <- 4
   model <- getNONMEMModelTemplate(advan, trans)
@@ -38,6 +38,9 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics", {
   model <- model %>% add(Bioavailability(1, "F1"))
   model <- model %>% add(InfusionDuration(1, "D1"))
   model <- model %>% add(InfusionDuration(2, "R2", rate=TRUE))
+  
+  # Add initial conditions
+  model <- model %>% add(InitialCondition(2, "100"))
   
   # Write
   model %>% write(file=writePath(advan, trans))

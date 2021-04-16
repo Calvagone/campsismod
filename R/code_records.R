@@ -68,7 +68,7 @@ getCompartments <- function(records) {
       compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=TRUE), compartments)
     
     } else if (isInitialCondition(line)) {
-      compartments <- addCharacteristic(line, InitialCondition(0, rhs=""), compartments)
+      compartments <- addInitialCondition(line, InitialCondition(0, rhs=""), compartments)
         
     } else {
       updatedRecord@code <- c(updatedRecord@code, line)
