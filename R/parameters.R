@@ -267,20 +267,25 @@ read.allparameters <- function(folder) {
   sigmaPath <- file.path(folder, "sigma.csv")
   varcovPath <- file.path(folder, "varcov.csv")
   
-  if (!file.exists(thetaPath)) {
-    stop(paste0("Theta file couln't be found."))
+  if (file.exists(thetaPath)) {
+    theta <- read.parameters(file=thetaPath, type="theta")
+  } else {
+    theta <- Parameters()
+    warning(paste0("No file 'theta.csv' could be found."))
   }
-  if (!file.exists(omegaPath)) {
-    stop(paste0("Omega file couln't be found."))
+  if (file.exists(omegaPath)) {
+    omega <- read.parameters(file=omegaPath, type="omega")
+  } else {
+    omega <- Parameters()
+    warning(paste0("No file 'omega.csv' could be found."))
   }
-  if (!file.exists(sigmaPath)) {
-    stop(paste0("Sigma file couln't be found."))
+  if (file.exists(sigmaPath)) {
+    sigma <- read.parameters(file=sigmaPath, type="sigma")
+  } else {
+    sigma <- Parameters()
+    warning(paste0("No file 'sigma.csv' could be found."))
   }
 
-  theta <- read.parameters(file=thetaPath, type="theta")
-  omega <- read.parameters(file=omegaPath, type="omega")
-  sigma <- read.parameters(file=sigmaPath, type="sigma")
-  
   parameters <- new("parameters", list=c(theta@list, omega@list, sigma@list)) %>% clean()
   if (file.exists(varcovPath)) {
     varcov <- read.varcov(varcovPath)
