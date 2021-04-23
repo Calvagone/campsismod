@@ -51,6 +51,18 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
 })
 
 #_______________________________________________________________________________
+#----                          getCompartmentIndex                          ----
+#_______________________________________________________________________________
+
+setMethod("getCompartmentIndex", signature=c("compartments", "character"), definition=function(object, name) {
+  compartment <- object %>% getByName(paste0("A_", name))
+  if (compartment %>% length() == 0) {
+    stop(paste0("Compartment ", name, " not found."))
+  }
+  return(compartment@index)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 

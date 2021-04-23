@@ -88,6 +88,14 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 })
 
 #_______________________________________________________________________________
+#----                          getCompartmentIndex                          ----
+#_______________________________________________________________________________
+
+setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definition=function(object, name) {
+  return(object@compartments %>% getCompartmentIndex(name=name))
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

@@ -51,6 +51,24 @@ setGeneric("export", function(object, dest, ...) {
 })
 
 #_______________________________________________________________________________
+#----                          getCompartmentIndex                          ----
+#_______________________________________________________________________________
+
+#' Get the compartment index for the specified compartment name.
+#' 
+#' @param object generic object that contains compartments information
+#' @param name compartment name
+#' @return the corresponding compartment index
+#' @export
+getCompartmentIndex <- function(object, name) {
+  stop("No default function is provided")
+}
+
+setGeneric("getCompartmentIndex", function(object, name) {
+  standardGeneric("getCompartmentIndex")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
