@@ -38,6 +38,11 @@ rxodeCode <- function(model) {
 rxodeParams <- function(model) {
   type <- "theta"
   params <- model@parameters
+  if (params %>% length() == 0) {
+    retValue <- numeric(0)
+    names(retValue) <- character(0)
+    return(retValue) # Must be named numeric, otherwise RxODE complains
+  }
   maxIndex <- params %>% maxIndex(type=type)
   
   # Careful, as.numeric(NA) is important...
