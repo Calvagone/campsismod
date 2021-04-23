@@ -39,6 +39,16 @@ setMethod("add", signature=c("pmx_model", "compartment_initial_condition"), defi
   return(object)
 })
 
+setMethod("add", signature=c("pmx_model", "parameter"), definition=function(object, x) {
+  object@parameters <- object@parameters %>% add(x)
+  return(object)
+})
+
+setMethod("add", signature=c("pmx_model", "code_record"), definition=function(object, x) {
+  object@model <- object@model %>% add(x)
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
@@ -149,6 +159,20 @@ updateCompartments <- function(model) {
   model@compartments <- compartments
   return(model)
 }
+
+#_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+setMethod("replace", signature=c("pmx_model", "parameter"), definition=function(object, x) {
+  object@parameters <- object@parameters %>% replace(x)
+  return(object)
+})
+
+setMethod("replace", signature=c("pmx_model", "code_record"), definition=function(object, x) {
+  object@model <- object@model %>% replace(x)
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                                 write                                 ----
