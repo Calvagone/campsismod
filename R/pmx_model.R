@@ -124,7 +124,7 @@ read.pmxmod <- function(file) {
     stop("file is not a ZIP file nor a valid folder")
   }
   
-  modelPath <- file.path(folder, "model.mod")
+  modelPath <- file.path(folder, "model.pmx")
   
   if (!file.exists(modelPath)) {
     stop(paste0("Model file couln't be found."))
@@ -191,7 +191,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     } else {
       dir.create(file)
     }
-    records %>% write(file=file.path(file, "model.mod"), model=object)
+    records %>% write(file=file.path(file, "model.pmx"), model=object)
     parameters %>% write(file=file)
   }
   return(TRUE)
