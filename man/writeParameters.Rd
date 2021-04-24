@@ -10,6 +10,8 @@ writeParameters(object, file, ...)
 \item{object}{subset of parameters}
 
 \item{file}{filename}
+
+\item{...}{extra arguments, like defaultDf for empty parameters list}
 }
 \value{
 TRUE if success

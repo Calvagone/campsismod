@@ -6,6 +6,11 @@
 \usage{
 Compartment(index, name = NA)
 }
+\arguments{
+\item{index}{compartment index}
+
+\item{name}{compartment name}
+}
 \value{
 an empty list of compartments
 }

@@ -377,6 +377,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' 
 #' @param object subset of parameters
 #' @param file filename
+#' @param ... extra arguments, like defaultDf for empty parameters list
 #' @return TRUE if success
 #' @importFrom dplyr select_if
 writeParameters <- function(object, file, ...) {
@@ -397,7 +398,7 @@ writeParameters <- function(object, file, ...) {
 #' @param object matrix
 #' @param file filename
 #' @return TRUE if success
-writeVarcov <- function(object, file, ...) {
+writeVarcov <- function(object, file) {
   write.csv(object, file=file)
   return(TRUE)
 }

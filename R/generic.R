@@ -132,6 +132,7 @@ setGeneric("standardise", function(object, ...) {
 #' ToString generic method
 #' 
 #' @param object generic object
+#' @param ... extra arguments needed for toString conversion
 #' @return character value/vector
 #' @export
 toString <- function(object, ...) {

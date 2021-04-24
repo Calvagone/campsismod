@@ -8,6 +8,8 @@ toString(object, ...)
 }
 \arguments{
 \item{object}{generic object}
+
+\item{...}{extra arguments needed for toString conversion}
 }
 \value{
 character value/vector

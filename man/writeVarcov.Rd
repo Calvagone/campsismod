@@ -4,7 +4,7 @@
 \alias{writeVarcov}
 \title{Write variance-covariance matrix.}
 \usage{
-writeVarcov(object, file, ...)
+writeVarcov(object, file)
 }
 \arguments{
 \item{object}{matrix}

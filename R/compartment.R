@@ -21,6 +21,8 @@ setClass(
 #' 
 #' Create a compartment.
 #' 
+#' @param index compartment index
+#' @param name compartment name
 #' @return an empty list of compartments  
 #' @export
 Compartment <- function(index, name=NA) {
