@@ -70,7 +70,7 @@ test_that("removeEquation method is working well", {
   expect_equal(model@model %>% getByName("PK") %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% removeEquation("S1")
-  expect_equal(model@model %>% getByName("PK") %>% length(), 2) # 3 equations: K, V
+  expect_equal(model@model %>% getByName("PK") %>% length(), 2) # 2 equations: K, V
 })
 
 test_that("replaceEquation method is working well", {

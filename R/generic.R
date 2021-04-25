@@ -86,6 +86,43 @@ setGeneric("read", function(file, ...) {
 })
 
 #_______________________________________________________________________________
+#----                           removeEquation                              ----
+#_______________________________________________________________________________
+
+#' Remove equation from code record.
+#' 
+#' @param object object containing code record(s)
+#' @param lhs left-hand-side variable
+#' @return updated code record
+#' @export
+removeEquation <- function(object, lhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("removeEquation", function(object, lhs) {
+  standardGeneric("removeEquation")
+})
+
+#_______________________________________________________________________________
+#----                           replaceEquation                             ----
+#_______________________________________________________________________________
+
+#' Replace equation in code records.
+#' 
+#' @param object object containing code records
+#' @param lhs left-hand-side variable
+#' @param rhs right-hand-side expression
+#' @return updated code records
+#' @export
+replaceEquation <- function(object, lhs, rhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("replaceEquation", function(object, lhs, rhs) {
+  standardGeneric("replaceEquation")
+})
+
+#_______________________________________________________________________________
 #----                                 select                                ----
 #_______________________________________________________________________________
 

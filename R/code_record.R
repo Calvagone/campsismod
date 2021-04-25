@@ -129,6 +129,36 @@ setMethod("length", signature=c("code_record"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
+#----                           removeEquation                              ----
+#_______________________________________________________________________________
+
+setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
+  for (lineIndex in seq_along(object@code)) {
+    line <- object@code[lineIndex]
+    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
+      object@code <- object@code[-lineIndex]
+      break
+    }
+  }
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                           replaceEquation                             ----
+#_______________________________________________________________________________
+
+setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
+  for (lineIndex in seq_along(object@code)) {
+    line <- object@code[lineIndex]
+    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
+      object@code[lineIndex] <- paste0(extractLhs(line), "=", rhs)
+      break
+    }
+  }
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
