@@ -171,7 +171,7 @@ getRecordDelimiter <- function(line) {
 #' Remove equation from code records.
 #' 
 #' @param object object containing code records
-#' @param lhs left hand side variable
+#' @param lhs left-hand-side variable
 #' @return updated code records
 #' @export
 removeEquation <- function(object, lhs) {
@@ -182,13 +182,47 @@ setGeneric("removeEquation", function(object, lhs) {
   standardGeneric("removeEquation")
 })
 
-setMethod("removeEquation", signature=c("code_records"), definition=function(object, lhs) {
+setMethod("removeEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
   copy <- object
   for (record in object@list) {
     for (lineIndex in seq_along(record@code)) {
       line <- record@code[lineIndex]
-      if (isEquation(line) && extractLhs(line)==lhs) {
+      if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
         record@code <- record@code[-lineIndex]
+        copy <- copy %>% replace(record)
+        break
+      }
+    }
+  }
+  return(copy)
+})
+
+#_______________________________________________________________________________
+#----                           replaceEquation                             ----
+#_______________________________________________________________________________
+
+#' Replace equation in code records.
+#' 
+#' @param object object containing code records
+#' @param lhs left-hand-side variable
+#' @param rhs right-hand-side expression
+#' @return updated code records
+#' @export
+replaceEquation <- function(object, lhs, rhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("replaceEquation", function(object, lhs, rhs) {
+  standardGeneric("replaceEquation")
+})
+
+setMethod("replaceEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs) {
+  copy <- object
+  for (record in object@list) {
+    for (lineIndex in seq_along(record@code)) {
+      line <- record@code[lineIndex]
+      if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
+        record@code[lineIndex] <- paste0(extractLhs(line), "=", rhs)
         copy <- copy %>% replace(record)
         break
       }

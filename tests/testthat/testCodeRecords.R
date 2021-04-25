@@ -72,3 +72,12 @@ test_that("removeEquation method is working well", {
   model <- model %>% removeEquation("S1")
   expect_equal(model@model %>% getByName("PK") %>% length(), 2) # 3 equations: K, V
 })
+
+test_that("replaceEquation method is working well", {
+  
+  model <- getNONMEMModelTemplate(1,1)
+  expect_equal(model@model %>% getByName("PK") %>% length(), 3) # 3 equations: K, V, S1
+  
+  model <- model %>% replaceEquation("S1", rhs="V/1000")
+  expect_equal((model@model %>% getByName("PK"))@code[3], "S1=V/1000") # Equation well modified
+})

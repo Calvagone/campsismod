@@ -127,13 +127,13 @@ extractRhs <- function(x) {
 #' Extract left-hand-side expression.
 #' 
 #' @param x character value
-#' @return left-hand-side expressionn
+#' @return left-hand-side expression, not trimmed
 #' @importFrom assertthat assert_that
 #' @export
 extractLhs <- function(x) {
   assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
   tmp <- strsplit(x=x, split="=")[[1]]
-  lhs <- tmp[1] %>% trim()
+  lhs <- tmp[1]
   return(lhs)
 }
 

@@ -10,7 +10,7 @@ extractLhs(x)
 \item{x}{character value}
 }
 \value{
-left-hand-side expressionn
+left-hand-side expression, not trimmed
 }
 \description{
 Extract left-hand-side expression.

@@ -164,7 +164,7 @@ updateCompartments <- function(model) {
 #----                           removeEquation                              ----
 #_______________________________________________________________________________
 
-setMethod("removeEquation", signature=c("pmx_model"), definition=function(object, lhs) {
+setMethod("removeEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
   object@model <- object@model %>% removeEquation(lhs)
   return(object)
 })
@@ -180,6 +180,15 @@ setMethod("replace", signature=c("pmx_model", "parameter"), definition=function(
 
 setMethod("replace", signature=c("pmx_model", "code_record"), definition=function(object, x) {
   object@model <- object@model %>% replace(x)
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                           replaceEquation                             ----
+#_______________________________________________________________________________
+
+setMethod("replaceEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs) {
+  object@model <- object@model %>% replaceEquation(lhs, rhs)
   return(object)
 })
 
