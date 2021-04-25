@@ -4,12 +4,14 @@
 \alias{add}
 \title{Add element to list.}
 \usage{
-add(object, x)
+add(object, x, ...)
 }
 \arguments{
 \item{object}{list object}
 
 \item{x}{element to add}
+
+\item{...}{extra arguments}
 }
 \value{
 object

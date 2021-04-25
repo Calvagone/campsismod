@@ -81,3 +81,26 @@ test_that("replaceEquation method is working well", {
   model <- model %>% replaceEquation("S1", rhs="V/1000")
   expect_equal((model@model %>% getByName("PK"))@code[3], "S1=V/1000") # Equation well modified
 })
+
+test_that("add method is working well on code record", {
+  
+  model <- getNONMEMModelTemplate(1,1)
+  
+  pk1 <- model@model %>% getByName("PK")
+  pk1 <- pk1 %>% add("V2=THETA_V2*exp(ETA_V2)", after="V")
+  
+  pk2 <- model@model %>% getByName("PK")
+  pk2 <- pk2 %>% add("V2=THETA_V2*exp(ETA_V2)", before="S1")
+  
+  expect_equal(pk1, pk2)
+  
+  pk3 <- model@model %>% getByName("PK")
+  pk3 <- pk3 %>% add("V2=THETA_V2*exp(ETA_V2)", after=2)
+  
+  pk4 <- model@model %>% getByName("PK")
+  pk4 <- pk4 %>% add("V2=THETA_V2*exp(ETA_V2)", before=3)
+  
+  expect_equal(pk1, pk3)
+  expect_equal(pk3, pk4)
+})
+

@@ -28,13 +28,14 @@ setClass(
 #' 
 #' @param object list object
 #' @param x element to add
+#' @param ... extra arguments
 #' @return object
 #' @export
-add <- function(object, x) {
+add <- function(object, x, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("add", function(object, x) {
+setGeneric("add", function(object, x, ...) {
   standardGeneric("add")
 })
 

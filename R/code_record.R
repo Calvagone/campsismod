@@ -101,6 +101,38 @@ ErrorRecord <- function(code=character()) {
 }
 
 #_______________________________________________________________________________
+#----                              add                                      ----
+#_______________________________________________________________________________
+
+getEquationIndex <- function(object, lhs) {
+  for (lineIndex in seq_along(object@code)) {
+    line <- object@code[lineIndex]
+    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
+      return(lineIndex)
+    }
+  }
+  return(-1)
+}
+
+setMethod("add", signature=c("code_record", "character"), definition=function(object, x, before=NULL, after=NULL) {
+  if (!is.null(before)) {
+    index <- ifelse(is.numeric(before), before, getEquationIndex(object, before)) - 1
+  } else if(!is.null(after)) {
+    index <- ifelse(is.numeric(after), after, getEquationIndex(object, after))
+  } else {
+    index <- NULL
+  }
+  
+  if (is.null(index)) {
+    object@code <- object@code %>% append(x)
+  } else {
+    object@code <- object@code %>% append(x, after=index)
+  }
+
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
@@ -133,12 +165,9 @@ setMethod("length", signature=c("code_record"), definition=function(x) {
 #_______________________________________________________________________________
 
 setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
-  for (lineIndex in seq_along(object@code)) {
-    line <- object@code[lineIndex]
-    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
-      object@code <- object@code[-lineIndex]
-      break
-    }
+  index <- getEquationIndex(object, lhs)
+  if (index != -1) {
+    object@code <- object@code[-index]
   }
   return(object)
 })
@@ -148,12 +177,10 @@ setMethod("removeEquation", signature=c("code_record", "character"), definition=
 #_______________________________________________________________________________
 
 setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
-  for (lineIndex in seq_along(object@code)) {
-    line <- object@code[lineIndex]
-    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
-      object@code[lineIndex] <- paste0(extractLhs(line), "=", rhs)
-      break
-    }
+  index <- getEquationIndex(object, lhs)
+  if (index != -1) {
+    line <- object@code[index]
+    object@code[index] <- paste0(extractLhs(line), "=", rhs)
   }
   return(object)
 })
