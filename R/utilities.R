@@ -110,7 +110,7 @@ extractTextBetweenBrackets <- function(x) {
   return(retValue[1] %>% trim())
 }
 
-#' Extract right-hand side expression.
+#' Extract right-hand-side expression.
 #' 
 #' @param x character value
 #' @return right-hand side expressionn
@@ -118,10 +118,23 @@ extractTextBetweenBrackets <- function(x) {
 #' @export
 extractRhs <- function(x) {
   assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
-  rhs <- strsplit(x=x, split="=")[[1]]
+  tmp <- strsplit(x=x, split="=")[[1]]
   # Remove lhs and collapse (in case of several =)
-  rhs <- paste0(rhs[-1], collapse="=")
+  rhs <- paste0(tmp[-1], collapse="=")
   return(rhs)
+}
+
+#' Extract left-hand-side expression.
+#' 
+#' @param x character value
+#' @return left-hand-side expressionn
+#' @importFrom assertthat assert_that
+#' @export
+extractLhs <- function(x) {
+  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  tmp <- strsplit(x=x, split="=")[[1]]
+  lhs <- tmp[1] %>% trim()
+  return(lhs)
 }
 
 #' Trim character vector. Remove all leading and trailing spaces.

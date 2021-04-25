@@ -63,3 +63,12 @@ test_that("getCompartments method is working well", {
   expect_equal(compartment1@name, "CENTRAL")
   expect_equal(compartment2@name, "OUTPUT")
 })
+
+test_that("removeEquation method is working well", {
+  
+  model <- getNONMEMModelTemplate(1,1)
+  expect_equal(model@model %>% getByName("PK") %>% length(), 3) # 3 equations: K, V, S1
+  
+  model <- model %>% removeEquation("S1")
+  expect_equal(model@model %>% getByName("PK") %>% length(), 2) # 3 equations: K, V
+})

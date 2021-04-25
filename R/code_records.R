@@ -156,14 +156,6 @@ read.model <- function(file) {
   return(records)
 }
 
-#' Extract all compartment characteristics from the DES record.
-#' 
-#' @param record DES record
-#' @return a list
-extractCharacteristicsFromDesRecord <- function(record) {
-  
-}
-
 isRecordDelimiter <- function(line) {
   return(grepl("^s*\\[.*\\]s*$", line))
 }
@@ -171,6 +163,39 @@ isRecordDelimiter <- function(line) {
 getRecordDelimiter <- function(line) {
   return(gsub("\\[(.*)\\]","\\1", line))
 }
+
+#_______________________________________________________________________________
+#----                           removeEquation                              ----
+#_______________________________________________________________________________
+
+#' Remove equation from code records.
+#' 
+#' @param object object containing code records
+#' @param lhs left hand side variable
+#' @return updated code records
+#' @export
+removeEquation <- function(object, lhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("removeEquation", function(object, lhs) {
+  standardGeneric("removeEquation")
+})
+
+setMethod("removeEquation", signature=c("code_records"), definition=function(object, lhs) {
+  copy <- object
+  for (record in object@list) {
+    for (lineIndex in seq_along(record@code)) {
+      line <- record@code[lineIndex]
+      if (isEquation(line) && extractLhs(line)==lhs) {
+        record@code <- record@code[-lineIndex]
+        copy <- copy %>% replace(record)
+        break
+      }
+    }
+  }
+  return(copy)
+})
 
 #_______________________________________________________________________________
 #----                                  show                                 ----
