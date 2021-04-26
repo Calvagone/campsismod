@@ -10,7 +10,7 @@ mrgsolveParam(model)
 \item{model}{PMX model}
 }
 \value{
-character vector, each value is a line
+character vector, each value is a line or character(0) if no param
 }
 \description{
 Get the parameters block for mrgsolve.

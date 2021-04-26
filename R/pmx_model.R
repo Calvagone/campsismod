@@ -87,11 +87,11 @@ setClass(
 #_______________________________________________________________________________
 
 
-setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest) {
+setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest, outvars=NULL) {
   if (dest=="RxODE") {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
-    return(object %>% export(new("mrgsolve_type")))
+    return(object %>% export(new("mrgsolve_type"), outvars=outvars))
   } else {
     stop("Only RxODE and mrgsolve are supported for now")
   }

@@ -50,5 +50,5 @@ test_that("ToString method works", {
   model <- getNONMEMModelTemplate(4,4)
   mrgsolve <- model %>% export(dest="mrgsolve")
   cppFileContent <- mrgsolve %>% toString()
-  expect_equal(nchar(cppFileContent), 927) # Just to not have an empty test...
+  expect_equal(nchar(cppFileContent), 928) # Just to not have an empty test...
 })

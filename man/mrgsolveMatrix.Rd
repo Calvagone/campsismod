@@ -12,7 +12,7 @@ mrgsolveMatrix(model, type = "omega")
 \item{type}{either omega or sigma}
 }
 \value{
-named matrix
+named matrix or character(0) if matrix is empty
 }
 \description{
 Get the OMEGA/SIGMA matrix for mrgsolve.

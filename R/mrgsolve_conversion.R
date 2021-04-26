@@ -2,10 +2,13 @@
 #' Get the parameters block for mrgsolve.
 #' 
 #' @param model PMX model
-#' @return character vector, each value is a line
+#' @return character vector, each value is a line or character(0) if no param
 #' @export
 mrgsolveParam <- function(model) {
   params <- rxodeParams(model)
+  if (params %>% length()==0) {
+    return(character(0))
+  }
   retValue <- "[PARAM] @annotated"
   for (index in seq_len(length(params))) {
     param <- params[index]
@@ -32,10 +35,13 @@ mrgsolveCompartment <- function(model) {
 #' 
 #' @param model PMX model
 #' @param type either omega or sigma
-#' @return named matrix
+#' @return named matrix or character(0) if matrix is empty
 #' @export
 mrgsolveMatrix <- function(model, type="omega") {
   matrix <- rxodeMatrix(model, type=type)
+  if (nrow(matrix) == 0) {
+    return(character(0))
+  }
   if (type=="omega") {
     retValue <- "[OMEGA] @annotated @block"
   } else {
@@ -134,4 +140,17 @@ mrgsolveTable <- function(model) {
   errorRecord <- records %>% getByName("ERROR")
   retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)
+}
+
+#' Get the CAPTURE block for mrgsolve.
+#'
+#' @param outvars outvars from pmxsim
+#' @return CAPTURE block or character(0) if no variable in outvars
+#' @export
+mrgsolveCapture <- function(outvars) {
+  if (is.null(outvars) || outvars %>% length()==0) {
+    return(character(0))
+  } else {
+    return(paste("[CAPTURE]", outvars))
+  }
 }
