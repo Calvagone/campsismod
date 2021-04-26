@@ -69,6 +69,24 @@ setGeneric("getCompartmentIndex", function(object, name) {
 })
 
 #_______________________________________________________________________________
+#----                              getEquation                              ----
+#_______________________________________________________________________________
+
+#' Get equation from code record(s).
+#' 
+#' @param object object containing code record(s)
+#' @param lhs left-hand-side variable
+#' @return equation, character or NULL if not found
+#' @export
+getEquation <- function(object, lhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("getEquation", function(object, lhs) {
+  standardGeneric("getEquation")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

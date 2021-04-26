@@ -106,6 +106,14 @@ setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definiti
 })
 
 #_______________________________________________________________________________
+#----                              getEquation                              ----
+#_______________________________________________________________________________
+
+setMethod("getEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
+  return(object@model %>% getEquation(lhs))
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

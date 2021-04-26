@@ -120,6 +120,20 @@ addInitialCondition <- function(line, emptyCondition, compartments) {
 }
 
 #_______________________________________________________________________________
+#----                              getEquation                              ----
+#_______________________________________________________________________________
+
+setMethod("getEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
+  for (record in object@list) {
+    equation <- record %>% getEquation(lhs)
+    if (!is.null(equation)) {
+      return(equation)
+    }
+  }
+  return(NULL)
+})
+
+#_______________________________________________________________________________
 #----                                read.model                             ----
 #_______________________________________________________________________________
 

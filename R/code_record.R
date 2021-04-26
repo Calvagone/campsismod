@@ -104,6 +104,13 @@ ErrorRecord <- function(code=character()) {
 #----                              add                                      ----
 #_______________________________________________________________________________
 
+#' 
+#' Get equation index.
+#' 
+#' @param object code record
+#' @param lhs left-hand-side variable to search for
+#' @return index in this record or -1 if not found 
+#' @export
 getEquationIndex <- function(object, lhs) {
   for (lineIndex in seq_along(object@code)) {
     line <- object@code[lineIndex]
@@ -130,6 +137,19 @@ setMethod("add", signature=c("code_record", "character"), definition=function(ob
   }
 
   return(object)
+})
+
+#_______________________________________________________________________________
+#----                              getEquation                              ----
+#_______________________________________________________________________________
+
+setMethod("getEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
+  index <- getEquationIndex(object, lhs)
+  if (index == -1) {
+    return(NULL)
+  } else {
+    return(object@code[index])
+  }
 })
 
 #_______________________________________________________________________________
