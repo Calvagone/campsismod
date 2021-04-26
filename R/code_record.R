@@ -148,7 +148,7 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
   if (index == -1) {
     return(NULL)
   } else {
-    return(object@code[index])
+    return(extractRhs(object@code[index]))
   }
 })
 

@@ -107,7 +107,7 @@ test_that("add method is working well on code record", {
 test_that("getEquation method is working well", {
   
   model <- getNONMEMModelTemplate(1,1)
-  expect_equal(model %>% getEquation("V"), "V=THETA_V*exp(ETA_V)")
+  expect_equal(model %>% getEquation("V"), "THETA_V*exp(ETA_V)")
   expect_equal(model %>% getEquation("V2"), NULL)
 })
 
