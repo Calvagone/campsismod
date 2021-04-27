@@ -82,25 +82,22 @@ test_that("replaceEquation method is working well", {
   expect_equal((model@model %>% getByName("MAIN"))@code[3], "S1=V/1000") # Equation well modified
 })
 
-test_that("add method is working well on code record", {
+test_that("addEquation method is working well on code record", {
   
   model <- getNONMEMModelTemplate(1,1)
   
-  pk1 <- model@model %>% getByName("MAIN")
-  pk1 <- pk1 %>% add("V2=THETA_V2*exp(ETA_V2)", after="V")
+  model1 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after="V")
+  model2 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", before="S1")
   
-  pk2 <- model@model %>% getByName("MAIN")
-  pk2 <- pk2 %>% add("V2=THETA_V2*exp(ETA_V2)", before="S1")
+  expect_equal(model1, model2)
   
-  expect_equal(pk1, pk2)
-  
+  # By number
   pk3 <- model@model %>% getByName("MAIN")
-  pk3 <- pk3 %>% add("V2=THETA_V2*exp(ETA_V2)", after=2)
+  pk3 <- pk3 %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after=2)
   
   pk4 <- model@model %>% getByName("MAIN")
-  pk4 <- pk4 %>% add("V2=THETA_V2*exp(ETA_V2)", before=3)
+  pk4 <- pk4 %>% addEquation("V2",  rhs="THETA_V2*exp(ETA_V2)", before=3)
   
-  expect_equal(pk1, pk3)
   expect_equal(pk3, pk4)
 })
 
@@ -109,5 +106,12 @@ test_that("getEquation method is working well", {
   model <- getNONMEMModelTemplate(1,1)
   expect_equal(model %>% getEquation("V"), "THETA_V*exp(ETA_V)")
   expect_equal(model %>% getEquation("V2"), NULL)
+})
+
+test_that("hasEquation method is working well", {
+  
+  model <- getNONMEMModelTemplate(1,1)
+  expect_true(model %>% hasEquation("V"))
+  expect_false(model %>% hasEquation("V2"))
 })
 

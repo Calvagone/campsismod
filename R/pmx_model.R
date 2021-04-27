@@ -38,6 +38,15 @@ setMethod("add", signature=c("pmx_model", "code_record"), definition=function(ob
 })
 
 #_______________________________________________________________________________
+#----                            addEquation                                ----
+#_______________________________________________________________________________
+
+setMethod("addEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
+  object@model <- object@model %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
@@ -99,6 +108,14 @@ setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definiti
 
 setMethod("getEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
   return(object@model %>% getEquation(lhs))
+})
+
+#_______________________________________________________________________________
+#----                            hasEquation                                ----
+#_______________________________________________________________________________
+
+setMethod("hasEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
+  return(object@model %>% hasEquation(lhs))
 })
 
 #_______________________________________________________________________________

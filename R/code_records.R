@@ -17,6 +17,31 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
+#----                            addEquation                                ----
+#_______________________________________________________________________________
+
+setMethod("addEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
+  
+  if (is.null(before) && is.null(after)) {
+    # Default use MAIN record and append
+    mainRecord <- object %>% getByName("MAIN")
+    mainRecord <- mainRecord %>% addEquation(x)
+    object <- object %>% replace(mainRecord)
+  } else {
+    for(record in object@list) {
+      beforeOrAfter <- ifelse(is.null(before), after, before)
+      if (record %>% hasEquation(beforeOrAfter)) {
+        record <- record %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
+        object <- object %>% replace(record)
+        break
+      }
+    }
+  }
+  
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                         addTransientRecords                           ----
 #_______________________________________________________________________________
 
@@ -138,6 +163,19 @@ setMethod("getEquation", signature=c("code_records", "character"), definition=fu
 getRecordNames <- function() {
   return(c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR"))
 }
+
+#_______________________________________________________________________________
+#----                            hasEquation                                ----
+#_______________________________________________________________________________
+
+setMethod("hasEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
+  for (record in object@list) {
+    if (record %>% hasEquation(lhs=lhs)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+})
 
 #_______________________________________________________________________________
 #----                                read.model                             ----

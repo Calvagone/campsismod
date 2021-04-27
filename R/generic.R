@@ -1,5 +1,25 @@
 
 #_______________________________________________________________________________
+#----                            addEquation                                ----
+#_______________________________________________________________________________
+
+#' Add equation.
+#' 
+#' @param object object containing code record(s)
+#' @param lhs left-hand-side variable
+#' @param rhs right-hand-side expression
+#' @param ... extra arguments like before or after
+#' @return updated object
+#' @export
+addEquation <- function(object, lhs, rhs, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("addEquation", function(object, lhs, rhs, ...) {
+  standardGeneric("addEquation")
+})
+
+#_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
@@ -84,6 +104,24 @@ getEquation <- function(object, lhs) {
 
 setGeneric("getEquation", function(object, lhs) {
   standardGeneric("getEquation")
+})
+
+#_______________________________________________________________________________
+#----                            hasEquation                                ----
+#_______________________________________________________________________________
+
+#' Has equation.
+#' 
+#' @param object object containing code record(s)
+#' @param lhs left-hand-side variable to search 
+#' @return TRUE or FALSE
+#' @export
+hasEquation <- function(object, lhs) {
+  stop("No default function is provided")
+}
+
+setGeneric("hasEquation", function(object, lhs) {
+  standardGeneric("hasEquation")
 })
 
 #_______________________________________________________________________________

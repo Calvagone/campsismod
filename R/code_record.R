@@ -149,7 +149,7 @@ ErrorRecord <- function(code=character()) {
 }
 
 #_______________________________________________________________________________
-#----                              add                                      ----
+#----                            addEquation                                ----
 #_______________________________________________________________________________
 
 #' 
@@ -169,7 +169,7 @@ getEquationIndex <- function(object, lhs) {
   return(-1)
 }
 
-setMethod("add", signature=c("code_record", "character"), definition=function(object, x, before=NULL, after=NULL) {
+setMethod("addEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
   if (!is.null(before)) {
     index <- ifelse(is.numeric(before), before, getEquationIndex(object, before)) - 1
   } else if(!is.null(after)) {
@@ -179,9 +179,9 @@ setMethod("add", signature=c("code_record", "character"), definition=function(ob
   }
   
   if (is.null(index)) {
-    object@code <- object@code %>% append(x)
+    object@code <- object@code %>% append(paste0(lhs, "=", rhs))
   } else {
-    object@code <- object@code %>% append(x, after=index)
+    object@code <- object@code %>% append(paste0(lhs, "=", rhs), after=index)
   }
 
   return(object)
@@ -234,6 +234,19 @@ setMethod("getName", signature=c("init_record"), definition=function(x) {
 
 setMethod("getName", signature=c("error_record"), definition=function(x) {
   return("ERROR")
+})
+
+#_______________________________________________________________________________
+#----                            hasEquation                                ----
+#_______________________________________________________________________________
+
+setMethod("hasEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
+  index <- getEquationIndex(object, lhs)
+  if (index == -1) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
 })
 
 #_______________________________________________________________________________
