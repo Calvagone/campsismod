@@ -91,14 +91,19 @@ test_that("addEquation method is working well on code record", {
   
   expect_equal(model1, model2)
   
+  model3 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after="S1")
+  model4 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)") # Will be appended to MAIN block
+  
+  expect_equal(model3, model4)
+  
   # By number
-  pk3 <- model@model %>% getByName("MAIN")
-  pk3 <- pk3 %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after=2)
+  pk5 <- model@model %>% getByName("MAIN")
+  pk5 <- pk5 %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after=2)
   
-  pk4 <- model@model %>% getByName("MAIN")
-  pk4 <- pk4 %>% addEquation("V2",  rhs="THETA_V2*exp(ETA_V2)", before=3)
+  pk6 <- model@model %>% getByName("MAIN")
+  pk6 <- pk6 %>% addEquation("V2",  rhs="THETA_V2*exp(ETA_V2)", before=3)
   
-  expect_equal(pk3, pk4)
+  expect_equal(pk5, pk6)
 })
 
 test_that("getEquation method is working well", {

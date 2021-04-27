@@ -25,7 +25,7 @@ setMethod("addEquation", signature=c("code_records", "character", "character"), 
   if (is.null(before) && is.null(after)) {
     # Default use MAIN record and append
     mainRecord <- object %>% getByName("MAIN")
-    mainRecord <- mainRecord %>% addEquation(x)
+    mainRecord <- mainRecord %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
     object <- object %>% replace(mainRecord)
   } else {
     for(record in object@list) {
