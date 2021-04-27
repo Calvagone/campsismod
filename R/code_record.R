@@ -16,66 +16,45 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                            PK record                                  ----
+#----                           MAIN record                                 ----
 #_______________________________________________________________________________
 
 #' @export
 setClass(
-  "pk_record",
+  "main_record",
   representation(
   ),
   contains = "code_record"
 )
 
 #' 
-#' Create PK code record.
+#' Create MAIN code record.
 #' 
 #' @param code code record
 #' @export
-PkRecord <- function(code=character()) {
-  return(new("pk_record", code=code))
+MainRecord <- function(code=character()) {
+  return(new("main_record", code=code))
 }
 
 #_______________________________________________________________________________
-#----                           PRED record                                 ----
+#----                            ODE record                                 ----
 #_______________________________________________________________________________
 
 #' @export
 setClass(
-  "pred_record",
+  "ode_record",
   representation(
   ),
   contains = "code_record"
 )
 
 #' 
-#' Create PRED code record.
+#' Create ODE code record.
 #' 
 #' @param code code record
 #' @export
-PredRecord <- function(code=character()) {
-  return(new("pred_record", code=code))
-}
-
-#_______________________________________________________________________________
-#----                            DES record                                 ----
-#_______________________________________________________________________________
-
-#' @export
-setClass(
-  "des_record",
-  representation(
-  ),
-  contains = "code_record"
-)
-
-#' 
-#' Create DES code record.
-#' 
-#' @param code code record
-#' @export
-DesRecord <- function(code=character()) {
-  return(new("des_record", code=code))
+OdeRecord <- function(code=character()) {
+  return(new("ode_record", code=code))
 }
 
 #_______________________________________________________________________________
@@ -156,16 +135,12 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
-setMethod("getName", signature=c("pk_record"), definition=function(x) {
-  return("PK")
+setMethod("getName", signature=c("main_record"), definition=function(x) {
+  return("MAIN")
 })
 
-setMethod("getName", signature=c("pred_record"), definition=function(x) {
-  return("PRED")
-})
-
-setMethod("getName", signature=c("des_record"), definition=function(x) {
-  return("DES")
+setMethod("getName", signature=c("ode_record"), definition=function(x) {
+  return("ODE")
 })
 
 setMethod("getName", signature=c("error_record"), definition=function(x) {

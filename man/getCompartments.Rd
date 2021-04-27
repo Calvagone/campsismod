@@ -11,7 +11,7 @@ getCompartments(records)
 \item{records}{code records}
 }
 \value{
-a list of 2 args: first argument is the DES record without characteristics,
+a list of 2 args: first argument is the ODE record without characteristics,
 second argument is the compartments object
 }
 \description{

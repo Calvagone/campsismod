@@ -21,7 +21,7 @@ First import the `pmxmod` package:
 library(pmxmod)
 ```
 
-Load 2-compartment PK model from built-in model library and show
+Load 2-compartment MAIN model from built-in model library and show
 content:
 
 ``` r
@@ -31,7 +31,7 @@ show(model)
 
     ## An object of class "pmx_model"
     ## Slot "model":
-    ## [PK]
+    ## [MAIN]
     ## KA=THETA_KA*exp(ETA_KA)
     ## CL=THETA_CL*exp(ETA_CL)
     ## V2=THETA_V2*exp(ETA_V2)
@@ -39,7 +39,7 @@ show(model)
     ## Q=THETA_Q*exp(ETA_Q)
     ## S2=V2
     ## 
-    ## [DES]
+    ## [ODE]
     ## d/dt(A_DEPOT)=-KA*A_DEPOT
     ## d/dt(A_CENTRAL)=KA*A_DEPOT + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL
     ## d/dt(A_PERIPHERAL)=-Q*A_PERIPHERAL/V3 + Q*A_CENTRAL/V2
@@ -159,7 +159,7 @@ show(model)
 
     ## An object of class "pmx_model"
     ## Slot "model":
-    ## [PK]
+    ## [MAIN]
     ## KA=THETA_KA*exp(ETA_KA)
     ## CL=THETA_CL*exp(ETA_CL)
     ## V2=THETA_V2*exp(ETA_V2)
@@ -167,7 +167,7 @@ show(model)
     ## Q=THETA_Q*exp(ETA_Q)
     ## S2=V2
     ## 
-    ## [DES]
+    ## [ODE]
     ## d/dt(A_DEPOT)=-KA*A_DEPOT
     ## d/dt(A_CENTRAL)=KA*A_DEPOT + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL
     ## d/dt(A_PERIPHERAL)=-Q*A_PERIPHERAL/V3 + Q*A_CENTRAL/V2

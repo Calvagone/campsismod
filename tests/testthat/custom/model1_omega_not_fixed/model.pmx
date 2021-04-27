@@ -1,4 +1,4 @@
-[PK]
+[MAIN]
 if (NEWIND != 2) NFOOD=FOOD
 KAFD=NFOOD*THETA_NFOOD + 1
 LAMB=THETA_LAMB
@@ -50,7 +50,7 @@ NFOOD=FOOD
 DONO1=0
 if (DONO == 1) DONO1=1
 
-[DES]
+[ODE]
 CP=A_2/V2
 d/dt(A_1)=-A_1*KA
 d/dt(A_2)=-A_2*K20 - A_2*K23 + A_3*K32 + A_7*KTR

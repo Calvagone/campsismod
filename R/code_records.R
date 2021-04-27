@@ -24,19 +24,19 @@ CodeRecords <- function() {
 #' Only for model instantiation. Not exported.
 #'
 #' @param records code records
-#' @return a list of 2 args: first argument is the DES record without characteristics,
+#' @return a list of 2 args: first argument is the ODE record without characteristics,
 #' second argument is the compartments object
 #' 
 getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
-  desRecord <- records %>% getByName("DES")
+  odeRecord <- records %>% getByName("ODE")
   compartments <- Compartments()
-  if (length(desRecord) == 0) {
-    return(list(desRecord, compartments))
+  if (length(odeRecord) == 0) {
+    return(list(odeRecord, compartments))
   }
-  code <- desRecord@code
+  code <- odeRecord@code
   odeCounter <- 0
-  updatedRecord <- new("des_record")
+  updatedRecord <- OdeRecord()
   
   for (index in seq_along(code)) {
     line <- code[index]
@@ -163,10 +163,6 @@ read.model <- function(file) {
   # Filling last record
   records@list[[length(records@list)]]@code <- allLines[(prevRecordIndex + 1):length(allLines)]
   
-  # Reading DES record
-  desRecord <- records %>% getByName("DES")
-  
-  
   return(records)
 }
 
@@ -222,7 +218,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
   names <- x@list %>% purrr::map_chr(~.x %>% getName())
 
   # Reorder
-  names <- factor(names, levels=c("PK", "PRED", "DES", "ERROR"), labels=c("PK", "PRED", "DES", "ERROR"))
+  names <- factor(names, levels=c("MAIN", "ODE", "ERROR"), labels=c("MAIN", "ODE", "ERROR"))
   order <- order(names)
   
   # Apply result to original list
@@ -247,16 +243,16 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     initial_conditions <- model@compartments@initial_conditions
   }
   
-  # Adding characteristics to DES record
-  desRecord <- object %>% getByName("DES")
-  if (!is.null(desRecord) && !is.null(model)) {
+  # Adding characteristics to ODE record
+  odeRecord <- object %>% getByName("ODE")
+  if (!is.null(odeRecord) && !is.null(model)) {
     for (characteristic in characteristics@list) {
-      desRecord@code <- desRecord@code %>% append(characteristic %>% toString(model=model))
+      odeRecord@code <- odeRecord@code %>% append(characteristic %>% toString(model=model))
     }
     for (initial_condition in initial_conditions@list) {
-      desRecord@code <- desRecord@code %>% append(initial_condition %>% toString(model=model))
+      odeRecord@code <- odeRecord@code %>% append(initial_condition %>% toString(model=model))
     }
-    object <- object %>% replace(desRecord)
+    object <- object %>% replace(odeRecord)
   }
 
   # Write code record

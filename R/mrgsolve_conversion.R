@@ -66,7 +66,7 @@ mrgsolveMain <- function(model) {
   characteristics <- model@compartments@characteristics
   initial_conditions <- model@compartments@initial_conditions
   retValue <- "[MAIN]"
-  record <- records %>% getByName("PK")
+  record <- records %>% getByName("MAIN")
   retValue <- mrgsolveBlock(record, init="[MAIN]")
   if (characteristics %>% length() > 0) {
     for (characteristic in characteristics@list) {
@@ -124,8 +124,8 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 #' @export
 mrgsolveOde <- function(model) {
   records <- model@model
-  desRecord <- records %>% getByName("DES")
-  retValue <- mrgsolveBlock(desRecord, init="[ODE]")
+  odeRecord <- records %>% getByName("ODE")
+  retValue <- mrgsolveBlock(odeRecord, init="[ODE]")
   return(retValue)
 }
 

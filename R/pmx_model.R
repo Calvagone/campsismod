@@ -158,10 +158,10 @@ updateCompartments <- function(model) {
   records <- model@model
   returnedList <- records %>% getCompartments()
   
-  updatedDesRecord <- returnedList[[1]]
+  updatedOdeRecord <- returnedList[[1]]
   compartments <- returnedList[[2]]
-  if (length(updatedDesRecord) > 0) {
-    records <- records %>% replace(updatedDesRecord)
+  if (length(updatedOdeRecord) > 0) {
+    records <- records %>% replace(updatedOdeRecord)
   }
   model@model <- records
   model@compartments <- compartments

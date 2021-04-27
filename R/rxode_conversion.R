@@ -11,17 +11,17 @@ rxodeCode <- function(model) {
   initial_conditions <- model@compartments@initial_conditions
   
   if (characteristics %>% length() > 0 || initial_conditions %>% length() > 0) {
-    desRecord <- records %>% getByName("DES")
-    if (length(desRecord) == 0) {
-      stop("Not able to add compartment characteristics or initial conditions for RxODE: no DES block")
+    odeRecord <- records %>% getByName("ODE")
+    if (length(odeRecord) == 0) {
+      stop("Not able to add compartment characteristics or initial conditions for RxODE: no ODE block")
     }
     for (characteristic in characteristics@list) {
-      desRecord@code <- desRecord@code %>% append(characteristic %>% toString(model=model))
+      odeRecord@code <- odeRecord@code %>% append(characteristic %>% toString(model=model))
     }
     for (initial_condition in initial_conditions@list) {
-      desRecord@code <- desRecord@code %>% append(initial_condition %>% toString(model=model, dest="RxODE"))
+      odeRecord@code <- odeRecord@code %>% append(initial_condition %>% toString(model=model, dest="RxODE"))
     }
-    records <- records %>% replace(desRecord)
+    records <- records %>% replace(odeRecord)
   }
   code <- NULL
   for (record in records@list) {

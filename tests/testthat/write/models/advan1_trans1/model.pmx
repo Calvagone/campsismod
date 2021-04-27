@@ -1,9 +1,9 @@
-[PK]
+[MAIN]
 K=THETA_K*exp(ETA_K)
 V=THETA_V*exp(ETA_V)
 S1=V
 
-[DES]
+[ODE]
 d/dt(A_CENTRAL)=-K*A_CENTRAL
 d/dt(A_OUTPUT)=K*A_CENTRAL
 F=A_CENTRAL/S1

@@ -25,7 +25,7 @@ First import the `pmxmod` package:
 library(pmxmod)
 ```
 
-Load 2-compartment PK model from built-in model library and show content:
+Load 2-compartment MAIN model from built-in model library and show content:
 
 ```{r}
 model <- getNONMEMModelTemplate(advan=4, trans=4)
