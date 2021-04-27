@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test read/write methods on PMX model")
 
-testFolder <<- "C:/prj/pmxmod/tests/testthat/"
+testFolder <<- ""
 
 advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))
@@ -40,11 +40,15 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initia
   model <- model %>% add(InfusionRate(2, "R2"))
   model <- model %>% add(InitialCondition(2, "100"))
   
+  # Sort properties
+  model <- model %>% sort()
+  
   # Write
   model %>% write(file=writePath(advan, trans))
-  
+  prop <- model@compartments@properties
   # Read
   model2 <- read.pmxmod(file=writePath(advan, trans))
+  prop2 <- model2@compartments@properties
   
   # Check equality  
   expect_equal(model, model2)

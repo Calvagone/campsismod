@@ -41,6 +41,22 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
 })
 
 #_______________________________________________________________________________
+#----                                  sort                                 ----
+#_______________________________________________________________________________
+
+setMethod("sort", signature=c("compartment_properties"), definition=function(x, decreasing=FALSE, ...) {
+  names <- x@list %>% purrr::map_chr(~.x %>% getRecordName())
+  
+  # Reorder
+  names <- factor(names, levels=getRecordNames(), labels=getRecordNames())
+  order <- order(names)
+  
+  # Apply result to original list
+  x@list <- x@list[order]
+  return(x)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 

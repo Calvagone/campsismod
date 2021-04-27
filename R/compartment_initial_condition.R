@@ -35,6 +35,14 @@ setMethod("getName", signature=c("compartment_initial_condition"), definition=fu
 })
 
 #_______________________________________________________________________________
+#----                             getPrefix                                ----
+#_______________________________________________________________________________
+
+setMethod("getPrefix", signature = c("compartment_initial_condition"), definition = function(object, ...) {
+  return("")
+})
+
+#_______________________________________________________________________________
 #----                           getRecordName                               ----
 #_______________________________________________________________________________
 
@@ -48,5 +56,27 @@ setMethod("getRecordName", signature = c("compartment_initial_condition"), defin
 
 setMethod("show", signature=c("compartment_initial_condition"), definition=function(object) {
   cat(paste0(object %>% getName(), ": ", object@rhs))
+})
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+setMethod("toString", signature=c("compartment_initial_condition"), definition=function(object, ...) {
+  model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
+  dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
+  
+  compartmentIndex <- object@compartment
+  compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+  
+  if (dest=="RxODE") {
+    return(paste0(compartment %>% getName(), "(0)=", object@rhs))
+  } else if (dest=="mrgsolve") {
+    return(paste0(compartment %>% getName(), "_0=", object@rhs))
+  } else if (dest=="pmxmod") {
+    return(paste0(compartment %>% getName(), "=", object@rhs))
+  } else {
+    stop("Only RxODE, mrgsolve or pmxmod are supported")
+  }
 })
 

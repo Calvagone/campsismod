@@ -24,9 +24,9 @@
             <Keywords name="Folders in comment, open"></Keywords>
             <Keywords name="Folders in comment, middle"></Keywords>
             <Keywords name="Folders in comment, close"></Keywords>
-            <Keywords name="Keywords1">[MAIN] [PRED] [ODE] [ERROR]</Keywords>
+            <Keywords name="Keywords1">[MAIN] [ODE] [F] [LAG] [DURATION] [RATE] [ERROR]</Keywords>
             <Keywords name="Keywords2">THETA_</Keywords>
-            <Keywords name="Keywords3">ETA_</Keywords>
+            <Keywords name="Keywords3">ETA_ EPS_</Keywords>
             <Keywords name="Keywords4">A_</Keywords>
             <Keywords name="Keywords5"></Keywords>
             <Keywords name="Keywords6"></Keywords>

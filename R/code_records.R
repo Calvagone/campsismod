@@ -222,7 +222,6 @@ removeTransientRecords <- function(object) {
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-
 setMethod("show", signature=c("code_records"), definition=function(object) {
   for (record in object@list) {
     show(record)

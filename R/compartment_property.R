@@ -79,7 +79,7 @@ setMethod("toString", signature=c("compartment_property"), definition=function(o
   } else if (dest=="pmxmod") {
     return(paste0(compartment %>% getName(), "=", object@rhs))
   } else {
-    stop("Only RxODE, mrgsolve or pmxsim are supported")
+    stop("Only RxODE, mrgsolve or pmxmod are supported")
   }
 })
 

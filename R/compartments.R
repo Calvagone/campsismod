@@ -60,21 +60,10 @@ setMethod("getCompartmentIndex", signature=c("compartments", "character"), defin
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartments"), definition=function(object) {
+  cat("Compartments:\n")
   for (element in object@list) {
     show(element)
     cat("\n")
-  }
-  if (object@characteristics %>% length() == 0) {
-    cat("No compartment characteristic")
-  } else {
-    cat("Compartment characteristics:\n")
-    show(object@characteristics)
-  }
-  if (object@initial_conditions %>% length() == 0) {
-    cat("No initial conditions")
-  } else {
-    cat("Initial conditions:\n")
-    show(object@initial_conditions)
   }
 })
 

@@ -196,6 +196,32 @@ setMethod("replaceEquation", signature=c("pmx_model", "character", "character"),
 })
 
 #_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("pmx_model"), definition=function(object) {
+  show(object@model %>% addTransientRecords(model=object))
+  cat("\n")
+  show(object@parameters)
+  cat("\n")
+  show(object@compartments)
+})
+
+#_______________________________________________________________________________
+#----                                  sort                                 ----
+#_______________________________________________________________________________
+
+setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FALSE, ...) {
+  # Sort code records
+  x@model <- x@model %>% sort()
+  
+  # Sort compartment properties
+  x@compartments@properties <- x@compartments@properties %>% sort()
+  
+  return(x)
+})
+
+#_______________________________________________________________________________
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
