@@ -7,22 +7,23 @@
 #' @export
 rxodeCode <- function(model) {
   records <- model@model
-  characteristics <- model@compartments@characteristics
-  initial_conditions <- model@compartments@initial_conditions
+  properties <- model@compartments@properties
   
-  if (characteristics %>% length() > 0 || initial_conditions %>% length() > 0) {
+  if (properties %>% length() > 0) {
     odeRecord <- records %>% getByName("ODE")
     if (length(odeRecord) == 0) {
-      stop("Not able to add compartment characteristics or initial conditions for RxODE: no ODE block")
+      stop("Not able to add compartment properties for RxODE: no ODE block")
     }
-    for (characteristic in characteristics@list) {
-      odeRecord@code <- odeRecord@code %>% append(characteristic %>% toString(model=model))
-    }
-    for (initial_condition in initial_conditions@list) {
-      odeRecord@code <- odeRecord@code %>% append(initial_condition %>% toString(model=model, dest="RxODE"))
+    for (property in properties@list) {
+      compartmentIndex <- property@compartment
+      compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+      equation <- property %>% toString(model=model, dest="RxODE")
+      odeRecord@code <- odeRecord@code %>% append(equation)
     }
     records <- records %>% replace(odeRecord)
   }
+  
+  # All records to 'single' record
   code <- NULL
   for (record in records@list) {
     code <- c(code, record@code)
