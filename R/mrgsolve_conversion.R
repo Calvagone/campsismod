@@ -145,12 +145,39 @@ mrgsolveTable <- function(model) {
 #' Get the CAPTURE block for mrgsolve.
 #'
 #' @param outvars outvars from pmxsim
+#' @param model PMX model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
-mrgsolveCapture <- function(outvars) {
+mrgsolveCapture <- function(outvars, model) {
+  # Get rid of variables that are already in error block (and thus already captured in TABLE)
+  outvars <- convertOutvarsToCapture(outvars, model=model)
+  
   if (is.null(outvars) || outvars %>% length()==0) {
     return(character(0))
   } else {
     return(paste("[CAPTURE]", outvars))
   }
+}
+
+#' Convert outvars argument to capture. Variables that are already in error block
+#' will be discarded.
+#'
+#' @param outvars character vector
+#' @param model PMX model
+#' @return all variables to capture
+#'
+convertOutvarsToCapture <- function(outvars, model) {
+  # List all variables that are already exported into mrgsolve TABLE block by pmxmod
+  error <- model@model %>% getByName("ERROR")
+  list <- NULL
+  if (length(error) > 0) {
+    for (line in error@code) {
+      if (isEquation(line)) {
+        lhs <- extractLhs(line) %>% trim()
+        list <- list %>% append(lhs)
+      }
+    }
+    outvars <- outvars[!(outvars %in% list)]
+  }
+  return(outvars)
 }

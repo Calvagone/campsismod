@@ -4,10 +4,12 @@
 \alias{mrgsolveCapture}
 \title{Get the CAPTURE block for mrgsolve.}
 \usage{
-mrgsolveCapture(outvars)
+mrgsolveCapture(outvars, model)
 }
 \arguments{
 \item{outvars}{outvars from pmxsim}
+
+\item{model}{PMX model}
 }
 \value{
 CAPTURE block or character(0) if no variable in outvars

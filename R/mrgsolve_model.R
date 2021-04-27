@@ -28,7 +28,7 @@ setMethod("export", signature=c("pmx_model", "mrgsolve_type"), definition=functi
       omega = mrgsolveMatrix(object, type="omega"),
       sigma = mrgsolveMatrix(object, type="sigma"),
       table = mrgsolveTable(object),
-      capture = mrgsolveCapture(outvars)
+      capture = mrgsolveCapture(outvars, model=object)
     )
   )
 })
