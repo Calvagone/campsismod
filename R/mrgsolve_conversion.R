@@ -63,22 +63,15 @@ mrgsolveMatrix <- function(model, type="omega") {
 #' @export
 mrgsolveMain <- function(model) {
   records <- model@model
-  characteristics <- model@compartments@characteristics
-  initial_conditions <- model@compartments@initial_conditions
+  properties <- model@compartments@properties
   retValue <- "[MAIN]"
   record <- records %>% getByName("MAIN")
   retValue <- mrgsolveBlock(record, init="[MAIN]")
-  if (characteristics %>% length() > 0) {
-    for (characteristic in characteristics@list) {
-      compartmentIndex <- characteristic@compartment
+  if (properties %>% length() > 0) {
+    for (property in properties@list) {
+      compartmentIndex <- property@compartment
       compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
-      equation <- paste0(characteristic %>% getPrefix(dest="mrgsolve"), "_", compartment %>% getName(), "=", characteristic@rhs, ";")
-      retValue <- retValue %>% append(equation)
-    }
-  }
-  if (initial_conditions %>% length() > 0) {
-    for (initial_condition in initial_conditions@list) {
-      equation <- paste0(initial_condition %>% toString(model=model, dest="mrgsolve"), ";")
+      equation <- paste0(property %>% toString(model=model, dest="mrgsolve"), ";")
       retValue <- retValue %>% append(equation)
     }
   }
@@ -136,7 +129,6 @@ mrgsolveOde <- function(model) {
 #' @export
 mrgsolveTable <- function(model) {
   records <- model@model
-  characteristics <- model@compartments@characteristics
   errorRecord <- records %>% getByName("ERROR")
   retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)

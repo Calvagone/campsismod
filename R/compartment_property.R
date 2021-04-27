@@ -38,6 +38,22 @@ setGeneric("getPrefix", function(object, ...) {
 })
 
 #_______________________________________________________________________________
+#----                          getRecordName                                ----
+#_______________________________________________________________________________
+
+#' Get record name.
+#' 
+#' @param object generic object
+#' @export
+getRecordName <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("getRecordName", function(object) {
+  standardGeneric("getRecordName")
+})
+
+#_______________________________________________________________________________
 #----                               show                                    ----
 #_______________________________________________________________________________
 
@@ -51,7 +67,19 @@ setMethod("show", signature=c("compartment_property"), definition=function(objec
 
 setMethod("toString", signature=c("compartment_property"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
+  dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
+  
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
-  return(paste0(object %>% getPrefix(), "(", compartment %>% getName(), ")=", object@rhs))
+  
+  if (dest=="RxODE") {
+    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% getName(), ")=", object@rhs))
+  } else if (dest=="mrgsolve") {
+    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% getName(), "=", object@rhs))
+  } else if (dest=="pmxmod") {
+    return(paste0(compartment %>% getName(), "=", object@rhs))
+  } else {
+    stop("Only RxODE, mrgsolve or pmxsim are supported")
+  }
 })
+

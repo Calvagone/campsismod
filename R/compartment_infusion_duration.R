@@ -3,7 +3,7 @@
 #_______________________________________________________________________________
 
 validateInfusionDuration <- function(object) {
-  return(expectOneForAll(object, c("rate")))
+  return(TRUE)
 }
 
 #' @export
@@ -31,7 +31,7 @@ InfusionDuration <- function(compartment, rhs) {
 #_______________________________________________________________________________
 
 setMethod("getName", signature = c("compartment_infusion_duration"), definition = function(x) {
-  return(paste0("INFUSION_DURATION (", "CMT=", x@compartment, ")"))
+  return(paste0("DURATION (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
@@ -45,4 +45,12 @@ setMethod("getPrefix", signature = c("compartment_infusion_duration"), definitio
   } else {
     return("dur")
   }
+})
+
+#_______________________________________________________________________________
+#----                           getRecordName                               ----
+#_______________________________________________________________________________
+
+setMethod("getRecordName", signature = c("compartment_infusion_duration"), definition = function(object) {
+  return("DURATION")
 })

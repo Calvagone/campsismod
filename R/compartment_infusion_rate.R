@@ -31,7 +31,7 @@ InfusionRate <- function(compartment, rhs) {
 #_______________________________________________________________________________
 
 setMethod("getName", signature = c("compartment_infusion_rate"), definition = function(x) {
-  return(paste0("INFUSION_RATE (", "CMT=", x@compartment, ")"))
+  return(paste0("RATE (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
@@ -45,4 +45,12 @@ setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = 
   } else {
     return("rate")
   }
+})
+
+#_______________________________________________________________________________
+#----                           getRecordName                               ----
+#_______________________________________________________________________________
+
+setMethod("getRecordName", signature = c("compartment_infusion_rate"), definition = function(object) {
+  return("RATE")
 })

@@ -48,3 +48,11 @@ setMethod("getPrefix", signature = c("compartment_lag_time"), definition = funct
     return("lag")
   }
 })
+
+#_______________________________________________________________________________
+#----                           getRecordName                               ----
+#_______________________________________________________________________________
+
+setMethod("getRecordName", signature = c("compartment_lag_time"), definition = function(object) {
+  return("LAG")
+})

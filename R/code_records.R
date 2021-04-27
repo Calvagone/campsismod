@@ -17,6 +17,30 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
+#----                         addTransientRecords                           ----
+#_______________________________________________________________________________
+
+addTransientRecords <- function(records, model) {
+  properties <- model@compartments@properties
+  
+  for (name in getRecordNames()) {
+    record <- new(tolower(paste0(name, "_record")))
+    if (!record@transient) {
+      next
+    }
+    subProperties <- properties %>% select(name) 
+    if (subProperties %>% length() == 0) {
+      next
+    }
+    for (subProperty in subProperties@list) {
+      record@code <- record@code %>% append(subProperty %>% toString(model=model, dest="pmxmod"))
+    }
+    records <- records %>% add(record)
+  }
+  return(records %>% sort())
+}
+
+#_______________________________________________________________________________
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
@@ -106,6 +130,14 @@ setMethod("getEquation", signature=c("code_records", "character"), definition=fu
   }
   return(NULL)
 })
+
+#_______________________________________________________________________________
+#----                             getRecordNames                            ----
+#_______________________________________________________________________________
+
+getRecordNames <- function() {
+  return(c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR"))
+}
 
 #_______________________________________________________________________________
 #----                                read.model                             ----
@@ -206,8 +238,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
   names <- x@list %>% purrr::map_chr(~.x %>% getName())
 
   # Reorder
-  levels <- c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR")
-  names <- factor(names, levels=levels, labels=levels)
+  names <- factor(names, levels=getRecordNames(), labels=getRecordNames())
   order <- order(names)
   
   # Apply result to original list
@@ -220,28 +251,15 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #_______________________________________________________________________________
 
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
-  # First sort code records
-  object <- object %>% sort()
-  
-  # The model is needed to get the characteristics
+
+  # The model is needed to get the compartment properties
   model <- processExtraArg(args=list(...), name="model")
   if (is.null(model)) {
-    warning("model not provided, compartment characteristics and initial conditions will be lost")
+    warning("model not provided, compartment properties will be lost")
+    object <- object %>% sort()
   } else {
-    characteristics <- model@compartments@characteristics
-    initial_conditions <- model@compartments@initial_conditions
-  }
-  
-  # Adding characteristics to ODE record
-  odeRecord <- object %>% getByName("ODE")
-  if (!is.null(odeRecord) && !is.null(model)) {
-    for (characteristic in characteristics@list) {
-      odeRecord@code <- odeRecord@code %>% append(characteristic %>% toString(model=model))
-    }
-    for (initial_condition in initial_conditions@list) {
-      odeRecord@code <- odeRecord@code %>% append(initial_condition %>% toString(model=model))
-    }
-    object <- object %>% replace(odeRecord)
+    # Add transient records and sort
+    object <- object %>% addTransientRecords(model)
   }
 
   # Write code record

@@ -26,12 +26,7 @@ Compartments <- function() {
 #_______________________________________________________________________________
 
 setMethod("add", signature = c("compartments", "compartment_property"), definition = function(object, x) {
-  object@characteristics <- object@characteristics %>% add(x) 
-  return(object)
-})
-
-setMethod("add", signature = c("compartments", "compartment_initial_condition"), definition = function(object, x) {
-  object@initial_conditions <- object@initial_conditions %>% add(x) 
+  object@properties <- object@properties %>% add(x) 
   return(object)
 })
 

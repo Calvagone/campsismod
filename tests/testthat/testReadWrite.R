@@ -33,13 +33,11 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initia
   trans <- 4
   model <- getNONMEMModelTemplate(advan, trans)
   
-  # Add a few characteristics
+  # Add a few properties
   model <- model %>% add(LagTime(1, "ALAG1"))
   model <- model %>% add(Bioavailability(1, "F1"))
   model <- model %>% add(InfusionDuration(1, "D1"))
-  model <- model %>% add(InfusionDuration(2, "R2", rate=TRUE))
-  
-  # Add initial conditions
+  model <- model %>% add(InfusionRate(2, "R2"))
   model <- model %>% add(InitialCondition(2, "100"))
   
   # Write

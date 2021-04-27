@@ -48,3 +48,11 @@ setMethod("getPrefix", signature = c("compartment_bioavailability"), definition 
     return("f")
   }
 })
+
+#_______________________________________________________________________________
+#----                           getRecordName                               ----
+#_______________________________________________________________________________
+
+setMethod("getRecordName", signature = c("compartment_bioavailability"), definition = function(object) {
+  return("F")
+})

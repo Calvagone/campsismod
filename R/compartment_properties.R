@@ -31,12 +31,12 @@ setMethod("getByIndex", signature=c("compartment_properties", "compartment_prope
 
 setMethod("select", signature=c("compartment_properties"), definition=function(object, ...) {
   args <- list(...)
-  types <- c("compartment_bioavailability", "compartment_lag_time", "compartment_infusion_duration", "compartment_initial_condition")
+  types <- c("F", "LAG", "DURATION", "RATE", "INIT")
   msg <- paste0("Please select one of those parameter types: ", paste0(paste0("'", types, "'"), collapse=", "))
   assertthat::assert_that(length(args) > 0, msg=msg)
   type <- args[[1]]
   assertthat::assert_that(type %in% types, msg=msg)
-  object@list <- object@list %>% purrr::keep(~is(.x, type))
+  object@list <- object@list %>% purrr::keep(~.x %>% getRecordName()==type)
   return(object)
 })
 

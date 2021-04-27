@@ -27,18 +27,6 @@ setMethod("add", signature=c("pmx_model", "compartment_property"), definition=fu
   return(object)
 })
 
-setMethod("add", signature=c("pmx_model", "compartment_initial_condition"), definition=function(object, x) {
-  compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
-  if (length(compartment) == 0) {
-    stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
-  }
-  
-  # Add initial condition (delegate to add method in compartments class)
-  object@compartments <- object@compartments %>% add(x) 
-  
-  return(object)
-})
-
 setMethod("add", signature=c("pmx_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% add(x)
   return(object)
@@ -163,8 +151,8 @@ updateCompartments <- function(model) {
   # Extract characteristics
   compartments <- compartments %>% addProperties(records, "F", init=Bioavailability(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "LAG", init=LagTime(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs="", rate=FALSE))
-  compartments <- compartments %>% addProperties(records, "RATE", init=InfusionDuration(0, rhs="", rate=TRUE))
+  compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs=""))
+  compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
   
   # Remove transient records because information is now found in properties
