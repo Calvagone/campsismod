@@ -1,5 +1,5 @@
 #_______________________________________________________________________________
-#----                   compartment_characteristic class                    ----
+#----                   compartment_property class                    ----
 #_______________________________________________________________________________
 
 validateCompartmentCharacteristic <- function(object) {
@@ -11,7 +11,7 @@ validateCompartmentCharacteristic <- function(object) {
 #' 
 #' @export
 setClass(
-  "compartment_characteristic",
+  "compartment_property",
   representation(
     compartment = "integer",
     rhs = "character"
@@ -41,7 +41,7 @@ setGeneric("getPrefix", function(object, ...) {
 #----                               show                                    ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("compartment_characteristic"), definition=function(object) {
+setMethod("show", signature=c("compartment_property"), definition=function(object) {
   cat(paste0(object %>% getName(), ": ", object@rhs))
 })
 
@@ -49,7 +49,7 @@ setMethod("show", signature=c("compartment_characteristic"), definition=function
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
-setMethod("toString", signature=c("compartment_characteristic"), definition=function(object, ...) {
+setMethod("toString", signature=c("compartment_property"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))

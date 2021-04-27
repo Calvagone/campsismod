@@ -3,21 +3,16 @@
 #_______________________________________________________________________________
 
 validateInitialCondition <- function(object) {
-  return(expectOneForAll(object, c("compartment", "rhs")))
+  return(TRUE)
 }
 
-#' 
-#' Compartment initial condition class.
-#' 
 #' @export
 setClass(
   "compartment_initial_condition",
   representation(
-    compartment = "integer",
-    rhs = "character"
   ),
-  contains="pmx_element",
-  validity=validateInitialCondition 
+  contains = "compartment_property",
+  validity=validateInitialCondition
 )
 
 #'

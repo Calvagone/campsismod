@@ -12,7 +12,7 @@ setClass(
   "compartment_bioavailability",
   representation(
   ),
-  contains = "compartment_characteristic",
+  contains = "compartment_property",
   validity=validateBioavailability
 )
 

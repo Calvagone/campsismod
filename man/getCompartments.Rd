@@ -2,7 +2,7 @@
 % Please edit documentation in R/code_records.R
 \name{getCompartments}
 \alias{getCompartments}
-\title{Detect all compartments from model code records.
+\title{Detect all compartments names from the code records.
 Only for model instantiation. Not exported.}
 \usage{
 getCompartments(records)
@@ -11,10 +11,9 @@ getCompartments(records)
 \item{records}{code records}
 }
 \value{
-a list of 2 args: first argument is the ODE record without characteristics,
-second argument is the compartments object
+a list of compartments
 }
 \description{
-Detect all compartments from model code records.
+Detect all compartments names from the code records.
 Only for model instantiation. Not exported.
 }

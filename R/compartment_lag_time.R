@@ -12,7 +12,7 @@ setClass(
   "compartment_lag_time",
   representation(
   ),
-  contains = "compartment_characteristic",
+  contains = "compartment_property",
   validity=validateLagTime
 )
 

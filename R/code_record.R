@@ -3,15 +3,19 @@
 #_______________________________________________________________________________
 
 checkCodeRecord <- function(object) {
-  return(expectZeroOrMore(object, "code"))
+  check1 <- expectZeroOrMore(object, "code")
+  check2 <- expectOne(object, "transient")
+  return(c(check1, check2))
 }
 
 setClass(
   "code_record",
   representation(
-    code = "character"
+    code = "character",
+    transient = "logical"
   ),
   contains = "pmx_element",
+  prototype = prototype(transient=FALSE),
   validity = checkCodeRecord
 )
 
@@ -56,6 +60,71 @@ setClass(
 OdeRecord <- function(code=character()) {
   return(new("ode_record", code=code))
 }
+
+#_______________________________________________________________________________
+#----                              F record                                 ----
+#_______________________________________________________________________________
+
+#' @export
+setClass(
+  "f_record",
+  representation(
+  ),
+  contains = "code_record",
+  prototype = prototype(transient=TRUE)
+)
+
+#_______________________________________________________________________________
+#----                              LAG record                               ----
+#_______________________________________________________________________________
+
+#' @export
+setClass(
+  "lag_record",
+  representation(
+  ),
+  contains = "code_record",
+  prototype = prototype(transient=TRUE)
+)
+
+#_______________________________________________________________________________
+#----                           DURATION record                             ----
+#_______________________________________________________________________________
+
+#' @export
+setClass(
+  "duration_record",
+  representation(
+  ),
+  contains = "code_record",
+  prototype = prototype(transient=TRUE)
+)
+
+#_______________________________________________________________________________
+#----                             RATE record                               ----
+#_______________________________________________________________________________
+
+#' @export
+setClass(
+  "rate_record",
+  representation(
+  ),
+  contains = "code_record",
+  prototype = prototype(transient=TRUE)
+)
+
+#_______________________________________________________________________________
+#----                             INIT record                               ----
+#_______________________________________________________________________________
+
+#' @export
+setClass(
+  "init_record",
+  representation(
+  ),
+  contains = "code_record",
+  prototype = prototype(transient=TRUE)
+)
 
 #_______________________________________________________________________________
 #----                           ERROR record                                ----
@@ -141,6 +210,26 @@ setMethod("getName", signature=c("main_record"), definition=function(x) {
 
 setMethod("getName", signature=c("ode_record"), definition=function(x) {
   return("ODE")
+})
+
+setMethod("getName", signature=c("f_record"), definition=function(x) {
+  return("F")
+})
+
+setMethod("getName", signature=c("lag_record"), definition=function(x) {
+  return("LAG")
+})
+
+setMethod("getName", signature=c("duration_record"), definition=function(x) {
+  return("DURATION")
+})
+
+setMethod("getName", signature=c("rate_record"), definition=function(x) {
+  return("RATE")
+})
+
+setMethod("getName", signature=c("init_record"), definition=function(x) {
+  return("INIT")
 })
 
 setMethod("getName", signature=c("error_record"), definition=function(x) {

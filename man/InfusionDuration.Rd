@@ -2,20 +2,18 @@
 % Please edit documentation in R/compartment_infusion_duration.R
 \name{InfusionDuration}
 \alias{InfusionDuration}
-\title{Create an infusion duration/rate.}
+\title{Create an infusion duration.}
 \usage{
-InfusionDuration(compartment, rhs, rate = FALSE)
+InfusionDuration(compartment, rhs)
 }
 \arguments{
 \item{compartment}{compartment index}
 
 \item{rhs}{right-hand side part of the equation}
-
-\item{rate}{logical value, TRUE if distribution is a rate, FALSE if it is an infusion}
 }
 \value{
-details about infusion duration/rate
+details about infusion duration
 }
 \description{
-Create an infusion duration/rate.
+Create an infusion duration.
 }

@@ -20,12 +20,11 @@ CodeRecords <- function() {
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
-#' Detect all compartments from model code records.
+#' Detect all compartments names from the code records.
 #' Only for model instantiation. Not exported.
 #'
 #' @param records code records
-#' @return a list of 2 args: first argument is the ODE record without characteristics,
-#' second argument is the compartments object
+#' @return a list of compartments
 #' 
 getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
@@ -36,7 +35,7 @@ getCompartments <- function(records) {
   }
   code <- odeRecord@code
   odeCounter <- 0
-  updatedRecord <- OdeRecord()
+  updatedOdeRecord <- OdeRecord()
   
   for (index in seq_along(code)) {
     line <- code[index]
@@ -53,70 +52,45 @@ getCompartments <- function(records) {
       }
       compartment <- Compartment(index=odeCounter, name=name)
       compartments <- compartments %>% add(compartment)
-      updatedRecord@code <- updatedRecord@code %>% append(line)
-    
-    } else if (isBioavailibility(line)) {
-      compartments <- addCharacteristic(line, Bioavailability(0, rhs=""), compartments)
-      
-    } else if (isLagTime(line)) {
-      compartments <- addCharacteristic(line, LagTime(0, rhs=""), compartments)
-    
-    } else if (isInfusionDuration(line)) {
-      compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=FALSE), compartments)
-    
-    } else if (isRate(line)) {
-      compartments <- addCharacteristic(line, InfusionDuration(0, rhs="", rate=TRUE), compartments)
-    
-    } else if (isInitialCondition(line)) {
-      compartments <- addInitialCondition(line, InitialCondition(0, rhs=""), compartments)
-        
+      updatedOdeRecord@code <- updatedOdeRecord@code %>% append(line)
+
     } else {
-      updatedRecord@code <- c(updatedRecord@code, line)
+      updatedOdeRecord@code <- c(updatedOdeRecord@code, line)
     }
   }
-  return(list(updatedRecord, compartments))
+  return(compartments)
 }
 
-#' Add characteristic to compartments object.
+#' Add properties to compartments object.
 #'
-#' @param line line record
-#' @param emptyCharacteristic empty characteristic, to be completed
 #' @param compartments compartments object
+#' @param records all records
+#' @param name record name to look at
+#' @param init empty characteristic, to be completed
 #' @return updated compartments object
 #' 
-addCharacteristic <- function(line, emptyCharacteristic, compartments) {
-  cmtName <- extractTextBetweenBrackets(line)
-  compartment <- compartments %>% getByName(cmtName)
-  
-  if (length(compartment) == 0) {
-    stop(paste0("Characteristic compartment undefined: '", cmtName, "'"))
+addProperties <- function(compartments, records, name, init) {
+  record <- records %>% getByName(name)
+  if (record %>% length() == 0) {
+    return(compartments)
   }
-  characteristic <- emptyCharacteristic
-  characteristic@compartment <- compartment@index
-  characteristic@rhs <- extractRhs(line)
-  
-  return(compartments %>% add(characteristic))
-}
-
-#' Add initial condition to compartments object.
-#'
-#' @param line line record
-#' @param emptyCondition empty condition, to be completed
-#' @param compartments compartments object
-#' @return updated compartments object
-#' 
-addInitialCondition <- function(line, emptyCondition, compartments) {
-  cmtName <- getInitialConditionCmt(line)
-  compartment <- compartments %>% getByName(cmtName)
-  
-  if (length(compartment) == 0) {
-    stop(paste0("Initial condition compartment undefined: '", cmtName, "'"))
+  for (line in record@code) {
+    cmtName <- extractLhs(line) %>% trim()
+    if (cmtName %>% length() == 0) {
+      next
+    }
+    compartment <- compartments %>% getByName(cmtName)
+    
+    if (length(compartment) == 0) {
+      stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% getName()))
+    }
+    characteristic <- init
+    characteristic@compartment <- compartment@index
+    characteristic@rhs <- extractRhs(line)
+    
+    compartments <- compartments %>% add(characteristic)
   }
-  condition <- emptyCondition
-  condition@compartment <- compartment@index
-  condition@rhs <- extractRhs(line)
-  
-  return(compartments %>% add(condition))
+  return(compartments)
 }
 
 #_______________________________________________________________________________
@@ -199,6 +173,20 @@ setMethod("replaceEquation", signature=c("code_records", "character", "character
 })
 
 #_______________________________________________________________________________
+#----                       removeTransientRecords                          ----
+#_______________________________________________________________________________
+
+removeTransientRecords <- function(object) {
+  records <- CodeRecords()
+  for (record in object@list) {
+    if (!record@transient) {
+      records <- records %>% add(record)
+    }
+  }
+  return(records)
+}
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
@@ -218,7 +206,8 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
   names <- x@list %>% purrr::map_chr(~.x %>% getName())
 
   # Reorder
-  names <- factor(names, levels=c("MAIN", "ODE", "ERROR"), labels=c("MAIN", "ODE", "ERROR"))
+  levels <- c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR")
+  names <- factor(names, levels=levels, labels=levels)
   order <- order(names)
   
   # Apply result to original list

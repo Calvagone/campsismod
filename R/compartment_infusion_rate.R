@@ -2,47 +2,47 @@
 #----                   compartment_infusion_duration class                 ----
 #_______________________________________________________________________________
 
-validateInfusionDuration <- function(object) {
-  return(expectOneForAll(object, c("rate")))
+validateInfusionRate <- function(object) {
+  return(TRUE)
 }
 
 #' @export
 setClass(
-  "compartment_infusion_duration",
+  "compartment_infusion_rate",
   representation(
   ),
   contains = "compartment_property",
-  validity=validateInfusionDuration
+  validity=validateInfusionRate
 )
 
 #'
-#' Create an infusion duration.
+#' Create an infusion rate.
 #'
 #' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
-#' @return details about infusion duration
+#' @return details about infusion rate
 #' @export
-InfusionDuration <- function(compartment, rhs) {
-  return(new("compartment_infusion_duration", compartment=as.integer(compartment), rhs=rhs))
+InfusionRate <- function(compartment, rhs) {
+  return(new("compartment_infusion_rate", compartment=as.integer(compartment), rhs=rhs))
 }
 
 #_______________________________________________________________________________
 #----                            getName                                    ----
 #_______________________________________________________________________________
 
-setMethod("getName", signature = c("compartment_infusion_duration"), definition = function(x) {
-  return(paste0("INFUSION_DURATION (", "CMT=", x@compartment, ")"))
+setMethod("getName", signature = c("compartment_infusion_rate"), definition = function(x) {
+  return(paste0("INFUSION_RATE (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
-setMethod("getPrefix", signature = c("compartment_infusion_duration"), definition = function(object, ...) {
+setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
   if (dest=="mrgsolve") {
-    return("D")
+    return("R")
   } else {
-    return("dur")
+    return("rate")
   }
 })

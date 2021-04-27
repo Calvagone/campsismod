@@ -6,12 +6,10 @@
 setClass(
   "compartments",
   representation(
-    characteristics="compartment_characteristics",
-    initial_conditions="compartment_initial_conditions"
+    properties="compartment_properties"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="compartment", characteristics=new("compartment_characteristics"),
-                        initial_conditions=new("compartment_initial_conditions"))
+  prototype = prototype(type="compartment", properties=new("compartment_properties"))
 )
 
 #' 
@@ -27,7 +25,7 @@ Compartments <- function() {
 #----                                add                                    ----
 #_______________________________________________________________________________
 
-setMethod("add", signature = c("compartments", "compartment_characteristic"), definition = function(object, x) {
+setMethod("add", signature = c("compartments", "compartment_property"), definition = function(object, x) {
   object@characteristics <- object@characteristics %>% add(x) 
   return(object)
 })

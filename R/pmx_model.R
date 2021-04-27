@@ -15,7 +15,7 @@ setClass(
 #----                                add                                    ----
 #_______________________________________________________________________________
 
-setMethod("add", signature=c("pmx_model", "compartment_characteristic"), definition=function(object, x) {
+setMethod("add", signature=c("pmx_model", "compartment_property"), definition=function(object, x) {
   compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
   if (length(compartment) == 0) {
     stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
@@ -156,13 +156,20 @@ updateCompartments <- function(model) {
     stop("model is not a PMX model")   
   }
   records <- model@model
-  returnedList <- records %>% getCompartments()
   
-  updatedOdeRecord <- returnedList[[1]]
-  compartments <- returnedList[[2]]
-  if (length(updatedOdeRecord) > 0) {
-    records <- records %>% replace(updatedOdeRecord)
-  }
+  # Get list of compartments
+  compartments <- records %>% getCompartments()
+  
+  # Extract characteristics
+  compartments <- compartments %>% addProperties(records, "F", init=Bioavailability(0, rhs=""))
+  compartments <- compartments %>% addProperties(records, "LAG", init=LagTime(0, rhs=""))
+  compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs="", rate=FALSE))
+  compartments <- compartments %>% addProperties(records, "RATE", init=InfusionDuration(0, rhs="", rate=TRUE))
+  compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
+  
+  # Remove transient records because information is now found in properties
+  records <- records %>% removeTransientRecords()
+
   model@model <- records
   model@compartments <- compartments
   return(model)
