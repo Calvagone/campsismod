@@ -141,7 +141,7 @@ processDoubleArrayArguments <- function(index, index2, type) {
     stop("Please specify both OMEGA indexes")
   }
   # Both NA: OK
-  if (is.na(index) && is.na(index2)) {
+  if (is.null(type) && is.na(index) && is.na(index2)) {
     type <- "var"
   }
   if (is.null(type)) {
