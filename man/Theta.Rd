@@ -4,7 +4,7 @@
 \alias{Theta}
 \title{Create a THETA parameter.}
 \usage{
-Theta(name = NA, index, value = NA, fix = FALSE)
+Theta(name = NA, index = NA, value = NA, fix = FALSE)
 }
 \arguments{
 \item{name}{parameter name, e.g. CL (prefix THETA will be added automatically)}

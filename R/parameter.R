@@ -5,8 +5,7 @@
 
 validateParameter <- function(object) {
   check1 <- expectOneForAll(object, c("name", "index", "fix", "value"))
-  check2 <- if (is.na(object@index)) {"Index can't be NA"} else {character()} 
-  return(c(check1, check2))
+  return(check1)
 }
 
 #' @export
@@ -19,7 +18,7 @@ setClass(
     fix = "logical"
   ),
   contains = "pmx_element",
-  prototype = prototype(name=as.character(NA), value=as.numeric(NA), fix=FALSE),
+  prototype = prototype(name=as.character(NA), index=as.integer(NA), value=as.numeric(NA), fix=FALSE),
   validity = validateParameter
 )
 
@@ -41,27 +40,30 @@ setClass(
 #_______________________________________________________________________________
 
 validateDoubleArrayParameter <- function(object) {
-  check1 <- if (is.na(object@index2)) {"Index2 can't be NA"} else {character()}
-  check2 <- expectOne(object, "type")
-  check3 <-
+  check1 <- expectOne(object, "type")
+  check2 <-
     if (object@type %in% c("var", "sd", "covar", "cv", "cv%")) {
       character()
     } else {
       "Type should be one of: 'var', 'sd', 'covar', 'cv' or 'cv%'"
     }
-  check4 <- 
-    if (object@index != object@index2 && !(object@type %in% c("covar"))) {
+  check3 <- 
+    if (is.na(object@index) && is.na(object@index2)) {
+      character() # Don't go further
+    } else if (object@index != object@index2 && !(object@type %in% c("covar"))) {
       paste0("Parameter type must be 'covar' (index:", object@index, ", index2:", object@index2, ")")
     } else {
       character()
     }
-  check5 <- 
-    if (object@index == object@index2 && object@type %in% c("covar")) {
+  check4 <- 
+    if (is.na(object@index) && is.na(object@index2)) {
+      character() # Don't go further
+    } else if (object@index == object@index2 && object@type %in% c("covar")) {
       paste0("Parameter type can't be 'covar' (index:", object@index, ", index2:", object@index2, ")")
     } else {
       character()
     }
-  return(c(check1, check2, check3, check4, check5))
+  return(c(check1, check2, check3, check4))
 }
 
 #' @export
@@ -100,7 +102,7 @@ setClass(
 #' @param fix parameter was fixed in estimation, logical value
 #' @return a THETA parameter  
 #' @export
-Theta <- function(name=NA, index, value=NA, fix=FALSE) {
+Theta <- function(name=NA, index=NA, value=NA, fix=FALSE) {
   return(new("theta", name=as.character(name), index=as.integer(index), value=as.numeric(value), fix=fix))
 }
 
@@ -121,9 +123,32 @@ setClass(
     same = "logical"
   ),
   contains = "double_array_parameter",
-  prototype = prototype(same=as.logical(NA)),
+  prototype = prototype(same=as.logical(NA), index2=as.integer(NA)),
   validity = validateOmega
 )
+
+#' 
+#' Process double array arguments.
+#' 
+#' @param index parameter index
+#' @param index2 second parameter index
+#' @param type variance type
+#' @return variance type  
+#'
+processDoubleArrayArguments <- function(index, index2, type) {
+  # Only 1 NA: NOK
+  if (xor(is.na(index), is.na(index2))) {
+    stop("Please specify both OMEGA indexes")
+  }
+  # Both NA: OK
+  if (is.na(index) && is.na(index2)) {
+    type <- "var"
+  }
+  if (is.null(type)) {
+    type <- if (index==index2) {"var"} else {"covar"}
+  }
+  return(type)
+}
 
 #' 
 #' Create an OMEGA parameter.
@@ -137,10 +162,8 @@ setClass(
 #' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for to 'SAME' OMEGA's
 #' @return an OMEGA parameter  
 #' @export
-Omega <- function(name=NA, index, index2, value=NA, fix=FALSE, type=NULL, same=NA) {
-  if (is.null(type)) {
-    type <- if (index==index2) {"var"} else {"covar"}
-  }
+Omega <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL, same=NA) {
+  type <- processDoubleArrayArguments(index=index, index2=index2, type=type)
   return(new("omega", name=as.character(name), index=as.integer(index), index2=as.integer(index2),
              value=as.numeric(value), fix=fix, type=type, same=as.logical(same)))
 }
@@ -170,10 +193,8 @@ setClass(
 #' @param type variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'
 #' @return a SIGMA parameter  
 #' @export
-Sigma <- function(name=NA, index, index2, value=NA, fix=FALSE, type=NULL) {
-  if (is.null(type)) {
-    type <- if (index==index2) {"var"} else {"covar"}
-  }
+Sigma <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL) {
+  type <- processDoubleArrayArguments(index=index, index2=index2, type=type)
   return(new("sigma", name=as.character(name), index=as.integer(index), index2=as.integer(index2),
              value=as.numeric(value), fix=fix, type=type))
 }

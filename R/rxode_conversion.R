@@ -44,7 +44,7 @@ rxodeParams <- function(model) {
     names(retValue) <- character(0)
     return(retValue) # Must be named numeric, otherwise RxODE complains
   }
-  maxIndex <- params %>% maxIndex(type=type)
+  maxIndex <- params %>% select("theta") %>% maxIndex()
   
   # Careful, as.numeric(NA) is important...
   # If values are all integers, RxODE gives a strange error message:
@@ -82,7 +82,7 @@ rxodeMatrix <- function(model, type="omega") {
   if (params %>% select(type) %>% length()==0) {
     return(matrix(data = numeric(0)))
   }
-  maxIndex <- params %>% maxIndex(type=type)
+  maxIndex <- params %>% select(type) %>% maxIndex()
   matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
   names <- rep("", maxIndex)
   
