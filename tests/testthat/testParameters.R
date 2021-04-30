@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test all methods from the parameters class")
 
-testFolder <<- "C:/prj/pmxmod/tests/testthat/"
+testFolder <<- ""
 
 test_that("Write/Read THETA's", {
   
@@ -271,4 +271,33 @@ test_that("Add parameters with NA indexes", {
   expect_equal(parameters %>% getByIndex(Sigma(index=2, index2=2)) %>% length(), 1)
   expect_equal(parameters %>% getByIndex(Sigma(index=3, index2=3)) %>% length(), 1)
   expect_true(validObject(parameters))
+})
+
+test_that("Replace parameters without specifying the index", {
+  # Thetas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Theta(name="X1", value=0))
+  parameters <- parameters %>% add(Theta(name="X2", value=0))
+  parameters <- parameters %>% add(Theta(name="X3", value=0))
+  parameters <- parameters %>% replace(Theta(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("THETA_X1"))@value, 10)
+  
+  # Omegas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Omega(name="X1", value=0))
+  parameters <- parameters %>% add(Omega(name="X2", value=0))
+  parameters <- parameters %>% add(Omega(name="X3", value=0))
+  parameters <- parameters %>% replace(Omega(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("OMEGA_X1"))@value, 10)
+  
+  # Sigmas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Sigma(name="X1", value=0))
+  parameters <- parameters %>% add(Sigma(name="X2", value=0))
+  parameters <- parameters %>% add(Sigma(name="X3", value=0))
+  parameters <- parameters %>% replace(Sigma(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("SIGMA_X1"))@value, 10)
 })

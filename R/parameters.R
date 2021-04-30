@@ -397,6 +397,33 @@ read.allparameters <- function(folder) {
 }
 
 #_______________________________________________________________________________
+#----                             replace                                   ----
+#_______________________________________________________________________________
+
+setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+    }
+  }
+  return(callNextMethod(object, x))
+})
+
+setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+      x@index2 <- existingParam@index2 # Copy index2!
+    }
+  }
+  return(callNextMethod(object, x))
+})
+
+#_______________________________________________________________________________
 #----                                 select                                ----
 #_______________________________________________________________________________
 
