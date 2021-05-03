@@ -80,7 +80,7 @@ getCompartments <- function(records) {
   odeRecord <- records %>% getByName("ODE")
   compartments <- Compartments()
   if (length(odeRecord) == 0) {
-    return(list(odeRecord, compartments))
+    return(compartments)
   }
   code <- odeRecord@code
   odeCounter <- 0
