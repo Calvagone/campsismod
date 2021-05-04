@@ -6,8 +6,8 @@
 \usage{
 Omega(
   name = NA,
-  index,
-  index2,
+  index = NA,
+  index2 = NA,
   value = NA,
   fix = FALSE,
   type = NULL,

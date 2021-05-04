@@ -138,11 +138,25 @@ test_that("Disable method (IOV)", {
 
 test_that("Fix omega method is working", {
   
-  model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_not_fixed"))
-  model@parameters <- model@parameters %>% fixOmega()
+  # 'Unfix' OMEGA matrix
+  original_model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  list <- original_model@parameters@list %>% purrr::map(.f=function(x) {
+    if (is(x, "omega")) {
+      if(isTRUE(x@same)) {
+        x@value <- as.numeric(NA)
+      }
+      x@same <- as.logical(NA)
+    }
+    return(x)
+  })
+  model_not_fixed <- original_model
+  model_not_fixed@parameters@list <- list
   
-  expected <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
-  expect_equal(model, expected)
+  # Fix OMEGA
+  model_fixed <- model_not_fixed
+  model_fixed@parameters <- model_fixed@parameters %>% fixOmega()
+  
+  expect_equal(original_model, model_fixed)
 })
 
 test_that("Name column is optional", {
@@ -150,4 +164,140 @@ test_that("Name column is optional", {
   model <- read.pmxmod(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
   names <- (model@parameters %>% select("theta"))@list %>% purrr::map_chr(.f=~.x@name)
   expect_true(all(is.na(names)))
+})
+
+test_that("THETA indexes validation", {
+  # 2 THETAS OK
+  theta1 <- Theta(index=1, value=0)
+  theta2 <- Theta(index=2, value=0)
+  thetas <- Parameters() %>% add(theta1) %>% add(theta2)
+  expect_equal(thetas %>% length(), 2)
+  expect_true(validObject(thetas))
+  
+  # Wrong starting index
+  thetas <- Parameters() %>% add(Theta(index=2, value=0))
+  expect_error(validObject(thetas))
+  
+  # NA value
+  thetas <- Parameters() %>% add(Theta(index=1, value=NA))
+  expect_error(validObject(thetas))
+  
+  # Index 2 missing
+  theta1 <- Theta(index=1, value=0)
+  theta2 <- Theta(index=3, value=0)
+  thetas <- Parameters() %>% add(theta1) %>% add(theta2)
+  expect_equal(thetas %>% length(), 2)
+  expect_error(validObject(thetas))
+})
+
+test_that("OMEGA indexes validation", {
+  # 2 OMEGA OK
+  omega1 <- Omega(index=1, index2=1, value=0)
+  omega2 <- Omega(index=2, index2=2, value=0)
+  omegas <- Parameters() %>% add(omega1) %>% add(omega2)
+  expect_equal(omegas %>% length(), 2)
+  expect_true(validObject(omegas))
+  
+  # Wrong starting index
+  omegas <- Parameters() %>% add(Omega(index=2, index2=2, value=0))
+  expect_error(validObject(omegas))
+  
+  # NA value
+  omegas <- Parameters() %>% add(Omega(index=1, index2=1, value=NA))
+  expect_error(validObject(omegas))
+  
+  # Index 2 missing
+  omega1 <- Omega(index=1, index2=1, value=0)
+  omega2 <- Omega(index=3, index2=3, value=0)
+  omegas <- Parameters() %>% add(omega1) %>% add(omega2)
+  expect_equal(omegas %>% length(), 2)
+  expect_error(validObject(omegas))
+})
+
+test_that("SIGMA indexes validation", {
+  # 2 SIGMA OK
+  sigma1 <- Sigma(index=1, index2=1, value=0)
+  sigma2 <- Sigma(index=2, index2=2, value=0)
+  sigmas <- Parameters() %>% add(sigma1) %>% add(sigma2)
+  expect_equal(sigmas %>% length(), 2)
+  expect_true(validObject(sigmas))
+  
+  # Wrong starting index
+  sigmas <- Parameters() %>% add(Sigma(index=2, index2=2, value=0))
+  expect_error(validObject(sigmas))
+  
+  # NA value
+  sigmas <- Parameters() %>% add(Sigma(index=1, index2=1, value=NA))
+  expect_error(validObject(sigmas))
+  
+  # Index 2 missing
+  sigma1 <- Sigma(index=1, index2=1, value=0)
+  sigma2 <- Sigma(index=3, index2=3, value=0)
+  sigmas <- Parameters() %>% add(sigma1) %>% add(sigma2)
+  expect_equal(sigmas %>% length(), 2)
+  expect_error(validObject(sigmas))
+})
+
+test_that("Add parameters with NA indexes", {
+  # Thetas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Theta(value=0))
+  parameters <- parameters %>% add(Theta(value=0))
+  parameters <- parameters %>% add(Theta(value=0))
+  
+  expect_equal(parameters %>% getByIndex(Theta(index=1)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Theta(index=2)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Theta(index=3)) %>% length(), 1)
+  expect_true(validObject(parameters))
+  
+  # Omegas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Omega(value=0))
+  parameters <- parameters %>% add(Omega(value=0))
+  parameters <- parameters %>% add(Omega(value=0))
+  
+  expect_equal(parameters %>% getByIndex(Omega(index=1, index2=1)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Omega(index=2, index2=2)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Omega(index=3, index2=3)) %>% length(), 1)
+  expect_true(validObject(parameters))
+  
+  # Sigmas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Sigma(value=0))
+  parameters <- parameters %>% add(Sigma(value=0))
+  parameters <- parameters %>% add(Sigma(value=0))
+  
+  expect_equal(parameters %>% getByIndex(Sigma(index=1, index2=1)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Sigma(index=2, index2=2)) %>% length(), 1)
+  expect_equal(parameters %>% getByIndex(Sigma(index=3, index2=3)) %>% length(), 1)
+  expect_true(validObject(parameters))
+})
+
+test_that("Replace parameters without specifying the index", {
+  # Thetas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Theta(name="X1", value=0))
+  parameters <- parameters %>% add(Theta(name="X2", value=0))
+  parameters <- parameters %>% add(Theta(name="X3", value=0))
+  parameters <- parameters %>% replace(Theta(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("THETA_X1"))@value, 10)
+  
+  # Omegas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Omega(name="X1", value=0))
+  parameters <- parameters %>% add(Omega(name="X2", value=0))
+  parameters <- parameters %>% add(Omega(name="X3", value=0))
+  parameters <- parameters %>% replace(Omega(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("OMEGA_X1"))@value, 10)
+  
+  # Sigmas
+  parameters <- Parameters()
+  parameters <- parameters %>% add(Sigma(name="X1", value=0))
+  parameters <- parameters %>% add(Sigma(name="X2", value=0))
+  parameters <- parameters %>% add(Sigma(name="X3", value=0))
+  parameters <- parameters %>% replace(Sigma(name="X1", value=10))
+  
+  expect_equal((parameters %>% getByName("SIGMA_X1"))@value, 10)
 })

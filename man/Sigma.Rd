@@ -4,7 +4,7 @@
 \alias{Sigma}
 \title{Create a SIGMA parameter.}
 \usage{
-Sigma(name = NA, index, index2, value = NA, fix = FALSE, type = NULL)
+Sigma(name = NA, index = NA, index2 = NA, value = NA, fix = FALSE, type = NULL)
 }
 \arguments{
 \item{name}{parameter name, e.g. CL (prefix SIGMA will be added automatically)}

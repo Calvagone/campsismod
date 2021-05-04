@@ -3,6 +3,45 @@
 #----                          parameters class                             ----
 #_______________________________________________________________________________
 
+validateParametersByType <- function(object, type, emptyParameter) {
+  params <- object %>% select(type)
+  if (params %>% length() == 0) {
+    return(character())
+  }
+  maxIndex <- params %>% maxIndex()
+  minIndex <- params %>% minIndex()
+  if (is.na(minIndex)) {
+    return(paste0("At least one ", type %>% toupper(), " index is NA"))
+  }
+  if (minIndex != 1) {
+    return(paste0("First ", type %>% toupper(), " index is different than 1"))
+  }
+  for (i in seq_len(maxIndex)) {
+    search <- emptyParameter
+    if (is(emptyParameter, "double_array_parameter")) {
+      search@index <- i
+      search@index2 <- i
+    } else {
+      search@index <- i
+    }
+    param <- params %>% getByIndex(search)
+    if (length(param) == 0) {
+      return(paste0("No ", type %>% toupper(), " with index ", i))
+    }
+    if (is.na(param@value)) {
+      return(paste0(type %>% toupper(), " with index ", i, " has NA value"))
+    }
+  }
+  return(character())
+}
+
+validateParameters <- function(object) {
+  check1 <- validateParametersByType(object, "theta", Theta())
+  check2 <- validateParametersByType(object, "omega", Omega())
+  check3 <- validateParametersByType(object, "sigma", Sigma())
+  return(c(check1, check2, check3))
+}
+
 #' @export
 setClass(
   "parameters",
@@ -10,7 +49,8 @@ setClass(
     varcov = "matrix"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="parameter", varcov=matrix(numeric(0), nrow=0, ncol=0))
+  prototype = prototype(type="parameter", varcov=matrix(numeric(0), nrow=0, ncol=0)),
+  validity = validateParameters
 )
 
 #' 
@@ -21,6 +61,28 @@ setClass(
 Parameters <- function() {
   return(new("parameters"))
 }
+
+#_______________________________________________________________________________
+#----                              add                                      ----
+#_______________________________________________________________________________
+
+
+setMethod("add", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
+  if (is.na(x@index)) {
+    maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
+    x@index <- as.integer(maxIndex + 1)
+  }
+  return(callNextMethod(object, x))
+})
+
+setMethod("add", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
+  if (is.na(x@index) && is.na(x@index2)) {
+    maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
+    x@index <- as.integer(maxIndex + 1)
+    x@index2 <- as.integer(maxIndex + 1)
+  }
+  return(callNextMethod(object, x))
+})
 
 #_______________________________________________________________________________
 #----                                 clean                                ----
@@ -187,23 +249,63 @@ setMethod("getByIndex", signature=c("parameters", "parameter"), definition=funct
 })
 
 #_______________________________________________________________________________
+#----                                minIndex                               ----
+#_______________________________________________________________________________
+
+#' Min index.
+#' 
+#' @param object generic object
+#' @return min index
+#' @export
+minIndex <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("minIndex", function(object) {
+  standardGeneric("minIndex")
+})
+
+setMethod("minIndex", signature=c("parameters"), definition=function(object) {
+  if (object %>% length() == 0) {
+    return(0)
+  }
+  return(object@list %>% purrr::map_int(.f=function(.x) {
+    if (is(.x, "double_array_parameter")) {
+      return(min(c(.x@index, .x@index2)))
+    } else {
+      return(.x@index)
+    }
+  }) %>% min())
+})
+
+#_______________________________________________________________________________
 #----                                maxIndex                               ----
 #_______________________________________________________________________________
 
 #' Max index.
 #' 
 #' @param object generic object
-#' @param type parameter type: theta, omega or sigma
-#' @return filtered object
+#' @return max index
 #' @export
-maxIndex <- function(object, type) object
+maxIndex <- function(object) {
+  stop("No default function is provided")
+}
 
-setGeneric("maxIndex", function(object, type) {
+setGeneric("maxIndex", function(object) {
   standardGeneric("maxIndex")
 })
 
-setMethod("maxIndex", signature=c("parameters", "character"), definition=function(object, type) {
-  return((object %>% select(type))@list %>% purrr::map_int(~.x@index) %>% max())
+setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
+  if (object %>% length() == 0) {
+    return(0)
+  }
+  return(object@list %>% purrr::map_int(.f=function(.x) {
+    if (is(.x, "double_array_parameter")) {
+      return(max(c(.x@index, .x@index2)))
+    } else {
+      return(.x@index)
+    }
+  }) %>% max())
 })
 
 #_______________________________________________________________________________
@@ -293,6 +395,33 @@ read.allparameters <- function(folder) {
   }
   return(parameters)
 }
+
+#_______________________________________________________________________________
+#----                             replace                                   ----
+#_______________________________________________________________________________
+
+setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+    }
+  }
+  return(callNextMethod(object, x))
+})
+
+setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+      x@index2 <- existingParam@index2 # Copy index2!
+    }
+  }
+  return(callNextMethod(object, x))
+})
 
 #_______________________________________________________________________________
 #----                                 select                                ----
