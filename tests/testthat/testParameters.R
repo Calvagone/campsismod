@@ -301,3 +301,18 @@ test_that("Replace parameters without specifying the index", {
   
   expect_equal((parameters %>% getByName("SIGMA_X1"))@value, 10)
 })
+
+test_that("Add all method works well", {
+  # Use c() operator and add
+  parameters1 <- Parameters()
+  parameters1 <- parameters1 %>% add(c(Theta(value=0), Theta(value=0), Theta(value=0)))
+  
+  expect_equal(parameters1 %>% length(), 3)
+  
+  # Use list() operator and add
+  parameters2 <- Parameters()
+  parameters2 <- parameters2 %>% add(list(Theta(value=0), Theta(value=0), Theta(value=0)))
+  
+  expect_equal(parameters2 %>% length(), 3)
+  expect_equal(parameters1, parameters2)
+})
