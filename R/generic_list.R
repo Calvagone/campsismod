@@ -61,6 +61,13 @@ setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object
   return(object)
 })
 
+setMethod("add", signature=c("pmx_list", "list"), definition=function(object, x) {
+  for (element in x) {
+    object <- object %>% add(element)
+  }
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                             replace                                   ----
 #_______________________________________________________________________________
