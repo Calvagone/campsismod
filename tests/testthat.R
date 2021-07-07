@@ -1,4 +1,4 @@
 Sys.setenv("R_TESTS" = "")
 library(testthat)
-library(pmxmod)
-test_check("pmxmod")
+library(campsismod)
+test_check("campsismod")

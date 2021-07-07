@@ -1,5 +1,5 @@
 
-#' PMXmod model library.
+#' CAMPSIS model library.
 #'
 #' A list containing model templates.
 #'
