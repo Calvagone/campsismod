@@ -6,6 +6,9 @@ validateInitialCondition <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment initial condition class.
+#' 
 #' @export
 setClass(
   "compartment_initial_condition",

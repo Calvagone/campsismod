@@ -2,6 +2,10 @@
 #----                        compartments class                             ----
 #_______________________________________________________________________________
 
+#' 
+#' Compartments class.
+#' 
+#' @slot properties compartment properties of the compartments defined in this class
 #' @export
 setClass(
   "compartments",

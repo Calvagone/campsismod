@@ -3,6 +3,9 @@
 #----                  compartment_properties class                    ----
 #_______________________________________________________________________________
 
+#' 
+#' Compartment properties class.
+#' 
 #' @export
 setClass(
   "compartment_properties",

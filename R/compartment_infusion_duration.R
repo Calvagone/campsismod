@@ -6,6 +6,9 @@ validateInfusionDuration <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment infusion duration class.
+#' 
 #' @export
 setClass(
   "compartment_infusion_duration",

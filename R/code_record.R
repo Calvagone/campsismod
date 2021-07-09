@@ -23,6 +23,9 @@ setClass(
 #----                           MAIN record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' Main record class.
+#' 
 #' @export
 setClass(
   "main_record",
@@ -44,6 +47,9 @@ MainRecord <- function(code=character()) {
 #----                            ODE record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' ODE record class.
+#' 
 #' @export
 setClass(
   "ode_record",
@@ -65,6 +71,9 @@ OdeRecord <- function(code=character()) {
 #----                              F record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' Bioavailability record class.
+#' 
 #' @export
 setClass(
   "f_record",
@@ -78,6 +87,9 @@ setClass(
 #----                              LAG record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' Lag record class.
+#' 
 #' @export
 setClass(
   "lag_record",
@@ -91,6 +103,9 @@ setClass(
 #----                           DURATION record                             ----
 #_______________________________________________________________________________
 
+#' 
+#' (Infusion)-duration record class.
+#' 
 #' @export
 setClass(
   "duration_record",
@@ -104,6 +119,9 @@ setClass(
 #----                             RATE record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' (Infusion)-rate record class.
+#' 
 #' @export
 setClass(
   "rate_record",
@@ -117,6 +135,9 @@ setClass(
 #----                             INIT record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' Init record class.
+#' 
 #' @export
 setClass(
   "init_record",
@@ -131,6 +152,9 @@ setClass(
 #_______________________________________________________________________________
 
 
+#' 
+#' Error record class.
+#' 
 #' @export
 setClass(
   "error_record",

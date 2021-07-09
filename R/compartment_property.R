@@ -7,8 +7,10 @@ validateCompartmentCharacteristic <- function(object) {
 }
 
 #' 
-#' Compartment characteristic class.
+#' Compartment property class.
 #' 
+#' @slot compartment related compartment index
+#' @slot rhs right-hand side formula
 #' @export
 setClass(
   "compartment_property",

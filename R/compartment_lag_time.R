@@ -7,6 +7,9 @@ validateLagTime <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment lag time class.
+#' 
 #' @export
 setClass(
   "compartment_lag_time",

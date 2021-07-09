@@ -3,7 +3,15 @@
 \docType{class}
 \name{compartment_property-class}
 \alias{compartment_property-class}
-\title{Compartment characteristic class.}
+\title{Compartment property class.}
 \description{
-Compartment characteristic class.
+Compartment property class.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{compartment}}{related compartment index}
+
+\item{\code{rhs}}{right-hand side formula}
+}}
+

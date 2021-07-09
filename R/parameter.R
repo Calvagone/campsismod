@@ -8,6 +8,13 @@ validateParameter <- function(object) {
   return(check1)
 }
 
+#' 
+#' Parameter class. Any parameter in a pharmacometric model.
+#' 
+#' @slot name parameter name, optional (although recommended)
+#' @slot index parameter index, integer
+#' @slot value parameter value (e.g. the estimated value from a modelling tool)
+#' @slot fix logical value, say if parameter was fixed in the modelling phase
 #' @export
 setClass(
   "parameter",
@@ -27,6 +34,9 @@ setClass(
 #_______________________________________________________________________________
 
 
+#' 
+#' Single-array parameter class. This parameter has a single index value.
+#' 
 #' @export
 setClass(
   "single_array_parameter",
@@ -66,6 +76,10 @@ validateDoubleArrayParameter <- function(object) {
   return(c(check1, check2, check3, check4))
 }
 
+#' 
+#' Double-array parameter class. This parameter has 2 indexes. 
+#' It can thus be used to define correlations between parameters.
+#' 
 #' @export
 setClass(
   "double_array_parameter",
@@ -82,7 +96,7 @@ setClass(
 #----                                theta                                  ----
 #_______________________________________________________________________________
 
-
+#' 
 #' Theta parameter class.
 #' 
 #' @export
@@ -114,6 +128,7 @@ validateOmega <- function(object) {
   return(expectOne(object, "same"))
 }
 
+#'
 #' Omega parameter class.
 #' 
 #' @export

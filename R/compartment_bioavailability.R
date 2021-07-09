@@ -7,6 +7,9 @@ validateBioavailability <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment bioavailability class.
+#' 
 #' @export
 setClass(
   "compartment_bioavailability",
