@@ -29,6 +29,7 @@ Compartments <- function() {
 #----                                add                                    ----
 #_______________________________________________________________________________
 
+#' @rdname add
 setMethod("add", signature = c("compartments", "compartment_property"), definition = function(object, x) {
   object@properties <- object@properties %>% add(x) 
   return(object)
@@ -38,6 +39,7 @@ setMethod("add", signature = c("compartments", "compartment_property"), definiti
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
 
+#' @rdname getByIndex
 setMethod("getByIndex", signature=c("compartments", "compartment"), definition=function(object, x) {
   retValue <- object@list %>% purrr::keep(~(.x@index==x@index))
   
@@ -51,6 +53,7 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
 #----                          getCompartmentIndex                          ----
 #_______________________________________________________________________________
 
+#' @rdname getCompartmentIndex
 setMethod("getCompartmentIndex", signature=c("compartments", "character"), definition=function(object, name) {
   compartment <- object %>% getByName(paste0("A_", name))
   if (compartment %>% length() == 0) {

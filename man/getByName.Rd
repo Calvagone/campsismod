@@ -2,9 +2,12 @@
 % Please edit documentation in R/generic_list.R
 \name{getByName}
 \alias{getByName}
+\alias{getByName,pmx_list,character-method}
 \title{Get an element from a list by name.}
 \usage{
 getByName(object, name)
+
+\S4method{getByName}{pmx_list,character}(object, name)
 }
 \arguments{
 \item{object}{list object}

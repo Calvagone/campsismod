@@ -2,9 +2,12 @@
 % Please edit documentation in R/parameter.R
 \name{isDiag}
 \alias{isDiag}
+\alias{isDiag,double_array_parameter-method}
 \title{Is diagonal.}
 \usage{
 isDiag(object)
+
+\S4method{isDiag}{double_array_parameter}(object)
 }
 \arguments{
 \item{object}{generic object}

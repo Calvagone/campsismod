@@ -2,9 +2,18 @@
 % Please edit documentation in R/parameter.R
 \name{as.data.frame}
 \alias{as.data.frame}
+\alias{as.data.frame,theta,character,logical-method}
+\alias{as.data.frame,omega,character,logical-method}
+\alias{as.data.frame,sigma,character,logical-method}
 \title{As data frame method.}
 \usage{
 as.data.frame(x, row.names = NULL, optional = FALSE, ...)
+
+\S4method{as.data.frame}{theta,character,logical}(x, row.names = NULL, optional = FALSE, ...)
+
+\S4method{as.data.frame}{omega,character,logical}(x, row.names = NULL, optional = FALSE, ...)
+
+\S4method{as.data.frame}{sigma,character,logical}(x, row.names = NULL, optional = FALSE, ...)
 }
 \arguments{
 \item{x}{generic object}

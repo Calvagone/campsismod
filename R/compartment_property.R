@@ -31,6 +31,7 @@ setClass(
 #' @param object generic object
 #' @param ... e.g. dest='mrgsolve'
 #' @export
+#' @rdname getPrefix
 getPrefix <- function(object, ...) {
   stop("No default function is provided")
 }
@@ -47,6 +48,7 @@ setGeneric("getPrefix", function(object, ...) {
 #' 
 #' @param object generic object
 #' @export
+#' @rdname getRecordName
 getRecordName <- function(object) {
   stop("No default function is provided")
 }
@@ -67,6 +69,7 @@ setMethod("show", signature=c("compartment_property"), definition=function(objec
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
+#' @rdname toString
 setMethod("toString", signature=c("compartment_property"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)

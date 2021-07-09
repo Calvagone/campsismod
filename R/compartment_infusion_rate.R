@@ -33,6 +33,7 @@ InfusionRate <- function(compartment, rhs) {
 #----                            getName                                    ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature = c("compartment_infusion_rate"), definition = function(x) {
   return(paste0("RATE (", "CMT=", x@compartment, ")"))
 })
@@ -41,6 +42,7 @@ setMethod("getName", signature = c("compartment_infusion_rate"), definition = fu
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
+#' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
   if (dest=="mrgsolve") {
@@ -54,6 +56,7 @@ setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = 
 #----                           getRecordName                               ----
 #_______________________________________________________________________________
 
+#' @rdname getRecordName
 setMethod("getRecordName", signature = c("compartment_infusion_rate"), definition = function(object) {
   return("RATE")
 })

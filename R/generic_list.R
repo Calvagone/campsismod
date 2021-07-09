@@ -31,6 +31,7 @@ setClass(
 #' @param ... extra arguments
 #' @return object
 #' @export
+#' @rdname add
 add <- function(object, x, ...) {
   stop("No default function is provided")
 }
@@ -39,6 +40,7 @@ setGeneric("add", function(object, x, ...) {
   standardGeneric("add")
 })
 
+#' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   if (validObject(x)) {
     if (!is(x, object@type)) {
@@ -54,6 +56,7 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
   return(object)
 })
 
+#' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
   for (element in x@list) {
     object <- object %>% add(element)
@@ -61,6 +64,7 @@ setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object
   return(object)
 })
 
+#' @rdname add
 setMethod("add", signature=c("pmx_list", "list"), definition=function(object, x) {
   for (element in x) {
     object <- object %>% add(element)
@@ -78,6 +82,7 @@ setMethod("add", signature=c("pmx_list", "list"), definition=function(object, x)
 #' @param x element to replace
 #' @return list object
 #' @export
+#' @rdname replace
 replace <- function(object, x) {
   stop("No default function is provided")
 }
@@ -86,6 +91,7 @@ setGeneric("replace", function(object, x) {
   standardGeneric("replace")
 })
 
+#' @rdname replace
 setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   if (object %>% contains(x)) {
     index <- object %>% indexOf(x)
@@ -106,6 +112,7 @@ setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function
 #' @param x element to know the index
 #' @return index of this element
 #' @export
+#' @rdname indexOf
 indexOf <- function(object, x) {
   stop("No default function is provided")
 }
@@ -114,6 +121,7 @@ setGeneric("indexOf", function(object, x) {
   standardGeneric("indexOf")
 })
 
+#' @rdname indexOf
 setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   logicalVector <- object@list %>% purrr::map_lgl(~(.x %>% getName()==x %>% getName()))
   index <- which(logicalVector)
@@ -133,6 +141,7 @@ setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function
 #' @param name element name to search for
 #' @return index of this element
 #' @export
+#' @rdname getByName
 getByName <- function(object, name) {
   stop("No default function is provided")
 }
@@ -141,6 +150,7 @@ setGeneric("getByName", function(object, name) {
   standardGeneric("getByName")
 })
 
+#' @rdname getByName
 setMethod("getByName", signature=c("pmx_list", "character"), definition=function(object, name) {
   element <- object@list %>% purrr::keep(~(.x %>% getName()==name))
   if (length(element) > 0) {
@@ -159,6 +169,7 @@ setMethod("getByName", signature=c("pmx_list", "character"), definition=function
 #' @param x element to check if exists
 #' @return logical value
 #' @export
+#' @rdname contains
 contains <- function(object, x) {
   stop("No default function is provided")
 }
@@ -167,6 +178,7 @@ setGeneric("contains", function(object, x) {
   standardGeneric("contains")
 })
 
+#' @rdname contains
 setMethod("contains", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   return(object %>% getByName(x %>% getName()) %>% length() != 0)
 })
@@ -175,11 +187,12 @@ setMethod("contains", signature=c("pmx_list", "pmx_element"), definition=functio
 #----                            getNames                                   ----
 #_______________________________________________________________________________
 
-#' Get names of element in list.
+#' Get element names from list.
 #' 
 #' @param object list object
 #' @return character vector
 #' @export
+#' @rdname getNames
 getNames <- function(object) {
   stop("No default function is provided")
 }
@@ -188,6 +201,7 @@ setGeneric("getNames", function(object) {
   standardGeneric("getNames")
 })
 
+#' @rdname getNames
 setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
   return(object@list %>% purrr::map_chr(~.x %>% getName()))
 })
@@ -214,6 +228,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 #' @param x something to search for, either indexed element or index itself
 #' @return element from the list whose index matches with provided index
 #' @export
+#' @rdname getByIndex
 getByIndex <- function(object, x) {
   stop("No default function is provided")
 }
@@ -235,6 +250,7 @@ setGeneric("getByIndex", function(object, x) {
 #' @param ... extra arguments
 #' @return same list but ordered
 #' @export
+#' @rdname sort
 sort <- function(x, decreasing = FALSE, ...) {
   stop("No default function is provided")
 }

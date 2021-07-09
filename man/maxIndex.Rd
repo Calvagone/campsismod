@@ -2,9 +2,12 @@
 % Please edit documentation in R/parameters.R
 \name{maxIndex}
 \alias{maxIndex}
+\alias{maxIndex,parameters-method}
 \title{Max index.}
 \usage{
 maxIndex(object)
+
+\S4method{maxIndex}{parameters}(object)
 }
 \arguments{
 \item{object}{generic object}

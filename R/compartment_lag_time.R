@@ -34,7 +34,7 @@ LagTime <- function(compartment, rhs) {
 #----                            getName                                    ----
 #_______________________________________________________________________________
 
-
+#' @rdname getName
 setMethod("getName", signature = c("compartment_lag_time"), definition = function(x) {
   return(paste0("LAG_TIME (", "CMT=", x@compartment, ")"))
 })
@@ -43,6 +43,7 @@ setMethod("getName", signature = c("compartment_lag_time"), definition = functio
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
+#' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_lag_time"), definition = function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
   if (dest=="mrgsolve") {
@@ -56,6 +57,7 @@ setMethod("getPrefix", signature = c("compartment_lag_time"), definition = funct
 #----                           getRecordName                               ----
 #_______________________________________________________________________________
 
+#' @rdname getRecordName
 setMethod("getRecordName", signature = c("compartment_lag_time"), definition = function(object) {
   return("LAG")
 })

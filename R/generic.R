@@ -11,6 +11,7 @@
 #' @param ... extra arguments like before or after
 #' @return updated object
 #' @export
+#' @rdname addEquation
 addEquation <- function(object, lhs, rhs, ...) {
   stop("No default function is provided")
 }
@@ -30,6 +31,7 @@ setGeneric("addEquation", function(object, lhs, rhs, ...) {
 #' @param ... extra arguments needed for disabling
 #' @return standardised object
 #' @export
+#' @rdname disable
 disable <- function(object, x, ...) {
   stop("No default function is provided")
 }
@@ -62,6 +64,7 @@ setClass(
 #' @param ... optional arguments
 #' @return specific object depending on given destination
 #' @export
+#' @rdname export
 export <- function(object, dest, ...) {
   stop("No default function is provided")
 }
@@ -80,6 +83,7 @@ setGeneric("export", function(object, dest, ...) {
 #' @param name compartment name
 #' @return the corresponding compartment index
 #' @export
+#' @rdname getCompartmentIndex
 getCompartmentIndex <- function(object, name) {
   stop("No default function is provided")
 }
@@ -98,6 +102,7 @@ setGeneric("getCompartmentIndex", function(object, name) {
 #' @param lhs left-hand-side variable
 #' @return equation, character or NULL if not found
 #' @export
+#' @rdname getEquation
 getEquation <- function(object, lhs) {
   stop("No default function is provided")
 }
@@ -116,6 +121,7 @@ setGeneric("getEquation", function(object, lhs) {
 #' @param lhs left-hand-side variable to search 
 #' @return TRUE or FALSE
 #' @export
+#' @rdname hasEquation
 hasEquation <- function(object, lhs) {
   stop("No default function is provided")
 }
@@ -151,6 +157,7 @@ setGeneric("read", function(file, ...) {
 #' @param lhs left-hand-side variable
 #' @return updated code record
 #' @export
+#' @rdname removeEquation
 removeEquation <- function(object, lhs) {
   stop("No default function is provided")
 }
@@ -170,6 +177,7 @@ setGeneric("removeEquation", function(object, lhs) {
 #' @param rhs right-hand-side expression
 #' @return updated code records
 #' @export
+#' @rdname replaceEquation
 replaceEquation <- function(object, lhs, rhs) {
   stop("No default function is provided")
 }
@@ -182,12 +190,13 @@ setGeneric("replaceEquation", function(object, lhs, rhs) {
 #----                                 select                                ----
 #_______________________________________________________________________________
 
-#' Select.
+#' Select something from given object.
 #' 
 #' @param object generic object
 #' @param ... arguments to select
 #' @return filtered object
 #' @export
+#' @rdname select
 select <- function(object, ...) {
   stop("No default function is provided")
 }
@@ -196,6 +205,7 @@ setGeneric("select", function(object, ...) {
   standardGeneric("select")
 })
 
+#' @rdname select
 setMethod("select", signature=c("data.frame"), definition=function(object, ...) {
   return(return(dplyr::select(.data=object, ...)))
 })
@@ -210,6 +220,7 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 #' @param ... extra arguments needed for standardisation
 #' @return standardised object
 #' @export
+#' @rdname standardise
 standardise <- function(object, ...) {
   stop("No default function is provided")
 }
@@ -228,6 +239,7 @@ setGeneric("standardise", function(object, ...) {
 #' @param ... extra arguments needed for toString conversion
 #' @return character value/vector
 #' @export
+#' @rdname toString
 toString <- function(object, ...) {
   stop("No default function is provided")
 }
@@ -246,6 +258,7 @@ setGeneric("toString", function(object, ...) {
 #' @param file path of the output dir or ZIP filename
 #' @param ... extra arguments
 #' @export
+#' @rdname write
 write <- function(object, file, ...) {
   stop("No default function is provided")
 }

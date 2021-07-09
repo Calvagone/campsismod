@@ -2,9 +2,12 @@
 % Please edit documentation in R/parameters.R
 \name{clean}
 \alias{clean}
+\alias{clean,parameters-method}
 \title{Clean}
 \usage{
 clean(object)
+
+\S4method{clean}{parameters}(object)
 }
 \arguments{
 \item{object}{generic object}

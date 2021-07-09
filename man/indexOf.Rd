@@ -2,9 +2,12 @@
 % Please edit documentation in R/generic_list.R
 \name{indexOf}
 \alias{indexOf}
+\alias{indexOf,pmx_list,pmx_element-method}
 \title{Get the index of an element in list.}
 \usage{
 indexOf(object, x)
+
+\S4method{indexOf}{pmx_list,pmx_element}(object, x)
 }
 \arguments{
 \item{object}{list object}

@@ -226,6 +226,7 @@ Sigma <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL) 
 #' @param ... extra arguments
 #' @return data frame
 #' @export
+#' @rdname as.data.frame
 as.data.frame <- function(x, row.names=NULL, optional=FALSE, ...) {
   base::as.data.frame(x, row.names=row.names, optional=optional, ...)
 }
@@ -234,14 +235,17 @@ setGeneric("as.data.frame", function(x, row.names=NULL, optional=FALSE, ...) {
   standardGeneric("as.data.frame")
 })
 
+#' @rdname as.data.frame
 setMethod("as.data.frame", signature("theta", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
   return(data.frame(name=x@name, index=x@index, value=x@value, fix=x@fix))
 })
 
+#' @rdname as.data.frame
 setMethod("as.data.frame", signature("omega", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
   return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type, same=x@same))
 })
 
+#' @rdname as.data.frame
 setMethod("as.data.frame", signature("sigma", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
   return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type))
 })
@@ -255,12 +259,14 @@ setMethod("as.data.frame", signature("sigma", "character", "logical"), function(
 #' @param object generic object
 #' @return logical value
 #' @export
+#' @rdname isDiag
 isDiag <- function(object) TRUE
 
 setGeneric("isDiag", function(object) {
   standardGeneric("isDiag")
 })
 
+#' @rdname isDiag
 setMethod("isDiag", signature(object = "double_array_parameter"), function(object) {
   return(object@index==object@index2)
 })
@@ -274,6 +280,7 @@ setMethod("isDiag", signature(object = "double_array_parameter"), function(objec
 #' @param object generic object
 #' @return NONMEM name
 #' @export
+#' @rdname getNONMEMName
 getNONMEMName <- function(object) {
   stop("No default function is provided")
 }
@@ -282,14 +289,17 @@ setGeneric("getNONMEMName", function(object) {
   standardGeneric("getNONMEMName")
 })
 
+#' @rdname getNONMEMName
 setMethod("getNONMEMName", signature=c("theta"), definition=function(object) {
   return(paste0("THETA(", object@index, ")"))
 })
 
+#' @rdname getNONMEMName
 setMethod("getNONMEMName", signature=c("omega"), definition=function(object) {
   return(paste0("OMEGA(", object@index, ",", object@index2, ")"))
 })
 
+#' @rdname getNONMEMName
 setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
   return(paste0("SIGMA(", object@index, ",", object@index2, ")"))
 })
@@ -298,6 +308,7 @@ setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
@@ -306,6 +317,7 @@ setMethod("getName", signature=c("theta"), definition=function(x) {
   }
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("OMEGA", "_", x@index, "_", x@index2))
@@ -314,6 +326,7 @@ setMethod("getName", signature=c("omega"), definition=function(x) {
   }
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("SIGMA", "_", x@index, "_", x@index2))
@@ -331,6 +344,7 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 #' @param x element to know the name
 #' @return the name of this element
 #' @export
+#' @rdname getNameInModel 
 getNameInModel <- function(x) {
   stop("No default function is provided")
 }
@@ -339,6 +353,7 @@ setGeneric("getNameInModel", function(x) {
   standardGeneric("getNameInModel")
 })
 
+#' @rdname getNameInModel 
 setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
@@ -347,6 +362,7 @@ setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
   }
 })
 
+#' @rdname getNameInModel 
 setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
@@ -358,6 +374,7 @@ setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
   }
 })
 
+#' @rdname getNameInModel 
 setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
@@ -373,10 +390,12 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 #----                            standardise                                ----
 #_______________________________________________________________________________
 
+#' @rdname standardise
 setMethod("standardise", signature=c("theta"), definition=function(object, ...) {
   return(object)
 })
 
+#' @rdname standardise
 setMethod("standardise", signature=c("double_array_parameter"), definition=function(object, ...) {
   type <- object@type
   index <- object@index

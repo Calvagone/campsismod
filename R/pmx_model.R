@@ -15,6 +15,7 @@ setClass(
 #----                                add                                    ----
 #_______________________________________________________________________________
 
+#' @rdname add
 setMethod("add", signature=c("pmx_model", "compartment_property"), definition=function(object, x) {
   compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
   if (length(compartment) == 0) {
@@ -27,11 +28,13 @@ setMethod("add", signature=c("pmx_model", "compartment_property"), definition=fu
   return(object)
 })
 
+#' @rdname add
 setMethod("add", signature=c("pmx_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% add(x)
   return(object)
 })
 
+#' @rdname add
 setMethod("add", signature=c("pmx_model", "code_record"), definition=function(object, x) {
   object@model <- object@model %>% add(x)
   return(object)
@@ -41,6 +44,7 @@ setMethod("add", signature=c("pmx_model", "code_record"), definition=function(ob
 #----                            addEquation                                ----
 #_______________________________________________________________________________
 
+#' @rdname addEquation
 setMethod("addEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
   object@model <- object@model %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
   return(object)
@@ -50,6 +54,7 @@ setMethod("addEquation", signature=c("pmx_model", "character", "character"), def
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
+#' @rdname disable
 setMethod("disable", signature=c("pmx_model", "character"), definition=function(object, x, ...) {
   object@parameters <- object@parameters %>% disable(x=x, ...)
   return(object)
@@ -83,7 +88,7 @@ setClass(
 #----                                export                                 ----
 #_______________________________________________________________________________
 
-
+#' @rdname export
 setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest, outvars=NULL) {
   if (dest=="RxODE") {
     return(object %>% export(new("rxode_type")))
@@ -98,6 +103,7 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #----                          getCompartmentIndex                          ----
 #_______________________________________________________________________________
 
+#' @rdname getCompartmentIndex
 setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definition=function(object, name) {
   return(object@compartments %>% getCompartmentIndex(name=name))
 })
@@ -106,6 +112,7 @@ setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definiti
 #----                              getEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname getEquation
 setMethod("getEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
   return(object@model %>% getEquation(lhs))
 })
@@ -114,6 +121,7 @@ setMethod("getEquation", signature=c("pmx_model", "character"), definition=funct
 #----                            hasEquation                                ----
 #_______________________________________________________________________________
 
+#' @rdname hasEquation
 setMethod("hasEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
   return(object@model %>% hasEquation(lhs))
 })
@@ -184,6 +192,7 @@ updateCompartments <- function(model) {
 #----                           removeEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname removeEquation
 setMethod("removeEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
   object@model <- object@model %>% removeEquation(lhs)
   return(object)
@@ -193,11 +202,13 @@ setMethod("removeEquation", signature=c("pmx_model", "character"), definition=fu
 #----                               replace                                 ----
 #_______________________________________________________________________________
 
+#' @rdname replace
 setMethod("replace", signature=c("pmx_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% replace(x)
   return(object)
 })
 
+#' @rdname replace
 setMethod("replace", signature=c("pmx_model", "code_record"), definition=function(object, x) {
   object@model <- object@model %>% replace(x)
   return(object)
@@ -207,6 +218,7 @@ setMethod("replace", signature=c("pmx_model", "code_record"), definition=functio
 #----                           replaceEquation                             ----
 #_______________________________________________________________________________
 
+#' @rdname replaceEquation
 setMethod("replaceEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs) {
   object@model <- object@model %>% replaceEquation(lhs, rhs)
   return(object)
@@ -228,6 +240,7 @@ setMethod("show", signature=c("pmx_model"), definition=function(object) {
 #----                                  sort                                 ----
 #_______________________________________________________________________________
 
+#' @rdname sort
 setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FALSE, ...) {
   # Sort code records
   x@model <- x@model %>% sort()
@@ -242,6 +255,7 @@ setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FA
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
+#' @rdname write
 setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, ...) {
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   records <- object@model

@@ -17,6 +17,8 @@ setClass(
 #----                                export                                 ----
 #_______________________________________________________________________________
 
+#' @param outvars additional variables to capture
+#' @rdname export
 setMethod("export", signature=c("pmx_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL) {
   return(
     new(
@@ -37,6 +39,7 @@ setMethod("export", signature=c("pmx_model", "mrgsolve_type"), definition=functi
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
+#' @rdname toString
 setMethod("toString", signature=c("mrgsolve_model"), definition=function(object, ...) {
   cpp <- NULL
   if (!is.null(object@param)) {

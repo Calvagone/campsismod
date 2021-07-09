@@ -38,6 +38,7 @@ Compartment <- function(index, name=NA) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("compartment"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("A", "_", x@index))

@@ -2,9 +2,12 @@
 % Please edit documentation in R/parameters.R
 \name{minIndex}
 \alias{minIndex}
+\alias{minIndex,parameters-method}
 \title{Min index.}
 \usage{
 minIndex(object)
+
+\S4method{minIndex}{parameters}(object)
 }
 \arguments{
 \item{object}{generic object}
