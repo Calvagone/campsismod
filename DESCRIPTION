@@ -1,4 +1,4 @@
-Package: pmxmod
+Package: campsismod
 Type: Package
 Collate:
     'data.R'
@@ -27,8 +27,8 @@ Collate:
     'rxode_conversion.R'
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
-Title: Pmxmod package
-Version: 0.3
+Title: CAMPSIS model package
+Version: 0.4
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
@@ -43,5 +43,5 @@ LazyData: true
 Suggests: stringr, knitr, rmarkdown, testthat, roxygen2, devtools, pkgdown, bookdown, RxODE, ggplot2, pmxtran
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
-URL: https://github.com/Calvagone/pmxmod
-BugReports: https://github.com/Calvagone/pmxmod/issues
+URL: https://github.com/Calvagone/campsismod
+BugReports: https://github.com/Calvagone/campsismod/issues

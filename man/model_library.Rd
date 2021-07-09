@@ -3,7 +3,7 @@
 \docType{data}
 \name{model_library}
 \alias{model_library}
-\title{PMXmod model library.}
+\title{CAMPSIS model library.}
 \format{
 A list with all the models:
 \describe{

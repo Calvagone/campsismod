@@ -196,6 +196,10 @@ setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
 #----                             length                                    ----
 #_______________________________________________________________________________
 
+#' Return the length of this list.
+#' 
+#' @param x list object
+#' @rdname length
 setMethod("length", signature=c("pmx_list"), definition=function(x) {
   return(length(x@list))
 })
