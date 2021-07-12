@@ -1,4 +1,9 @@
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
+<!-- badges: end -->
+
 # campsismod
 
 Generic implementation of a drug model in pharmacometrics.
