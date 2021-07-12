@@ -35,7 +35,6 @@ Authors@R: c(
 Description: TODO.
 Depends: R (>= 4.0.0)
 Imports: assertthat, dplyr, plyr, purrr, tibble, tidyr
-Remotes: Calvagone/campsismod
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
