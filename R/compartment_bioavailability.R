@@ -7,6 +7,9 @@ validateBioavailability <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment bioavailability class.
+#' 
 #' @export
 setClass(
   "compartment_bioavailability",
@@ -31,7 +34,7 @@ Bioavailability <- function(compartment, rhs) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
-
+#' @rdname getName
 setMethod("getName", signature = c("compartment_bioavailability"), definition = function(x) {
   return(paste0("BIOAVAILABILITY (", "CMT=", x@compartment, ")"))
 })
@@ -40,6 +43,7 @@ setMethod("getName", signature = c("compartment_bioavailability"), definition = 
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
+#' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_bioavailability"), definition = function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
   if (dest=="mrgsolve") {
@@ -53,6 +57,7 @@ setMethod("getPrefix", signature = c("compartment_bioavailability"), definition 
 #----                           getRecordName                               ----
 #_______________________________________________________________________________
 
+#' @rdname getRecordName
 setMethod("getRecordName", signature = c("compartment_bioavailability"), definition = function(object) {
   return("F")
 })

@@ -27,20 +27,19 @@ Collate:
     'rxode_conversion.R'
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
-Title: CAMPSIS model package
-Version: 0.4
+Title: CAMPSIS Model Package
+Version: 0.4.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
 Description: TODO.
 Depends: R (>= 4.0.0)
 Imports: assertthat, dplyr, plyr, purrr, tibble, tidyr
-Remotes: 
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-Suggests: stringr, knitr, rmarkdown, testthat, roxygen2, devtools, pkgdown, bookdown, RxODE, ggplot2, pmxtran
+Suggests: devtools, knitr, pkgdown, rmarkdown, roxygen2, testthat
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 URL: https://github.com/Calvagone/campsismod

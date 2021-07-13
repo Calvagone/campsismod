@@ -6,6 +6,11 @@ validateCompartment <- function(object) {
   return(expectOneForAll(object, c("name", "index")))
 }
 
+#' 
+#' Compartment class.
+#' 
+#' @slot name compartment name (without prefix)
+#' @slot index compartment index
 #' @export
 setClass(
   "compartment",
@@ -22,7 +27,7 @@ setClass(
 #' Create a compartment.
 #' 
 #' @param index compartment index
-#' @param name compartment name
+#' @param name compartment name (without prefix)
 #' @return an empty list of compartments  
 #' @export
 Compartment <- function(index, name=NA) {
@@ -33,6 +38,7 @@ Compartment <- function(index, name=NA) {
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("compartment"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("A", "_", x@index))

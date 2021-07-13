@@ -3,6 +3,9 @@
 #----                  compartment_properties class                    ----
 #_______________________________________________________________________________
 
+#' 
+#' Compartment properties class.
+#' 
 #' @export
 setClass(
   "compartment_properties",
@@ -16,6 +19,7 @@ setClass(
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
 
+#' @rdname getByIndex
 setMethod("getByIndex", signature=c("compartment_properties", "compartment_property"), definition=function(object, x) {
   retValue <- object@list %>% purrr::keep(~(.x@compartment==x@compartment & as.character(class(.x))==as.character(class(x))))
   
@@ -29,6 +33,7 @@ setMethod("getByIndex", signature=c("compartment_properties", "compartment_prope
 #----                                 select                                ----
 #_______________________________________________________________________________
 
+#' @rdname select
 setMethod("select", signature=c("compartment_properties"), definition=function(object, ...) {
   args <- list(...)
   types <- c("F", "LAG", "DURATION", "RATE", "INIT")
@@ -44,6 +49,7 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
 #----                                  sort                                 ----
 #_______________________________________________________________________________
 
+#' @rdname sort
 setMethod("sort", signature=c("compartment_properties"), definition=function(x, decreasing=FALSE, ...) {
   names <- x@list %>% purrr::map_chr(~.x %>% getRecordName())
   

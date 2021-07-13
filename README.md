@@ -1,4 +1,10 @@
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
+[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://codecov.io/gh/Calvagone/campsismod)
+<!-- badges: end -->
+
 # campsismod
 
 Generic implementation of a drug model in pharmacometrics.
@@ -9,7 +15,7 @@ Install the latest stable release with the authentication token you have
 received:
 
 ``` r
-devtools::install_github("Calvagone/campsismod", ref="release", auth_token="AUTH_TOKEN", force=TRUE)
+devtools::install_github("Calvagone/campsismod", ref="main", auth_token="AUTH_TOKEN", force=TRUE)
 ```
 
 ## Some examples

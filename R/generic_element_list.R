@@ -21,6 +21,7 @@ setClass(
 #' @param x element to know the name
 #' @return the name of this element
 #' @export
+#' @rdname getName
 getName <- function(x) {
   stop("No default function is provided")
 }

@@ -2,9 +2,12 @@
 % Please edit documentation in R/generic_list.R
 \name{getNames}
 \alias{getNames}
-\title{Get names of element in list.}
+\alias{getNames,pmx_list-method}
+\title{Get element names from list.}
 \usage{
 getNames(object)
+
+\S4method{getNames}{pmx_list}(object)
 }
 \arguments{
 \item{object}{list object}
@@ -13,5 +16,5 @@ getNames(object)
 character vector
 }
 \description{
-Get names of element in list.
+Get element names from list.
 }

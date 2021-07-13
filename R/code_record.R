@@ -23,6 +23,9 @@ setClass(
 #----                           MAIN record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' Main record class.
+#' 
 #' @export
 setClass(
   "main_record",
@@ -44,6 +47,9 @@ MainRecord <- function(code=character()) {
 #----                            ODE record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' ODE record class.
+#' 
 #' @export
 setClass(
   "ode_record",
@@ -65,6 +71,9 @@ OdeRecord <- function(code=character()) {
 #----                              F record                                 ----
 #_______________________________________________________________________________
 
+#' 
+#' Bioavailability record class.
+#' 
 #' @export
 setClass(
   "f_record",
@@ -78,6 +87,9 @@ setClass(
 #----                              LAG record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' Lag record class.
+#' 
 #' @export
 setClass(
   "lag_record",
@@ -91,6 +103,9 @@ setClass(
 #----                           DURATION record                             ----
 #_______________________________________________________________________________
 
+#' 
+#' (Infusion)-duration record class.
+#' 
 #' @export
 setClass(
   "duration_record",
@@ -104,6 +119,9 @@ setClass(
 #----                             RATE record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' (Infusion)-rate record class.
+#' 
 #' @export
 setClass(
   "rate_record",
@@ -117,6 +135,9 @@ setClass(
 #----                             INIT record                               ----
 #_______________________________________________________________________________
 
+#' 
+#' Init record class.
+#' 
 #' @export
 setClass(
   "init_record",
@@ -131,6 +152,9 @@ setClass(
 #_______________________________________________________________________________
 
 
+#' 
+#' Error record class.
+#' 
 #' @export
 setClass(
   "error_record",
@@ -169,6 +193,9 @@ getEquationIndex <- function(object, lhs) {
   return(-1)
 }
 
+#' @param before index or variable, may be used to insert an equation at a specific position, before this index (in record) or variable
+#' @param after index or variable, may be used to insert an equation at a specific position, after this index (in record) or variable
+#' @rdname addEquation
 setMethod("addEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
   if (!is.null(before)) {
     index <- ifelse(is.numeric(before), before, getEquationIndex(object, before)) - 1
@@ -191,6 +218,7 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
 #----                              getEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname getEquation
 setMethod("getEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
   index <- getEquationIndex(object, lhs)
   if (index == -1) {
@@ -204,34 +232,42 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("main_record"), definition=function(x) {
   return("MAIN")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("ode_record"), definition=function(x) {
   return("ODE")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("f_record"), definition=function(x) {
   return("F")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("lag_record"), definition=function(x) {
   return("LAG")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("duration_record"), definition=function(x) {
   return("DURATION")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("rate_record"), definition=function(x) {
   return("RATE")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("init_record"), definition=function(x) {
   return("INIT")
 })
 
+#' @rdname getName
 setMethod("getName", signature=c("error_record"), definition=function(x) {
   return("ERROR")
 })
@@ -240,6 +276,7 @@ setMethod("getName", signature=c("error_record"), definition=function(x) {
 #----                            hasEquation                                ----
 #_______________________________________________________________________________
 
+#' @rdname hasEquation
 setMethod("hasEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
   index <- getEquationIndex(object, lhs)
   if (index == -1) {
@@ -253,6 +290,7 @@ setMethod("hasEquation", signature=c("code_record", "character"), definition=fun
 #----                             length                                    ----
 #_______________________________________________________________________________
 
+#' @rdname length
 setMethod("length", signature=c("code_record"), definition=function(x) {
   return(length(x@code))
 })
@@ -261,6 +299,7 @@ setMethod("length", signature=c("code_record"), definition=function(x) {
 #----                           removeEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname removeEquation
 setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {
@@ -273,6 +312,7 @@ setMethod("removeEquation", signature=c("code_record", "character"), definition=
 #----                           replaceEquation                             ----
 #_______________________________________________________________________________
 
+#' @rdname replaceEquation
 setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {

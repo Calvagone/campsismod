@@ -17,9 +17,38 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+#' @rdname add
+setMethod("add", signature=c("code_records", "code_records"), definition=function(object, x) {
+  return(object %>% appendCodeRecords(x))
+})
+
+#' Append code records
+#' 
+#' @param records1 base set of code records
+#' @param records2 extra set of code records to be appended
+#' @return the resulting set of code records
+#' 
+appendCodeRecords <- function(records1, records2) {
+  for (record in (records2)@list) {
+    baseRecord <- records1 %>% getByName(record %>% getName())
+    if (baseRecord %>% length() == 0) {
+      records1 <- records1 %>% add(record)
+    } else {
+      baseRecord@code <- baseRecord@code %>% append(record@code)
+      records1 <- records1 %>% replace(baseRecord)
+    }
+  }
+  return(records1 %>% sort())
+}
+
+#_______________________________________________________________________________
 #----                            addEquation                                ----
 #_______________________________________________________________________________
 
+#' @rdname addEquation
 setMethod("addEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
   
   if (is.null(before) && is.null(after)) {
@@ -146,6 +175,7 @@ addProperties <- function(compartments, records, name, init) {
 #----                              getEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname getEquation
 setMethod("getEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
   for (record in object@list) {
     equation <- record %>% getEquation(lhs)
@@ -168,6 +198,7 @@ getRecordNames <- function() {
 #----                            hasEquation                                ----
 #_______________________________________________________________________________
 
+#' @rdname hasEquation
 setMethod("hasEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
   for (record in object@list) {
     if (record %>% hasEquation(lhs=lhs)) {
@@ -222,6 +253,7 @@ getRecordDelimiter <- function(line) {
 #----                           removeEquation                              ----
 #_______________________________________________________________________________
 
+#' @rdname removeEquation
 setMethod("removeEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
   copy <- object
   for (record in object@list) {
@@ -234,6 +266,7 @@ setMethod("removeEquation", signature=c("code_records", "character"), definition
 #----                           replaceEquation                             ----
 #_______________________________________________________________________________
 
+#' @rdname replaceEquation
 setMethod("replaceEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs) {
   copy <- object
   for (record in object@list) {
@@ -271,6 +304,7 @@ setMethod("show", signature=c("code_records"), definition=function(object) {
 #----                                  sort                                 ----
 #_______________________________________________________________________________
 
+#' @rdname sort
 setMethod("sort", signature=c("code_records"), definition=function(x, decreasing=FALSE, ...) {
   names <- x@list %>% purrr::map_chr(~.x %>% getName())
 
@@ -287,8 +321,8 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
+#' @rdname write
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
-
   # The model is needed to get the compartment properties
   model <- processExtraArg(args=list(...), name="model")
   if (is.null(model)) {

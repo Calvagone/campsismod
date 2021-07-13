@@ -9,7 +9,7 @@ Compartment(index, name = NA)
 \arguments{
 \item{index}{compartment index}
 
-\item{name}{compartment name}
+\item{name}{compartment name (without prefix)}
 }
 \value{
 an empty list of compartments

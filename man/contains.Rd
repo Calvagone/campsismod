@@ -2,9 +2,12 @@
 % Please edit documentation in R/generic_list.R
 \name{contains}
 \alias{contains}
+\alias{contains,pmx_list,pmx_element-method}
 \title{Check if an element exists in list.}
 \usage{
 contains(object, x)
+
+\S4method{contains}{pmx_list,pmx_element}(object, x)
 }
 \arguments{
 \item{object}{list object}

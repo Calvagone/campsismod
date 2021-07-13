@@ -2,9 +2,18 @@
 % Please edit documentation in R/parameter.R
 \name{getNameInModel}
 \alias{getNameInModel}
+\alias{getNameInModel,theta-method}
+\alias{getNameInModel,omega-method}
+\alias{getNameInModel,sigma-method}
 \title{Get name of parameter in the PMX model.}
 \usage{
 getNameInModel(x)
+
+\S4method{getNameInModel}{theta}(x)
+
+\S4method{getNameInModel}{omega}(x)
+
+\S4method{getNameInModel}{sigma}(x)
 }
 \arguments{
 \item{x}{element to know the name}

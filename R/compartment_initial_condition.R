@@ -6,6 +6,9 @@ validateInitialCondition <- function(object) {
   return(TRUE)
 }
 
+#' 
+#' Compartment initial condition class.
+#' 
 #' @export
 setClass(
   "compartment_initial_condition",
@@ -30,6 +33,7 @@ InitialCondition <- function(compartment, rhs) {
 #----                            getName                                    ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("compartment_initial_condition"), definition=function(x) {
   return(paste0("INIT (", "CMT=", x@compartment, ")"))
 })
@@ -38,6 +42,7 @@ setMethod("getName", signature=c("compartment_initial_condition"), definition=fu
 #----                             getPrefix                                ----
 #_______________________________________________________________________________
 
+#' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_initial_condition"), definition = function(object, ...) {
   return("")
 })
@@ -46,6 +51,7 @@ setMethod("getPrefix", signature = c("compartment_initial_condition"), definitio
 #----                           getRecordName                               ----
 #_______________________________________________________________________________
 
+#' @rdname getRecordName
 setMethod("getRecordName", signature = c("compartment_initial_condition"), definition = function(object) {
   return("INIT")
 })
@@ -62,6 +68,7 @@ setMethod("show", signature=c("compartment_initial_condition"), definition=funct
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
+#' @rdname toString
 setMethod("toString", signature=c("compartment_initial_condition"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)

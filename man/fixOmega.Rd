@@ -2,9 +2,12 @@
 % Please edit documentation in R/parameters.R
 \name{fixOmega}
 \alias{fixOmega}
+\alias{fixOmega,parameters-method}
 \title{Fix omega matrix for SAME OMEGA parameters that have NA values due to imperfections in Pharmpy import.}
 \usage{
 fixOmega(object)
+
+\S4method{fixOmega}{parameters}(object)
 }
 \arguments{
 \item{object}{generic object}

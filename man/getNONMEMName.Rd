@@ -2,9 +2,18 @@
 % Please edit documentation in R/parameter.R
 \name{getNONMEMName}
 \alias{getNONMEMName}
+\alias{getNONMEMName,theta-method}
+\alias{getNONMEMName,omega-method}
+\alias{getNONMEMName,sigma-method}
 \title{Get NONMEM name.}
 \usage{
 getNONMEMName(object)
+
+\S4method{getNONMEMName}{theta}(object)
+
+\S4method{getNONMEMName}{omega}(object)
+
+\S4method{getNONMEMName}{sigma}(object)
 }
 \arguments{
 \item{object}{generic object}
