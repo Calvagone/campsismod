@@ -12,6 +12,7 @@
 \alias{add,pmx_model,compartment_property-method}
 \alias{add,pmx_model,parameter-method}
 \alias{add,pmx_model,code_record-method}
+\alias{add,pmx_model,pmx_model-method}
 \title{Add element to list.}
 \usage{
 add(object, x, ...)
@@ -33,6 +34,8 @@ add(object, x, ...)
 \S4method{add}{pmx_model,parameter}(object, x)
 
 \S4method{add}{pmx_model,code_record}(object, x)
+
+\S4method{add}{pmx_model,pmx_model}(object, x)
 }
 \arguments{
 \item{object}{list object}

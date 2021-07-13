@@ -16,3 +16,15 @@ toFile <- function(code, path) {
 loadNonRegressionFile <- function(path) {
   return(read.table(file=path, sep="@")[,1])
 }
+
+nonRegressionPath <- function(regFilename) {
+  return(paste0(testFolder, "non_regression/", regFilename))
+}
+
+modelRegressionTest <- function(model, regFilename) {
+  if (overwriteNonRegressionFiles) {
+    model %>% write(file=nonRegressionPath(regFilename))
+  }
+  expectedModel <- read.pmxmod(file=nonRegressionPath(regFilename))
+  expect_equal(model, expectedModel)
+}

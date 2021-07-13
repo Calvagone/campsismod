@@ -40,6 +40,73 @@ setMethod("add", signature=c("pmx_model", "code_record"), definition=function(ob
   return(object)
 })
 
+#' @rdname add
+setMethod("add", signature=c("pmx_model", "pmx_model"), definition=function(object, x) {
+  object <- object %>% appendModel(x)
+  return(object)
+})
+
+#' Append model (or simply add).
+#' 
+#' @param model1 base model
+#' @param model2 model to append
+#' @return the resulting CAMPSIS model
+appendModel <- function(model1, model2) {
+  paramNames1 <- model1@parameters %>% getNames()
+  paramNames2 <- model2@parameters %>% getNames()
+  cmtNames1 <- model1@compartments %>% getNames()
+  cmtNames2 <- model2@compartments %>% getNames()
+  
+  checkCollisionOnParams <- paramNames1 %in% paramNames2
+  if (any(checkCollisionOnParams)) {
+    stop(paste0("Model can't be appended because of duplicate parameter name(s): ", paste0(paramNames1[checkCollisionOnParams], collapse=", ")))
+  }
+  checkCollisionOnCmts <- cmtNames1 %in% cmtNames2
+  if (any(checkCollisionOnCmts)) {
+    stop(paste0("Model can't be appended because of duplicate compartment name(s): ", paste0(cmtNames1[checkCollisionOnCmts], collapse=", ")))
+  }
+  
+  thetaMax <- model1@parameters %>% select("theta") %>% maxIndex()
+  omegaMax <- model1@parameters %>% select("omega") %>% maxIndex()
+  sigmaMax <- model1@parameters %>% select("sigma") %>% maxIndex()
+  cmtMax <- model1@compartments %>% length()
+  
+  for (theta in (model2@parameters %>% select("theta"))@list) {
+    theta@index <- theta@index + thetaMax
+    model1 <- model1 %>% add(theta)
+  }
+  for (omega in (model2@parameters %>% select("omega"))@list) {
+    omega@index <- omega@index + omegaMax
+    omega@index2 <- omega@index2 + omegaMax
+    model1 <- model1 %>% add(omega)
+  }
+  for (sigma in (model2@parameters %>% select("sigma"))@list) {
+    sigma@index <- sigma@index + sigmaMax
+    sigma@index2 <- sigma@index2 + sigmaMax
+    model1 <- model1 %>% add(sigma)
+  }
+  for (record in (model2@model)@list) {
+    baseRecord <- model1@model %>% getByName(record %>% getName())
+    if (baseRecord %>% length() == 0) {
+      model1 <- model1 %>% add(record)
+    } else {
+      baseRecord@code <- baseRecord@code %>% append(record@code)
+      model1 <- model1 %>% replace(baseRecord)
+    }
+  }
+  for (compartment in model2@compartments@list) {
+    compartment@index <- compartment@index + cmtMax
+    model1@compartments@list <- model1@compartments@list %>% append(compartment)
+  }
+  for (property in model2@compartments@properties@list) {
+    property@compartment <- property@compartment + cmtMax
+    model1@compartments <- model1@compartments %>% add(property)
+  }
+  
+  # Sort function will sort all code records in the proper order
+  return(model1 %>% sort())
+}
+
 #_______________________________________________________________________________
 #----                            addEquation                                ----
 #_______________________________________________________________________________
@@ -247,6 +314,9 @@ setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FA
   
   # Sort compartment properties
   x@compartments@properties <- x@compartments@properties %>% sort()
+  
+  # Sort parameters
+  x@parameters <- x@parameters %>% sort()
   
   return(x)
 })

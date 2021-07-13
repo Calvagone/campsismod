@@ -28,7 +28,7 @@ Collate:
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.4
+Version: 0.4.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
@@ -39,7 +39,7 @@ License: file LICENSE
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-Suggests: knitr, rmarkdown, testthat, roxygen2, devtools, pkgdown
+Suggests: devtools, knitr, pkgdown, rmarkdown, roxygen2, testthat
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 URL: https://github.com/Calvagone/campsismod
