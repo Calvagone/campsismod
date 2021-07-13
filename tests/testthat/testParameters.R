@@ -316,3 +316,10 @@ test_that("Add all method works well", {
   expect_equal(parameters2 %>% length(), 3)
   expect_equal(parameters1, parameters2)
 })
+
+test_that("Max index on empty list works and returns an integer", {
+  parameters <- Parameters()
+  index <- parameters %>% maxIndex()
+  expect_true(is.integer(index))
+  expect_equal(index, 0)
+})

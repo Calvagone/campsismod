@@ -351,7 +351,7 @@ setGeneric("maxIndex", function(object) {
 #' @rdname maxIndex
 setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
   if (object %>% length() == 0) {
-    return(0)
+    return(as.integer(0))
   }
   return(object@list %>% purrr::map_int(.f=function(.x) {
     if (is(.x, "double_array_parameter")) {
