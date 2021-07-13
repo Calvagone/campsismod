@@ -35,6 +35,38 @@ setMethod("add", signature = c("compartments", "compartment_property"), definiti
   return(object)
 })
 
+#' @rdname add
+setMethod("add", signature=c("compartments", "compartments"), definition=function(object, x) {
+  return(object %>% appendCompartments(x))
+})
+
+#' Append compartments.
+#' 
+#' @param compartments1 base set of compartments
+#' @param compartments2 extra set of compartments to be appended
+#' @return the resulting set of compartments
+#' 
+appendCompartments <- function(compartments1, compartments2) {
+  
+  cmtNames1 <- compartments1 %>% getNames()
+  cmtNames2 <- compartments2 %>% getNames()
+  cmtMax <- compartments1 %>% length()
+  
+  checkCollisionOnCmts <- cmtNames1 %in% cmtNames2
+  if (any(checkCollisionOnCmts)) {
+    stop(paste0("Model can't be appended because of duplicate compartment name(s): ", paste0(cmtNames1[checkCollisionOnCmts], collapse=", ")))
+  }
+  for (compartment in compartments2@list) {
+    compartment@index <- compartment@index + cmtMax
+    compartments1@list <- compartments1@list %>% append(compartment)
+  }
+  for (property in compartments2@properties@list) {
+    property@compartment <- property@compartment + cmtMax
+    compartments1 <- compartments1 %>% add(property)
+  }
+  return(compartments1 %>% sort())
+}
+
 #_______________________________________________________________________________
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
@@ -72,5 +104,16 @@ setMethod("show", signature=c("compartments"), definition=function(object) {
     show(element)
     cat("\n")
   }
+})
+
+#_______________________________________________________________________________
+#----                                  sort                                 ----
+#_______________________________________________________________________________
+
+#' @rdname sort
+setMethod("sort", signature=c("compartments"), definition=function(x, decreasing=FALSE, ...) {
+  # Sort compartment properties
+  x@properties <- x@properties %>% sort()
+  return(x)
 })
 

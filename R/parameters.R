@@ -89,6 +89,46 @@ setMethod("add", signature=c("parameters", "double_array_parameter"), definition
   return(callNextMethod(object, x))
 })
 
+#' @rdname add
+setMethod("add", signature=c("parameters", "parameters"), definition=function(object, x) {
+  return(object %>% appendParameters(x))
+})
+
+#' Append parameters.
+#' 
+#' @param params1 base set of parameters
+#' @param params2 extra set of parameters to be appended
+#' @return the resulting set of parameters
+appendParameters <- function(params1, params2) {
+  paramNames1 <- params1 %>% getNames()
+  paramNames2 <- params2 %>% getNames()
+  
+  checkCollisionOnParams <- paramNames1 %in% paramNames2
+  if (any(checkCollisionOnParams)) {
+    stop(paste0("Model can't be appended because of duplicate parameter name(s): ", paste0(paramNames1[checkCollisionOnParams], collapse=", ")))
+  }
+  
+  thetaMax <- params1 %>% select("theta") %>% maxIndex()
+  omegaMax <- params1 %>% select("omega") %>% maxIndex()
+  sigmaMax <- params1 %>% select("sigma") %>% maxIndex()
+
+  for (theta in (params2 %>% select("theta"))@list) {
+    theta@index <- theta@index + thetaMax
+    params1 <- params1 %>% add(theta)
+  }
+  for (omega in (params2 %>% select("omega"))@list) {
+    omega@index <- omega@index + omegaMax
+    omega@index2 <- omega@index2 + omegaMax
+    params1 <- params1 %>% add(omega)
+  }
+  for (sigma in (params2 %>% select("sigma"))@list) {
+    sigma@index <- sigma@index + sigmaMax
+    sigma@index2 <- sigma@index2 + sigmaMax
+    params1 <- params1 %>% add(sigma)
+  }
+  return(params1 %>% sort())
+}
+
 #_______________________________________________________________________________
 #----                                 clean                                ----
 #_______________________________________________________________________________

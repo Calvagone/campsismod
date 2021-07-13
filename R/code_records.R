@@ -17,6 +17,34 @@ CodeRecords <- function() {
 }
 
 #_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+#' @rdname add
+setMethod("add", signature=c("code_records", "code_records"), definition=function(object, x) {
+  return(object %>% appendCodeRecords(x))
+})
+
+#' Append code records
+#' 
+#' @param records1 base set of code records
+#' @param records2 extra set of code records to be appended
+#' @return the resulting set of code records
+#' 
+appendCodeRecords <- function(records1, records2) {
+  for (record in (records2)@list) {
+    baseRecord <- records1 %>% getByName(record %>% getName())
+    if (baseRecord %>% length() == 0) {
+      records1 <- records1 %>% add(record)
+    } else {
+      baseRecord@code <- baseRecord@code %>% append(record@code)
+      records1 <- records1 %>% replace(baseRecord)
+    }
+  }
+  return(records1 %>% sort())
+}
+
+#_______________________________________________________________________________
 #----                            addEquation                                ----
 #_______________________________________________________________________________
 
