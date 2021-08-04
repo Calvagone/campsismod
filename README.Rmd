@@ -67,25 +67,29 @@ thetas <- model@parameters %>% select("theta")
 show(thetas)
 ```
 
-### Write PMX model
+### Write CAMPSIS model
 
 ```{r}
 model %>% write(file="readme_tmp")
 list.files("readme_tmp")
 ```
 
-### Read PMX model
+### Read CAMPSIS model
 
 ```{r}
-model <- read.pmxmod(file="readme_tmp")
+model <- read.campsis(file="readme_tmp")
 show(model)
 ```
 
-### Export PMX model to RxODE
+### Export CAMPSIS model to RxODE
 
 ```{r}
 rxmod <- model %>% export(dest="RxODE")
-rxmod@theta
-rxmod@omega
-rxmod@sigma
+rxmod
+```
+
+### Export CAMPSIS model to mrgsolve
+```{r}
+mrgmod <- model %>% export(dest="mrgsolve")
+mrgmod
 ```

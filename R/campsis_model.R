@@ -199,8 +199,8 @@ read.pmxmod <- function(file) {
 #' Update compartments list from the persisted records.
 #' Exported especially for package pmxtran. However, this method should not be called.
 #' 
-#' @param model PMX model
-#' @return an updated PMX model, with an updated compartments list
+#' @param model CAMPSIS model
+#' @return an updated CAMPSIS model, with an updated compartments list
 #' @export
 updateCompartments <- function(model) {
   if (!is(model, "campsis_model")) {
