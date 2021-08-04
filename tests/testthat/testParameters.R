@@ -123,7 +123,7 @@ test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
 })
 
 test_that("Disable method (IOV)", {
-  model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
   model <- model %>% disable("IOV")
   
   omega4 <- model@parameters %>% getByIndex(Omega(index=4, index2=4))
@@ -139,7 +139,7 @@ test_that("Disable method (IOV)", {
 test_that("Fix omega method is working", {
   
   # 'Unfix' OMEGA matrix
-  original_model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  original_model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
   list <- original_model@parameters@list %>% purrr::map(.f=function(x) {
     if (is(x, "omega")) {
       if(isTRUE(x@same)) {
@@ -161,7 +161,7 @@ test_that("Fix omega method is working", {
 
 test_that("Name column is optional", {
   
-  model <- read.pmxmod(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
+  model <- read.campsis(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
   names <- (model@parameters %>% select("theta"))@list %>% purrr::map_chr(.f=~.x@name)
   expect_true(all(is.na(names)))
 })

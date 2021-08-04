@@ -78,6 +78,31 @@ mrgsolveMain <- function(model) {
   return(retValue)
 }
 
+#' Convert CAMPSIS comment style to C/C++ code.
+#' Only the first # is translated to //.
+#' 
+#' @param x any record line
+#' @return same line with comments translated to C/C++
+convertAnyComment <- function(x) {
+  return(sub(pattern="#", replacement="//", x=x))
+}
+
+#' Append comma at the right place. The goal of this function is to preserve
+#' comments in mrgsolve as well. Comma has to be placed before the comment '#'.
+#' 
+#' @param x record line
+#' @return same line with a comma at the right place
+#' @export
+appendComma <- function(x) {
+  if (hasComment(x)) {
+    pos <- gregexpr(pattern='\\s*#', x) %>% as.numeric()
+    x <- paste0(substring(x, 0, pos-1), ";", substring(x, pos, nchar(x)))
+    return(x)
+  } else {
+    return(paste0(x, ";"))
+  }
+}
+
 #' Convert code record for mrgsolve.
 #' 
 #' @param record code record
@@ -92,19 +117,27 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   }
   for (index in seq_len(length(record@code))) {
     line <- record@code[index]
-    if (isODE(line)) {
+
+    if (isComment(line) || isEmptyLine(line)) {
+      # Don't do anything right now
+    } else if (isODE(line)) {
       name <- extractTextBetweenBrackets(line)
       rhs <- extractRhs(line)
-      line <- paste0("dxdt_", name, "=", rhs, ";")
+      line <- paste0("dxdt_", name, "=", rhs) %>% appendComma()
     } else if (isEquation(line)) {
       if (capture) {
-        line <- paste0("capture ", line, ";")
+        line <- paste0("capture ", line) %>% appendComma()
       } else {
-        line <- paste0("double ", line, ";")
+        line <- paste0("double ", line) %>% appendComma()
       }
-    } else {
-      line <- paste0(line, ";")
+    } else  {
+      # Unknown line... We still append a comma.
+      line <- line %>% appendComma()
     }
+    # Finally, convert # to // if any
+    line <- line %>% convertAnyComment()
+    
+    # Append
     retValue <- retValue %>% append(line)
   }
   return(retValue)

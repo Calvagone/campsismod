@@ -22,7 +22,7 @@ test_that("Write/Read ADVAN1 TRANS1", {
   model %>% write(file=writePath(advan, trans))
   
   # read
-  model2 <- read.pmxmod(file=writePath(advan, trans))
+  model2 <- read.campsis(file=writePath(advan, trans))
 
   # Check equality  
   expect_equal(model, model2)
@@ -47,7 +47,7 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initia
   model %>% write(file=writePath(advan, trans))
   prop <- model@compartments@properties
   # Read
-  model2 <- read.pmxmod(file=writePath(advan, trans))
+  model2 <- read.campsis(file=writePath(advan, trans))
   prop2 <- model2@compartments@properties
   
   # Check equality  

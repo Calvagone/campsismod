@@ -25,6 +25,6 @@ modelRegressionTest <- function(model, regFilename) {
   if (overwriteNonRegressionFiles) {
     model %>% write(file=nonRegressionPath(regFilename))
   }
-  expectedModel <- read.pmxmod(file=nonRegressionPath(regFilename))
+  expectedModel <- read.campsis(file=nonRegressionPath(regFilename))
   expect_equal(model, expectedModel)
 }

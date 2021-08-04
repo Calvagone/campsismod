@@ -212,13 +212,30 @@ setMethod("hasEquation", signature=c("code_records", "character"), definition=fu
 #----                                read.model                             ----
 #_______________________________________________________________________________
 
+#' Remove all trailing line breaks.
+#' 
+#' @param x character vector
+#' @return a character vector
+removeTrailingLineBreaks <- function(x) {
+  lenX <- x %>% length()
+  if (lenX > 0) {
+    res <- rle(isEmptyLine(x))
+    lastValue <- res$values[res$values %>% length()]
+    if (lastValue) {
+      len <- res$lengths[res$values %>% length()]
+      x <- x[-((lenX-len+1):lenX)]
+    }
+  }
+  return(x)
+}
+
 #' Read model file.
 #' 
 #' @param file path to records
 #' @return records object
 #' @export
 read.model <- function(file) {
-  allLines <- read.table(file=file, sep="@")[,1]
+  allLines <- readLines(con=file)
   records <- CodeRecords()
   
   # Reading all records
@@ -227,16 +244,22 @@ read.model <- function(file) {
     line <- allLines[index]
     if (isRecordDelimiter(line)) {
       recordDelimiter <- getRecordDelimiter(line)
+      
+      # Create empty record and add it to list
       record <- new(paste0(tolower(recordDelimiter), "_record"), code=character())
       records@list <- c(records@list, record)
-      if (length(records@list) > 1) {
-        records@list[[length(records@list)-1]]@code <- allLines[(prevRecordIndex + 1):(index-1)]
+      
+      # Add lines to previous record
+      if (records %>% length() > 1) {
+        content <- allLines[(prevRecordIndex + 1):(index-1)]
+        records@list[[records %>% length()-1]]@code <- content %>% removeTrailingLineBreaks()
       }
       prevRecordIndex <- index
     }
   }
-  # Filling last record
-  records@list[[length(records@list)]]@code <- allLines[(prevRecordIndex + 1):length(allLines)]
+  # Filling in with lines of last record
+  content <- allLines[(prevRecordIndex + 1):length(allLines)]
+  records@list[[records %>% length()]]@code <- content %>% removeTrailingLineBreaks()
   
   return(records)
 }

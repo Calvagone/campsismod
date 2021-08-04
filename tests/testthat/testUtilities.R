@@ -56,3 +56,28 @@ test_that("getInitialConditionCmt is working well", {
   expect_equal(getInitialConditionCmt("A_Gluc_X1(0) = X"), "A_Gluc_X1")
   expect_equal(getInitialConditionCmt(" A_Gluc_X1 (0 ) = X"), "A_Gluc_X1")
 })
+
+test_that("isComment is working well", {
+  expect_true(isComment("# HELLO"))
+  expect_true(isComment("   # HELLO"))
+  expect_true(isComment("\t# HELLO"))
+  expect_false(isComment("A# HELLO"))
+  expect_false(isComment(" A # HELLO"))
+  expect_false(isComment("V3=THETA_V3*VDBW"))
+  expect_false(isComment("V3=THETA_V3*VDBW # COMMENT")) # This is an equation that has a comment
+})
+
+test_that("hasComment is working well", {
+  expect_true(hasComment("# HELLO"))
+  expect_true(hasComment("   # HELLO"))
+  expect_true(hasComment("\t# HELLO"))
+  expect_true(hasComment("V3=THETA_V3*VDBW # COMMENT"))
+  expect_false(hasComment("V3=THETA_V3*VDBW"))
+})
+
+test_that("isEmptyLine is working well", {
+  expect_true(isEmptyLine(""))
+  expect_true(isEmptyLine("  "))
+  expect_true(isEmptyLine("\t"))
+  expect_false(isEmptyLine("\tA"))
+})

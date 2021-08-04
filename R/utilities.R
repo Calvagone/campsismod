@@ -1,4 +1,13 @@
 
+#' Assert the given character vector is a single character string.
+#' 
+#' @param x single character string
+#' @importFrom assertthat assert_that
+#' @export
+assertSingleCharacterString <- function(x) {
+  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a single character string")
+}
+
 #' Process extra arguments.
 #' 
 #' @param args arguments list
@@ -34,7 +43,7 @@ isODE <- function(x) {
 #' @return logical value
 #' @export
 isEquation <- function(x) {
-  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  assertSingleCharacterString(x)
   parts <- strsplit(x, split="=")[[1]]
   variable <- parts[1] %>% trim()
   return(grepl(pattern="^[a-zA-Z_][a-zA-Z0-9_]*$", x=variable))
@@ -99,10 +108,9 @@ getInitialConditionCmt <- function(x) {
 #' 
 #' @param x character value
 #' @return text between brackets (trimmed)
-#' @importFrom assertthat assert_that
 #' @export
 extractTextBetweenBrackets <- function(x) {
-  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  assertSingleCharacterString(x)
   retValue <- gsub("[\\(\\)]", "", regmatches(x, gregexpr("\\(.*?\\)", x))[[1]])
   if (length(retValue) == 0) {
     stop(paste0("No parentheses found in ", x))
@@ -114,10 +122,9 @@ extractTextBetweenBrackets <- function(x) {
 #' 
 #' @param x character value
 #' @return right-hand side expressionn
-#' @importFrom assertthat assert_that
 #' @export
 extractRhs <- function(x) {
-  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  assertSingleCharacterString(x)
   tmp <- strsplit(x=x, split="=")[[1]]
   # Remove lhs and collapse (in case of several =)
   rhs <- paste0(tmp[-1], collapse="=")
@@ -128,10 +135,9 @@ extractRhs <- function(x) {
 #' 
 #' @param x character value
 #' @return left-hand-side expression, not trimmed
-#' @importFrom assertthat assert_that
 #' @export
 extractLhs <- function(x) {
-  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a character value to avoid ambiguities")
+  assertSingleCharacterString(x)
   tmp <- strsplit(x=x, split="=")[[1]]
   lhs <- tmp[1]
   return(lhs)
@@ -146,4 +152,31 @@ extractLhs <- function(x) {
 trim <- function(x) {
   assertthat::assert_that(is.character(x), msg="x must be a character vector")
   return(gsub("^\\s+|\\s+$", "", x))
+}
+
+#' Check if string contains CAMPSIS-style comments.
+#' 
+#' @param x character vector
+#' @return logical value
+#' @export
+hasComment <- function(x) {
+  return(grepl("#", x=x, fixed=TRUE))
+}
+
+#' Check if string is a CAMPSIS comment (i.e. not an equation).
+#' 
+#' @param x character vector
+#' @return logical value
+#' @export
+isComment <- function(x) {
+  return(grepl("^\\s*#", x=x))
+}
+
+#' Check if string is an empty line.
+#' 
+#' @param x character vector
+#' @return logical value
+#' @export
+isEmptyLine <- function(x) {
+  return(grepl("^\\s*$", x=x))
 }

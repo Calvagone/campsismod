@@ -54,3 +54,9 @@ test_that("ToString method works", {
   cppFileContent <- mrgsolve %>% toString()
   expect_equal(nchar(cppFileContent), 928) # Just to not have an empty test...
 })
+
+test_that("appendComma is working well", {
+  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA) # Comment"), "KA=THETA_KA*exp(ETA_KA); # Comment")
+  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA)# Comment"), "KA=THETA_KA*exp(ETA_KA);# Comment")
+  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA)   # Comment"), "KA=THETA_KA*exp(ETA_KA);   # Comment")
+})

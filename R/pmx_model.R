@@ -153,12 +153,12 @@ setMethod("hasEquation", signature=c("pmx_model", "character"), definition=funct
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
-#' Read PMX model file.
+#' Read a CAMPSIS model.
 #' 
-#' @param file path to folder or path to zipped project
-#' @return a PMX model
+#' @param file path to folder
+#' @return a CAMPSIS model
 #' @export
-read.pmxmod <- function(file) {
+read.campsis <- function(file) {
   folder <- NULL
   if (dir.exists(file)) {
     folder <- file
@@ -179,6 +179,17 @@ read.pmxmod <- function(file) {
   
   model <- new("pmx_model", model=records, parameters=parameters, compartments=Compartments())
   return(model %>% updateCompartments())
+}
+
+
+#' Read a CAMPSIS model (deprecated).
+#' 
+#' @param file path to folder
+#' @return a CAMPSIS model
+#' @export
+read.pmxmod <- function(file) {
+  .Deprecated("read.campsis")
+  return(read.campsis(file=file))
 }
 
 #' Update compartments list from the persisted records.
