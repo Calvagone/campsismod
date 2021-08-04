@@ -5,7 +5,7 @@
 \alias{hasEquation}
 \alias{hasEquation,code_record,character-method}
 \alias{hasEquation,code_records,character-method}
-\alias{hasEquation,pmx_model,character-method}
+\alias{hasEquation,campsis_model,character-method}
 \title{Has equation.}
 \usage{
 hasEquation(object, lhs)
@@ -14,7 +14,7 @@ hasEquation(object, lhs)
 
 \S4method{hasEquation}{code_records,character}(object, lhs)
 
-\S4method{hasEquation}{pmx_model,character}(object, lhs)
+\S4method{hasEquation}{campsis_model,character}(object, lhs)
 }
 \arguments{
 \item{object}{object containing code record(s)}

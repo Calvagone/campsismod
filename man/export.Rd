@@ -3,18 +3,18 @@
 %   R/mrgsolve_model.R
 \name{export}
 \alias{export}
-\alias{export,pmx_model,character-method}
-\alias{export,pmx_model,rxode_type-method}
-\alias{export,pmx_model,mrgsolve_type-method}
+\alias{export,campsis_model,character-method}
+\alias{export,campsis_model,rxode_type-method}
+\alias{export,campsis_model,mrgsolve_type-method}
 \title{Export function.}
 \usage{
 export(object, dest, ...)
 
-\S4method{export}{pmx_model,character}(object, dest, outvars = NULL)
+\S4method{export}{campsis_model,character}(object, dest, outvars = NULL)
 
-\S4method{export}{pmx_model,rxode_type}(object, dest, ...)
+\S4method{export}{campsis_model,rxode_type}(object, dest, ...)
 
-\S4method{export}{pmx_model,mrgsolve_type}(object, dest, outvars = NULL)
+\S4method{export}{campsis_model,mrgsolve_type}(object, dest, outvars = NULL)
 }
 \arguments{
 \item{object}{generic object}

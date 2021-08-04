@@ -5,7 +5,7 @@
 \alias{removeEquation}
 \alias{removeEquation,code_record,character-method}
 \alias{removeEquation,code_records,character-method}
-\alias{removeEquation,pmx_model,character-method}
+\alias{removeEquation,campsis_model,character-method}
 \title{Remove equation from code record.}
 \usage{
 removeEquation(object, lhs)
@@ -14,7 +14,7 @@ removeEquation(object, lhs)
 
 \S4method{removeEquation}{code_records,character}(object, lhs)
 
-\S4method{removeEquation}{pmx_model,character}(object, lhs)
+\S4method{removeEquation}{campsis_model,character}(object, lhs)
 }
 \arguments{
 \item{object}{object containing code record(s)}

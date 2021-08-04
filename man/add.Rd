@@ -12,10 +12,10 @@
 \alias{add,parameters,double_array_parameter-method}
 \alias{add,parameters,parameters-method}
 \alias{add,code_records,code_records-method}
-\alias{add,pmx_model,compartment_property-method}
-\alias{add,pmx_model,parameter-method}
-\alias{add,pmx_model,code_record-method}
-\alias{add,pmx_model,pmx_model-method}
+\alias{add,campsis_model,compartment_property-method}
+\alias{add,campsis_model,parameter-method}
+\alias{add,campsis_model,code_record-method}
+\alias{add,campsis_model,campsis_model-method}
 \title{Add element to list.}
 \usage{
 add(object, x, ...)
@@ -38,13 +38,13 @@ add(object, x, ...)
 
 \S4method{add}{code_records,code_records}(object, x)
 
-\S4method{add}{pmx_model,compartment_property}(object, x)
+\S4method{add}{campsis_model,compartment_property}(object, x)
 
-\S4method{add}{pmx_model,parameter}(object, x)
+\S4method{add}{campsis_model,parameter}(object, x)
 
-\S4method{add}{pmx_model,code_record}(object, x)
+\S4method{add}{campsis_model,code_record}(object, x)
 
-\S4method{add}{pmx_model,pmx_model}(object, x)
+\S4method{add}{campsis_model,campsis_model}(object, x)
 }
 \arguments{
 \item{object}{list object}

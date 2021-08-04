@@ -5,7 +5,7 @@
 \alias{replaceEquation}
 \alias{replaceEquation,code_record,character,character-method}
 \alias{replaceEquation,code_records,character,character-method}
-\alias{replaceEquation,pmx_model,character,character-method}
+\alias{replaceEquation,campsis_model,character,character-method}
 \title{Replace equation in code records.}
 \usage{
 replaceEquation(object, lhs, rhs)
@@ -14,7 +14,7 @@ replaceEquation(object, lhs, rhs)
 
 \S4method{replaceEquation}{code_records,character,character}(object, lhs, rhs)
 
-\S4method{replaceEquation}{pmx_model,character,character}(object, lhs, rhs)
+\S4method{replaceEquation}{campsis_model,character,character}(object, lhs, rhs)
 }
 \arguments{
 \item{object}{object containing code records}

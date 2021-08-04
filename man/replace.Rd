@@ -6,8 +6,8 @@
 \alias{replace,pmx_list,pmx_element-method}
 \alias{replace,parameters,single_array_parameter-method}
 \alias{replace,parameters,double_array_parameter-method}
-\alias{replace,pmx_model,parameter-method}
-\alias{replace,pmx_model,code_record-method}
+\alias{replace,campsis_model,parameter-method}
+\alias{replace,campsis_model,code_record-method}
 \title{Replace element by another in list.}
 \usage{
 replace(object, x)
@@ -18,9 +18,9 @@ replace(object, x)
 
 \S4method{replace}{parameters,double_array_parameter}(object, x)
 
-\S4method{replace}{pmx_model,parameter}(object, x)
+\S4method{replace}{campsis_model,parameter}(object, x)
 
-\S4method{replace}{pmx_model,code_record}(object, x)
+\S4method{replace}{campsis_model,code_record}(object, x)
 }
 \arguments{
 \item{object}{list object}

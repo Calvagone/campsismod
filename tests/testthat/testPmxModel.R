@@ -69,7 +69,7 @@ test_that("add effect compartment model to PK model using add method", {
   pk <- getNONMEMModelTemplate(4,4)
   pk <- pk %>% add(Bioavailability(1, "0.75"))
   
-  pd <- new("pmx_model")
+  pd <- new("campsis_model")
   
   pd_main <- MainRecord() %>% 
     addEquation("KE0", "THETA_KE0*exp(ETA_KE0)")

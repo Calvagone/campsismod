@@ -5,7 +5,7 @@
 \alias{write}
 \alias{write,parameters,character-method}
 \alias{write,code_records,character-method}
-\alias{write,pmx_model,character-method}
+\alias{write,campsis_model,character-method}
 \title{Write generic object.}
 \usage{
 write(object, file, ...)
@@ -14,7 +14,7 @@ write(object, file, ...)
 
 \S4method{write}{code_records,character}(object, file, ...)
 
-\S4method{write}{pmx_model,character}(object, file, ...)
+\S4method{write}{campsis_model,character}(object, file, ...)
 }
 \arguments{
 \item{object}{generic object}

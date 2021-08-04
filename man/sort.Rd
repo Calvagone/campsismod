@@ -7,7 +7,7 @@
 \alias{sort,compartments-method}
 \alias{sort,parameters-method}
 \alias{sort,code_records-method}
-\alias{sort,pmx_model-method}
+\alias{sort,campsis_model-method}
 \title{Sort the specified list.}
 \usage{
 sort(x, decreasing = FALSE, ...)
@@ -20,7 +20,7 @@ sort(x, decreasing = FALSE, ...)
 
 \S4method{sort}{code_records}(x, decreasing = FALSE, ...)
 
-\S4method{sort}{pmx_model}(x, decreasing = FALSE, ...)
+\S4method{sort}{campsis_model}(x, decreasing = FALSE, ...)
 }
 \arguments{
 \item{x}{list object}

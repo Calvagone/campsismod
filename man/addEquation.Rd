@@ -5,7 +5,7 @@
 \alias{addEquation}
 \alias{addEquation,code_record,character,character-method}
 \alias{addEquation,code_records,character,character-method}
-\alias{addEquation,pmx_model,character,character-method}
+\alias{addEquation,campsis_model,character,character-method}
 \title{Add equation.}
 \usage{
 addEquation(object, lhs, rhs, ...)
@@ -14,7 +14,7 @@ addEquation(object, lhs, rhs, ...)
 
 \S4method{addEquation}{code_records,character,character}(object, lhs, rhs, before = NULL, after = NULL)
 
-\S4method{addEquation}{pmx_model,character,character}(object, lhs, rhs, before = NULL, after = NULL)
+\S4method{addEquation}{campsis_model,character,character}(object, lhs, rhs, before = NULL, after = NULL)
 }
 \arguments{
 \item{object}{object containing code record(s)}

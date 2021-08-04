@@ -1,9 +1,9 @@
 
-#' PMX model class.
+#' CAMPSIS model class.
 #' 
 #' @export
 setClass(
-  "pmx_model",
+  "campsis_model",
   representation(
     model = "code_records",
     parameters = "parameters",
@@ -16,7 +16,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' @rdname add
-setMethod("add", signature=c("pmx_model", "compartment_property"), definition=function(object, x) {
+setMethod("add", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
   compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
   if (length(compartment) == 0) {
     stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
@@ -29,19 +29,19 @@ setMethod("add", signature=c("pmx_model", "compartment_property"), definition=fu
 })
 
 #' @rdname add
-setMethod("add", signature=c("pmx_model", "parameter"), definition=function(object, x) {
+setMethod("add", signature=c("campsis_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% add(x)
   return(object)
 })
 
 #' @rdname add
-setMethod("add", signature=c("pmx_model", "code_record"), definition=function(object, x) {
+setMethod("add", signature=c("campsis_model", "code_record"), definition=function(object, x) {
   object@model <- object@model %>% add(x)
   return(object)
 })
 
 #' @rdname add
-setMethod("add", signature=c("pmx_model", "pmx_model"), definition=function(object, x) {
+setMethod("add", signature=c("campsis_model", "campsis_model"), definition=function(object, x) {
   object <- object %>% appendModel(x)
   return(object)
 })
@@ -68,7 +68,7 @@ appendModel <- function(model1, model2) {
 #_______________________________________________________________________________
 
 #' @rdname addEquation
-setMethod("addEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
+setMethod("addEquation", signature=c("campsis_model", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
   object@model <- object@model %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
   return(object)
 })
@@ -78,7 +78,7 @@ setMethod("addEquation", signature=c("pmx_model", "character", "character"), def
 #_______________________________________________________________________________
 
 #' @rdname disable
-setMethod("disable", signature=c("pmx_model", "character"), definition=function(object, x, ...) {
+setMethod("disable", signature=c("campsis_model", "character"), definition=function(object, x, ...) {
   object@parameters <- object@parameters %>% disable(x=x, ...)
   return(object)
 })
@@ -112,7 +112,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' @rdname export
-setMethod("export", signature=c("pmx_model", "character"), definition=function(object, dest, outvars=NULL) {
+setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, outvars=NULL) {
   if (dest=="RxODE") {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
@@ -127,7 +127,7 @@ setMethod("export", signature=c("pmx_model", "character"), definition=function(o
 #_______________________________________________________________________________
 
 #' @rdname getCompartmentIndex
-setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definition=function(object, name) {
+setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), definition=function(object, name) {
   return(object@compartments %>% getCompartmentIndex(name=name))
 })
 
@@ -136,7 +136,7 @@ setMethod("getCompartmentIndex", signature=c("pmx_model", "character"), definiti
 #_______________________________________________________________________________
 
 #' @rdname getEquation
-setMethod("getEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
+setMethod("getEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
   return(object@model %>% getEquation(lhs))
 })
 
@@ -145,7 +145,7 @@ setMethod("getEquation", signature=c("pmx_model", "character"), definition=funct
 #_______________________________________________________________________________
 
 #' @rdname hasEquation
-setMethod("hasEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
+setMethod("hasEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
   return(object@model %>% hasEquation(lhs))
 })
 
@@ -181,7 +181,7 @@ read.campsis <- function(file) {
   records <- read.model(file=modelPath)
   parameters <- read.allparameters(folder=folder)
   
-  model <- new("pmx_model", model=records, parameters=parameters, compartments=Compartments())
+  model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
   return(model %>% updateCompartments())
 }
 
@@ -203,8 +203,8 @@ read.pmxmod <- function(file) {
 #' @return an updated PMX model, with an updated compartments list
 #' @export
 updateCompartments <- function(model) {
-  if (!is(model, "pmx_model")) {
-    stop("model is not a PMX model")   
+  if (!is(model, "campsis_model")) {
+    stop("model is not a CAMPSIS model")   
   }
   records <- model@model
   
@@ -231,7 +231,7 @@ updateCompartments <- function(model) {
 #_______________________________________________________________________________
 
 #' @rdname removeEquation
-setMethod("removeEquation", signature=c("pmx_model", "character"), definition=function(object, lhs) {
+setMethod("removeEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
   object@model <- object@model %>% removeEquation(lhs)
   return(object)
 })
@@ -241,13 +241,13 @@ setMethod("removeEquation", signature=c("pmx_model", "character"), definition=fu
 #_______________________________________________________________________________
 
 #' @rdname replace
-setMethod("replace", signature=c("pmx_model", "parameter"), definition=function(object, x) {
+setMethod("replace", signature=c("campsis_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% replace(x)
   return(object)
 })
 
 #' @rdname replace
-setMethod("replace", signature=c("pmx_model", "code_record"), definition=function(object, x) {
+setMethod("replace", signature=c("campsis_model", "code_record"), definition=function(object, x) {
   object@model <- object@model %>% replace(x)
   return(object)
 })
@@ -257,7 +257,7 @@ setMethod("replace", signature=c("pmx_model", "code_record"), definition=functio
 #_______________________________________________________________________________
 
 #' @rdname replaceEquation
-setMethod("replaceEquation", signature=c("pmx_model", "character", "character"), definition=function(object, lhs, rhs) {
+setMethod("replaceEquation", signature=c("campsis_model", "character", "character"), definition=function(object, lhs, rhs) {
   object@model <- object@model %>% replaceEquation(lhs, rhs)
   return(object)
 })
@@ -266,7 +266,7 @@ setMethod("replaceEquation", signature=c("pmx_model", "character", "character"),
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("pmx_model"), definition=function(object) {
+setMethod("show", signature=c("campsis_model"), definition=function(object) {
   show(object@model %>% addTransientRecords(model=object))
   cat("\n")
   show(object@parameters)
@@ -279,7 +279,7 @@ setMethod("show", signature=c("pmx_model"), definition=function(object) {
 #_______________________________________________________________________________
 
 #' @rdname sort
-setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FALSE, ...) {
+setMethod("sort", signature=c("campsis_model"), definition=function(x, decreasing=FALSE, ...) {
   # Sort code records
   x@model <- x@model %>% sort()
   
@@ -297,7 +297,7 @@ setMethod("sort", signature=c("pmx_model"), definition=function(x, decreasing=FA
 #_______________________________________________________________________________
 
 #' @rdname write
-setMethod("write", signature=c("pmx_model", "character"), definition=function(object, file, ...) {
+setMethod("write", signature=c("campsis_model", "character"), definition=function(object, file, ...) {
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters

@@ -5,7 +5,7 @@
 \alias{getEquation}
 \alias{getEquation,code_record,character-method}
 \alias{getEquation,code_records,character-method}
-\alias{getEquation,pmx_model,character-method}
+\alias{getEquation,campsis_model,character-method}
 \title{Get equation from code record(s).}
 \usage{
 getEquation(object, lhs)
@@ -14,7 +14,7 @@ getEquation(object, lhs)
 
 \S4method{getEquation}{code_records,character}(object, lhs)
 
-\S4method{getEquation}{pmx_model,character}(object, lhs)
+\S4method{getEquation}{campsis_model,character}(object, lhs)
 }
 \arguments{
 \item{object}{object containing code record(s)}

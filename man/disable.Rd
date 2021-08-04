@@ -3,14 +3,14 @@
 \name{disable}
 \alias{disable}
 \alias{disable,parameters,character-method}
-\alias{disable,pmx_model,character-method}
+\alias{disable,campsis_model,character-method}
 \title{Disable.}
 \usage{
 disable(object, x, ...)
 
 \S4method{disable}{parameters,character}(object, x, ...)
 
-\S4method{disable}{pmx_model,character}(object, x, ...)
+\S4method{disable}{campsis_model,character}(object, x, ...)
 }
 \arguments{
 \item{object}{generic object}
