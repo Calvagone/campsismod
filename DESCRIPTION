@@ -22,7 +22,7 @@ Collate:
     'parameters.R'
     'code_record.R'
     'code_records.R'
-    'pmx_model.R'
+    'campsis_model.R'
     'rxode_model.R'
     'rxode_conversion.R'
     'mrgsolve_model.R'
