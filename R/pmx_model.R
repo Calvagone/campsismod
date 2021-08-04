@@ -168,10 +168,14 @@ read.campsis <- function(file) {
     stop("file is not a ZIP file nor a valid folder")
   }
   
-  modelPath <- file.path(folder, "model.pmx")
-  
+  # model.campsis and model.pmx are both accepted
+  modelPath <- file.path(folder, "model.campsis")
   if (!file.exists(modelPath)) {
-    stop(paste0("Model file couln't be found."))
+    modelPath <- file.path(folder, "model.pmx")
+    warning("Please rename your model file to 'model.campsis'")
+    if (!file.exists(modelPath)) {
+      stop(paste0("Model file couln't be found."))
+    }
   }
   
   records <- read.model(file=modelPath)
@@ -306,7 +310,7 @@ setMethod("write", signature=c("pmx_model", "character"), definition=function(ob
     } else {
       dir.create(file)
     }
-    records %>% write(file=file.path(file, "model.pmx"), model=object)
+    records %>% write(file=file.path(file, "model.campsis"), model=object)
     parameters %>% write(file=file)
   }
   return(TRUE)
