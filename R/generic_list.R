@@ -237,6 +237,7 @@ setGeneric("getByIndex", function(object, x) {
   standardGeneric("getByIndex")
 })
 
+#' @rdname getByIndex
 setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(object, x) {
   len <- object %>% length()
   assertthat::assert_that(len > 0, msg="x must be greater than 0")
@@ -246,6 +247,7 @@ setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(
   return(object@list[[x]])
 })
 
+#' @rdname getByIndex
 setMethod("getByIndex", signature=c("pmx_list", "numeric"), definition=function(object, x) {
   return(getByIndex(object, x=as.integer(x)))
 })

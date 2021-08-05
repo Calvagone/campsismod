@@ -3,12 +3,18 @@
 %   R/compartments.R, R/parameters.R
 \name{getByIndex}
 \alias{getByIndex}
+\alias{getByIndex,pmx_list,integer-method}
+\alias{getByIndex,pmx_list,numeric-method}
 \alias{getByIndex,compartment_properties,compartment_property-method}
 \alias{getByIndex,compartments,compartment-method}
 \alias{getByIndex,parameters,parameter-method}
 \title{Get element by index.}
 \usage{
 getByIndex(object, x)
+
+\S4method{getByIndex}{pmx_list,integer}(object, x)
+
+\S4method{getByIndex}{pmx_list,numeric}(object, x)
 
 \S4method{getByIndex}{compartment_properties,compartment_property}(object, x)
 

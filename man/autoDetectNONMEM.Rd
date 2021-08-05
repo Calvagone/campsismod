@@ -3,7 +3,7 @@
 \name{autoDetectNONMEM}
 \alias{autoDetectNONMEM}
 \alias{autoDetectNONMEM,campsis_model-method}
-\title{Auto-detect special variables from NONMEM to fill in compartment properties.
+\title{Auto-detect special variables from NONMEM as compartment properties.
 Bioavailabilities, infusion durations/rates and lag times will be automatically
 detected.}
 \usage{
@@ -13,12 +13,14 @@ autoDetectNONMEM(object, ...)
 }
 \arguments{
 \item{object}{object that has NONMEM special variables to be identified}
+
+\item{...}{extra arguments, unused}
 }
 \value{
 updated object
 }
 \description{
-Auto-detect special variables from NONMEM to fill in compartment properties.
+Auto-detect special variables from NONMEM as compartment properties.
 Bioavailabilities, infusion durations/rates and lag times will be automatically
 detected.
 }

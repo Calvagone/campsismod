@@ -24,11 +24,12 @@ setGeneric("addEquation", function(object, lhs, rhs, ...) {
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________
 
-#' Auto-detect special variables from NONMEM to fill in compartment properties.
+#' Auto-detect special variables from NONMEM as compartment properties.
 #' Bioavailabilities, infusion durations/rates and lag times will be automatically
 #' detected.
 #' 
 #' @param object object that has NONMEM special variables to be identified
+#' @param ... extra arguments, unused
 #' @return updated object
 #' @export
 #' @rdname autoDetectNONMEM
