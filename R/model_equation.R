@@ -50,8 +50,10 @@ setMethod("getName", signature = c("equation"), definition = function(x) {
 
 #' @rdname toString
 setMethod("toString", signature=c("equation"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  init <- processExtraArg(args=list(...), name="init", default=TRUE)
+  args <- list(...)
+  dest <- processExtraArg(args=args, name="dest", default="campsis")
+  init <- processExtraArg(args=args, name="init", default=TRUE)
+  capture <- processExtraArg(args=args, name="init", default=FALSE)
   
   if (dest=="campsis" || dest=="RxODE") {
     retValue <- paste0(object@lhs, "=", object@rhs)
@@ -59,6 +61,8 @@ setMethod("toString", signature=c("equation"), definition=function(object, ...) 
     retValue <- paste0(object@lhs, "=", object@rhs, ";")
     if (init) {
       retValue <- paste0("double ", retValue)
+    } else if (capture) {
+      retValue <- paste0("capture ", retValue)
     }
   } else {
     UnsupportedDestException()

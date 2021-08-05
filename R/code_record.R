@@ -308,8 +308,8 @@ setMethod("hasEquation", signature=c("code_record", "character"), definition=fun
 #_______________________________________________________________________________
 
 #' @rdname length
-setMethod("length", signature=c("code_record"), definition=function(x) {
-  return(length(x@code))
+setMethod("length", signature=c("statement_record"), definition=function(x) {
+  return(x@statements %>% length())
 })
 
 #_______________________________________________________________________________

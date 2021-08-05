@@ -81,3 +81,8 @@ test_that("isEmptyLine is working well", {
   expect_true(isEmptyLine("\t"))
   expect_false(isEmptyLine("\tA"))
 })
+
+test_that("extractLhs and extractRhs with comment works well", {
+  expect_equal(extractLhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), "KA=THETA_KA*exp(ETA_KA) ")
+  expect_equal(extractRhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), " Comment")
+})

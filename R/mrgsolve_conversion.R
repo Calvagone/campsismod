@@ -98,33 +98,16 @@ convertAnyComment <- function(x) {
 #' @export
 mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
-  if (length(record) == 0) {
+  if (record %>% length() == 0) {
     return(retValue)
   }
-  for (index in seq_len(length(record@code))) {
-    line <- record@code[index]
-
-    if (isComment(line) || isEmptyLine(line)) {
-      # Don't do anything right now
-    } else if (isODE(line)) {
-      name <- extractTextBetweenBrackets(line)
-      rhs <- extractRhs(line)
-      line <- paste0("dxdt_", name, "=", rhs) %>% appendComma()
-    } else if (isEquation(line)) {
-      if (capture) {
-        line <- paste0("capture ", line) %>% appendComma()
-      } else {
-        line <- paste0("double ", line) %>% appendComma()
-      }
-    } else  {
-      # Unknown line... We still append a comma.
-      line <- line %>% appendComma()
-    }
-    # Finally, convert # to // if any
-    line <- line %>% convertAnyComment()
-    
-    # Append
-    retValue <- retValue %>% append(line)
+  for (statement in record@statements@list) {
+    retValue <-
+      retValue %>% append(statement %>% toString(
+        dest = "mrgsolve",
+        init = !capture,
+        capture = capture
+      ))
   }
   return(retValue)
 }

@@ -11,6 +11,7 @@ test_that("Export method works", {
   main@code[1] <- paste(main@code[1], "# EQUATION COMMENT")
   main@code <- main@code %>% append("")
   main@code <- main@code %>% append("# THIS IS A COMMENT")
+  main <- main %>% parseRecord()
   model <- model %>% replace(main)
   
   model <- model %>% add(Bioavailability(compartment=1, rhs="0.75"))
@@ -63,10 +64,4 @@ test_that("ToString method works", {
   mrgsolve <- model %>% export(dest="mrgsolve")
   cppFileContent <- mrgsolve %>% toString()
   expect_equal(nchar(cppFileContent), 928) # Just to not have an empty test...
-})
-
-test_that("appendComma is working well", {
-  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA) # Comment"), "KA=THETA_KA*exp(ETA_KA); # Comment")
-  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA)# Comment"), "KA=THETA_KA*exp(ETA_KA);# Comment")
-  expect_equal(appendComma("KA=THETA_KA*exp(ETA_KA)   # Comment"), "KA=THETA_KA*exp(ETA_KA);   # Comment")
 })
