@@ -238,7 +238,7 @@ read.model <- function(file) {
   allLines <- readLines(con=file)
   records <- CodeRecords()
   
-  # Reading all records
+  # Read all records
   prevRecordIndex <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
@@ -260,6 +260,9 @@ read.model <- function(file) {
   # Filling in with lines of last record
   content <- allLines[(prevRecordIndex + 1):length(allLines)]
   records@list[[records %>% length()]]@code <- content %>% removeTrailingLineBreaks()
+  
+  # Parse all statement records
+  records@list <- records@list %>% purrr::map(.f=parseRecord)
   
   return(records)
 }

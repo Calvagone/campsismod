@@ -20,6 +20,23 @@ setClass(
 )
 
 #_______________________________________________________________________________
+#----                      statement_record class                           ----
+#_______________________________________________________________________________
+
+#' 
+#' Statement record class.
+#' 
+#' @slot statements model statements
+setClass(
+  "statement_record",
+  representation(
+    statements = "model_statements"
+  ),
+  prototype=prototype(statements=ModelStatements()),
+  contains = "code_record"
+)
+
+#_______________________________________________________________________________
 #----                           MAIN record                                 ----
 #_______________________________________________________________________________
 
@@ -31,7 +48,7 @@ setClass(
   "main_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statement_record"
 )
 
 #' 
@@ -55,7 +72,7 @@ setClass(
   "ode_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statement_record"
 )
 
 #' 
@@ -160,7 +177,7 @@ setClass(
   "error_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statement_record"
 )
 
 #' 
