@@ -219,7 +219,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                        getByIndex (ABSTRACT)                          ----
+#----                           getByIndex                                  ----
 #_______________________________________________________________________________
 
 #' Get element by index.
@@ -236,6 +236,20 @@ getByIndex <- function(object, x) {
 setGeneric("getByIndex", function(object, x) {
   standardGeneric("getByIndex")
 })
+
+setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(object, x) {
+  len <- object %>% length()
+  assertthat::assert_that(len > 0, msg="x must be greater than 0")
+  if (x > len) {
+    stop(paste0("Can't find element at index ", x, " in list. List has a length of ", len, "."))
+  }
+  return(object@list[[x]])
+})
+
+setMethod("getByIndex", signature=c("pmx_list", "numeric"), definition=function(object, x) {
+  return(getByIndex(object, x=as.integer(x)))
+})
+
 
 #_______________________________________________________________________________
 #----                         sort (ABSTRACT)                               ----

@@ -74,6 +74,41 @@ setMethod("addEquation", signature=c("campsis_model", "character", "character"),
 })
 
 #_______________________________________________________________________________
+#----                         autoDetectNONMEM                              ----
+#_______________________________________________________________________________
+
+#' @rdname autoDetectNONMEM
+setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(object, ...) {
+  main <- object@model %>% getByName("MAIN")
+  numberOfCmts <- object@compartments %>% length()
+  
+  for (cmtIndex in seq_len(numberOfCmts)) {
+    # Search for bioavailability
+    fVar <- paste0("F", cmtIndex)
+    if (main %>% hasEquation(fVar)) {
+      object <- object %>% add(Bioavailability(cmtIndex, rhs=fVar))
+    }
+    # Search for infusion duration
+    dVar <- paste0("D", cmtIndex)
+    if (main %>% hasEquation(dVar)) {
+      object <- object %>% add(InfusionDuration(cmtIndex, rhs=dVar))
+    }
+    # Search for infusion rate
+    rVar <- paste0("R", cmtIndex)
+    if (main %>% hasEquation(rVar)) {
+      object <- object %>% add(InfusionRate(cmtIndex, rhs=rVar))
+    }
+    # Search for lag time
+    alagVar <- paste0("ALAG", cmtIndex)
+    if (main %>% hasEquation(paste0("ALAG", cmtIndex))) {
+      object <- object %>% add(LagTime(cmtIndex, rhs=alagVar))
+    }
+  }
+  
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
