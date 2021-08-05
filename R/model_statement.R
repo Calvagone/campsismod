@@ -29,7 +29,8 @@ setClass(
 #' @param object model statement
 #' @param dest destination engine, string
 appendComment <- function(str, object, dest) {
-  if (is.na(object@comment)) {
+  comment <- object@comment
+  if (is.na(comment)) {
     return(str)
   } else {
     symbol <- ifelse(dest=="mrgsolve", "//", "#")

@@ -201,13 +201,12 @@ ErrorRecord <- function(code=character()) {
 #' @return index in this record or -1 if not found 
 #' @export
 getEquationIndex <- function(object, lhs) {
-  for (lineIndex in seq_along(object@code)) {
-    line <- object@code[lineIndex]
-    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
-      return(lineIndex)
-    }
+  index <- object@statements %>% indexOf(Equation(lhs, ""))
+  if (index %>% length() == 0) {
+    return(-1)
+  } else {
+    return(index)
   }
-  return(-1)
 }
 
 #' @param before index or variable, may be used to insert an equation at a specific position, before this index (in record) or variable
@@ -221,11 +220,11 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
   } else {
     index <- NULL
   }
-  
+  eq <- Equation(lhs, rhs)
   if (is.null(index)) {
-    object@code <- object@code %>% append(paste0(lhs, "=", rhs))
+    object@statements@list <- object@statements@list %>% append(eq)
   } else {
-    object@code <- object@code %>% append(paste0(lhs, "=", rhs), after=index)
+    object@statements@list <- object@statements@list %>% append(eq, after=index)
   }
 
   return(object)
@@ -241,7 +240,8 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
   if (index == -1) {
     return(NULL)
   } else {
-    return(extractRhs(object@code[index]))
+    eq <- object@statements %>% getByIndex(index)
+    return(eq@rhs)
   }
 })
 
@@ -320,7 +320,7 @@ setMethod("length", signature=c("statement_record"), definition=function(x) {
 setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {
-    object@code <- object@code[-index]
+    object@statements@list <- object@statements@list[-index]
   }
   return(object)
 })
@@ -333,8 +333,8 @@ setMethod("removeEquation", signature=c("code_record", "character"), definition=
 setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {
-    line <- object@code[index]
-    object@code[index] <- paste0(extractLhs(line), "=", rhs)
+    eq <- Equation(lhs, rhs)
+    object@statements <- object@statements %>% replace(eq)
   }
   return(object)
 })
