@@ -87,21 +87,7 @@ convertAnyComment <- function(x) {
   return(sub(pattern="#", replacement="//", x=x))
 }
 
-#' Append comma at the right place. The goal of this function is to preserve
-#' comments in mrgsolve as well. Comma has to be placed before the comment '#'.
-#' 
-#' @param x record line
-#' @return same line with a comma at the right place
-#' @export
-appendComma <- function(x) {
-  if (hasComment(x)) {
-    pos <- gregexpr(pattern='\\s*#', x) %>% as.numeric()
-    x <- paste0(substring(x, 0, pos-1), ";", substring(x, pos, nchar(x)))
-    return(x)
-  } else {
-    return(paste0(x, ";"))
-  }
-}
+
 
 #' Convert code record for mrgsolve.
 #' 

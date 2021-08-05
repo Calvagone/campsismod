@@ -152,7 +152,10 @@ setGeneric("getByName", function(object, name) {
 
 #' @rdname getByName
 setMethod("getByName", signature=c("pmx_list", "character"), definition=function(object, name) {
-  element <- object@list %>% purrr::keep(~(.x %>% getName()==name))
+  if (is.na(name)) {
+    return(NULL)
+  }
+  element <- object@list %>% purrr::keep(~(!is.na(.x %>% getName()) && .x %>% getName()==name))
   if (length(element) > 0) {
     element <- element[[1]]
   }

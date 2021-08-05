@@ -3,9 +3,9 @@
 \docType{class}
 \name{comment-class}
 \alias{comment-class}
-\title{Equation class. Any statement in the form A = B.}
+\title{Comment class. A statement starting with #.}
 \description{
-Equation class. Any statement in the form A = B.
+Comment class. A statement starting with #.
 }
 \section{Slots}{
 

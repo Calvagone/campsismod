@@ -22,3 +22,12 @@ setClass(
   contains = "model_statement",
   validity = validateIfStatement
 )
+
+#_______________________________________________________________________________
+#----                            getName                                    ----
+#_______________________________________________________________________________
+
+#' @rdname getName
+setMethod("getName", signature = c("if_statement"), definition = function(x) {
+  return(as.character(NA)) # IF statement non-identifiable 
+})

@@ -4,7 +4,7 @@
 #_______________________________________________________________________________
 
 validateOde <- function(object) {
-  return(expectOne(object, c("lhs", "rhs")))
+  return(TRUE)
 }
 
 #' 
@@ -18,3 +18,24 @@ setClass(
   contains = "equation",
   validity = validateOde
 )
+
+#' 
+#' Create a new ordinary differential equation (ODE).
+#' 
+#' @param lhs left-hand side variable corresponding to compartment name
+#' @param rhs right-hand side expression corresponding to derivative value
+#' @param comment comment if any, single character string
+#' @return an ODE
+#' @export
+Ode <- function(lhs, rhs, comment=as.character(NA)) {
+  return(new("ode", lhs=lhs, rhs=rhs, comment=comment))
+}
+
+#_______________________________________________________________________________
+#----                            getName                                    ----
+#_______________________________________________________________________________
+
+#' @rdname getName
+setMethod("getName", signature = c("ode"), definition = function(x) {
+  return(paste0("ODE (", x@lhs, ")"))
+})

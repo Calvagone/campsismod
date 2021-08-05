@@ -11,6 +11,7 @@ Collate:
     'generic_list.R'
     'model_statement.R'
     'model_statements.R'
+    'model_unknown_statement.R'
     'model_comment.R'
     'model_line_break.R'
     'model_equation.R'
