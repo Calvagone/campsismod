@@ -39,3 +39,20 @@ Ode <- function(lhs, rhs, comment=as.character(NA)) {
 setMethod("getName", signature = c("ode"), definition = function(x) {
   return(paste0("ODE (", x@lhs, ")"))
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("ode"), definition=function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || dest=="RxODE") {
+    retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)
+  } else if (dest=="mrgsolve") {
+    retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")
+  } else {
+    UnsupportedDestException()
+  }
+  return(retValue %>% appendComment(object, dest))
+})

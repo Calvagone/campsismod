@@ -43,3 +43,25 @@ Equation <- function(lhs, rhs, comment=as.character(NA)) {
 setMethod("getName", signature = c("equation"), definition = function(x) {
   return(paste0("EQUATION (", x@lhs, ")"))
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("equation"), definition=function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  init <- processExtraArg(args=list(...), name="init", default=TRUE)
+  
+  if (dest=="campsis" || dest=="RxODE") {
+    retValue <- paste0(object@lhs, "=", object@rhs)
+  } else if (dest=="mrgsolve") {
+    retValue <- paste0(object@lhs, "=", object@rhs, ";")
+    if (init) {
+      retValue <- paste0("double ", retValue)
+    }
+  } else {
+    UnsupportedDestException()
+  }
+  return(retValue %>% appendComment(object, dest))
+})

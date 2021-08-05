@@ -346,5 +346,9 @@ setMethod("replaceEquation", signature=c("code_record", "character", "character"
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
   cat("[", object %>% getName(), "]\n", sep="")
-  cat(object@code, sep="\n")
+  if (is(object, "statement_record")) {
+    show(object@statements)
+  } else {
+    cat(object@code, sep="\n")
+  }
 })

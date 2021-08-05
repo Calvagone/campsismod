@@ -9,7 +9,7 @@ setMethod("parseRecord", signature=c("statement_record"), definition=function(ob
     hasComment <- hasComment(line) 
     comment <- as.character(NA)
     if (hasComment) {
-      comment <- extractRhs(line, split="#")
+      comment <- extractRhs(line, split="#") %>% trim()
     } else {
       line_ <- extractLhs(line, split="#")
     }

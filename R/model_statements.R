@@ -27,3 +27,15 @@ setClass(
 ModelStatements <- function() {
   return(new("model_statements"))
 }
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+
+setMethod("show", signature=c("model_statements"), definition=function(object) {
+  for (statement in object@list) {
+    show(statement)
+    cat("\n")
+  }
+})

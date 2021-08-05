@@ -31,3 +31,18 @@ setClass(
 setMethod("getName", signature = c("if_statement"), definition = function(x) {
   return(as.character(NA)) # IF statement non-identifiable 
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("if_statement"), definition=function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve") {
+    retValue <- paste0("if (", object@condition, ")", object@equation %>% toString(dest=dest, init=FALSE))
+  } else {
+    UnsupportedDestException()
+  }
+  return(retValue %>% appendComment(object, dest))
+})

@@ -35,3 +35,18 @@ LineBreak <- function() {
 setMethod("getName", signature = c("line_break"), definition = function(x) {
   return(as.character(NA)) # line_break non-identifiable 
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("line_break"), definition=function(object, ...) {
+  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve") {
+    retValue <- ""
+  } else {
+    UnsupportedDestException()
+  }
+  return(retValue)
+})
