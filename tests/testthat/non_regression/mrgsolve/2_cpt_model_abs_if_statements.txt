@@ -28,9 +28,9 @@ double V3=THETA_V3*exp(ETA_V3);
 double Q=THETA_Q*exp(ETA_Q);
 double S2=V2;
 double KA=0;
-if (OCC==1)KA=THETA_KA*1.5*exp(ETA_KA);
-if (OCC==2)KA=THETA_KA*0.5*exp(ETA_KA);
-if (OCC==3)KA=THETA_KA*0.1*exp(ETA_KA);
+if (OCC==1) KA=THETA_KA*1.5*exp(ETA_KA);
+if (OCC==2) KA=THETA_KA*0.5*exp(ETA_KA);
+if (OCC==3) KA=THETA_KA*0.1*exp(ETA_KA);
 
 [ODE]
 dxdt_A_DEPOT=-KA*A_DEPOT;
