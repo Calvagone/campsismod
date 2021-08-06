@@ -37,7 +37,7 @@ appendCodeRecords <- function(records1, records2) {
     if (baseRecord %>% length() == 0) {
       records1 <- records1 %>% add(record)
     } else {
-      baseRecord@code <- baseRecord@code %>% append(record@code)
+      baseRecord <- baseRecord %>% add(record)
       records1 <- records1 %>% replace(baseRecord)
     }
   }

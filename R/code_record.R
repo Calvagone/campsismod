@@ -50,6 +50,8 @@ setClass(
   contains = "code_record"
 )
 
+
+
 #_______________________________________________________________________________
 #----                           MAIN record                                 ----
 #_______________________________________________________________________________
@@ -199,6 +201,22 @@ ErrorRecord <- function(code=character()) {
 }
 
 #_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+#' @rdname add
+setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x) {
+  object@statements <- object@statements %>% add(x)
+  return(object)
+})
+
+#' @rdname add
+setMethod("add", signature=c("code_record", "code_record"), definition=function(object, x) {
+  object@statements <- object@statements %>% add(x@statements)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                            addEquation                                ----
 #_______________________________________________________________________________
 
@@ -335,6 +353,16 @@ setMethod("removeEquation", signature=c("code_record", "character"), definition=
   if (index != -1) {
     object@statements@list <- object@statements@list[-index]
   }
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  object@statements <- object@statements %>% replace(x)
   return(object)
 })
 

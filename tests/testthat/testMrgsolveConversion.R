@@ -8,10 +8,11 @@ test_that("Export method works", {
   
   # Add some comments/line breaks programmatically
   main <- model@model %>% getByName("MAIN")
-  main@code[1] <- paste(main@code[1], "# EQUATION COMMENT")
-  main@code <- main@code %>% append("")
-  main@code <- main@code %>% append("# THIS IS A COMMENT")
-  main <- main %>% parseRecord()
+  main <- main %>% replace(Equation("KA", "THETA_KA*exp(ETA_KA)", comment="EQUATION COMMENT"))
+  main <- main %>% add(LineBreak())
+  main <- main %>% add(Comment("THIS IS A COMMENT"))
+  
+
   model <- model %>% replace(main)
   
   model <- model %>% add(Bioavailability(compartment=1, rhs="0.75"))
