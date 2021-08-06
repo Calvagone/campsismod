@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test the conversion to mrgsolve")
 
-testFolder <- ""
+testFolder <<- ""
 overwriteNonRegressionFiles <<- FALSE
 
 source(paste0(testFolder, "testUtils.R"))
