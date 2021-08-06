@@ -2,13 +2,13 @@
 % Please edit documentation in R/generic.R, R/model_parser.R
 \name{parseRecord}
 \alias{parseRecord}
-\alias{parseRecord,statement_record-method}
+\alias{parseRecord,statements_record-method}
 \alias{parseRecord,code_record-method}
 \title{Parse code record.}
 \usage{
 parseRecord(object, ...)
 
-\S4method{parseRecord}{statement_record}(object)
+\S4method{parseRecord}{statements_record}(object)
 
 \S4method{parseRecord}{code_record}(object)
 }

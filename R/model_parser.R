@@ -1,7 +1,7 @@
 
 
 #' @rdname parseRecord
-setMethod("parseRecord", signature=c("statement_record"), definition=function(object) {
+setMethod("parseRecord", signature=c("statements_record"), definition=function(object) {
   statements <- ModelStatements()
   
   for (index in seq_len(length(object@code))) {

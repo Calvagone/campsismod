@@ -20,7 +20,7 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                      statement_record class                           ----
+#----                      statements_record class                           ----
 #_______________________________________________________________________________
 
 #' 
@@ -28,7 +28,7 @@ setClass(
 #' 
 #' @slot statements model statements
 setClass(
-  "statement_record",
+  "statements_record",
   representation(
     statements = "model_statements"
   ),
@@ -48,7 +48,7 @@ setClass(
   "main_record",
   representation(
   ),
-  contains = "statement_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -72,7 +72,7 @@ setClass(
   "ode_record",
   representation(
   ),
-  contains = "statement_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -177,7 +177,7 @@ setClass(
   "error_record",
   representation(
   ),
-  contains = "statement_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -220,7 +220,11 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
   } else {
     index <- NULL
   }
-  eq <- Equation(lhs, rhs)
+  if (isODE(paste0(lhs, "="))) {
+    eq <- Ode(extractTextBetweenBrackets(lhs), rhs)
+  } else {
+    eq <- Equation(lhs, rhs)
+  }
   if (is.null(index)) {
     object@statements@list <- object@statements@list %>% append(eq)
   } else {
@@ -308,7 +312,7 @@ setMethod("hasEquation", signature=c("code_record", "character"), definition=fun
 #_______________________________________________________________________________
 
 #' @rdname length
-setMethod("length", signature=c("statement_record"), definition=function(x) {
+setMethod("length", signature=c("statements_record"), definition=function(x) {
   return(x@statements %>% length())
 })
 
@@ -346,7 +350,7 @@ setMethod("replaceEquation", signature=c("code_record", "character", "character"
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
   cat("[", object %>% getName(), "]\n", sep="")
-  if (is(object, "statement_record")) {
+  if (is(object, "statements_record")) {
     show(object@statements)
   } else {
     cat(object@code, sep="\n")

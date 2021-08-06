@@ -108,18 +108,14 @@ getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
   odeRecord <- records %>% getByName("ODE")
   compartments <- Compartments()
-  if (length(odeRecord) == 0) {
+  if (odeRecord %>% length() == 0) {
     return(compartments)
   }
-  code <- odeRecord@code
   odeCounter <- 0
-  updatedOdeRecord <- OdeRecord()
-  
-  for (index in seq_along(code)) {
-    line <- code[index]
-    if (isODE(line)) {
+  for (statement in odeRecord@statements@list) {
+    if (is(statement, "ode")) {
       odeCounter <- odeCounter + 1
-      name <- extractTextBetweenBrackets(line)
+      name <- statement@lhs
       if (startsWith(name, prefix="A_")) {
         name <- gsub("^A_", "", name)
         if (name == as.character(odeCounter)) {
@@ -130,10 +126,6 @@ getCompartments <- function(records) {
       }
       compartment <- Compartment(index=odeCounter, name=name)
       compartments <- compartments %>% add(compartment)
-      updatedOdeRecord@code <- updatedOdeRecord@code %>% append(line)
-
-    } else {
-      updatedOdeRecord@code <- c(updatedOdeRecord@code, line)
     }
   }
   return(compartments)

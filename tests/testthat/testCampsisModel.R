@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test PMX model")
+context("Test CAMPSIS model")
 
 testFolder <<- ""
 overwriteNonRegressionFiles <<- FALSE
