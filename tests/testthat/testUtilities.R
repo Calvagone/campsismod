@@ -10,6 +10,8 @@ test_that("trim method is working well", {
 test_that("isODE method is working well", {
   expect_true(isODE("d/dt(A_DEPOT)=-KA*A_DEPOT"))
   expect_true(isODE("d/dt(A_OUTPUT)=K*A_CENTRAL"))
+  expect_false(isODE("d/dtHELLO(A_OUTPUT)=K*A_CENTRAL"))
+  expect_true(isODE("d/dt (A_OUTPUT) = K*A_CENTRAL"))
 })
 
 test_that("isLagTime method is working well", {
@@ -85,4 +87,23 @@ test_that("isEmptyLine is working well", {
 test_that("extractLhs and extractRhs with comment works well", {
   expect_equal(extractLhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), "KA=THETA_KA*exp(ETA_KA) ")
   expect_equal(extractRhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), " Comment")
+})
+
+test_that("isIfStatement works well", {
+  line <- "if (ID > 30) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
+  expect_true(isIfStatement(line))
+  
+  line <- "if (ID > (30)) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
+  expect_true(isIfStatement(line))
+  
+  # # Identify first parenthesis
+  # regexpr("^if\\s*\\(", line)
+  # 
+  # # Rhs
+  # rhs <- extractRhs(line)
+  # lhs <- extractLhs(line)
+  # 
+  # # Identify variable start
+  # regexpr("[a-zA-Z_][a-zA-Z0-9_]*$", lhs) %>% as.integer()
+  
 })

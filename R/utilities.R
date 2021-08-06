@@ -34,7 +34,7 @@ processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
 #' @return logical vector
 #' @export
 isODE <- function(x) {
-  return(grepl(pattern="^d/dt.*\\(.*\\).*=", x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
 #' Say if line in record is an equation not.
@@ -47,6 +47,15 @@ isEquation <- function(x) {
   parts <- strsplit(x, split="=")[[1]]
   variable <- parts[1] %>% trim()
   return(grepl(pattern="^[a-zA-Z_][a-zA-Z0-9_]*$", x=variable))
+}
+
+#' Say if line in record is an IF-statement.
+#' 
+#' @param x character value
+#' @return logical value
+#' @export
+isIfStatement <- function(x) {
+  return(grepl(pattern="^if\\s*\\(.*\\)\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
 #' Say if line(s) in record is/are lag times.
