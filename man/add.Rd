@@ -14,9 +14,11 @@
 \alias{add,code_record,model_statement-method}
 \alias{add,code_record,code_record-method}
 \alias{add,code_records,code_records-method}
+\alias{add,code_records,model_statement-method}
 \alias{add,campsis_model,compartment_property-method}
 \alias{add,campsis_model,parameter-method}
 \alias{add,campsis_model,code_record-method}
+\alias{add,campsis_model,model_statement-method}
 \alias{add,campsis_model,campsis_model-method}
 \title{Add element to list.}
 \usage{
@@ -44,11 +46,15 @@ add(object, x, ...)
 
 \S4method{add}{code_records,code_records}(object, x)
 
+\S4method{add}{code_records,model_statement}(object, x)
+
 \S4method{add}{campsis_model,compartment_property}(object, x)
 
 \S4method{add}{campsis_model,parameter}(object, x)
 
 \S4method{add}{campsis_model,code_record}(object, x)
+
+\S4method{add}{campsis_model,model_statement}(object, x)
 
 \S4method{add}{campsis_model,campsis_model}(object, x)
 }

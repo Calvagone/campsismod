@@ -41,6 +41,12 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
 })
 
 #' @rdname add
+setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
+  object@model <- object@model %>% add(x)
+  return(object)
+})
+
+#' @rdname add
 setMethod("add", signature=c("campsis_model", "campsis_model"), definition=function(object, x) {
   object <- object %>% appendModel(x)
   return(object)

@@ -8,7 +8,7 @@ overwriteNonRegressionFiles <<- FALSE
 
 source(paste0(testFolder, "testUtils.R"))
 
-test_that("Export method works", {
+test_that("Export method works (2-cpt model, comments)", {
   regFilename = "2_cpt_model_abs_comments"
   model <- getNONMEMModelTemplate(4,4)
   
@@ -29,4 +29,19 @@ test_that("Export method works", {
   mrgmod <- model %>% export(dest="mrgsolve")
   mrgsolveNonRegTest(mrgmod, regFilename)
 })
+
+test_that("Export method works (2-cpt model, if-statements)", {
+  regFilename = "2_cpt_model_abs_if_statements"
+  
+  model <- model_library$advan4_trans4
+  model <- model %>% removeEquation("KA")
+  model <- model %>% add(Equation("KA", "0"))
+  model <- model %>% add(IfStatement("OCC==1", Equation("KA", "THETA_KA*1.5*exp(ETA_KA)")))
+  model <- model %>% add(IfStatement("OCC==2", Equation("KA", "THETA_KA*0.5*exp(ETA_KA)")))
+  model <- model %>% add(IfStatement("OCC==3", Equation("KA", "THETA_KA*0.1*exp(ETA_KA)")))
+  mrgmod <- model %>% export(dest="mrgsolve")
+  mrgsolveNonRegTest(mrgmod, regFilename)
+})
+
+
 

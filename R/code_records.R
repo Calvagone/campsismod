@@ -44,6 +44,14 @@ appendCodeRecords <- function(records1, records2) {
   return(records1 %>% sort())
 }
 
+#' @rdname add
+setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  main <- object %>% getByName("MAIN")
+  main <- main %>% add(x)
+  object <- object %>% replace(main)
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                            addEquation                                ----
 #_______________________________________________________________________________

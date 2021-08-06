@@ -4,7 +4,7 @@
 #_______________________________________________________________________________
 
 validateIfStatement <- function(object) {
-  return(TRUE)
+  return(expectOne(object, "condition"))
 }
 
 #' 
@@ -23,6 +23,18 @@ setClass(
   validity = validateIfStatement
 )
 
+#' 
+#' Create a new IF-statement.
+#' 
+#' @param condition condition, single character string
+#' @param equation equation if condition is met
+#' @param comment comment if any, single character string
+#' @return an IF-statement
+#' @export
+IfStatement <- function(condition, equation, comment=as.character(NA)) {
+  return(new("if_statement", condition=condition, equation=equation, comment=comment))
+}
+
 #_______________________________________________________________________________
 #----                            getName                                    ----
 #_______________________________________________________________________________
@@ -40,7 +52,7 @@ setMethod("getName", signature = c("if_statement"), definition = function(x) {
 setMethod("toString", signature=c("if_statement"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
   if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve") {
-    retValue <- paste0("if (", object@condition, ")", object@equation %>% toString(dest=dest, init=FALSE))
+    retValue <- paste0("if (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))
   } else {
     UnsupportedDestException()
   }
