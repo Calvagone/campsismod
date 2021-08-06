@@ -13,5 +13,7 @@ Compartment property class.
 \item{\code{compartment}}{related compartment index}
 
 \item{\code{rhs}}{right-hand side formula}
+
+\item{\code{comment}}{comment if any, single character string}
 }}
 

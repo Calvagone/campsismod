@@ -1,21 +1,24 @@
 #_______________________________________________________________________________
-#----                       code_record class                               ----
+#----                     code_record class (ABSTRACT)                      ----
 #_______________________________________________________________________________
 
 checkCodeRecord <- function(object) {
-  check1 <- expectZeroOrMore(object, "code")
-  check2 <- expectOne(object, "transient")
-  return(c(check1, check2))
+  return(expectOne(object, "statements"))
 }
 
+#' 
+#' Code record class. See this code record as an abstract class.
+#' 2 implementations are possible:
+#' - properties record (lag, duration, rate & bioavailability properties)
+#' - statements record (main, ode & error records)
+#' 
 setClass(
   "code_record",
   representation(
-    code = "character",
-    transient = "logical"
+    statements = "model_statements"
   ),
   contains = "pmx_element",
-  prototype = prototype(transient=FALSE),
+  prototype = prototype(statements=ModelStatements()),
   validity = checkCodeRecord
 )
 
@@ -24,15 +27,26 @@ setClass(
 #_______________________________________________________________________________
 
 #' 
-#' Statement record class.
+#' Properties record class.
 #' 
-#' @slot statements model statements
+setClass(
+  "properties_record",
+  representation(
+  ),
+  contains = "code_record"
+)
+
+#_______________________________________________________________________________
+#----                      statements_record class                          ----
+#_______________________________________________________________________________
+
+#' 
+#' Statements record class.
+#' 
 setClass(
   "statements_record",
   representation(
-    statements = "model_statements"
   ),
-  prototype=prototype(statements=ModelStatements()),
   contains = "code_record"
 )
 
@@ -57,7 +71,7 @@ setClass(
 #' @param code code record
 #' @export
 MainRecord <- function(code=character()) {
-  return(new("main_record", code=code))
+  return(new("main_record", statements=parseStatements(code)))
 }
 
 #_______________________________________________________________________________
@@ -81,7 +95,7 @@ setClass(
 #' @param code code record
 #' @export
 OdeRecord <- function(code=character()) {
-  return(new("ode_record", code=code))
+  return(new("ode_record", statements=parseStatements(code)))
 }
 
 #_______________________________________________________________________________
@@ -96,8 +110,7 @@ setClass(
   "f_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
@@ -112,8 +125,7 @@ setClass(
   "lag_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
@@ -128,8 +140,7 @@ setClass(
   "duration_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
@@ -144,8 +155,7 @@ setClass(
   "rate_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
@@ -160,8 +170,7 @@ setClass(
   "init_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "code_record"
 )
 
 #_______________________________________________________________________________
@@ -186,7 +195,7 @@ setClass(
 #' @param code code record
 #' @export
 ErrorRecord <- function(code=character()) {
-  return(new("error_record", code=code))
+  return(new("error_record", statements=parseStatements(code)))
 }
 
 #_______________________________________________________________________________
@@ -350,9 +359,5 @@ setMethod("replaceEquation", signature=c("code_record", "character", "character"
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
   cat("[", object %>% getName(), "]\n", sep="")
-  if (is(object, "statements_record")) {
-    show(object@statements)
-  } else {
-    cat(object@code, sep="\n")
-  }
+  show(object@statements)
 })

@@ -71,10 +71,10 @@ setMethod("addEquation", signature=c("code_records", "character", "character"), 
 })
 
 #_______________________________________________________________________________
-#----                         addTransientRecords                           ----
+#----                         addPropertiesRecords                           ----
 #_______________________________________________________________________________
 
-addTransientRecords <- function(records, model) {
+addPropertiesRecords <- function(records, model) {
   properties <- model@compartments@properties
   
   for (name in getRecordNames()) {
@@ -87,7 +87,7 @@ addTransientRecords <- function(records, model) {
       next
     }
     for (subProperty in subProperties@list) {
-      record@code <- record@code %>% append(subProperty %>% toString(model=model, dest="pmxmod"))
+      record@code <- record@code %>% append(subProperty %>% toString(model=model, dest="campsis"))
     }
     records <- records %>% add(record)
   }
@@ -144,21 +144,20 @@ addProperties <- function(compartments, records, name, init) {
   if (record %>% length() == 0) {
     return(compartments)
   }
-  for (line in record@code) {
-    cmtName <- extractLhs(line) %>% trim()
-    if (cmtName %>% length() == 0) {
-      next
+  for (equation in record@statements) {
+    if (!is(equation, "equation")) {
+      stop("Properties record may only contain equations at this stage")
     }
+    cmtName <- equation@lhs
     compartment <- compartments %>% getByName(cmtName)
-    
     if (length(compartment) == 0) {
       stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% getName()))
     }
-    characteristic <- init
-    characteristic@compartment <- compartment@index
-    characteristic@rhs <- extractRhs(line)
-    
-    compartments <- compartments %>% add(characteristic)
+    property <- init
+    property@compartment <- compartment@index
+    property@rhs <- equation@rhs
+    property@comment <- equation@comment 
+    compartments <- compartments %>% add(property)
   }
   return(compartments)
 }
@@ -221,6 +220,20 @@ removeTrailingLineBreaks <- function(x) {
   return(x)
 }
 
+addContentToRecord <- function(record, content) {
+  # In all cases, we remove trailing line breaks
+  content <- content %>% removeTrailingLineBreaks()
+  
+  if (is(record, "properties_record")) {
+    record@statements <- parseProperties(content)
+  } else if (is(record, "statements_record")) {
+    record@statements <- parseStatements(content)
+  } else {
+    stop("Record must be either a 'properties_record' or a 'statements_record'")
+  }
+  return(record)
+}
+
 #' Read model file.
 #' 
 #' @param file path to records
@@ -231,30 +244,31 @@ read.model <- function(file) {
   records <- CodeRecords()
   
   # Read all records
-  prevRecordIndex <- 1
+  lastLineIndexInPrevRecord <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
     if (isRecordDelimiter(line)) {
       recordDelimiter <- getRecordDelimiter(line)
       
       # Create empty record and add it to list
-      record <- new(paste0(tolower(recordDelimiter), "_record"), code=character())
+      record <- new(paste0(tolower(recordDelimiter), "_record"))
       records@list <- c(records@list, record)
       
       # Add lines to previous record
       if (records %>% length() > 1) {
-        content <- allLines[(prevRecordIndex + 1):(index-1)]
-        records@list[[records %>% length()-1]]@code <- content %>% removeTrailingLineBreaks()
+        content <- allLines[(lastLineIndexInPrevRecord + 1):(index-1)]
+        prevRecordIndex <- records %>% length() - 1
+        records@list[[prevRecordIndex]] <-
+          addContentToRecord(records@list[[prevRecordIndex]], content)
       }
-      prevRecordIndex <- index
+      lastLineIndexInPrevRecord <- index
     }
   }
   # Filling in with lines of last record
-  content <- allLines[(prevRecordIndex + 1):length(allLines)]
-  records@list[[records %>% length()]]@code <- content %>% removeTrailingLineBreaks()
-  
-  # Parse all statement records
-  records@list <- records@list %>% purrr::map(.f=parseRecord)
+  content <- allLines[(lastLineIndexInPrevRecord + 1):length(allLines)]
+  lastRecordIndex <- records %>% length()
+  records@list[[lastRecordIndex]]@code <-
+    addContentToRecord(records@list[[lastRecordIndex]], content)
   
   return(records)
 }
@@ -348,7 +362,7 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     object <- object %>% sort()
   } else {
     # Add transient records and sort
-    object <- object %>% addTransientRecords(model)
+    object <- object %>% addPropertiesRecords(model)
   }
 
   # Write code record

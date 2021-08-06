@@ -152,25 +152,6 @@ setGeneric("hasEquation", function(object, lhs) {
 })
 
 #_______________________________________________________________________________
-#----                            parseRecord                                ----
-#_______________________________________________________________________________
-
-#' Parse code record.
-#' 
-#' @param object object containing code to be parsed
-#' @param ... extra arguments
-#' @return updated code record
-#' @export
-#' @rdname parseRecord
-parseRecord <- function(object, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("parseRecord", function(object, ...) {
-  standardGeneric("parseRecord")
-})
-
-#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

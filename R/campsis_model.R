@@ -302,7 +302,7 @@ setMethod("replaceEquation", signature=c("campsis_model", "character", "characte
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("campsis_model"), definition=function(object) {
-  show(object@model %>% addTransientRecords(model=object))
+  show(object@model %>% addPropertiesRecords(model=object))
   cat("\n")
   show(object@parameters)
   cat("\n")
