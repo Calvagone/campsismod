@@ -3,7 +3,7 @@
 #_______________________________________________________________________________
 
 checkCodeRecord <- function(object) {
-  return(expectOne(object, "statements"))
+  return(TRUE)
 }
 
 #' 
@@ -110,7 +110,7 @@ setClass(
   "f_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -125,7 +125,7 @@ setClass(
   "lag_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -140,7 +140,7 @@ setClass(
   "duration_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -155,7 +155,7 @@ setClass(
   "rate_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -170,7 +170,7 @@ setClass(
   "init_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________

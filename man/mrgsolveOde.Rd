@@ -7,7 +7,7 @@
 mrgsolveOde(model)
 }
 \arguments{
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
 ODE block

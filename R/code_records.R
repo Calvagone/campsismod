@@ -79,7 +79,7 @@ addPropertiesRecords <- function(records, model) {
   
   for (name in getRecordNames()) {
     record <- new(tolower(paste0(name, "_record")))
-    if (!record@transient) {
+    if (!is(record, "properties_record")) {
       next
     }
     subProperties <- properties %>% select(name) 
@@ -87,7 +87,9 @@ addPropertiesRecords <- function(records, model) {
       next
     }
     for (subProperty in subProperties@list) {
-      record@code <- record@code %>% append(subProperty %>% toString(model=model, dest="campsis"))
+      compartment <- model@compartments %>% getByIndex(Compartment(index=subProperty@compartment))
+      equation <- Equation(compartment %>% getName(), subProperty@rhs, comment=subProperty@comment)
+      record <- record %>% add(equation)
     }
     records <- records %>% add(record)
   }
@@ -144,7 +146,7 @@ addProperties <- function(compartments, records, name, init) {
   if (record %>% length() == 0) {
     return(compartments)
   }
-  for (equation in record@statements) {
+  for (equation in record@statements@list) {
     if (!is(equation, "equation")) {
       stop("Properties record may only contain equations at this stage")
     }
@@ -267,7 +269,7 @@ read.model <- function(file) {
   # Filling in with lines of last record
   content <- allLines[(lastLineIndexInPrevRecord + 1):length(allLines)]
   lastRecordIndex <- records %>% length()
-  records@list[[lastRecordIndex]]@code <-
+  records@list[[lastRecordIndex]] <-
     addContentToRecord(records@list[[lastRecordIndex]], content)
   
   return(records)
@@ -306,20 +308,6 @@ setMethod("replaceEquation", signature=c("code_records", "character", "character
   }
   return(copy)
 })
-
-#_______________________________________________________________________________
-#----                       removeTransientRecords                          ----
-#_______________________________________________________________________________
-
-removeTransientRecords <- function(object) {
-  records <- CodeRecords()
-  for (record in object@list) {
-    if (!record@transient) {
-      records <- records %>% add(record)
-    }
-  }
-  return(records)
-}
 
 #_______________________________________________________________________________
 #----                                  show                                 ----
@@ -369,7 +357,9 @@ setMethod("write", signature=c("code_records", "character"), definition=function
   code <- NULL
   for (record in object@list) {
     code <- code %>% append(paste0("[", record %>% getName(), "]"))
-    code <- code %>% append(record@code)
+    for (statement in record@statements@list) {
+      code <- code %>% append(statement %>% toString())
+    }
     code <- code %>% append("") # write.table will add a new line
   }
   write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)

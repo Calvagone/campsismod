@@ -1,7 +1,7 @@
 
 #' Get the parameters block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return character vector, each value is a line or character(0) if no param
 #' @export
 mrgsolveParam <- function(model) {
@@ -19,7 +19,7 @@ mrgsolveParam <- function(model) {
 
 #' Get the compartment block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return character vector, each value is a line
 #' @export
 mrgsolveCompartment <- function(model) {
@@ -33,7 +33,7 @@ mrgsolveCompartment <- function(model) {
 
 #' Get the OMEGA/SIGMA matrix for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @param type either omega or sigma
 #' @return named matrix or character(0) if matrix is empty
 #' @export
@@ -58,7 +58,7 @@ mrgsolveMatrix <- function(model, type="omega") {
 
 #' Get the MAIN block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return MAIN block
 #' @export
 mrgsolveMain <- function(model) {
@@ -114,7 +114,7 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 
 #' Get the ODE block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return ODE block
 #' @export
 mrgsolveOde <- function(model) {
@@ -126,7 +126,7 @@ mrgsolveOde <- function(model) {
 
 #' Get the TABLE block for mrgsolve.
 #'
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return TABLE block
 #' @export
 mrgsolveTable <- function(model) {
@@ -139,7 +139,7 @@ mrgsolveTable <- function(model) {
 #' Get the CAPTURE block for mrgsolve.
 #'
 #' @param outvars outvars from pmxsim
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
 mrgsolveCapture <- function(outvars, model) {
@@ -157,7 +157,8 @@ mrgsolveCapture <- function(outvars, model) {
 #' will be discarded.
 #'
 #' @param outvars character vector
-#' @param model PMX model
+#' @param model CAMPSIS model
+#' @importFrom purrr keep map_chr
 #' @return all variables to capture
 #'
 convertOutvarsToCapture <- function(outvars, model) {
@@ -165,12 +166,7 @@ convertOutvarsToCapture <- function(outvars, model) {
   error <- model@model %>% getByName("ERROR")
   list <- NULL
   if (length(error) > 0) {
-    for (line in error@code) {
-      if (isEquation(line)) {
-        lhs <- extractLhs(line) %>% trim()
-        list <- list %>% append(lhs)
-      }
-    }
+    list <- error@statements@list %>% purrr::keep(~is(.x, "equation")) %>% purrr::map_chr(~.x@lhs)
     outvars <- outvars[!(outvars %in% list)]
   }
   return(outvars)

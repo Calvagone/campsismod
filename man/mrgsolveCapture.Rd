@@ -9,7 +9,7 @@ mrgsolveCapture(outvars, model)
 \arguments{
 \item{outvars}{outvars from pmxsim}
 
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
 CAPTURE block or character(0) if no variable in outvars

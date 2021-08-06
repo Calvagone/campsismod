@@ -8,8 +8,8 @@ testFolder <<- ""
 test_that("Add and get methods", {
   
   model <- CodeRecords()
-  model <- model %>% add(MainRecord(code="") %>% parseRecord())
-  model <- model %>% add(ErrorRecord(code="") %>% parseRecord())
+  model <- model %>% add(MainRecord(code=""))
+  model <- model %>% add(ErrorRecord(code=""))
   
   expect_true(model %>% getByName("MAIN") %>% length() > 0)
   expect_true(model %>% getByName("ERROR") %>% length() > 0)
@@ -24,8 +24,8 @@ test_that("Add not record objects", {
 test_that("Write/Read methods", {
   
   model1 <- CodeRecords()
-  model1 <- model1 %>% add(MainRecord(code=c("A=1", "B=2")) %>% parseRecord())
-  model1 <- model1 %>% add(ErrorRecord(code=c("C=3")) %>% parseRecord())
+  model1 <- model1 %>% add(MainRecord(code=c("A=1", "B=2")))
+  model1 <- model1 %>% add(ErrorRecord(code=c("C=3")))
   
   # Write model
   # Warning is well provided: model not provided, compartment characteristics will be lost

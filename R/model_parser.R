@@ -47,7 +47,7 @@ parseStatements <- function(code) {
 #' @return a list of equations
 #' 
 parseProperties <- function(code) {
-  statements <- parseStatements()
+  statements <- parseStatements(code)
   odes <- statements@list %>% purrr::keep(~is(.x, "ode"))
   if (odes %>% length() > 0) {
     stop("ODE's detected in compartment property record. Please fix CAMPSIS model.")
@@ -60,6 +60,7 @@ parseProperties <- function(code) {
   if (ifStatements %>% length() > 0) {
     stop("IF-statements in compartment property record are not supported. Please fix CAMPSIS model.")
   }
-  return(statements %>% purrr::keep(~is(.x, "equation")))
+  statements@list <- statements@list %>% purrr::keep(~is(.x, "equation"))
+  return(statements)
 }
 

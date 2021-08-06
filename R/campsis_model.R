@@ -253,8 +253,8 @@ updateCompartments <- function(model) {
   compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
   
-  # Remove transient records because information is now found in properties
-  records <- records %>% removeTransientRecords()
+  # Remove properties records because information is found in properties
+  records@list <- records@list %>% purrr::keep(~!is(.x, "properties_record"))
 
   model@model <- records
   model@compartments <- compartments
