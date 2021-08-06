@@ -44,7 +44,7 @@ dxdt_A_OUTPUT=CL*A_CENTRAL/V2;
 double F=A_CENTRAL/S2;
 
 [TABLE]
-CP=F;
-OBS_CP=CP*(EPS_PROP + 1);
-Y=OBS_CP;
+capture CP=F;
+capture OBS_CP=CP*(EPS_PROP + 1);
+capture Y=OBS_CP;
 
