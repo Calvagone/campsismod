@@ -34,7 +34,14 @@ processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
 #' @return logical vector
 #' @export
 isODE <- function(x) {
-  return(grepl(pattern="^d/dt.*\\(.*\\).*=", x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
+}
+
+#' Return the variable pattern.
+#' 
+#' @return pattern (regular expression)
+variablePattern <- function() {
+  return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
 #' Say if line in record is an equation not.
@@ -45,63 +52,27 @@ isODE <- function(x) {
 isEquation <- function(x) {
   assertSingleCharacterString(x)
   parts <- strsplit(x, split="=")[[1]]
+  if (length(parts) == 1) {
+    return(FALSE)
+  }
   variable <- parts[1] %>% trim()
-  return(grepl(pattern="^[a-zA-Z_][a-zA-Z0-9_]*$", x=variable))
+  return(grepl(pattern=paste0("^", variablePattern(), "$"), x=variable))
 }
 
-#' Say if line(s) in record is/are lag times.
+#' Return the IF-statement pattern.
 #' 
-#' @param x character vector
-#' @return logical vector
-#' @export
-isLagTime <- function(x) {
-  return(grepl(pattern="^lag\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
+#' @return pattern (regular expression)
+ifStatementPattern <- function() {
+  return(paste0("if\\s*\\(.*\\)\\s*", variablePattern(), "\\s*="))
 }
 
-#' Say if line(s) in record is/are bioavailabilities.
+#' Say if line in record is an IF-statement.
 #' 
-#' @param x character vector
-#' @return logical vector
+#' @param x character value
+#' @return logical value
 #' @export
-isBioavailibility <- function(x) {
-  return(grepl(pattern="^f\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
-}
-
-#' Say if line(s) in record is/are infusion durations.
-#' 
-#' @param x character vector
-#' @return logical vector
-#' @export
-isInfusionDuration <- function(x) {
-  return(grepl(pattern="^dur\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
-}
-
-#' Say if line(s) in record is/are rates.
-#' 
-#' @param x character vector
-#' @return logical vector
-#' @export
-isRate <- function(x) {
-  return(grepl(pattern="^rate\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
-}
-
-#' Say if line(s) in record is/are initial conditions.
-#' 
-#' @param x character vector
-#' @return logical vector
-#' @export
-isInitialCondition <- function(x) {
-  return(grepl(pattern="^[a-z_][a-z0-9_]+\\s*\\(\\s*0\\s*\\)\\s*=", x=trim(x), ignore.case=TRUE))
-}
-
-#' Get initial condition compartment.
-#' Assumes x is an initial condition (isInitialCondition already called).
-#' 
-#' @param x character vector
-#' @return logical vector
-#' @export
-getInitialConditionCmt <- function(x) {
-  return(gsub(pattern="([a-z_][a-z0-9_]+)(\\s*\\(\\s*0\\s*\\)\\s*=.*)", replacement="\\1", x=trim(x), ignore.case=TRUE))
+isIfStatement <- function(x) {
+  return(grepl(pattern=paste0("^", ifStatementPattern()), x=trim(x), ignore.case=TRUE))
 }
 
 #' Extract text between brackets.
@@ -121,11 +92,12 @@ extractTextBetweenBrackets <- function(x) {
 #' Extract right-hand-side expression.
 #' 
 #' @param x character value
+#' @param split character where to split
 #' @return right-hand side expressionn
 #' @export
-extractRhs <- function(x) {
+extractRhs <- function(x, split="=") {
   assertSingleCharacterString(x)
-  tmp <- strsplit(x=x, split="=")[[1]]
+  tmp <- strsplit(x=x, split=split)[[1]]
   # Remove lhs and collapse (in case of several =)
   rhs <- paste0(tmp[-1], collapse="=")
   return(rhs)
@@ -134,11 +106,12 @@ extractRhs <- function(x) {
 #' Extract left-hand-side expression.
 #' 
 #' @param x character value
+#' @param split character where to split
 #' @return left-hand-side expression, not trimmed
 #' @export
-extractLhs <- function(x) {
+extractLhs <- function(x, split="=") {
   assertSingleCharacterString(x)
-  tmp <- strsplit(x=x, split="=")[[1]]
+  tmp <- strsplit(x=x, split=split)[[1]]
   lhs <- tmp[1]
   return(lhs)
 }

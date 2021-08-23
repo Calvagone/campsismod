@@ -1,0 +1,46 @@
+[PARAM] @annotated
+THETA_KA : 1 : THETA_KA
+THETA_CL : 5 : THETA_CL
+THETA_V2 : 80 : THETA_V2
+THETA_V3 : 20 : THETA_V3
+THETA_Q : 4 : THETA_Q
+
+[CMT] @annotated
+A_DEPOT : DEPOT
+A_CENTRAL : CENTRAL
+A_PERIPHERAL : PERIPHERAL
+A_OUTPUT : OUTPUT
+
+[OMEGA] @annotated @block
+ETA_KA : 0.025 : ETA_KA
+ETA_CL : 0 0.025 : ETA_CL
+ETA_V2 : 0 0 0.025 : ETA_V2
+ETA_V3 : 0 0 0 0.025 : ETA_V3
+ETA_Q : 0 0 0 0 0.025 : ETA_Q
+
+[SIGMA] @annotated @block
+EPS_PROP : 0.025 : EPS_PROP
+
+[MAIN]
+double CL=THETA_CL*exp(ETA_CL);
+double V2=THETA_V2*exp(ETA_V2);
+double V3=THETA_V3*exp(ETA_V3);
+double Q=THETA_Q*exp(ETA_Q);
+double S2=V2;
+double KA=0;
+if (OCC==1) KA=THETA_KA*1.5*exp(ETA_KA);
+if (OCC==2) KA=THETA_KA*0.5*exp(ETA_KA);
+if (OCC==3) KA=THETA_KA*0.1*exp(ETA_KA);
+
+[ODE]
+dxdt_A_DEPOT=-KA*A_DEPOT;
+dxdt_A_CENTRAL=KA*A_DEPOT + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL;
+dxdt_A_PERIPHERAL=-Q*A_PERIPHERAL/V3 + Q*A_CENTRAL/V2;
+dxdt_A_OUTPUT=CL*A_CENTRAL/V2;
+double F=A_CENTRAL/S2;
+
+[TABLE]
+capture CP=F;
+capture OBS_CP=CP*(EPS_PROP + 1);
+capture Y=OBS_CP;
+

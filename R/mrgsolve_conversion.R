@@ -1,7 +1,7 @@
 
 #' Get the parameters block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return character vector, each value is a line or character(0) if no param
 #' @export
 mrgsolveParam <- function(model) {
@@ -19,7 +19,7 @@ mrgsolveParam <- function(model) {
 
 #' Get the compartment block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return character vector, each value is a line
 #' @export
 mrgsolveCompartment <- function(model) {
@@ -33,7 +33,7 @@ mrgsolveCompartment <- function(model) {
 
 #' Get the OMEGA/SIGMA matrix for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @param type either omega or sigma
 #' @return named matrix or character(0) if matrix is empty
 #' @export
@@ -58,7 +58,7 @@ mrgsolveMatrix <- function(model, type="omega") {
 
 #' Get the MAIN block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return MAIN block
 #' @export
 mrgsolveMain <- function(model) {
@@ -87,21 +87,7 @@ convertAnyComment <- function(x) {
   return(sub(pattern="#", replacement="//", x=x))
 }
 
-#' Append comma at the right place. The goal of this function is to preserve
-#' comments in mrgsolve as well. Comma has to be placed before the comment '#'.
-#' 
-#' @param x record line
-#' @return same line with a comma at the right place
-#' @export
-appendComma <- function(x) {
-  if (hasComment(x)) {
-    pos <- gregexpr(pattern='\\s*#', x) %>% as.numeric()
-    x <- paste0(substring(x, 0, pos-1), ";", substring(x, pos, nchar(x)))
-    return(x)
-  } else {
-    return(paste0(x, ";"))
-  }
-}
+
 
 #' Convert code record for mrgsolve.
 #' 
@@ -112,40 +98,23 @@ appendComma <- function(x) {
 #' @export
 mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
-  if (length(record) == 0) {
+  if (record %>% length() == 0) {
     return(retValue)
   }
-  for (index in seq_len(length(record@code))) {
-    line <- record@code[index]
-
-    if (isComment(line) || isEmptyLine(line)) {
-      # Don't do anything right now
-    } else if (isODE(line)) {
-      name <- extractTextBetweenBrackets(line)
-      rhs <- extractRhs(line)
-      line <- paste0("dxdt_", name, "=", rhs) %>% appendComma()
-    } else if (isEquation(line)) {
-      if (capture) {
-        line <- paste0("capture ", line) %>% appendComma()
-      } else {
-        line <- paste0("double ", line) %>% appendComma()
-      }
-    } else  {
-      # Unknown line... We still append a comma.
-      line <- line %>% appendComma()
-    }
-    # Finally, convert # to // if any
-    line <- line %>% convertAnyComment()
-    
-    # Append
-    retValue <- retValue %>% append(line)
+  for (statement in record@statements@list) {
+    retValue <-
+      retValue %>% append(statement %>% toString(
+        dest = "mrgsolve",
+        init = !capture,
+        capture = capture
+      ))
   }
   return(retValue)
 }
 
 #' Get the ODE block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return ODE block
 #' @export
 mrgsolveOde <- function(model) {
@@ -157,7 +126,7 @@ mrgsolveOde <- function(model) {
 
 #' Get the TABLE block for mrgsolve.
 #'
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return TABLE block
 #' @export
 mrgsolveTable <- function(model) {
@@ -170,7 +139,7 @@ mrgsolveTable <- function(model) {
 #' Get the CAPTURE block for mrgsolve.
 #'
 #' @param outvars outvars from pmxsim
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
 mrgsolveCapture <- function(outvars, model) {
@@ -188,7 +157,8 @@ mrgsolveCapture <- function(outvars, model) {
 #' will be discarded.
 #'
 #' @param outvars character vector
-#' @param model PMX model
+#' @param model CAMPSIS model
+#' @importFrom purrr keep map_chr
 #' @return all variables to capture
 #'
 convertOutvarsToCapture <- function(outvars, model) {
@@ -196,12 +166,7 @@ convertOutvarsToCapture <- function(outvars, model) {
   error <- model@model %>% getByName("ERROR")
   list <- NULL
   if (length(error) > 0) {
-    for (line in error@code) {
-      if (isEquation(line)) {
-        lhs <- extractLhs(line) %>% trim()
-        list <- list %>% append(lhs)
-      }
-    }
+    list <- error@statements@list %>% purrr::keep(~is(.x, "equation")) %>% purrr::map_chr(~.x@lhs)
     outvars <- outvars[!(outvars %in% list)]
   }
   return(outvars)

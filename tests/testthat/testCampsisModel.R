@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test PMX model")
+context("Test CAMPSIS model")
 
 testFolder <<- ""
 overwriteNonRegressionFiles <<- FALSE
@@ -45,7 +45,7 @@ test_that("replace method works well", {
   # Replace a code record
   error <- ErrorRecord()
   model <- model %>% replace(error)
-  expect_equal((model@model %>% getByName("ERROR"))@code %>% length(), 0)
+  expect_equal(model@model %>% getByName("ERROR") %>% length(), 0)
 })
 
 test_that("add method on PMX model, exceptions on parameters names", {
@@ -60,7 +60,9 @@ test_that("add method on PMX model, exceptions on compartment names", {
   
   model2 <- getNONMEMModelTemplate(1,1)
   model2@parameters@list <- model2@parameters@list[-(model2@parameters %>% length())] # Remove SIGMA PROP
-  expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate compartment name\\(s\\): A_CENTRAL, A_OUTPUT")
+  
+  expect_error(model1 %>% add(model2), regexp="Element 'ODE \\(A_CENTRAL\\)' is already present.")
+  #expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate compartment name\\(s\\): A_CENTRAL, A_OUTPUT")
 })
 
 test_that("add effect compartment model to PK model using add method", {
@@ -86,7 +88,7 @@ test_that("add effect compartment model to PK model using add method", {
   
   pkpd <- pk %>% add(pd)
   
-  modelRegressionTest(pkpd, regFilename)
+  campsisNonRegTest(pkpd, regFilename)
   # dataset <- Dataset(1) %>% add(Bolus(0, 100)) %>% add(Observations(0:48))
   # results <- pkpd %>% simulate(dataset=dataset, dest="RxODE", seed=1)
   # spaghettiPlot(results, "A_EFFECT")

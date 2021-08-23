@@ -79,7 +79,7 @@ test_that("replaceEquation method is working well", {
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% replaceEquation("S1", rhs="V/1000")
-  expect_equal((model@model %>% getByName("MAIN"))@code[3], "S1=V/1000") # Equation well modified
+  expect_equal(model@model %>% getByName("MAIN") %>% getEquation("S1"), "V/1000") # Equation well modified
 })
 
 test_that("addEquation method is working well on code record", {

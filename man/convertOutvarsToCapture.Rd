@@ -10,7 +10,7 @@ convertOutvarsToCapture(outvars, model)
 \arguments{
 \item{outvars}{character vector}
 
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
 all variables to capture

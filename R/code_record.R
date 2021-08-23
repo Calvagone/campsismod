@@ -1,23 +1,56 @@
 #_______________________________________________________________________________
-#----                       code_record class                               ----
+#----                     code_record class (ABSTRACT)                      ----
 #_______________________________________________________________________________
 
 checkCodeRecord <- function(object) {
-  check1 <- expectZeroOrMore(object, "code")
-  check2 <- expectOne(object, "transient")
-  return(c(check1, check2))
+  return(TRUE)
 }
 
+#' 
+#' Code record class. See this code record as an abstract class.
+#' 2 implementations are possible:
+#' - properties record (lag, duration, rate & bioavailability properties)
+#' - statements record (main, ode & error records)
+#' 
 setClass(
   "code_record",
   representation(
-    code = "character",
-    transient = "logical"
+    statements = "model_statements"
   ),
   contains = "pmx_element",
-  prototype = prototype(transient=FALSE),
+  prototype = prototype(statements=ModelStatements()),
   validity = checkCodeRecord
 )
+
+#_______________________________________________________________________________
+#----                      statements_record class                           ----
+#_______________________________________________________________________________
+
+#' 
+#' Properties record class.
+#' 
+setClass(
+  "properties_record",
+  representation(
+  ),
+  contains = "code_record"
+)
+
+#_______________________________________________________________________________
+#----                      statements_record class                          ----
+#_______________________________________________________________________________
+
+#' 
+#' Statements record class.
+#' 
+setClass(
+  "statements_record",
+  representation(
+  ),
+  contains = "code_record"
+)
+
+
 
 #_______________________________________________________________________________
 #----                           MAIN record                                 ----
@@ -31,7 +64,7 @@ setClass(
   "main_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -40,7 +73,7 @@ setClass(
 #' @param code code record
 #' @export
 MainRecord <- function(code=character()) {
-  return(new("main_record", code=code))
+  return(new("main_record", statements=parseStatements(code)))
 }
 
 #_______________________________________________________________________________
@@ -55,7 +88,7 @@ setClass(
   "ode_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -64,7 +97,7 @@ setClass(
 #' @param code code record
 #' @export
 OdeRecord <- function(code=character()) {
-  return(new("ode_record", code=code))
+  return(new("ode_record", statements=parseStatements(code)))
 }
 
 #_______________________________________________________________________________
@@ -79,8 +112,7 @@ setClass(
   "f_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -95,8 +127,7 @@ setClass(
   "lag_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -111,8 +142,7 @@ setClass(
   "duration_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -127,8 +157,7 @@ setClass(
   "rate_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -143,8 +172,7 @@ setClass(
   "init_record",
   representation(
   ),
-  contains = "code_record",
-  prototype = prototype(transient=TRUE)
+  contains = "properties_record"
 )
 
 #_______________________________________________________________________________
@@ -160,7 +188,7 @@ setClass(
   "error_record",
   representation(
   ),
-  contains = "code_record"
+  contains = "statements_record"
 )
 
 #' 
@@ -169,8 +197,24 @@ setClass(
 #' @param code code record
 #' @export
 ErrorRecord <- function(code=character()) {
-  return(new("error_record", code=code))
+  return(new("error_record", statements=parseStatements(code)))
 }
+
+#_______________________________________________________________________________
+#----                                add                                    ----
+#_______________________________________________________________________________
+
+#' @rdname add
+setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x) {
+  object@statements <- object@statements %>% add(x)
+  return(object)
+})
+
+#' @rdname add
+setMethod("add", signature=c("code_record", "code_record"), definition=function(object, x) {
+  object@statements <- object@statements %>% add(x@statements)
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                            addEquation                                ----
@@ -184,13 +228,12 @@ ErrorRecord <- function(code=character()) {
 #' @return index in this record or -1 if not found 
 #' @export
 getEquationIndex <- function(object, lhs) {
-  for (lineIndex in seq_along(object@code)) {
-    line <- object@code[lineIndex]
-    if (isEquation(line) && extractLhs(line) %>% trim()==lhs) {
-      return(lineIndex)
-    }
+  index <- object@statements %>% indexOf(Equation(lhs, ""))
+  if (index %>% length() == 0) {
+    return(-1)
+  } else {
+    return(index)
   }
-  return(-1)
 }
 
 #' @param before index or variable, may be used to insert an equation at a specific position, before this index (in record) or variable
@@ -204,11 +247,15 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
   } else {
     index <- NULL
   }
-  
-  if (is.null(index)) {
-    object@code <- object@code %>% append(paste0(lhs, "=", rhs))
+  if (isODE(paste0(lhs, "="))) {
+    eq <- Ode(extractTextBetweenBrackets(lhs), rhs)
   } else {
-    object@code <- object@code %>% append(paste0(lhs, "=", rhs), after=index)
+    eq <- Equation(lhs, rhs)
+  }
+  if (is.null(index)) {
+    object@statements@list <- object@statements@list %>% append(eq)
+  } else {
+    object@statements@list <- object@statements@list %>% append(eq, after=index)
   }
 
   return(object)
@@ -224,7 +271,8 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
   if (index == -1) {
     return(NULL)
   } else {
-    return(extractRhs(object@code[index]))
+    eq <- object@statements %>% getByIndex(index)
+    return(eq@rhs)
   }
 })
 
@@ -291,8 +339,8 @@ setMethod("hasEquation", signature=c("code_record", "character"), definition=fun
 #_______________________________________________________________________________
 
 #' @rdname length
-setMethod("length", signature=c("code_record"), definition=function(x) {
-  return(length(x@code))
+setMethod("length", signature=c("statements_record"), definition=function(x) {
+  return(x@statements %>% length())
 })
 
 #_______________________________________________________________________________
@@ -303,8 +351,18 @@ setMethod("length", signature=c("code_record"), definition=function(x) {
 setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {
-    object@code <- object@code[-index]
+    object@statements@list <- object@statements@list[-index]
   }
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  object@statements <- object@statements %>% replace(x)
   return(object)
 })
 
@@ -316,8 +374,8 @@ setMethod("removeEquation", signature=c("code_record", "character"), definition=
 setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
   index <- getEquationIndex(object, lhs)
   if (index != -1) {
-    line <- object@code[index]
-    object@code[index] <- paste0(extractLhs(line), "=", rhs)
+    eq <- Equation(lhs, rhs)
+    object@statements <- object@statements %>% replace(eq)
   }
   return(object)
 })
@@ -329,5 +387,5 @@ setMethod("replaceEquation", signature=c("code_record", "character", "character"
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
   cat("[", object %>% getName(), "]\n", sep="")
-  cat(object@code, sep="\n")
+  show(object@statements)
 })

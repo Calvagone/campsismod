@@ -41,6 +41,12 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
 })
 
 #' @rdname add
+setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
+  object@model <- object@model %>% add(x)
+  return(object)
+})
+
+#' @rdname add
 setMethod("add", signature=c("campsis_model", "campsis_model"), definition=function(object, x) {
   object <- object %>% appendModel(x)
   return(object)
@@ -253,8 +259,8 @@ updateCompartments <- function(model) {
   compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
   
-  # Remove transient records because information is now found in properties
-  records <- records %>% removeTransientRecords()
+  # Remove properties records because information is found in properties
+  records@list <- records@list %>% purrr::keep(~!is(.x, "properties_record"))
 
   model@model <- records
   model@compartments <- compartments
@@ -302,7 +308,7 @@ setMethod("replaceEquation", signature=c("campsis_model", "character", "characte
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("campsis_model"), definition=function(object) {
-  show(object@model %>% addTransientRecords(model=object))
+  show(object@model %>% addPropertiesRecords(model=object))
   cat("\n")
   show(object@parameters)
   cat("\n")

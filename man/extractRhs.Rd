@@ -4,10 +4,12 @@
 \alias{extractRhs}
 \title{Extract right-hand-side expression.}
 \usage{
-extractRhs(x)
+extractRhs(x, split = "=")
 }
 \arguments{
 \item{x}{character value}
+
+\item{split}{character where to split}
 }
 \value{
 right-hand side expressionn

@@ -2,31 +2,31 @@
 
 #' Get code for RxODE.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return code for RxODE
 #' @export
 rxodeCode <- function(model) {
   records <- model@model
   properties <- model@compartments@properties
-  
+  propertiesCode <- NULL
   if (properties %>% length() > 0) {
-    odeRecord <- records %>% getByName("ODE")
-    if (length(odeRecord) == 0) {
-      stop("Not able to add compartment properties for RxODE: no ODE block")
-    }
     for (property in properties@list) {
       compartmentIndex <- property@compartment
       compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
       equation <- property %>% toString(model=model, dest="RxODE")
-      odeRecord@code <- odeRecord@code %>% append(equation)
+      propertiesCode <- propertiesCode %>% append(equation)
     }
-    records <- records %>% replace(odeRecord)
   }
   
-  # All records to 'single' record
+  # All records to character vector
   code <- NULL
   for (record in records@list) {
-    code <- c(code, record@code)
+    for (statement in record@statements@list) {
+      code <- code %>% append(statement %>% toString(dest="RxODE"))
+    }
+    if (is(record, "ode_record")) {
+      code <- code %>% append(propertiesCode)
+    }
   }
   return(code)
 }

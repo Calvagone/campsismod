@@ -11,14 +11,17 @@ validateCompartmentCharacteristic <- function(object) {
 #' 
 #' @slot compartment related compartment index
 #' @slot rhs right-hand side formula
+#' @slot comment comment if any, single character string
 #' @export
 setClass(
   "compartment_property",
   representation(
     compartment = "integer",
-    rhs = "character"
+    rhs = "character",
+    comment = "character"
   ),
   contains="pmx_element",
+  prototype=prototype(comment=as.character(NA)),
   validity=validateCompartmentCharacteristic 
 )
 
@@ -81,10 +84,10 @@ setMethod("toString", signature=c("compartment_property"), definition=function(o
     return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% getName(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% getName(), "=", object@rhs))
-  } else if (dest=="pmxmod") {
+  } else if (dest=="campsis") {
     return(paste0(compartment %>% getName(), "=", object@rhs))
   } else {
-    stop("Only RxODE, mrgsolve or pmxmod are supported")
+    UnsupportedDestException()
   }
 })
 

@@ -123,7 +123,10 @@ setGeneric("indexOf", function(object, x) {
 
 #' @rdname indexOf
 setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  logicalVector <- object@list %>% purrr::map_lgl(~(.x %>% getName()==x %>% getName()))
+  logicalVector <- object@list %>% purrr::map_lgl(.f=function(.x) {
+    retValue <- .x %>% getName() == x %>% getName()
+    return(ifelse(is.na(retValue), FALSE, retValue))
+  })
   index <- which(logicalVector)
   if (length(index) > 0) {
     index <- index[[1]]
@@ -152,7 +155,10 @@ setGeneric("getByName", function(object, name) {
 
 #' @rdname getByName
 setMethod("getByName", signature=c("pmx_list", "character"), definition=function(object, name) {
-  element <- object@list %>% purrr::keep(~(.x %>% getName()==name))
+  if (is.na(name)) {
+    return(NULL)
+  }
+  element <- object@list %>% purrr::keep(~(!is.na(.x %>% getName()) && .x %>% getName()==name))
   if (length(element) > 0) {
     element <- element[[1]]
   }
