@@ -45,6 +45,7 @@ test_that("extractTextBetweenBrackets method is working well", {
 test_that("isEquation is working well", {
   expect_true(isEquation("V3=THETA_V3*VDBW"))
   expect_false(isEquation("if (OCC == 1) VIS1=1"))
+  expect_false(isEquation("THETA_V3"))
 })
 
 test_that("isInitialCondition is working well", {
@@ -90,20 +91,12 @@ test_that("extractLhs and extractRhs with comment works well", {
 })
 
 test_that("isIfStatement works well", {
-  line <- "if (ID > 30) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
+  line <- "  if (ID > 30) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
   expect_true(isIfStatement(line))
   
-  line <- "if (ID > (30)) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
+  line <- "  if (ID > (30)) TVCL=THETA_7*pow(0.009*TBW, THETA_8)"
   expect_true(isIfStatement(line))
   
-  # # Identify first parenthesis
-  # regexpr("^if\\s*\\(", line)
-  # 
-  # # Rhs
-  # rhs <- extractRhs(line)
-  # lhs <- extractLhs(line)
-  # 
-  # # Identify variable start
-  # regexpr("[a-zA-Z_][a-zA-Z0-9_]*$", lhs) %>% as.integer()
-  
+  line <- " if(ID == 30) TVCL = THETA_7*pow(0.009*TBW, THETA_8)"
+  expect_true(isIfStatement(line))
 })

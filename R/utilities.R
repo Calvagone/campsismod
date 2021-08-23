@@ -37,6 +37,13 @@ isODE <- function(x) {
   return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
+#' Return the variable pattern.
+#' 
+#' @return pattern (regular expression)
+variablePattern <- function() {
+  return("[a-zA-Z_][a-zA-Z0-9_]*")
+}
+
 #' Say if line in record is an equation not.
 #' 
 #' @param x character value
@@ -45,8 +52,18 @@ isODE <- function(x) {
 isEquation <- function(x) {
   assertSingleCharacterString(x)
   parts <- strsplit(x, split="=")[[1]]
+  if (length(parts) == 1) {
+    return(FALSE)
+  }
   variable <- parts[1] %>% trim()
-  return(grepl(pattern="^[a-zA-Z_][a-zA-Z0-9_]*$", x=variable))
+  return(grepl(pattern=paste0("^", variablePattern(), "$"), x=variable))
+}
+
+#' Return the IF-statement pattern.
+#' 
+#' @return pattern (regular expression)
+ifStatementPattern <- function() {
+  return(paste0("if\\s*\\(.*\\)\\s*", variablePattern(), "\\s*="))
 }
 
 #' Say if line in record is an IF-statement.
@@ -55,7 +72,7 @@ isEquation <- function(x) {
 #' @return logical value
 #' @export
 isIfStatement <- function(x) {
-  return(grepl(pattern="^if\\s*\\(.*\\)\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*=", x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern=paste0("^", ifStatementPattern()), x=trim(x), ignore.case=TRUE))
 }
 
 #' Say if line(s) in record is/are lag times.
