@@ -73,7 +73,6 @@ parseProperties <- function(code) {
 #' @param line IF-statement as single character string value, comment omitted
 #' @param comment any comment, NA by default
 #' @return an IF statement object
-#' @export
 #' 
 parseIfStatement <- function(line, comment=as.character(NA)) {
   # Trim input
