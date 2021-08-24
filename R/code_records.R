@@ -305,6 +305,21 @@ setMethod("removeEquation", signature=c("code_records", "character"), definition
 })
 
 #_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  copy <- object
+  for (record in object@list) {
+    if (record %>% contains(x)) {
+      copy <- copy %>% replace(record %>% replace(x))
+    }
+  }
+  return(copy)
+})
+
+#_______________________________________________________________________________
 #----                           replaceEquation                             ----
 #_______________________________________________________________________________
 

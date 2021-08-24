@@ -282,6 +282,12 @@ setMethod("removeEquation", signature=c("campsis_model", "character"), definitio
 #_______________________________________________________________________________
 
 #' @rdname replace
+setMethod("replace", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
+  object@compartments <- object@compartments %>% replace(x)
+  return(object)
+})
+
+#' @rdname replace
 setMethod("replace", signature=c("campsis_model", "parameter"), definition=function(object, x) {
   object@parameters <- object@parameters %>% replace(x)
   return(object)
@@ -289,6 +295,12 @@ setMethod("replace", signature=c("campsis_model", "parameter"), definition=funct
 
 #' @rdname replace
 setMethod("replace", signature=c("campsis_model", "code_record"), definition=function(object, x) {
+  object@model <- object@model %>% replace(x)
+  return(object)
+})
+
+#' @rdname replace
+setMethod("replace", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
   object@model <- object@model %>% replace(x)
   return(object)
 })

@@ -38,14 +38,27 @@ test_that("replace method works well", {
   
   model <- getNONMEMModelTemplate(4,4)
   
-  # Replace a parameter
+  # Replace a parameter (1)
   model <- model %>% replace(Theta(name="KA", index=1, value=1.5))
   expect_equal((model@parameters %>% getByName("THETA_KA"))@value, 1.5)
   
+  # Replace a parameter, index does not need to be provided (2)
+  model <- model %>% replace(Theta(name="KA", value=1.5))
+  expect_equal((model@parameters %>% getByName("THETA_KA"))@value, 1.5)
+  
   # Replace a code record
-  error <- ErrorRecord()
+  error <- ErrorRecord() # 0 statement
   model <- model %>% replace(error)
   expect_equal(model@model %>% getByName("ERROR") %>% length(), 0)
+  
+  # Replace a model statement
+  model <- model %>% replace(Equation("S2", "V2*1000"))
+  expect_equal((model %>% getEquation("S2"))@rhs, "V2*1000")
+  
+  # Add and replace a compartment property
+  model <- model %>% add(Bioavailability(1, "0.75"))
+  model <- model %>% replace(Bioavailability(1, "0.50"))
+  expect_equal((model@compartments@properties %>% getByIndex(1))@rhs, "0.50")
 })
 
 test_that("add method on PMX model, exceptions on parameters names", {

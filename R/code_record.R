@@ -262,6 +262,15 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
 })
 
 #_______________________________________________________________________________
+#----                               contains                                ----
+#_______________________________________________________________________________
+
+#' @rdname contains
+setMethod("contains", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  return(object@statements %>% contains(x))
+})
+
+#_______________________________________________________________________________
 #----                              getEquation                              ----
 #_______________________________________________________________________________
 
@@ -271,8 +280,7 @@ setMethod("getEquation", signature=c("code_record", "character"), definition=fun
   if (index == -1) {
     return(NULL)
   } else {
-    eq <- object@statements %>% getByIndex(index)
-    return(eq@rhs)
+    return(object@statements %>% getByIndex(index))
   }
 })
 

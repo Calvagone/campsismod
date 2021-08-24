@@ -68,6 +68,15 @@ appendCompartments <- function(compartments1, compartments2) {
 }
 
 #_______________________________________________________________________________
+#----                               contains                                ----
+#_______________________________________________________________________________
+
+#' @rdname contains
+setMethod("contains", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  return(object@properties %>% contains(x))
+})
+
+#_______________________________________________________________________________
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
 
@@ -92,6 +101,16 @@ setMethod("getCompartmentIndex", signature=c("compartments", "character"), defin
     stop(paste0("Compartment ", name, " not found."))
   }
   return(compartment@index)
+})
+
+#_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  object@properties <- object@properties %>% replace(x)
+  return(object)
 })
 
 #_______________________________________________________________________________
