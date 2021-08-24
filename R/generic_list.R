@@ -80,7 +80,7 @@ setMethod("add", signature=c("pmx_list", "list"), definition=function(object, x)
 #' 
 #' @param object list object
 #' @param x element to replace
-#' @return list object
+#' @return list object or an error if the element does not exist in the list
 #' @export
 #' @rdname replace
 replace <- function(object, x) {
@@ -173,7 +173,7 @@ setMethod("getByName", signature=c("pmx_list", "character"), definition=function
 #' 
 #' @param object list object
 #' @param x element to check if exists
-#' @return logical value
+#' @return logical value, TRUE or FALSE
 #' @export
 #' @rdname contains
 contains <- function(object, x) {
@@ -187,6 +187,55 @@ setGeneric("contains", function(object, x) {
 #' @rdname contains
 setMethod("contains", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   return(object %>% getByName(x %>% getName()) %>% length() != 0)
+})
+
+#_______________________________________________________________________________
+#----                             delete                                    ----
+#_______________________________________________________________________________
+
+#' Delete an element from this list.
+#' 
+#' @param object list object
+#' @param x element to delete or element index
+#' @return the updated list
+#' @export
+#' @rdname delete
+delete <- function(object, x) {
+  stop("No default function is provided")
+}
+
+setGeneric("delete", function(object, x) {
+  if (is.numeric(x)) {
+    x <- as.integer(x)
+  }
+  if (is.integer(x) && x %>% length() > 1) {
+    stop("Only 1 element can be deleted at a time")
+  }
+  standardGeneric("delete")
+})
+
+#' @rdname delete
+setMethod("delete", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
+  index <- object %>% indexOf(x)
+  if (index %>% length() > 0) {
+    object@list <- object@list[-index]
+    return(object)
+  } else {
+    stop(paste("Element", x %>% getName(), "does not exist."))
+  }
+})
+
+#' @rdname delete
+setMethod("delete", signature=c("pmx_list", "integer"), definition=function(object, x) {
+  if (x %>% length() != 1) {
+    stop("x must be a single integer/numeric value")
+  }
+  if (x > 0 && x <= object %>% length()) {
+    object@list <- object@list[-index]
+    return(object)
+  } else {
+    stop(paste("No element exists at index", x))
+  }
 })
 
 #_______________________________________________________________________________

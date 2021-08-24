@@ -154,6 +154,57 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
+#----                             delete                                    ----
+#_______________________________________________________________________________
+
+#' Match single array parameter from list based on the name instead of the index.
+#' If a match is found, its index is automatically copied.
+#' 
+#' @param object parameters
+#' @param x single array parameter to match
+#' @return the same parameter is no match was found or the same parameter with updated index if a match was found
+matchSingleArrayParameter <- function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+    }
+  }
+  return(x)
+}
+
+#' Match double array parameter from list based on the name instead of the index.
+#' If a match is found, its indexes are automatically copied.
+#' 
+#' @param object parameters
+#' @param x double array parameter to match
+#' @return the same parameter is no match was found or the same parameter with updated indexes if a match was found
+matchDoubleArrayParameter <- function(object, x) {
+  # If index is NA, index will be the index of the replaced parameter
+  if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
+    existingParam <- object %>% getByName(x %>% getName())
+    if (existingParam %>% length() == 1) {
+      x@index <- existingParam@index   # Copy index!
+      x@index2 <- existingParam@index2 # Copy index2!
+    }
+  }
+  return(x)
+}
+
+#' @rdname delete
+setMethod("delete", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
+  x <- matchSingleArrayParameter(object, x)
+  return(callNextMethod(object, x))
+})
+
+#' @rdname delete
+setMethod("delete", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
+  x <- matchDoubleArrayParameter(object, x)
+  return(callNextMethod(object, x))
+})
+
+#_______________________________________________________________________________
 #----                              disable                                  ----
 #_______________________________________________________________________________
 
@@ -456,26 +507,13 @@ read.allparameters <- function(folder) {
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
-  # If index is NA, index will be the index of the replaced parameter
-  if (is.na(x@index) && !is.na(x@name)) {
-    existingParam <- object %>% getByName(x %>% getName())
-    if (existingParam %>% length() == 1) {
-      x@index <- existingParam@index   # Copy index!
-    }
-  }
+  x <- matchSingleArrayParameter(object, x)
   return(callNextMethod(object, x))
 })
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
-  # If index is NA, index will be the index of the replaced parameter
-  if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
-    existingParam <- object %>% getByName(x %>% getName())
-    if (existingParam %>% length() == 1) {
-      x@index <- existingParam@index   # Copy index!
-      x@index2 <- existingParam@index2 # Copy index2!
-    }
-  }
+  x <- matchDoubleArrayParameter(object, x)
   return(callNextMethod(object, x))
 })
 

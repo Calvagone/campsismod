@@ -4,7 +4,7 @@
 \alias{InfusionRate}
 \title{Create an infusion rate.}
 \usage{
-InfusionRate(compartment, rhs)
+InfusionRate(compartment, rhs = "")
 }
 \arguments{
 \item{compartment}{compartment index}

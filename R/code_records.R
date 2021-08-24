@@ -105,6 +105,21 @@ addPropertiesRecords <- function(records, model) {
 }
 
 #_______________________________________________________________________________
+#----                               delete                                  ----
+#_______________________________________________________________________________
+
+#' @rdname delete
+setMethod("delete", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  copy <- object
+  for (record in object@list) {
+    if (record %>% contains(x)) {
+      copy <- copy %>% replace(record %>% delete(x))
+    }
+  }
+  return(copy)
+})
+
+#_______________________________________________________________________________
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 

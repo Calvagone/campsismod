@@ -22,7 +22,7 @@ contains(object, x)
 \item{x}{element to check if exists}
 }
 \value{
-logical value
+logical value, TRUE or FALSE
 }
 \description{
 Check if an element exists in list.

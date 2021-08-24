@@ -77,6 +77,16 @@ setMethod("contains", signature=c("compartments", "compartment_property"), defin
 })
 
 #_______________________________________________________________________________
+#----                               delete                                  ----
+#_______________________________________________________________________________
+
+#' @rdname delete
+setMethod("delete", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  object@properties <- object@properties %>% delete(x)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                             getByIndex                                ----
 #_______________________________________________________________________________
 

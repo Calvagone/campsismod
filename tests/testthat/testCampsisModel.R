@@ -61,6 +61,29 @@ test_that("replace method works well", {
   expect_equal((model@compartments@properties %>% getByIndex(1))@rhs, "0.50")
 })
 
+test_that("delete method works well", {
+  
+  model <- getNONMEMModelTemplate(4,4)
+  
+  # Delete a parameter
+  updatedModel <- model %>% delete(Theta(name="KA"))
+  expect_equal(updatedModel@parameters %>% length(), model@parameters %>% length() - 1)
+  
+  # Delete a code record
+  updatedModel <- model %>% delete(ErrorRecord())
+  expect_equal(updatedModel@model %>% length(), model@model %>% length() - 1)
+  
+  # Delete a model statement
+  updatedModel <- model %>% delete(Equation("S2"))
+  expect_equal(updatedModel@model %>% getByName("MAIN") %>% length(), model@model %>% getByName("MAIN") %>% length() - 1)
+  
+  # Add and delete a compartment property
+  model <- model %>% add(Bioavailability(1, "0.75"))
+  model <- model %>% add(Bioavailability(2, "0.75"))
+  updatedModel <- model %>% delete(Bioavailability(1))
+  expect_equal(updatedModel@compartments@properties %>% length(), model@compartments@properties %>% length() - 1)
+})
+
 test_that("add method on PMX model, exceptions on parameters names", {
   model1 <- getNONMEMModelTemplate(4,4)
   model2 <- getNONMEMModelTemplate(1,1)

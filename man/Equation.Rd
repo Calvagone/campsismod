@@ -4,7 +4,7 @@
 \alias{Equation}
 \title{Create a new equation.}
 \usage{
-Equation(lhs, rhs, comment = as.character(NA))
+Equation(lhs, rhs = "", comment = as.character(NA))
 }
 \arguments{
 \item{lhs}{left-hand side variable corresponding to the assigned variable name}

@@ -43,7 +43,7 @@ replace(object, x)
 \item{x}{element to replace}
 }
 \value{
-list object
+list object or an error if the element does not exist in the list
 }
 \description{
 Replace element by another in list.

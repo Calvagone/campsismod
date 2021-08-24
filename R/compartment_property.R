@@ -21,7 +21,7 @@ setClass(
     comment = "character"
   ),
   contains="pmx_element",
-  prototype=prototype(comment=as.character(NA)),
+  prototype=prototype(comment=as.character(NA), rhs=""),
   validity=validateCompartmentCharacteristic 
 )
 

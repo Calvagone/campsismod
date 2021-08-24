@@ -271,6 +271,16 @@ setMethod("contains", signature=c("statements_record", "model_statement"), defin
 })
 
 #_______________________________________________________________________________
+#----                               delete                                  ----
+#_______________________________________________________________________________
+
+#' @rdname delete
+setMethod("delete", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  object@statements <- object@statements %>% delete(x)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                              getEquation                              ----
 #_______________________________________________________________________________
 

@@ -25,7 +25,7 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return initial condition object
 #' @export
-InitialCondition <- function(compartment, rhs) {
+InitialCondition <- function(compartment, rhs="") {
   return(new("compartment_initial_condition", compartment=as.integer(compartment), rhs=rhs))
 }
 

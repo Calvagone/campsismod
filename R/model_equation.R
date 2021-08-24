@@ -20,6 +20,7 @@ setClass(
     rhs = "character"
   ),
   contains = "model_statement",
+  prototype = prototype(rhs=""),
   validity = validateEquation
 )
 
@@ -31,7 +32,7 @@ setClass(
 #' @param comment comment if any, single character string
 #' @return an equation
 #' @export
-Equation <- function(lhs, rhs, comment=as.character(NA)) {
+Equation <- function(lhs, rhs="", comment=as.character(NA)) {
   return(new("equation", lhs=lhs, rhs=rhs, comment=comment))
 }
 

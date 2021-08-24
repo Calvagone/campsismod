@@ -4,7 +4,7 @@
 \alias{LagTime}
 \title{Create a lag time for the specified compartment.}
 \usage{
-LagTime(compartment, rhs)
+LagTime(compartment, rhs = "")
 }
 \arguments{
 \item{compartment}{compartment index}
