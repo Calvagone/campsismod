@@ -2,13 +2,10 @@
 #' Get the parameters block for mrgsolve.
 #' 
 #' @param model CAMPSIS model
-#' @return character vector, each value is a line or character(0) if no param
+#' @return character vector, 1 parameter per line. First one is header [PARAM].
 #' @export
 mrgsolveParam <- function(model) {
   params <- rxodeParams(model)
-  if (params %>% length()==0) {
-    return(character(0))
-  }
   retValue <- "[PARAM] @annotated"
   for (index in seq_len(length(params))) {
     param <- params[index]

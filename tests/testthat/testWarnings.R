@@ -22,4 +22,10 @@ test_that("Warnings displayed when no theta, omega and sigma.csv files", {
   expect_warning(read.campsis(paste0(testFolder, "custom/", modelName)), regexp="No file 'theta.csv' could be found")
   expect_warning(read.campsis(paste0(testFolder, "custom/", modelName)), regexp="No file 'omega.csv' could be found")
   expect_warning(read.campsis(paste0(testFolder, "custom/", modelName)), regexp="No file 'sigma.csv' could be found")
+  
+  model <- suppressWarnings(read.campsis(paste0(testFolder, "custom/", modelName)))
+  mrgmod <- model %>% export(dest="mrgsolve")
+  expect_equal(mrgmod@param, "[PARAM] @annotated")
+  expect_equal(mrgmod@omega, character(0))
+  expect_equal(mrgmod@sigma, character(0))
 })
