@@ -38,7 +38,7 @@ parseStatements <- function(code) {
       statements <- statements %>% add(parseIfStatement(line_, comment=comment))
       
     } else  {
-      statements <- statements %>% add(UnknownStatement(line, comment=comment))
+      statements <- statements %>% add(UnknownStatement(line_, comment=comment))
     }
   }
   return(statements)

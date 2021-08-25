@@ -25,7 +25,6 @@ rxodeNonRegPath <- function(regFilename) {
   return(paste0(testFolder, "non_regression/rxode/", regFilename, ".txt"))
 }
 
-
 campsisNonRegTest <- function(model, regFilename) {
   if (overwriteNonRegressionFiles) {
     model %>% write(file=campsisNonRegPath(regFilename))

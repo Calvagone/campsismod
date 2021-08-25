@@ -38,3 +38,27 @@ UnknownStatement <- function(line, comment=as.character(NA)) {
 setMethod("getName", signature = c("unknown_statement"), definition = function(x) {
   return(as.character(NA)) # unknown statement non-identifiable 
 })
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("unknown_statement"), definition=function(object, ...) {
+  args <- list(...)
+  dest <- processExtraArg(args=args, name="dest", default="campsis")
+  show <- processExtraArg(args=args, name="show", default=FALSE)
+
+  if (dest=="campsis") {
+    if (show) {
+      retValue <- paste0("[UNKNOWN STATEMENT] ", object@line)
+    } else {
+      retValue <- object@line
+    }
+  } else if (dest=="RxODE" || dest=="mrgsolve") {
+    retValue <- object@line
+  } else {
+    UnsupportedDestException()
+  }
+  return(retValue %>% appendComment(object, dest))
+})
