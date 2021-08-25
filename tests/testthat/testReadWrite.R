@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test read/write methods on PMX model")
 
-testFolder <<- "C:/prj/campsismod/tests/testthat/"
+testFolder <<- ""
 
 advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))

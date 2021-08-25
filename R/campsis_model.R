@@ -1,4 +1,8 @@
 
+#_______________________________________________________________________________
+#----                         campsis_model class                           ----
+#_______________________________________________________________________________
+
 #' CAMPSIS model class.
 #' 
 #' @export
@@ -247,11 +251,16 @@ read.campsis <- function(file) {
     }
   }
   
+  # Construct CAMPSIS model
   records <- read.model(file=modelPath)
   parameters <- read.allparameters(folder=folder)
-  
   model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
-  return(model %>% updateCompartments())
+  model <- model %>% updateCompartments()
+  
+  # Validate the whole model
+  validObject(model, complete=TRUE)
+  
+  return(model)
 }
 
 

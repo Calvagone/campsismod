@@ -1,10 +1,26 @@
+#_______________________________________________________________________________
+#----                         code_records class                            ----
+#_______________________________________________________________________________
+
+checkCodeRecords <- function(object) {
+  hasUnknownStatements <-
+    object@list %>% purrr::map_lgl(~.x@statements@list %>%
+                                     purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()) %>% any()
+  if (hasUnknownStatements) {
+    warning(
+      "Model code contains unknown statements. Conversion to RxODE and mrgsolve may lead to errors."
+    )
+  }
+  return(TRUE)
+}
 
 setClass(
   "code_records",
   representation(
   ),
   contains = "pmx_list",
-  prototype = prototype(type="code_record")
+  prototype = prototype(type="code_record"),
+  validity = checkCodeRecords
 )
 
 #' 

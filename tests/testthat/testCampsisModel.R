@@ -130,3 +130,10 @@ test_that("add effect compartment model to PK model using add method", {
   # spaghettiPlot(results, "A_EFFECT")
 })
 
+test_that("Valid object method works depending on complete argument", {
+  model <- getNONMEMModelTemplate(4,4)
+  model@parameters@list[[1]]@index <- c(1,1) %>% as.integer()
+  
+  expect_true(validObject(model))
+  expect_error(validObject(model, complete=TRUE))
+})
