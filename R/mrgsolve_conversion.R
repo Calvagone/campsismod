@@ -124,11 +124,14 @@ mrgsolveOde <- function(model) {
 #' Get the TABLE block for mrgsolve.
 #'
 #' @param model CAMPSIS model
-#' @return TABLE block
+#' @return TABLE block if at least one line in error record, character(0) otherwise
 #' @export
 mrgsolveTable <- function(model) {
   records <- model@model
   errorRecord <- records %>% getByName("ERROR")
+  if (errorRecord %>% length() == 0) {
+    return(character(0))
+  }
   retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)
 }

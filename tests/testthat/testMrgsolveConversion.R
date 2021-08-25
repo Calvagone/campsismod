@@ -43,5 +43,9 @@ test_that("Export method works (2-cpt model, if-statements)", {
   mrgsolveNonRegTest(mrgmod, regFilename)
 })
 
-
-
+test_that("No table block exported if empty error block", {
+  model <- model_library$advan4_trans4
+  model <- model %>% delete(ErrorRecord())  
+  mrgmod <- model %>% export(dest="mrgsolve")
+  expect_equal(mrgmod@table, character(0))
+})
