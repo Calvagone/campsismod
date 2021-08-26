@@ -52,6 +52,17 @@ test_that("Sort methods", {
   expect_equal(model %>% sort(), expectedModel)
 })
 
+test_that("Create very basic model on the fly", {
+  
+  records <- CodeRecords()
+  records <- records %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
+  records <- records %>% add(Equation("THALF", "12"))
+  
+  expect_equal(records %>% getNames(), c("MAIN", "ODE"))
+  expect_equal((records %>% getByName("MAIN"))@statements %>% getByIndex(1), Equation("THALF", "12"))
+  expect_equal((records %>% getByName("ODE"))@statements %>% getByIndex(1), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
+})
+
 test_that("getCompartments method is working well", {
   
   model <- getNONMEMModelTemplate(1,1)

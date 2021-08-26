@@ -62,9 +62,20 @@ appendCodeRecords <- function(records1, records2) {
 
 #' @rdname add
 setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x) {
-  main <- object %>% getByName("MAIN")
-  main <- main %>% add(x)
-  object <- object %>% replace(main)
+  if (is(x, "ode")) {
+    recordName <- "ODE"
+  } else {
+    recordName <- "MAIN"
+  }
+  record <- object %>% getByName(recordName)
+  if (isS4(record)) {
+    record <- record %>% add(x)
+    object <- object %>% replace(record)
+  } else {
+    record <- new(paste0(recordName %>% tolower(), "_record"))
+    record <- record %>% add(x)
+    object <- object %>% add(record) %>% sort()
+  }
   return(object)
 })
 
