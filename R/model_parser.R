@@ -44,29 +44,6 @@ parseStatements <- function(code) {
   return(statements)
 }
 
-#' Parse properties and return CAMPSIS statements.
-#' 
-#' @param code character vector containing all properties (text form)
-#' @return a list of equations
-#' 
-parseProperties <- function(code) {
-  statements <- parseStatements(code)
-  odes <- statements@list %>% purrr::keep(~is(.x, "ode"))
-  if (odes %>% length() > 0) {
-    stop("ODE's detected in compartment property record. Please fix CAMPSIS model.")
-  }
-  unknowStatements <- statements@list %>% purrr::keep(~is(.x, "unknown_statement"))
-  if (unknowStatements %>% length() > 0) {
-    stop("Unrecognised statements in compartment property record. Please fix CAMPSIS model.")
-  }
-  ifStatements <- statements@list %>% purrr::keep(~is(.x, "if_statement"))
-  if (ifStatements %>% length() > 0) {
-    stop("IF-statements in compartment property record are not supported. Please fix CAMPSIS model.")
-  }
-  statements@list <- statements@list %>% purrr::keep(~is(.x, "equation"))
-  return(statements)
-}
-
 #' Parse IF-statement.
 #' Assumption: isIfStatement method already called and returned TRUE.
 #' 

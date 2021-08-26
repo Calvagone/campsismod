@@ -29,3 +29,13 @@ test_that("Warnings displayed when no theta, omega and sigma.csv files", {
   expect_equal(mrgmod@omega, character(0))
   expect_equal(mrgmod@sigma, character(0))
 })
+
+test_that("Error displayed if model file has ODE's in non ODE record", {
+  modelName <- "ode_in_non_ode_record"
+  expect_error(suppressWarnings(read.campsis(paste0(testFolder, "custom/", modelName))), regexp="ODE detected in non ODE record")
+})
+
+test_that("Error displayed if model file has an IF-statement in a properties record", {
+  modelName <- "if_in_properties_record"
+  expect_error(suppressWarnings(read.campsis(paste0(testFolder, "custom/", modelName))), regexp="IF-statement detected in properties record")
+})

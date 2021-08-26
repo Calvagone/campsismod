@@ -185,10 +185,8 @@ addProperties <- function(compartments, records, name, init) {
   if (record %>% length() == 0) {
     return(compartments)
   }
-  for (equation in record@statements@list) {
-    if (!is(equation, "equation")) {
-      stop("Properties record may only contain equations at this stage")
-    }
+  # Filter on equations (line breaks and comments are accepted in properties record)
+  for (equation in record@statements@list %>% purrr::keep(~is(.x, "equation"))) {
     cmtName <- equation@lhs
     compartment <- compartments %>% getByName(cmtName)
     if (length(compartment) == 0) {
@@ -266,7 +264,10 @@ addContentToRecord <- function(record, content) {
   content <- content %>% removeTrailingLineBreaks()
   
   if (is(record, "properties_record")) {
-    record@statements <- parseProperties(content)
+    record@statements <- parseStatements(content)
+    # Because properties records are transient and will not be part of the final model
+    # We validate here the content
+    validObject(record, complete=TRUE)
   } else if (is(record, "statements_record")) {
     record@statements <- parseStatements(content)
   } else {

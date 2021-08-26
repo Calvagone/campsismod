@@ -3,7 +3,11 @@
 #_______________________________________________________________________________
 
 validatePmxList <- function(object) {
-  return(expectOneForAll(object, c("type")))
+  check <- expectOne(object, "type")
+  for (elem in object@list) {
+    validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
+  }
+  return(check)
 }
 
 #' 
