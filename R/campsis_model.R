@@ -46,6 +46,9 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
 
 #' @rdname add
 setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
+  if (is(x, "ode")) {
+    object@compartments <- object@compartments %>% addODECompartment(ode=x)
+  }
   object@model <- object@model %>% add(x)
   return(object)
 })

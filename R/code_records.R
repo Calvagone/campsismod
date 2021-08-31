@@ -150,6 +150,31 @@ setMethod("delete", signature=c("code_records", "model_statement"), definition=f
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
+#' Add ODE compartment to comparments object.
+#'
+#' @param compartments compartments object
+#' @param ode ODE
+#' @return a compartments object
+#' 
+addODECompartment <- function(compartments, ode) {
+  if (!is(ode, "ode")) {
+    stop("ode is not an ODE")
+  }
+  name <- ode@lhs
+  cmtIndex <- compartments %>% length() + 1
+  if (startsWith(name, prefix="A_")) {
+    name <- gsub("^A_", "", name)
+    if (name == as.character(cmtIndex)) {
+      name <- NA
+    }
+  } else {
+    stop(paste0("Compartment ", name, " does not start with 'A_'"))
+  }
+  compartment <- Compartment(index=cmtIndex, name=name)
+  compartments <- compartments %>% add(compartment)
+  return(compartments)
+}
+
 #' Detect all compartments names from the code records.
 #' Only for model instantiation. Not exported.
 #'
@@ -163,21 +188,9 @@ getCompartments <- function(records) {
   if (odeRecord %>% length() == 0) {
     return(compartments)
   }
-  odeCounter <- 0
   for (statement in odeRecord@statements@list) {
     if (is(statement, "ode")) {
-      odeCounter <- odeCounter + 1
-      name <- statement@lhs
-      if (startsWith(name, prefix="A_")) {
-        name <- gsub("^A_", "", name)
-        if (name == as.character(odeCounter)) {
-          name <- NA
-        }
-      } else {
-        stop(paste0("Compartment ", name, " does not start with 'A_'"))
-      }
-      compartment <- Compartment(index=odeCounter, name=name)
-      compartments <- compartments %>% add(compartment)
+      compartments <- compartments %>% addODECompartment(ode=statement)
     }
   }
   return(compartments)

@@ -107,18 +107,15 @@ test_that("add effect compartment model to PK model using add method", {
   pk <- getNONMEMModelTemplate(4,4)
   pk <- pk %>% add(Bioavailability(1, "0.75"))
   
-  pd <- new("campsis_model")
+  pd <- new("campsis_model") %>%
+    add(Equation("KE0", "THETA_KE0*exp(ETA_KE0)")) %>%
+    add(Ode("A_EFFECT", "KE0*(A_CENTRAL/S2 - A_EFFECT)"))
   
-  pd_main <- MainRecord() %>% 
-    addEquation("KE0", "THETA_KE0*exp(ETA_KE0)")
+  expect_equal(pd@compartments %>% length(), 1)
   
-  pd_ode <- OdeRecord() %>% 
-    addEquation("d/dt(A_EFFECT)", "KE0*(A_CENTRAL/S2 - A_EFFECT)")
-  
-  pd <- pd %>% add(pd_main) %>% add(pd_ode)
   pd <- pd %>% add(Theta("KE0", value=0.5))
   pd <- pd %>% add(Omega("KE0", value=0.3, type="sd"))
-  pd <- pd %>% updateCompartments()
+  
   pd <- pd %>% add(InitialCondition(1, "0.40"))
   pd <- pd %>% add(Bioavailability(1, "0.50"))
   
