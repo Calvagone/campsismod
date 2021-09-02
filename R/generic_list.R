@@ -32,7 +32,7 @@ setClass(
 #' 
 #' @param object list object
 #' @param x element to add
-#' @param ... extra arguments
+#' @param ... extra arguments, unused by this generic list
 #' @return object
 #' @export
 #' @rdname add
@@ -41,11 +41,14 @@ add <- function(object, x, ...) {
 }
 
 setGeneric("add", function(object, x, ...) {
+  # if (is.null(pos)) {
+  #   pos <- UndefinedPosition()
+  # }
   standardGeneric("add")
 })
 
 #' @rdname add
-setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
+setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
   if (validObject(x)) {
     if (!is(x, object@type)) {
       stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
@@ -54,7 +57,20 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
       stop(paste0("Element '", x %>% getName(), "' is already present."))
     
     } else {
-      object@list <- c(object@list, x)
+      if (is.null(pos)) {
+        pos <- Position(object %>% length(), after=TRUE)
+      }
+      if (pos@by_index) {
+        index <- pos@index
+      } else if (pos@by_element) {
+        index <- object %>% indexOf(pos@element)
+      } else {
+        stop("Element position can only by index or by position")
+      }
+      if (!pos@after) {
+        index <- index - 1
+      }
+      object@list <- object@list %>% append(x, after=index)
     }
   }
   return(object)

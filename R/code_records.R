@@ -60,21 +60,49 @@ appendCodeRecords <- function(records1, records2) {
   return(records1 %>% sort())
 }
 
-#' @rdname add
-setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x) {
-  if (is(x, "ode")) {
-    recordName <- "ODE"
-  } else {
-    recordName <- "MAIN"
+findRecordByPosition <- function(object, pos) {
+  if (is.null(pos)) {
+    stop("pos is null")
   }
-  record <- object %>% getByName(recordName)
-  if (isS4(record)) {
-    record <- record %>% add(x)
-    object <- object %>% replace(record)
+  for (record in object@list) {
+    if (pos@by_index) {
+      # Return first record
+      return(record)
+    } else if (pos@by_element) {
+      # Return record if contains element
+      if (record %>% contains(pos@element)) {
+        return(record)
+      }
+    } else {
+      stop("pos either by index or by element")
+    }
+  }
+  stop("No code record found for specified position 'pos'")
+}
+
+#' @rdname add
+setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x, pos=NULL) {
+  if (is.null(pos)) {
+    if (is(x, "ode")) {
+      recordName <- "ODE"
+    } else {
+      recordName <- "MAIN"
+    }
+    record <- object %>% getByName(recordName)
+    if (isS4(record)) {
+      # Existing record
+      record <- record %>% add(x)
+      object <- object %>% replace(record)
+    } else {
+      # New record
+      record <- new(paste0(recordName %>% tolower(), "_record"))
+      record <- record %>% add(x)
+      object <- object %>% add(record) %>% sort()
+    }
   } else {
-    record <- new(paste0(recordName %>% tolower(), "_record"))
-    record <- record %>% add(x)
-    object <- object %>% add(record) %>% sort()
+    record <- object %>% findRecordByPosition(pos)
+    record <- record %>% add(x, pos=pos)
+    object <- object %>% replace(record)
   }
   return(object)
 })

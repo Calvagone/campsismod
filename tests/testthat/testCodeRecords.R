@@ -80,7 +80,7 @@ test_that("removeEquation method is working well", {
   model <- getNONMEMModelTemplate(1,1)
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
   
-  model <- model %>% removeEquation("S1")
+  model <- model %>% delete(Equation("S1"))
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 2) # 2 equations: K, V
 })
 
@@ -97,24 +97,21 @@ test_that("addEquation method is working well on code record", {
   
   model <- getNONMEMModelTemplate(1,1)
   
-  model1 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after="V")
-  model2 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", before="S1")
+  model1 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("V")))
+  model2 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("S1"), after=FALSE))
   
   expect_equal(model1, model2)
   
-  model3 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after="S1")
-  model4 <- model %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)") # Will be appended to MAIN block
+  model3 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("S1")))
+  model4 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)")) # Will be appended to MAIN block
   
   expect_equal(model3, model4)
   
-  # By number
-  pk5 <- model@model %>% getByName("MAIN")
-  pk5 <- pk5 %>% addEquation("V2", rhs="THETA_V2*exp(ETA_V2)", after=2)
+  # By index
+  model5 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(2))
+  model6 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(3, after=FALSE))
   
-  pk6 <- model@model %>% getByName("MAIN")
-  pk6 <- pk6 %>% addEquation("V2",  rhs="THETA_V2*exp(ETA_V2)", before=3)
-  
-  expect_equal(pk5, pk6)
+  expect_equal(model5, model6)
 })
 
 test_that("getEquation method is working well", {

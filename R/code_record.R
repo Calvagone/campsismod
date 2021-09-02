@@ -234,8 +234,8 @@ ErrorRecord <- function(code=character()) {
 #_______________________________________________________________________________
 
 #' @rdname add
-setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x) {
-  object@statements <- object@statements %>% add(x)
+setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x, pos=NULL) {
+  object@statements <- object@statements %>% add(x, pos=pos)
   return(object)
 })
 

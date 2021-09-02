@@ -8,6 +8,7 @@ Collate:
     'check.R'
     'generic.R'
     'generic_element_list.R'
+    'generic_element_position.R'
     'generic_list.R'
     'model_statement.R'
     'model_statements.R'

@@ -24,7 +24,7 @@
 \usage{
 add(object, x, ...)
 
-\S4method{add}{pmx_list,pmx_element}(object, x)
+\S4method{add}{pmx_list,pmx_element}(object, x, pos = NULL)
 
 \S4method{add}{pmx_list,pmx_list}(object, x)
 
@@ -40,13 +40,13 @@ add(object, x, ...)
 
 \S4method{add}{parameters,parameters}(object, x)
 
-\S4method{add}{code_record,model_statement}(object, x)
+\S4method{add}{code_record,model_statement}(object, x, pos = NULL)
 
 \S4method{add}{code_record,code_record}(object, x)
 
 \S4method{add}{code_records,code_records}(object, x)
 
-\S4method{add}{code_records,model_statement}(object, x)
+\S4method{add}{code_records,model_statement}(object, x, pos = NULL)
 
 \S4method{add}{campsis_model,compartment_property}(object, x)
 
@@ -54,7 +54,7 @@ add(object, x, ...)
 
 \S4method{add}{campsis_model,code_record}(object, x)
 
-\S4method{add}{campsis_model,model_statement}(object, x)
+\S4method{add}{campsis_model,model_statement}(object, x, pos = NULL)
 
 \S4method{add}{campsis_model,campsis_model}(object, x)
 }
@@ -63,7 +63,7 @@ add(object, x, ...)
 
 \item{x}{element to add}
 
-\item{...}{extra arguments}
+\item{...}{extra arguments, unused by this generic list}
 }
 \value{
 object
