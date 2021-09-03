@@ -53,7 +53,8 @@ test_that("replace method works well", {
   
   # Replace a model statement
   model <- model %>% replace(Equation("S2", "V2*1000"))
-  expect_equal((model %>% getEquation("S2"))@rhs, "V2*1000")
+  equation <- model %>% find(Equation("S2"))
+  expect_equal(equation@rhs, "V2*1000")
   
   # Add and replace a compartment property
   model <- model %>% add(Bioavailability(1, "0.75"))

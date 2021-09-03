@@ -78,16 +78,6 @@ appendModel <- function(model1, model2) {
 }
 
 #_______________________________________________________________________________
-#----                            addEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname addEquation
-setMethod("addEquation", signature=c("campsis_model", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
-  object@model <- object@model %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________
 
@@ -99,22 +89,22 @@ setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(
   for (cmtIndex in seq_len(numberOfCmts)) {
     # Search for bioavailability
     fVar <- paste0("F", cmtIndex)
-    if (main %>% hasEquation(fVar)) {
+    if (main %>% find(Equation(fVar)) %>% length() > 0) {
       object <- object %>% add(Bioavailability(cmtIndex, rhs=fVar))
     }
     # Search for infusion duration
     dVar <- paste0("D", cmtIndex)
-    if (main %>% hasEquation(dVar)) {
+    if (main %>% find(Equation(dVar)) %>% length() > 0) {
       object <- object %>% add(InfusionDuration(cmtIndex, rhs=dVar))
     }
     # Search for infusion rate
     rVar <- paste0("R", cmtIndex)
-    if (main %>% hasEquation(rVar)) {
+    if (main %>% find(Equation(rVar)) %>% length() > 0) {
       object <- object %>% add(InfusionRate(cmtIndex, rhs=rVar))
     }
     # Search for lag time
     alagVar <- paste0("ALAG", cmtIndex)
-    if (main %>% hasEquation(paste0("ALAG", cmtIndex))) {
+    if (main %>% find(Equation(alagVar)) %>% length() > 0) {
       object <- object %>% add(LagTime(cmtIndex, rhs=alagVar))
     }
   }
@@ -233,24 +223,6 @@ setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), defi
 })
 
 #_______________________________________________________________________________
-#----                              getEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname getEquation
-setMethod("getEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
-  return(object@model %>% getEquation(lhs))
-})
-
-#_______________________________________________________________________________
-#----                            hasEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname hasEquation
-setMethod("hasEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
-  return(object@model %>% hasEquation(lhs))
-})
-
-#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
@@ -333,16 +305,6 @@ updateCompartments <- function(model) {
 }
 
 #_______________________________________________________________________________
-#----                           removeEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname removeEquation
-setMethod("removeEquation", signature=c("campsis_model", "character"), definition=function(object, lhs) {
-  object@model <- object@model %>% removeEquation(lhs)
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                               replace                                 ----
 #_______________________________________________________________________________
 
@@ -367,16 +329,6 @@ setMethod("replace", signature=c("campsis_model", "code_record"), definition=fun
 #' @rdname replace
 setMethod("replace", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
   object@model <- object@model %>% replace(x)
-  return(object)
-})
-
-#_______________________________________________________________________________
-#----                           replaceEquation                             ----
-#_______________________________________________________________________________
-
-#' @rdname replaceEquation
-setMethod("replaceEquation", signature=c("campsis_model", "character", "character"), definition=function(object, lhs, rhs) {
-  object@model <- object@model %>% replaceEquation(lhs, rhs)
   return(object)
 })
 

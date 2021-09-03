@@ -68,15 +68,6 @@ appendCompartments <- function(compartments1, compartments2) {
 }
 
 #_______________________________________________________________________________
-#----                               contains                                ----
-#_______________________________________________________________________________
-
-#' @rdname contains
-setMethod("contains", signature=c("compartments", "compartment_property"), definition=function(object, x) {
-  return(object@properties %>% contains(x))
-})
-
-#_______________________________________________________________________________
 #----                               delete                                  ----
 #_______________________________________________________________________________
 
@@ -84,6 +75,15 @@ setMethod("contains", signature=c("compartments", "compartment_property"), defin
 setMethod("delete", signature=c("compartments", "compartment_property"), definition=function(object, x) {
   object@properties <- object@properties %>% delete(x)
   return(object)
+})
+
+#_______________________________________________________________________________
+#----                                 find                                  ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  return(object@properties %>% find(x))
 })
 
 #_______________________________________________________________________________

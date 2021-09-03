@@ -109,32 +109,6 @@ setMethod("add", signature=c("code_records", "model_statement"), definition=func
 })
 
 #_______________________________________________________________________________
-#----                            addEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname addEquation
-setMethod("addEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
-  
-  if (is.null(before) && is.null(after)) {
-    # Default use MAIN record and append
-    mainRecord <- object %>% getByName("MAIN")
-    mainRecord <- mainRecord %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
-    object <- object %>% replace(mainRecord)
-  } else {
-    for(record in object@list) {
-      beforeOrAfter <- ifelse(is.null(before), after, before)
-      if (record %>% hasEquation(beforeOrAfter)) {
-        record <- record %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
-        object <- object %>% replace(record)
-        break
-      }
-    }
-  }
-  
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                         addPropertiesRecords                           ----
 #_______________________________________________________________________________
 
@@ -271,41 +245,12 @@ addProperties <- function(compartments, records, name, init) {
 }
 
 #_______________________________________________________________________________
-#----                              getEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname getEquation
-setMethod("getEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
-  for (record in object@list) {
-    equation <- record %>% getEquation(lhs)
-    if (!is.null(equation)) {
-      return(equation)
-    }
-  }
-  return(NULL)
-})
-
-#_______________________________________________________________________________
 #----                             getRecordNames                            ----
 #_______________________________________________________________________________
 
 getRecordNames <- function() {
   return(c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR"))
 }
-
-#_______________________________________________________________________________
-#----                            hasEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname hasEquation
-setMethod("hasEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
-  for (record in object@list) {
-    if (record %>% hasEquation(lhs=lhs)) {
-      return(TRUE)
-    }
-  }
-  return(FALSE)
-})
 
 #_______________________________________________________________________________
 #----                                read.model                             ----
@@ -393,19 +338,6 @@ getRecordDelimiter <- function(line) {
 }
 
 #_______________________________________________________________________________
-#----                           removeEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname removeEquation
-setMethod("removeEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
-  copy <- object
-  for (record in object@list) {
-    copy <- copy %>% replace(record %>% removeEquation(lhs))
-  }
-  return(copy)
-})
-
-#_______________________________________________________________________________
 #----                               replace                                 ----
 #_______________________________________________________________________________
 
@@ -416,19 +348,6 @@ setMethod("replace", signature=c("code_records", "model_statement"), definition=
     if (record %>% find(x) %>% length() > 0) {
       copy <- copy %>% replace(record %>% replace(x))
     }
-  }
-  return(copy)
-})
-
-#_______________________________________________________________________________
-#----                           replaceEquation                             ----
-#_______________________________________________________________________________
-
-#' @rdname replaceEquation
-setMethod("replaceEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs) {
-  copy <- object
-  for (record in object@list) {
-    copy <- copy %>% replace(record %>% replaceEquation(lhs, rhs))
   }
   return(copy)
 })

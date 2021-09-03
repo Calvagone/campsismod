@@ -247,51 +247,6 @@ setMethod("add", signature=c("code_record", "code_record"), definition=function(
 })
 
 #_______________________________________________________________________________
-#----                            addEquation                                ----
-#_______________________________________________________________________________
-
-#' 
-#' Get equation index.
-#' 
-#' @param object code record
-#' @param lhs left-hand-side variable to search for
-#' @return index in this record or -1 if not found 
-#' @export
-getEquationIndex <- function(object, lhs) {
-  index <- object@statements %>% indexOf(Equation(lhs, ""))
-  if (index %>% length() == 0) {
-    return(-1)
-  } else {
-    return(index)
-  }
-}
-
-#' @param before index or variable, may be used to insert an equation at a specific position, before this index (in record) or variable
-#' @param after index or variable, may be used to insert an equation at a specific position, after this index (in record) or variable
-#' @rdname addEquation
-setMethod("addEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
-  if (!is.null(before)) {
-    index <- ifelse(is.numeric(before), before, getEquationIndex(object, before)) - 1
-  } else if(!is.null(after)) {
-    index <- ifelse(is.numeric(after), after, getEquationIndex(object, after))
-  } else {
-    index <- NULL
-  }
-  if (isODE(paste0(lhs, "="))) {
-    eq <- Ode(extractTextBetweenBrackets(lhs), rhs)
-  } else {
-    eq <- Equation(lhs, rhs)
-  }
-  if (is.null(index)) {
-    object@statements@list <- object@statements@list %>% append(eq)
-  } else {
-    object@statements@list <- object@statements@list %>% append(eq, after=index)
-  }
-
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                               delete                                  ----
 #_______________________________________________________________________________
 
@@ -308,20 +263,6 @@ setMethod("delete", signature=c("statements_record", "model_statement"), definit
 #' @rdname find
 setMethod("find", signature=c("statements_record", "model_statement"), definition=function(object, x) {
   return(object@statements %>% find(x))
-})
-
-#_______________________________________________________________________________
-#----                              getEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname getEquation
-setMethod("getEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
-  index <- getEquationIndex(object, lhs)
-  if (index == -1) {
-    return(NULL)
-  } else {
-    return(object@statements %>% getByIndex(index))
-  }
 })
 
 #_______________________________________________________________________________
@@ -369,20 +310,6 @@ setMethod("getName", signature=c("error_record"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                            hasEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname hasEquation
-setMethod("hasEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
-  index <- getEquationIndex(object, lhs)
-  if (index == -1) {
-    return(FALSE)
-  } else {
-    return(TRUE)
-  }
-})
-
-#_______________________________________________________________________________
 #----                             length                                    ----
 #_______________________________________________________________________________
 
@@ -392,39 +319,12 @@ setMethod("length", signature=c("statements_record"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                           removeEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname removeEquation
-setMethod("removeEquation", signature=c("code_record", "character"), definition=function(object, lhs) {
-  index <- getEquationIndex(object, lhs)
-  if (index != -1) {
-    object@statements@list <- object@statements@list[-index]
-  }
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                               replace                                 ----
 #_______________________________________________________________________________
 
 #' @rdname replace
 setMethod("replace", signature=c("statements_record", "model_statement"), definition=function(object, x) {
   object@statements <- object@statements %>% replace(x)
-  return(object)
-})
-
-#_______________________________________________________________________________
-#----                           replaceEquation                             ----
-#_______________________________________________________________________________
-
-#' @rdname replaceEquation
-setMethod("replaceEquation", signature=c("code_record", "character", "character"), definition=function(object, lhs, rhs) {
-  index <- getEquationIndex(object, lhs)
-  if (index != -1) {
-    eq <- Equation(lhs, rhs)
-    object@statements <- object@statements %>% replace(eq)
-  }
   return(object)
 })
 

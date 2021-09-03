@@ -34,7 +34,7 @@ test_that("Export method works (2-cpt model, if-statements)", {
   regFilename = "2_cpt_model_abs_if_statements"
   
   model <- model_library$advan4_trans4
-  model <- model %>% removeEquation("KA")
+  model <- model %>% delete(Equation("KA"))
   model <- model %>% add(Equation("KA", "0"))
   model <- model %>% add(IfStatement("OCC==1", Equation("KA", "THETA_KA*1.5*exp(ETA_KA)")))
   model <- model %>% add(IfStatement("OCC==2", Equation("KA", "THETA_KA*0.5*exp(ETA_KA)")))

@@ -1,26 +1,5 @@
 
 #_______________________________________________________________________________
-#----                            addEquation                                ----
-#_______________________________________________________________________________
-
-#' Add equation.
-#' 
-#' @param object object containing code record(s)
-#' @param lhs left-hand-side variable
-#' @param rhs right-hand-side expression
-#' @param ... extra arguments like before or after
-#' @return updated object
-#' @export
-#' @rdname addEquation
-addEquation <- function(object, lhs, rhs, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("addEquation", function(object, lhs, rhs, ...) {
-  standardGeneric("addEquation")
-})
-
-#_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________
 
@@ -114,44 +93,6 @@ setGeneric("getCompartmentIndex", function(object, name) {
 })
 
 #_______________________________________________________________________________
-#----                              getEquation                              ----
-#_______________________________________________________________________________
-
-#' Get equation from code record(s).
-#' 
-#' @param object object containing code record(s)
-#' @param lhs left-hand-side variable
-#' @return equation, character or NULL if not found
-#' @export
-#' @rdname getEquation
-getEquation <- function(object, lhs) {
-  stop("No default function is provided")
-}
-
-setGeneric("getEquation", function(object, lhs) {
-  standardGeneric("getEquation")
-})
-
-#_______________________________________________________________________________
-#----                            hasEquation                                ----
-#_______________________________________________________________________________
-
-#' Has equation.
-#' 
-#' @param object object containing code record(s)
-#' @param lhs left-hand-side variable to search 
-#' @return TRUE or FALSE
-#' @export
-#' @rdname hasEquation
-hasEquation <- function(object, lhs) {
-  stop("No default function is provided")
-}
-
-setGeneric("hasEquation", function(object, lhs) {
-  standardGeneric("hasEquation")
-})
-
-#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
@@ -166,45 +107,6 @@ read <- function(file, ...) {
 
 setGeneric("read", function(file, ...) {
   standardGeneric("read")
-})
-
-#_______________________________________________________________________________
-#----                           removeEquation                              ----
-#_______________________________________________________________________________
-
-#' Remove equation from code record.
-#' 
-#' @param object object containing code record(s)
-#' @param lhs left-hand-side variable
-#' @return updated code record
-#' @export
-#' @rdname removeEquation
-removeEquation <- function(object, lhs) {
-  stop("No default function is provided")
-}
-
-setGeneric("removeEquation", function(object, lhs) {
-  standardGeneric("removeEquation")
-})
-
-#_______________________________________________________________________________
-#----                           replaceEquation                             ----
-#_______________________________________________________________________________
-
-#' Replace equation in code records.
-#' 
-#' @param object object containing code records
-#' @param lhs left-hand-side variable
-#' @param rhs right-hand-side expression
-#' @return updated code records
-#' @export
-#' @rdname replaceEquation
-replaceEquation <- function(object, lhs, rhs) {
-  stop("No default function is provided")
-}
-
-setGeneric("replaceEquation", function(object, lhs, rhs) {
-  standardGeneric("replaceEquation")
 })
 
 #_______________________________________________________________________________
