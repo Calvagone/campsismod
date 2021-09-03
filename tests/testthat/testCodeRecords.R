@@ -5,20 +5,20 @@ context("Test all methods from the code records class")
 
 testFolder <<- ""
 
-test_that("Add and get methods", {
+test_that("Check records can be added correctly into the CAMPSIS model", {
   
-  model <- CodeRecords()
-  model <- model %>% add(MainRecord(code=""))
-  model <- model %>% add(ErrorRecord(code=""))
+  model <- CampsisModel()
+  model <- model %>% add(MainRecord())
+  model <- model %>% add(ErrorRecord())
   
-  expect_true(model %>% getByName("MAIN") %>% length() > 0)
-  expect_true(model %>% getByName("ERROR") %>% length() > 0)
-  expect_true(model %>% getByName("ODE") %>% length() == 0)
+  expect_true(!is.null(model %>% find(MainRecord())))
+  expect_true(!is.null(model %>% find(ErrorRecord())))
+  expect_true(is.null(model %>% find(OdeRecord())))
 })
 
-test_that("Add not record objects", {
-  model <- CodeRecords()
-  expect_error(model %>% add(Theta(index=1))) # Element 'THETA_1' does not extend type 'code_record'.
+test_that("Check non-record items can't be added to a list of code records", {
+  records <- CodeRecords()
+  expect_error(records %>% add(Theta(index=1)), regexp="Element 'THETA_1' does not extend type 'code_record'")
 })
 
 test_that("Write/Read methods", {
@@ -39,12 +39,12 @@ test_that("Write/Read methods", {
 
 test_that("Sort methods", {
   
-  model <- CodeRecords()
+  model <- CampsisModel()
   model <- model %>% add(OdeRecord())
   model <- model %>% add(ErrorRecord())
   model <- model %>% add(MainRecord())
   
-  expectedModel <- CodeRecords()
+  expectedModel <- CampsisModel()
   expectedModel <- expectedModel %>% add(MainRecord())
   expectedModel <- expectedModel %>% add(OdeRecord())
   expectedModel <- expectedModel %>% add(ErrorRecord())
@@ -53,19 +53,22 @@ test_that("Sort methods", {
 })
 
 test_that("Create very basic model on the fly", {
+  model <- CampsisModel()
+  model <- model %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
+  model <- model %>% add(Equation("THALF", "12"))
   
-  records <- CodeRecords()
-  records <- records %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
-  records <- records %>% add(Equation("THALF", "12"))
+  expect_equal(model@model %>% getNames(), c("MAIN", "ODE"))
   
-  expect_equal(records %>% getNames(), c("MAIN", "ODE"))
-  expect_equal((records %>% getByName("MAIN"))@statements %>% getByIndex(1), Equation("THALF", "12"))
-  expect_equal((records %>% getByName("ODE"))@statements %>% getByIndex(1), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
+  # Check THALF can be found in MAIN code record
+  expect_equal(model %>% find(MainRecord()) %>% find(Equation("THALF")), Equation("THALF", "12"))
+  
+  # Check A_CENTRAL ODE can be found in ODE record
+  expect_equal(model %>% find(OdeRecord()) %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
 })
 
 test_that("getCompartments method is working well", {
   
-  model <- getNONMEMModelTemplate(1,1)
+  model <- model_library$advan1_trans1
   compartments <- model@compartments
   compartment1 <- compartments %>% getByIndex(Compartment(index=1))
   compartment2 <- compartments %>% getByIndex(Compartment(index=2))
@@ -77,7 +80,7 @@ test_that("getCompartments method is working well", {
 
 test_that("removeEquation method is working well", {
   
-  model <- getNONMEMModelTemplate(1,1)
+  model <- model_library$advan1_trans1
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% delete(Equation("S1"))
@@ -86,7 +89,7 @@ test_that("removeEquation method is working well", {
 
 test_that("replaceEquation method is working well", {
   
-  model <- getNONMEMModelTemplate(1,1)
+  model <- model_library$advan1_trans1
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% replace(Equation("S1", "V/1000"))
@@ -96,7 +99,7 @@ test_that("replaceEquation method is working well", {
 
 test_that("addEquation method is working well on code record", {
   
-  model <- getNONMEMModelTemplate(1,1)
+  model <- model_library$advan1_trans1
   
   model1 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("V")))
   model2 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("S1"), after=FALSE))
@@ -117,18 +120,18 @@ test_that("addEquation method is working well on code record", {
 
 test_that("getEquation method is working well", {
   
-  model <- getNONMEMModelTemplate(1,1)
+  model <- model_library$advan1_trans1
   equation <- model %>% find(Equation("V"))
   expect_equal(equation@rhs, "THETA_V*exp(ETA_V)")
   
   equation <- model %>% find(Equation("V2"))
-  expect_equal(equation, list())
+  expect_true(is.null(equation))
 })
 
 test_that("hasEquation method is working well", {
   
-  model <- getNONMEMModelTemplate(1,1)
-  expect_true(model %>% find(Equation("V")) %>% length() > 0)
-  expect_false(model %>% find(Equation("V2")) %>% length() > 0)
+  model <- model_library$advan1_trans1
+  expect_true(!is.null(model %>% find(Equation("V"))))
+  expect_true(is.null(model %>% find(Equation("V2"))))
 })
 

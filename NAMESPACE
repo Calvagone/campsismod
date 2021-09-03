@@ -2,6 +2,7 @@
 
 export("%>%")
 export(Bioavailability)
+export(CampsisModel)
 export(CodeRecords)
 export(Comment)
 export(Compartment)

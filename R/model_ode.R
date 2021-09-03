@@ -27,7 +27,7 @@ setClass(
 #' @param comment comment if any, single character string
 #' @return an ODE
 #' @export
-Ode <- function(lhs, rhs, comment=as.character(NA)) {
+Ode <- function(lhs, rhs="", comment=as.character(NA)) {
   return(new("ode", lhs=lhs, rhs=rhs, comment=comment))
 }
 

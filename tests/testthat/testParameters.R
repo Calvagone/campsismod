@@ -80,7 +80,7 @@ test_that("Sort method", {
 
 test_that("Disable method (IIV/RUV)", {
   
-  model <- getNONMEMModelTemplate(4,4)
+  model <- model_library$advan4_trans4
   
   model <- model %>% disable("IIV")
   expect_equal((model@parameters %>% getByName("OMEGA_KA"))@value, 0)

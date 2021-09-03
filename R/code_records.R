@@ -142,7 +142,7 @@ addPropertiesRecords <- function(records, model) {
 setMethod("delete", signature=c("code_records", "model_statement"), definition=function(object, x) {
   copy <- object
   for (record in object@list) {
-    if (record %>% find(x) %>% length() > 0) {
+    if (!is.null(record %>% find(x))) {
       copy <- copy %>% replace(record %>% delete(x))
     }
   }
@@ -158,11 +158,11 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
   copy <- object
   for (record in object@list) {
     statement <- record %>% find(x)
-    if (statement %>% length() > 0) {
+    if (!is.null(statement)) {
       return(statement)
     }
   }
-  return(list())
+  return(NULL)
 })
 
 #_______________________________________________________________________________

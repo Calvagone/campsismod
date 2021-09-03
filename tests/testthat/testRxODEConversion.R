@@ -10,7 +10,7 @@ source(paste0(testFolder, "testUtils.R"))
 
 test_that("Export method works (2-cpt model, comments)", {
   regFilename = "2_cpt_model_abs_comments"
-  model <- getNONMEMModelTemplate(4,4)
+  model <- model_library$advan4_trans4
   
   # Add some comments/line breaks programmatically
   main <- model@model %>% getByName("MAIN")

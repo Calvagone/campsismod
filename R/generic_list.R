@@ -160,10 +160,11 @@ setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function
 #_______________________________________________________________________________
 
 #' Get an element from a list by name.
+#' Never return more than 1 element.
 #' 
 #' @param object list object
 #' @param name element name to search for
-#' @return index of this element
+#' @return the element that was found or NULL if no element was found with the same name
 #' @export
 #' @rdname getByName
 getByName <- function(object, name) {
@@ -179,11 +180,7 @@ setMethod("getByName", signature=c("pmx_list", "character"), definition=function
   if (is.na(name)) {
     return(NULL)
   }
-  element <- object@list %>% purrr::keep(~(!is.na(.x %>% getName()) && .x %>% getName()==name))
-  if (length(element) > 0) {
-    element <- element[[1]]
-  }
-  return(element)
+  return(object@list %>% purrr::detect(~(!is.na(.x %>% getName()) && .x %>% getName()==name)))
 })
 
 #_______________________________________________________________________________
@@ -207,7 +204,7 @@ setGeneric("contains", function(object, x) {
 
 #' @rdname contains
 setMethod("contains", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  return(object %>% find(x) %>% length() != 0)
+  return(!is.null(object %>% find(x)))
 })
 
 #_______________________________________________________________________________
@@ -267,7 +264,7 @@ setMethod("delete", signature=c("pmx_list", "integer"), definition=function(obje
 #' 
 #' @param object list object
 #' @param x element to find, only key slots need to be filled in
-#' @return logical value, TRUE or FALSE
+#' @return the element from the list that has same name as x, or NULL if no element was found
 #' @export
 #' @rdname find
 find <- function(object, x) {

@@ -15,6 +15,14 @@ setClass(
   )
 )
 
+#' Create a new CAMPSIS model.
+#' 
+#' @return a CAMPSIS model, empty
+#' @export
+CampsisModel <- function() {
+  return(new("campsis_model"))
+}
+
 #_______________________________________________________________________________
 #----                                add                                    ----
 #_______________________________________________________________________________

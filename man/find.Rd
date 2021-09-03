@@ -37,7 +37,7 @@ find(object, x)
 \item{x}{element to find, only key slots need to be filled in}
 }
 \value{
-logical value, TRUE or FALSE
+the element from the list that has same name as x, or NULL if no element was found
 }
 \description{
 Find an element in list.

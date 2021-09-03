@@ -4,7 +4,7 @@
 \alias{Ode}
 \title{Create a new ordinary differential equation (ODE).}
 \usage{
-Ode(lhs, rhs, comment = as.character(NA))
+Ode(lhs, rhs = "", comment = as.character(NA))
 }
 \arguments{
 \item{lhs}{left-hand side variable corresponding to compartment name}
