@@ -44,6 +44,7 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
   return(object)
 })
 
+#' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x, pos=NULL) {
   if (is(x, "ode")) {
@@ -196,6 +197,30 @@ setMethod("export", signature=c("campsis_model", "character"), definition=functi
   } else {
     stop("Only RxODE and mrgsolve are supported for now")
   }
+})
+
+#_______________________________________________________________________________
+#----                                find                                   ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
+  return(object@compartments %>% find(x))
+})
+
+#' @rdname find
+setMethod("find", signature=c("campsis_model", "parameter"), definition=function(object, x) {
+  return(object@parameters %>% find(x))
+})
+
+#' @rdname find
+setMethod("find", signature=c("campsis_model", "code_record"), definition=function(object, x) {
+  return(object@model %>% find(x))
+})
+
+#' @rdname find
+setMethod("find", signature=c("campsis_model", "model_statement"), definition=function(object, x) {
+  return(object@model %>% find(x))
 })
 
 #_______________________________________________________________________________

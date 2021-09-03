@@ -70,7 +70,7 @@ findRecordByPosition <- function(object, pos) {
       return(record)
     } else if (pos@by_element) {
       # Return record if contains element
-      if (record %>% contains(pos@element)) {
+      if (record %>% find(pos@element) %>% length() > 0) {
         return(record)
       }
     } else {
@@ -80,6 +80,7 @@ findRecordByPosition <- function(object, pos) {
   stop("No code record found for specified position 'pos'")
 }
 
+#' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x, pos=NULL) {
   if (is.null(pos)) {
@@ -167,11 +168,27 @@ addPropertiesRecords <- function(records, model) {
 setMethod("delete", signature=c("code_records", "model_statement"), definition=function(object, x) {
   copy <- object
   for (record in object@list) {
-    if (record %>% contains(x)) {
+    if (record %>% find(x) %>% length() > 0) {
       copy <- copy %>% replace(record %>% delete(x))
     }
   }
   return(copy)
+})
+
+#_______________________________________________________________________________
+#----                                find                                   ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  copy <- object
+  for (record in object@list) {
+    statement <- record %>% find(x)
+    if (statement %>% length() > 0) {
+      return(statement)
+    }
+  }
+  return(list())
 })
 
 #_______________________________________________________________________________
@@ -396,7 +413,7 @@ setMethod("removeEquation", signature=c("code_records", "character"), definition
 setMethod("replace", signature=c("code_records", "model_statement"), definition=function(object, x) {
   copy <- object
   for (record in object@list) {
-    if (record %>% contains(x)) {
+    if (record %>% find(x) %>% length() > 0) {
       copy <- copy %>% replace(record %>% replace(x))
     }
   }

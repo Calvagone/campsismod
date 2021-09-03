@@ -47,6 +47,7 @@ setGeneric("add", function(object, x, ...) {
   standardGeneric("add")
 })
 
+#' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
   if (validObject(x)) {
@@ -206,7 +207,7 @@ setGeneric("contains", function(object, x) {
 
 #' @rdname contains
 setMethod("contains", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  return(object %>% getByName(x %>% getName()) %>% length() != 0)
+  return(object %>% find(x) %>% length() != 0)
 })
 
 #_______________________________________________________________________________
@@ -256,6 +257,30 @@ setMethod("delete", signature=c("pmx_list", "integer"), definition=function(obje
   } else {
     stop(paste("No element exists at index", x))
   }
+})
+
+#_______________________________________________________________________________
+#----                              find                                     ----
+#_______________________________________________________________________________
+
+#' Find an element in list.
+#' 
+#' @param object list object
+#' @param x element to find, only key slots need to be filled in
+#' @return logical value, TRUE or FALSE
+#' @export
+#' @rdname find
+find <- function(object, x) {
+  stop("No default function is provided")
+}
+
+setGeneric("find", function(object, x) {
+  standardGeneric("find")
+})
+
+#' @rdname find
+setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
+  return(object %>% getByName(x %>% getName()))
 })
 
 #_______________________________________________________________________________

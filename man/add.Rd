@@ -64,6 +64,8 @@ add(object, x, ...)
 \item{x}{element to add}
 
 \item{...}{extra arguments, unused by this generic list}
+
+\item{pos}{position where x needs to be added in list}
 }
 \value{
 object

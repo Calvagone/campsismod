@@ -233,6 +233,7 @@ ErrorRecord <- function(code=character()) {
 #----                                add                                    ----
 #_______________________________________________________________________________
 
+#' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x, pos=NULL) {
   object@statements <- object@statements %>% add(x, pos=pos)
@@ -291,15 +292,6 @@ setMethod("addEquation", signature=c("code_record", "character", "character"), d
 })
 
 #_______________________________________________________________________________
-#----                               contains                                ----
-#_______________________________________________________________________________
-
-#' @rdname contains
-setMethod("contains", signature=c("statements_record", "model_statement"), definition=function(object, x) {
-  return(object@statements %>% contains(x))
-})
-
-#_______________________________________________________________________________
 #----                               delete                                  ----
 #_______________________________________________________________________________
 
@@ -307,6 +299,15 @@ setMethod("contains", signature=c("statements_record", "model_statement"), defin
 setMethod("delete", signature=c("statements_record", "model_statement"), definition=function(object, x) {
   object@statements <- object@statements %>% delete(x)
   return(object)
+})
+
+#_______________________________________________________________________________
+#----                                find                                   ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  return(object@statements %>% find(x))
 })
 
 #_______________________________________________________________________________

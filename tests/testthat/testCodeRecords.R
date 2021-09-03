@@ -90,7 +90,8 @@ test_that("replaceEquation method is working well", {
   expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% replaceEquation("S1", rhs="V/1000")
-  expect_equal((model %>% getEquation("S1"))@rhs, "V/1000") # Equation well modified
+  equation <- model %>% find(Equation("S1"))
+  expect_equal(equation@rhs, "V/1000") # Equation well modified
 })
 
 test_that("addEquation method is working well on code record", {
@@ -117,14 +118,15 @@ test_that("addEquation method is working well on code record", {
 test_that("getEquation method is working well", {
   
   model <- getNONMEMModelTemplate(1,1)
-  expect_equal((model %>% getEquation("V"))@rhs, "THETA_V*exp(ETA_V)")
+  equation <- model %>% find(Equation("V"))
+  expect_equal(equation@rhs, "THETA_V*exp(ETA_V)")
   expect_equal(model %>% getEquation("V2"), NULL)
 })
 
 test_that("hasEquation method is working well", {
   
   model <- getNONMEMModelTemplate(1,1)
-  expect_true(model %>% hasEquation("V"))
-  expect_false(model %>% hasEquation("V2"))
+  expect_true(model %>% find(Equation("V")) %>% length() > 0)
+  expect_false(model %>% find(Equation("V2")) %>% length() > 0)
 })
 
