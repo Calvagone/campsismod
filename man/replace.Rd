@@ -9,6 +9,7 @@
 \alias{replace,parameters,double_array_parameter-method}
 \alias{replace,statements_record,model_statement-method}
 \alias{replace,code_records,model_statement-method}
+\alias{replace,campsis_model,compartment-method}
 \alias{replace,campsis_model,compartment_property-method}
 \alias{replace,campsis_model,parameter-method}
 \alias{replace,campsis_model,code_record-method}
@@ -28,6 +29,8 @@ replace(object, x)
 \S4method{replace}{statements_record,model_statement}(object, x)
 
 \S4method{replace}{code_records,model_statement}(object, x)
+
+\S4method{replace}{campsis_model,compartment}(object, x)
 
 \S4method{replace}{campsis_model,compartment_property}(object, x)
 

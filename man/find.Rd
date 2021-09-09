@@ -7,6 +7,7 @@
 \alias{find,compartments,compartment_property-method}
 \alias{find,statements_record,model_statement-method}
 \alias{find,code_records,model_statement-method}
+\alias{find,campsis_model,compartment-method}
 \alias{find,campsis_model,compartment_property-method}
 \alias{find,campsis_model,parameter-method}
 \alias{find,campsis_model,code_record-method}
@@ -22,6 +23,8 @@ find(object, x)
 \S4method{find}{statements_record,model_statement}(object, x)
 
 \S4method{find}{code_records,model_statement}(object, x)
+
+\S4method{find}{campsis_model,compartment}(object, x)
 
 \S4method{find}{campsis_model,compartment_property}(object, x)
 

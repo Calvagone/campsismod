@@ -12,7 +12,7 @@ rxodeCode <- function(model) {
   if (properties %>% length() > 0) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
-      compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+      compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
       equation <- property %>% toString(model=model, dest="RxODE")
       propertiesCode <- propertiesCode %>% append(equation)
     }

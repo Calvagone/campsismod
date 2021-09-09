@@ -29,9 +29,9 @@ CampsisModel <- function() {
 
 #' @rdname add
 setMethod("add", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
-  compartment <- object@compartments %>% getByIndex(Compartment(index=x@compartment))
-  if (length(compartment) == 0) {
-    stop(paste0("Unable to find compartment ", x@compartment, " in PMX model"))
+  compartment <- object@compartments %>% find(Compartment(index=x@compartment))
+  if (is.null(compartment)) {
+    stop(paste0("Unable to find compartment ", x@compartment, " in CAMPSIS model"))
   }
   
   # Add characteristic (delegate to add method in compartments class)
@@ -121,6 +121,15 @@ setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(
 })
 
 #_______________________________________________________________________________
+#----                               contains                                ----
+#_______________________________________________________________________________
+
+#' @rdname contains
+setMethod("contains", signature=c("campsis_model", "pmx_element"), definition=function(object, x) {
+  return(!is.null(object %>% find(x)))
+})
+
+#_______________________________________________________________________________
 #----                               delete                                  ----
 #_______________________________________________________________________________
 
@@ -200,6 +209,11 @@ setMethod("export", signature=c("campsis_model", "character"), definition=functi
 #_______________________________________________________________________________
 #----                                find                                   ----
 #_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("campsis_model", "compartment"), definition=function(object, x) {
+  return(object@compartments %>% find(x))
+})
 
 #' @rdname find
 setMethod("find", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
@@ -315,6 +329,12 @@ updateCompartments <- function(model) {
 #_______________________________________________________________________________
 #----                               replace                                 ----
 #_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("campsis_model", "compartment"), definition=function(object, x) {
+  object@compartments <- object@compartments %>% replace(x)
+  return(object)
+})
 
 #' @rdname replace
 setMethod("replace", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {

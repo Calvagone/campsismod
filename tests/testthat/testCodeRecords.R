@@ -66,18 +66,6 @@ test_that("Create very basic model on the fly", {
   expect_equal(model %>% find(OdeRecord()) %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
 })
 
-test_that("getCompartments method is working well", {
-  
-  model <- model_library$advan1_trans1
-  compartments <- model@compartments
-  compartment1 <- compartments %>% getByIndex(Compartment(index=1))
-  compartment2 <- compartments %>% getByIndex(Compartment(index=2))
-  
-  expect_equal(compartments %>% length(), 2)
-  expect_equal(compartment1@name, "CENTRAL")
-  expect_equal(compartment2@name, "OUTPUT")
-})
-
 test_that("removeEquation method is working well", {
   
   model <- model_library$advan1_trans1

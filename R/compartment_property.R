@@ -78,14 +78,14 @@ setMethod("toString", signature=c("compartment_property"), definition=function(o
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
   
   compartmentIndex <- object@compartment
-  compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+  compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
   if (dest=="RxODE") {
-    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% getName(), ")=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% toString(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% getName(), "=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% toString(), "=", object@rhs))
   } else if (dest=="campsis") {
-    return(paste0(compartment %>% getName(), "=", object@rhs))
+    return(paste0(compartment %>% toString(), "=", object@rhs))
   } else {
     UnsupportedDestException()
   }

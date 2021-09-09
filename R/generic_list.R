@@ -322,7 +322,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 #' Get element by index.
 #' 
 #' @param object list object
-#' @param x something to search for, either indexed element or index itself
+#' @param x element index
 #' @return element from the list whose index matches with provided index
 #' @export
 #' @rdname getByIndex

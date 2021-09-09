@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test read/write methods on PMX model")
+context("Test read/write methods on CAMPSIS model")
 
 testFolder <<- ""
 

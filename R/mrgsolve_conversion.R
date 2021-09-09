@@ -23,7 +23,7 @@ mrgsolveCompartment <- function(model) {
   compartments <- model@compartments
   retValue <- "[CMT] @annotated"
   for (compartment in compartments@list) {
-    retValue <- retValue %>% append(paste0(compartment %>% getName(), " : ", compartment@name))
+    retValue <- retValue %>% append(paste0(compartment %>% toString(), " : ", compartment@name))
   }
   return(retValue)
 }
@@ -67,7 +67,7 @@ mrgsolveMain <- function(model) {
   if (properties %>% length() > 0) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
-      compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+      compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
       equation <- paste0(property %>% toString(model=model, dest="mrgsolve"), ";")
       retValue <- retValue %>% append(equation)
     }
