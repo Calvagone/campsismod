@@ -54,13 +54,20 @@ test_that("Sort methods", {
 
 test_that("Create very basic model on the fly", {
   model <- CampsisModel()
+  
+  # ODE must starts with 'A_'
+  expect_error(model %>% add(Ode("CENTRAL", "-K*CENTRAL")), regexp="Derivative name must start with 'A_'")
+  
+  # Create minimalist model
   model <- model %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
   model <- model %>% add(Equation("THALF", "12"))
+  model <- model %>% add(Equation("K", "log(2)/THALF"))
   
   expect_equal(model@model %>% getNames(), c("MAIN", "ODE"))
   
-  # Check THALF can be found in MAIN code record
+  # Check THALF and K can be found in MAIN code record
   expect_equal(model %>% find(MainRecord()) %>% find(Equation("THALF")), Equation("THALF", "12"))
+  expect_equal(model %>% find(MainRecord()) %>% find(Equation("K")), Equation("K", "log(2)/THALF"))
   
   # Check A_CENTRAL ODE can be found in ODE record
   expect_equal(model %>% find(OdeRecord()) %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
@@ -144,6 +151,3 @@ test_that("Add IF-statements at specific locations in the model", {
   expect_equal(main@statements %>% getByIndex(5), if3)
   expect_equal(main@statements %>% getByIndex(6), Equation("S1", "V"))
 })
-
-
-

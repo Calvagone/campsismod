@@ -7,7 +7,7 @@
 Ode(lhs, rhs = "", comment = as.character(NA))
 }
 \arguments{
-\item{lhs}{left-hand side variable corresponding to compartment name}
+\item{lhs}{left-hand side variable corresponding to derivative name, must start with 'A_'}
 
 \item{rhs}{right-hand side expression corresponding to derivative value}
 

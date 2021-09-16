@@ -3,7 +3,7 @@
 \docType{class}
 \name{ode-class}
 \alias{ode-class}
-\title{ODE class. Any statement in the form d/dt(A) = B.}
+\title{ODE class. Any statement in the form d/dt(A_CMT) = B.}
 \description{
-ODE class. Any statement in the form d/dt(A) = B.
+ODE class. Any statement in the form d/dt(A_CMT) = B.
 }

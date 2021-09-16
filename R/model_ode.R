@@ -4,11 +4,15 @@
 #_______________________________________________________________________________
 
 validateOde <- function(object) {
-  return(TRUE)
+  if (startsWith(object@lhs, "A_")) {
+    return(TRUE)
+  } else {
+    return("Derivative name must start with 'A_'")
+  }
 }
 
 #' 
-#' ODE class. Any statement in the form d/dt(A) = B.
+#' ODE class. Any statement in the form d/dt(A_CMT) = B.
 #' 
 #' @export
 setClass(
@@ -22,7 +26,7 @@ setClass(
 #' 
 #' Create a new ordinary differential equation (ODE).
 #' 
-#' @param lhs left-hand side variable corresponding to compartment name
+#' @param lhs left-hand side variable corresponding to derivative name, must start with 'A_'
 #' @param rhs right-hand side expression corresponding to derivative value
 #' @param comment comment if any, single character string
 #' @return an ODE
