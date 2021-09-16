@@ -41,7 +41,7 @@ IfStatement <- function(condition, equation, comment=as.character(NA)) {
 
 #' @rdname getName
 setMethod("getName", signature = c("if_statement"), definition = function(x) {
-  return(as.character(NA)) # IF statement non-identifiable 
+  return(paste0("IF (", x@condition, ") ", x@equation %>% getName()))
 })
 
 #_______________________________________________________________________________

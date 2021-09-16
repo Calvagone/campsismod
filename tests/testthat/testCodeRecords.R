@@ -66,26 +66,26 @@ test_that("Create very basic model on the fly", {
   expect_equal(model %>% find(OdeRecord()) %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K*A_CENTRAL"))    
 })
 
-test_that("removeEquation method is working well", {
+test_that("Equations can be removed", {
   
   model <- model_library$advan1_trans1
-  expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
+  expect_equal(model %>% find(MainRecord()) %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% delete(Equation("S1"))
-  expect_equal(model@model %>% getByName("MAIN") %>% length(), 2) # 2 equations: K, V
+  expect_equal(model %>% find(MainRecord()) %>% length(), 2) # 2 equations: K, V
 })
 
-test_that("replaceEquation method is working well", {
+test_that("Equations can be replaced", {
   
   model <- model_library$advan1_trans1
-  expect_equal(model@model %>% getByName("MAIN") %>% length(), 3) # 3 equations: K, V, S1
+  expect_equal(model %>% find(MainRecord()) %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% replace(Equation("S1", "V/1000"))
   equation <- model %>% find(Equation("S1"))
   expect_equal(equation@rhs, "V/1000") # Equation well modified
 })
 
-test_that("addEquation method is working well on code record", {
+test_that("Equations can be added at a specific position", {
   
   model <- model_library$advan1_trans1
   
@@ -106,7 +106,7 @@ test_that("addEquation method is working well on code record", {
   expect_equal(model5, model6)
 })
 
-test_that("getEquation method is working well", {
+test_that("Find method works well to search for a specific equation", {
   
   model <- model_library$advan1_trans1
   equation <- model %>% find(Equation("V"))
@@ -116,10 +116,34 @@ test_that("getEquation method is working well", {
   expect_true(is.null(equation))
 })
 
-test_that("hasEquation method is working well", {
+test_that("Contains method can be used to check the existence of an equation", {
   
   model <- model_library$advan1_trans1
-  expect_true(!is.null(model %>% find(Equation("V"))))
-  expect_true(is.null(model %>% find(Equation("V2"))))
+  expect_true(model %>% contains(Equation("V")))
+  expect_false(model %>% contains(Equation("V2")))
 })
+
+test_that("Add IF-statements at specific locations in the model", {
+  
+  model <- model_library$advan1_trans1
+  
+  if1 <- IfStatement("COV==1", Equation("V", "V*1.0"))
+  if2 <- IfStatement("COV==2", Equation("V", "V*1.1"))
+  if3 <- IfStatement("COV==3", Equation("V", "V*1.2"))
+  
+  # Add before Equation S1
+  model <- model %>% add(if1, Position(Equation("S1"), after=F))
+  model <- model %>% add(if2, Position(Equation("S1"), after=F))
+  
+  # Or add after previous IF statement
+  model <- model %>% add(if3, Position(if2, after=T))
+
+  main <- model %>% find(MainRecord())
+  expect_equal(main@statements %>% getByIndex(3), if1)
+  expect_equal(main@statements %>% getByIndex(4), if2)
+  expect_equal(main@statements %>% getByIndex(5), if3)
+  expect_equal(main@statements %>% getByIndex(6), Equation("S1", "V"))
+})
+
+
 
