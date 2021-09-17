@@ -29,16 +29,17 @@ test_that("replace method works well", {
   
   # Replace a parameter (1)
   model <- model %>% replace(Theta(name="KA", index=1, value=1.5))
-  expect_equal((model@parameters %>% getByName("THETA_KA"))@value, 1.5)
+  expect_equal((model %>% find(Theta("KA")))@value, 1.5)
   
   # Replace a parameter, index does not need to be provided (2)
   model <- model %>% replace(Theta(name="KA", value=1.5))
-  expect_equal((model@parameters %>% getByName("THETA_KA"))@value, 1.5)
+  expect_equal((model %>% find(Theta("KA")))@value, 1.5)
   
   # Replace a code record
   error <- ErrorRecord() # 0 statement
   model <- model %>% replace(error)
-  expect_equal(model@model %>% getByName("ERROR") %>% length(), 0)
+  expect_true(!is.null(model %>% find(ErrorRecord())))
+  expect_equal(model %>% find(ErrorRecord()) %>% length(), 0)
   
   # Replace a model statement
   model <- model %>% replace(Equation("S2", "V2*1000"))
@@ -65,13 +66,19 @@ test_that("delete method works well", {
   
   # Delete a model statement
   updatedModel <- model %>% delete(Equation("S2"))
-  expect_equal(updatedModel@model %>% getByName("MAIN") %>% length(), model@model %>% getByName("MAIN") %>% length() - 1)
+  expect_equal(updatedModel %>% find(MainRecord()) %>% length(), model %>% find(MainRecord()) %>% length() - 1)
   
   # Add and delete a compartment property
   model <- model %>% add(Bioavailability(1, "0.75"))
   model <- model %>% add(Bioavailability(2, "0.75"))
   updatedModel <- model %>% delete(Bioavailability(1))
   expect_equal(updatedModel@compartments@properties %>% length(), model@compartments@properties %>% length() - 1)
+  
+  # Delete works also with an index
+  main <- model %>% find(MainRecord())
+  expect_true(main %>% contains(Equation("S2")))
+  updatedMain <- main %>% delete(Equation("S2"))
+  expect_false(updatedMain %>% contains(Equation("S2")))
 })
 
 test_that("add method on PMX model, exceptions on parameters names", {

@@ -247,6 +247,15 @@ setMethod("add", signature=c("code_record", "code_record"), definition=function(
 })
 
 #_______________________________________________________________________________
+#----                                contains                               ----
+#_______________________________________________________________________________
+
+#' @rdname contains
+setMethod("contains", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+  return(!is.null(object@statements %>% find(x)))
+})
+
+#_______________________________________________________________________________
 #----                               delete                                  ----
 #_______________________________________________________________________________
 

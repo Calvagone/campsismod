@@ -249,7 +249,7 @@ setMethod("delete", signature=c("pmx_list", "integer"), definition=function(obje
     stop("x must be a single integer/numeric value")
   }
   if (x > 0 && x <= object %>% length()) {
-    object@list <- object@list[-index]
+    object@list <- object@list[-x]
     return(object)
   } else {
     stop(paste("No element exists at index", x))
