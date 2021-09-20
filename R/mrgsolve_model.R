@@ -19,7 +19,7 @@ setClass(
 
 #' @param outvars additional variables to capture
 #' @rdname export
-setMethod("export", signature=c("pmx_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL) {
+setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL) {
   return(
     new(
       "mrgsolve_model",

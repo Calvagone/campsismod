@@ -3,7 +3,8 @@
 \name{getByName}
 \alias{getByName}
 \alias{getByName,pmx_list,character-method}
-\title{Get an element from a list by name.}
+\title{Get an element from a list by name.
+Never return more than 1 element.}
 \usage{
 getByName(object, name)
 
@@ -15,8 +16,9 @@ getByName(object, name)
 \item{name}{element name to search for}
 }
 \value{
-index of this element
+the element that was found or NULL if no element was found with the same name
 }
 \description{
 Get an element from a list by name.
+Never return more than 1 element.
 }

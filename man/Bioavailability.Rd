@@ -4,7 +4,7 @@
 \alias{Bioavailability}
 \title{Create a bioavailability for the specified compartment.}
 \usage{
-Bioavailability(compartment, rhs)
+Bioavailability(compartment, rhs = "")
 }
 \arguments{
 \item{compartment}{compartment index}

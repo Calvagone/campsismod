@@ -1,10 +1,26 @@
+#_______________________________________________________________________________
+#----                         code_records class                            ----
+#_______________________________________________________________________________
+
+checkCodeRecords <- function(object) {
+  hasUnknownStatements <-
+    object@list %>% purrr::map_lgl(~.x@statements@list %>%
+                                     purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()) %>% any()
+  if (hasUnknownStatements) {
+    warning(
+      "Model code contains unknown statements. Conversion to RxODE and mrgsolve may lead to errors."
+    )
+  }
+  return(TRUE)
+}
 
 setClass(
   "code_records",
   representation(
   ),
   contains = "pmx_list",
-  prototype = prototype(type="code_record")
+  prototype = prototype(type="code_record"),
+  validity = checkCodeRecords
 )
 
 #' 
@@ -37,49 +53,71 @@ appendCodeRecords <- function(records1, records2) {
     if (baseRecord %>% length() == 0) {
       records1 <- records1 %>% add(record)
     } else {
-      baseRecord@code <- baseRecord@code %>% append(record@code)
+      baseRecord <- baseRecord %>% add(record)
       records1 <- records1 %>% replace(baseRecord)
     }
   }
   return(records1 %>% sort())
 }
 
-#_______________________________________________________________________________
-#----                            addEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname addEquation
-setMethod("addEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs, before=NULL, after=NULL) {
-  
-  if (is.null(before) && is.null(after)) {
-    # Default use MAIN record and append
-    mainRecord <- object %>% getByName("MAIN")
-    mainRecord <- mainRecord %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
-    object <- object %>% replace(mainRecord)
-  } else {
-    for(record in object@list) {
-      beforeOrAfter <- ifelse(is.null(before), after, before)
-      if (record %>% hasEquation(beforeOrAfter)) {
-        record <- record %>% addEquation(lhs=lhs, rhs=rhs, before=before, after=after)
-        object <- object %>% replace(record)
-        break
+findRecordByPosition <- function(object, pos) {
+  if (is.null(pos)) {
+    stop("pos is null")
+  }
+  for (record in object@list) {
+    if (pos@by_index) {
+      # Return first record
+      return(record)
+    } else if (pos@by_element) {
+      # Return record if contains element
+      if (record %>% find(pos@element) %>% length() > 0) {
+        return(record)
       }
+    } else {
+      stop("pos either by index or by element")
     }
   }
-  
+  stop("No code record found for specified position 'pos'")
+}
+
+#' @param pos position where x needs to be added in list
+#' @rdname add
+setMethod("add", signature=c("code_records", "model_statement"), definition=function(object, x, pos=NULL) {
+  if (is.null(pos)) {
+    if (is(x, "ode")) {
+      recordName <- "ODE"
+    } else {
+      recordName <- "MAIN"
+    }
+    record <- object %>% getByName(recordName)
+    if (isS4(record)) {
+      # Existing record
+      record <- record %>% add(x)
+      object <- object %>% replace(record)
+    } else {
+      # New record
+      record <- new(paste0(recordName %>% tolower(), "_record"))
+      record <- record %>% add(x)
+      object <- object %>% add(record) %>% sort()
+    }
+  } else {
+    record <- object %>% findRecordByPosition(pos)
+    record <- record %>% add(x, pos=pos)
+    object <- object %>% replace(record)
+  }
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                         addTransientRecords                           ----
+#----                         addPropertiesRecords                           ----
 #_______________________________________________________________________________
 
-addTransientRecords <- function(records, model) {
+addPropertiesRecords <- function(records, model) {
   properties <- model@compartments@properties
   
   for (name in getRecordNames()) {
     record <- new(tolower(paste0(name, "_record")))
-    if (!record@transient) {
+    if (!is(record, "properties_record")) {
       next
     }
     subProperties <- properties %>% select(name) 
@@ -87,7 +125,9 @@ addTransientRecords <- function(records, model) {
       next
     }
     for (subProperty in subProperties@list) {
-      record@code <- record@code %>% append(subProperty %>% toString(model=model, dest="pmxmod"))
+      compartment <- model@compartments %>% find(Compartment(index=subProperty@compartment))
+      equation <- Equation(compartment %>% toString(), subProperty@rhs, comment=subProperty@comment)
+      record <- record %>% add(equation)
     }
     records <- records %>% add(record)
   }
@@ -95,8 +135,64 @@ addTransientRecords <- function(records, model) {
 }
 
 #_______________________________________________________________________________
+#----                               delete                                  ----
+#_______________________________________________________________________________
+
+#' @rdname delete
+setMethod("delete", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  copy <- object
+  for (record in object@list) {
+    if (!is.null(record %>% find(x))) {
+      copy <- copy %>% replace(record %>% delete(x))
+    }
+  }
+  return(copy)
+})
+
+#_______________________________________________________________________________
+#----                                find                                   ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("code_records", "model_statement"), definition=function(object, x) {
+  copy <- object
+  for (record in object@list) {
+    statement <- record %>% find(x)
+    if (!is.null(statement)) {
+      return(statement)
+    }
+  }
+  return(NULL)
+})
+
+#_______________________________________________________________________________
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
+
+#' Add ODE compartment to comparments object.
+#'
+#' @param compartments compartments object
+#' @param ode ODE
+#' @return a compartments object
+#' 
+addODECompartment <- function(compartments, ode) {
+  if (!is(ode, "ode")) {
+    stop("ode is not an ODE")
+  }
+  name <- ode@lhs
+  cmtIndex <- compartments %>% length() + 1
+  if (startsWith(name, prefix="A_")) {
+    name <- gsub("^A_", "", name)
+    if (name == as.character(cmtIndex)) {
+      name <- NA
+    }
+  } else {
+    stop(paste0("Compartment ", name, " does not start with 'A_'"))
+  }
+  compartment <- Compartment(index=cmtIndex, name=name)
+  compartments <- compartments %>% add(compartment)
+  return(compartments)
+}
 
 #' Detect all compartments names from the code records.
 #' Only for model instantiation. Not exported.
@@ -108,32 +204,12 @@ getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
   odeRecord <- records %>% getByName("ODE")
   compartments <- Compartments()
-  if (length(odeRecord) == 0) {
+  if (odeRecord %>% length() == 0) {
     return(compartments)
   }
-  code <- odeRecord@code
-  odeCounter <- 0
-  updatedOdeRecord <- OdeRecord()
-  
-  for (index in seq_along(code)) {
-    line <- code[index]
-    if (isODE(line)) {
-      odeCounter <- odeCounter + 1
-      name <- extractTextBetweenBrackets(line)
-      if (startsWith(name, prefix="A_")) {
-        name <- gsub("^A_", "", name)
-        if (name == as.character(odeCounter)) {
-          name <- NA
-        }
-      } else {
-        stop(paste0("Compartment ", name, " does not start with 'A_'"))
-      }
-      compartment <- Compartment(index=odeCounter, name=name)
-      compartments <- compartments %>% add(compartment)
-      updatedOdeRecord@code <- updatedOdeRecord@code %>% append(line)
-
-    } else {
-      updatedOdeRecord@code <- c(updatedOdeRecord@code, line)
+  for (statement in odeRecord@statements@list) {
+    if (is(statement, "ode")) {
+      compartments <- compartments %>% addODECompartment(ode=statement)
     }
   }
   return(compartments)
@@ -152,39 +228,21 @@ addProperties <- function(compartments, records, name, init) {
   if (record %>% length() == 0) {
     return(compartments)
   }
-  for (line in record@code) {
-    cmtName <- extractLhs(line) %>% trim()
-    if (cmtName %>% length() == 0) {
-      next
-    }
-    compartment <- compartments %>% getByName(cmtName)
-    
-    if (length(compartment) == 0) {
+  # Filter on equations (line breaks and comments are accepted in properties record)
+  for (equation in record@statements@list %>% purrr::keep(~is(.x, "equation"))) {
+    cmtName <- equation@lhs
+    compartment <- compartments@list %>% purrr::detect(~.x %>% toString() == cmtName)
+    if (is.null(compartment)) {
       stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% getName()))
     }
-    characteristic <- init
-    characteristic@compartment <- compartment@index
-    characteristic@rhs <- extractRhs(line)
-    
-    compartments <- compartments %>% add(characteristic)
+    property <- init
+    property@compartment <- compartment@index
+    property@rhs <- equation@rhs
+    property@comment <- equation@comment 
+    compartments <- compartments %>% add(property)
   }
   return(compartments)
 }
-
-#_______________________________________________________________________________
-#----                              getEquation                              ----
-#_______________________________________________________________________________
-
-#' @rdname getEquation
-setMethod("getEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
-  for (record in object@list) {
-    equation <- record %>% getEquation(lhs)
-    if (!is.null(equation)) {
-      return(equation)
-    }
-  }
-  return(NULL)
-})
 
 #_______________________________________________________________________________
 #----                             getRecordNames                            ----
@@ -195,22 +253,42 @@ getRecordNames <- function() {
 }
 
 #_______________________________________________________________________________
-#----                            hasEquation                                ----
-#_______________________________________________________________________________
-
-#' @rdname hasEquation
-setMethod("hasEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
-  for (record in object@list) {
-    if (record %>% hasEquation(lhs=lhs)) {
-      return(TRUE)
-    }
-  }
-  return(FALSE)
-})
-
-#_______________________________________________________________________________
 #----                                read.model                             ----
 #_______________________________________________________________________________
+
+#' Remove all trailing line breaks.
+#' 
+#' @param x character vector
+#' @return a character vector
+removeTrailingLineBreaks <- function(x) {
+  lenX <- x %>% length()
+  if (lenX > 0) {
+    res <- rle(isEmptyLine(x))
+    lastValue <- res$values[res$values %>% length()]
+    if (lastValue) {
+      len <- res$lengths[res$values %>% length()]
+      x <- x[-((lenX-len+1):lenX)]
+    }
+  }
+  return(x)
+}
+
+addContentToRecord <- function(record, content) {
+  # In all cases, we remove trailing line breaks
+  content <- content %>% removeTrailingLineBreaks()
+  
+  if (is(record, "properties_record")) {
+    record@statements <- parseStatements(content)
+    # Because properties records are transient and will not be part of the final model
+    # We validate here the content
+    validObject(record, complete=TRUE)
+  } else if (is(record, "statements_record")) {
+    record@statements <- parseStatements(content)
+  } else {
+    stop("Record must be either a 'properties_record' or a 'statements_record'")
+  }
+  return(record)
+}
 
 #' Read model file.
 #' 
@@ -218,25 +296,35 @@ setMethod("hasEquation", signature=c("code_records", "character"), definition=fu
 #' @return records object
 #' @export
 read.model <- function(file) {
-  allLines <- read.table(file=file, sep="@")[,1]
+  allLines <- readLines(con=file)
   records <- CodeRecords()
   
-  # Reading all records
-  prevRecordIndex <- 1
+  # Read all records
+  lastLineIndexInPrevRecord <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
     if (isRecordDelimiter(line)) {
       recordDelimiter <- getRecordDelimiter(line)
-      record <- new(paste0(tolower(recordDelimiter), "_record"), code=character())
+      
+      # Create empty record and add it to list
+      record <- new(paste0(tolower(recordDelimiter), "_record"))
       records@list <- c(records@list, record)
-      if (length(records@list) > 1) {
-        records@list[[length(records@list)-1]]@code <- allLines[(prevRecordIndex + 1):(index-1)]
+      
+      # Add lines to previous record
+      if (records %>% length() > 1) {
+        content <- allLines[(lastLineIndexInPrevRecord + 1):(index-1)]
+        prevRecordIndex <- records %>% length() - 1
+        records@list[[prevRecordIndex]] <-
+          addContentToRecord(records@list[[prevRecordIndex]], content)
       }
-      prevRecordIndex <- index
+      lastLineIndexInPrevRecord <- index
     }
   }
-  # Filling last record
-  records@list[[length(records@list)]]@code <- allLines[(prevRecordIndex + 1):length(allLines)]
+  # Filling in with lines of last record
+  content <- allLines[(lastLineIndexInPrevRecord + 1):length(allLines)]
+  lastRecordIndex <- records %>% length()
+  records@list[[lastRecordIndex]] <-
+    addContentToRecord(records@list[[lastRecordIndex]], content)
   
   return(records)
 }
@@ -250,44 +338,19 @@ getRecordDelimiter <- function(line) {
 }
 
 #_______________________________________________________________________________
-#----                           removeEquation                              ----
+#----                               replace                                 ----
 #_______________________________________________________________________________
 
-#' @rdname removeEquation
-setMethod("removeEquation", signature=c("code_records", "character"), definition=function(object, lhs) {
+#' @rdname replace
+setMethod("replace", signature=c("code_records", "model_statement"), definition=function(object, x) {
   copy <- object
   for (record in object@list) {
-    copy <- copy %>% replace(record %>% removeEquation(lhs))
-  }
-  return(copy)
-})
-
-#_______________________________________________________________________________
-#----                           replaceEquation                             ----
-#_______________________________________________________________________________
-
-#' @rdname replaceEquation
-setMethod("replaceEquation", signature=c("code_records", "character", "character"), definition=function(object, lhs, rhs) {
-  copy <- object
-  for (record in object@list) {
-    copy <- copy %>% replace(record %>% replaceEquation(lhs, rhs))
-  }
-  return(copy)
-})
-
-#_______________________________________________________________________________
-#----                       removeTransientRecords                          ----
-#_______________________________________________________________________________
-
-removeTransientRecords <- function(object) {
-  records <- CodeRecords()
-  for (record in object@list) {
-    if (!record@transient) {
-      records <- records %>% add(record)
+    if (record %>% find(x) %>% length() > 0) {
+      copy <- copy %>% replace(record %>% replace(x))
     }
   }
-  return(records)
-}
+  return(copy)
+})
 
 #_______________________________________________________________________________
 #----                                  show                                 ----
@@ -330,14 +393,16 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     object <- object %>% sort()
   } else {
     # Add transient records and sort
-    object <- object %>% addTransientRecords(model)
+    object <- object %>% addPropertiesRecords(model)
   }
 
   # Write code record
   code <- NULL
   for (record in object@list) {
     code <- code %>% append(paste0("[", record %>% getName(), "]"))
-    code <- code %>% append(record@code)
+    for (statement in record@statements@list) {
+      code <- code %>% append(statement %>% toString())
+    }
     code <- code %>% append("") # write.table will add a new line
   }
   write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)

@@ -25,7 +25,7 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return details about infusion rate
 #' @export
-InfusionRate <- function(compartment, rhs) {
+InfusionRate <- function(compartment, rhs="") {
   return(new("compartment_infusion_rate", compartment=as.integer(compartment), rhs=rhs))
 }
 

@@ -25,7 +25,7 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return details about infusion duration
 #' @export
-InfusionDuration <- function(compartment, rhs) {
+InfusionDuration <- function(compartment, rhs="") {
   return(new("compartment_infusion_duration", compartment=as.integer(compartment), rhs=rhs))
 }
 

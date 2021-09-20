@@ -4,10 +4,12 @@
 \alias{extractLhs}
 \title{Extract left-hand-side expression.}
 \usage{
-extractLhs(x)
+extractLhs(x, split = "=")
 }
 \arguments{
 \item{x}{character value}
+
+\item{split}{character where to split}
 }
 \value{
 left-hand-side expression, not trimmed

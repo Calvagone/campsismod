@@ -4,7 +4,7 @@
 \alias{InfusionDuration}
 \title{Create an infusion duration.}
 \usage{
-InfusionDuration(compartment, rhs)
+InfusionDuration(compartment, rhs = "")
 }
 \arguments{
 \item{compartment}{compartment index}

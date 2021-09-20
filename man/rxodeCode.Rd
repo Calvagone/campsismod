@@ -7,7 +7,7 @@
 rxodeCode(model)
 }
 \arguments{
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
 code for RxODE

@@ -31,25 +31,31 @@ test_that("Add/contains methods", {
   theta2 <- Theta(name="KA", index=2, value=1, fix=TRUE)
   thetas <- Parameters() %>% add(theta1) %>% add(theta2)
 
-  expect_true(thetas %>% contains(Theta(name="CL", index=1)))
-  expect_false(thetas %>% contains(Theta(name="V", index=3)))
+  expect_true(thetas %>% contains(Theta(name="CL")))
+  expect_false(thetas %>% contains(Theta(name="V")))
   
-  thetas <- thetas %>% add(Theta(name="V", index=3))
-  expect_true(thetas %>% contains(Theta(name="V", index=3)))
+  thetas <- thetas %>% add(Theta(name="V"))
+  expect_true(thetas %>% contains(Theta(name="V")))
 })
 
-test_that("GetByIndex, select method", {
+test_that("GetByIndex, find & select method work well", {
   p <- Parameters()
-  p <- p %>% add(Theta(index=1))
-  p <- p %>% add(Theta(index=2))
-  p <- p %>% add(Theta(index=3))
-  p <- p %>% add(Omega(index=1, index2=1))
-  p <- p %>% add(Omega(index=2, index2=2))
-  p <- p %>% add(Sigma(index=1, index2=1))
+  p <- p %>% add(Theta())
+  p <- p %>% add(Theta())
+  p <- p %>% add(Theta())
+  p <- p %>% add(Omega())
+  p <- p %>% add(Omega())
+  p <- p %>% add(Sigma())
 
+  # Search by index
   expect_equal(p %>% getByIndex(Theta(index=3)), Theta(index=3))
   expect_equal(p %>% getByIndex(Omega(index=1, index2=1)), Omega(index=1, index2=1))
   expect_equal(p %>% getByIndex(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
+  
+  # Or equivalently using find
+  expect_equal(p %>% find(Theta(index=3)), Theta(index=3))
+  expect_equal(p %>% find(Omega(index=1, index2=1)), Omega(index=1, index2=1))
+  expect_equal(p %>% find(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
   
   p <- p %>% select("theta")
   expect_equal(p %>% length(), 3)
@@ -69,29 +75,28 @@ test_that("Sort method", {
   theta2 <- Theta(index=2, value=1)
   theta1 <- Theta(index=1, value=1)
   
-  params <- Parameters() %>% add(sigma1) %>% add(omega2) %>% add(omega1) %>% add(theta2) %>% add(theta1)
+  params <- Parameters() %>% add(c(sigma1, omega2, omega1, theta2, theta1))
   
   orderedParams <- params %>% sort()
   
-  expectedParams <- Parameters() %>% add(theta1) %>% add(theta2) %>% add(omega1) %>% add(omega2) %>% add(sigma1)
+  expectedParams <- Parameters() %>% add(c(theta1, theta2, omega1, omega2, sigma1))
   expect_equal(orderedParams, expectedParams)
-  
 })
 
 test_that("Disable method (IIV/RUV)", {
   
-  model <- getNONMEMModelTemplate(4,4)
+  model <- model_library$advan4_trans4
   
   model <- model %>% disable("IIV")
-  expect_equal((model@parameters %>% getByName("OMEGA_KA"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_CL"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_V2"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_V3"))@value, 0)
-  expect_equal((model@parameters %>% getByName("OMEGA_Q"))@value, 0)
-  expect_equal((model@parameters %>% getByName("SIGMA_PROP"))@value, 0.025)
+  expect_equal((model@parameters %>% find(Omega(name="KA")))@value, 0)
+  expect_equal((model@parameters %>% find(Omega(name="CL")))@value, 0)
+  expect_equal((model@parameters %>% find(Omega(name="V2")))@value, 0)
+  expect_equal((model@parameters %>% find(Omega(name="V3")))@value, 0)
+  expect_equal((model@parameters %>% find(Omega(name="Q")))@value, 0)
+  expect_equal((model@parameters %>% find(Sigma(name="PROP")))@value, 0.025)
   
   model <- model %>% disable("RUV")
-  expect_equal((model@parameters %>% getByName("SIGMA_PROP"))@value, 0)
+  expect_equal((model@parameters %>% find(Sigma(name="PROP")))@value, 0)
   
   expect_error(model %>% disable("SOMETHING"))
 })
@@ -123,7 +128,7 @@ test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
 })
 
 test_that("Disable method (IOV)", {
-  model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
   model <- model %>% disable("IOV")
   
   omega4 <- model@parameters %>% getByIndex(Omega(index=4, index2=4))
@@ -139,7 +144,7 @@ test_that("Disable method (IOV)", {
 test_that("Fix omega method is working", {
   
   # 'Unfix' OMEGA matrix
-  original_model <- read.pmxmod(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  original_model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
   list <- original_model@parameters@list %>% purrr::map(.f=function(x) {
     if (is(x, "omega")) {
       if(isTRUE(x@same)) {
@@ -161,7 +166,7 @@ test_that("Fix omega method is working", {
 
 test_that("Name column is optional", {
   
-  model <- read.pmxmod(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
+  model <- read.campsis(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
   names <- (model@parameters %>% select("theta"))@list %>% purrr::map_chr(.f=~.x@name)
   expect_true(all(is.na(names)))
 })
@@ -281,7 +286,7 @@ test_that("Replace parameters without specifying the index", {
   parameters <- parameters %>% add(Theta(name="X3", value=0))
   parameters <- parameters %>% replace(Theta(name="X1", value=10))
   
-  expect_equal((parameters %>% getByName("THETA_X1"))@value, 10)
+  expect_equal((parameters %>% find(Theta(name="X1")))@value, 10)
   
   # Omegas
   parameters <- Parameters()
@@ -290,7 +295,7 @@ test_that("Replace parameters without specifying the index", {
   parameters <- parameters %>% add(Omega(name="X3", value=0))
   parameters <- parameters %>% replace(Omega(name="X1", value=10))
   
-  expect_equal((parameters %>% getByName("OMEGA_X1"))@value, 10)
+  expect_equal((parameters %>% find(Omega(name="X1")))@value, 10)
   
   # Sigmas
   parameters <- Parameters()
@@ -299,7 +304,7 @@ test_that("Replace parameters without specifying the index", {
   parameters <- parameters %>% add(Sigma(name="X3", value=0))
   parameters <- parameters %>% replace(Sigma(name="X1", value=10))
   
-  expect_equal((parameters %>% getByName("SIGMA_X1"))@value, 10)
+  expect_equal((parameters %>% find(Sigma(name="X1")))@value, 10)
 })
 
 test_that("Add all method works well", {

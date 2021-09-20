@@ -48,8 +48,8 @@ setMethod("add", signature=c("compartments", "compartments"), definition=functio
 #' 
 appendCompartments <- function(compartments1, compartments2) {
   
-  cmtNames1 <- compartments1 %>% getNames()
-  cmtNames2 <- compartments2 %>% getNames()
+  cmtNames1 <- compartments1@list %>% purrr::map_chr(~.x %>% toString())
+  cmtNames2 <- compartments2@list %>% purrr::map_chr(~.x %>% toString())
   cmtMax <- compartments1 %>% length()
   
   checkCollisionOnCmts <- cmtNames1 %in% cmtNames2
@@ -58,7 +58,7 @@ appendCompartments <- function(compartments1, compartments2) {
   }
   for (compartment in compartments2@list) {
     compartment@index <- compartment@index + cmtMax
-    compartments1@list <- compartments1@list %>% append(compartment)
+    compartments1 <- compartments1 %>% add(compartment)
   }
   for (property in compartments2@properties@list) {
     property@compartment <- property@compartment + cmtMax
@@ -68,17 +68,22 @@ appendCompartments <- function(compartments1, compartments2) {
 }
 
 #_______________________________________________________________________________
-#----                             getByIndex                                ----
+#----                               delete                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("compartments", "compartment"), definition=function(object, x) {
-  retValue <- object@list %>% purrr::keep(~(.x@index==x@index))
-  
-  if (length(retValue) > 0) {
-    retValue <- retValue[[1]]
-  }
-  return(retValue)
+#' @rdname delete
+setMethod("delete", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  object@properties <- object@properties %>% delete(x)
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                                 find                                  ----
+#_______________________________________________________________________________
+
+#' @rdname find
+setMethod("find", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  return(object@properties %>% find(x))
 })
 
 #_______________________________________________________________________________
@@ -87,11 +92,21 @@ setMethod("getByIndex", signature=c("compartments", "compartment"), definition=f
 
 #' @rdname getCompartmentIndex
 setMethod("getCompartmentIndex", signature=c("compartments", "character"), definition=function(object, name) {
-  compartment <- object %>% getByName(paste0("A_", name))
+  compartment <- object@list %>% purrr::detect(~.x@name == name)
   if (compartment %>% length() == 0) {
     stop(paste0("Compartment ", name, " not found."))
   }
   return(compartment@index)
+})
+
+#_______________________________________________________________________________
+#----                               replace                                 ----
+#_______________________________________________________________________________
+
+#' @rdname replace
+setMethod("replace", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+  object@properties <- object@properties %>% replace(x)
+  return(object)
 })
 
 #_______________________________________________________________________________

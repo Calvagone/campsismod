@@ -25,7 +25,7 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return initial condition object
 #' @export
-InitialCondition <- function(compartment, rhs) {
+InitialCondition <- function(compartment, rhs="") {
   return(new("compartment_initial_condition", compartment=as.integer(compartment), rhs=rhs))
 }
 
@@ -74,14 +74,14 @@ setMethod("toString", signature=c("compartment_initial_condition"), definition=f
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
   
   compartmentIndex <- object@compartment
-  compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+  compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
   if (dest=="RxODE") {
-    return(paste0(compartment %>% getName(), "(0)=", object@rhs))
+    return(paste0(compartment %>% toString(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(compartment %>% getName(), "_0=", object@rhs))
+    return(paste0(compartment %>% toString(), "_0=", object@rhs))
   } else if (dest=="pmxmod") {
-    return(paste0(compartment %>% getName(), "=", object@rhs))
+    return(paste0(compartment %>% toString(), "=", object@rhs))
   } else {
     stop("Only RxODE, mrgsolve or pmxmod are supported")
   }

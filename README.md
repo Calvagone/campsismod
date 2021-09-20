@@ -141,7 +141,7 @@ show(thetas)
     ## # A tibble: 0 x 0
     ## No variance-covariance matrix
 
-### Write PMX model
+### Write CAMPSIS model
 
 ``` r
 model %>% write(file="readme_tmp")
@@ -153,12 +153,13 @@ model %>% write(file="readme_tmp")
 list.files("readme_tmp")
 ```
 
-    ## [1] "model.pmx" "omega.csv" "sigma.csv" "theta.csv"
+    ## [1] "model.campsis" "model.pmx"     "omega.csv"     "sigma.csv"    
+    ## [5] "theta.csv"
 
-### Read PMX model
+### Read CAMPSIS model
 
 ``` r
-model <- read.pmxmod(file="readme_tmp")
+model <- read.campsis(file="readme_tmp")
 show(model)
 ```
 
@@ -208,30 +209,89 @@ show(model)
     ## A_PERIPHERAL (CMT=3)
     ## A_OUTPUT (CMT=4)
 
-### Export PMX model to RxODE
+### Export CAMPSIS model to RxODE
 
 ``` r
 rxmod <- model %>% export(dest="RxODE")
-rxmod@theta
+rxmod
 ```
 
+    ## An object of class "rxode_model"
+    ## Slot "code":
+    ##  [1] "KA=THETA_KA*exp(ETA_KA)"                                                   
+    ##  [2] "CL=THETA_CL*exp(ETA_CL)"                                                   
+    ##  [3] "V2=THETA_V2*exp(ETA_V2)"                                                   
+    ##  [4] "V3=THETA_V3*exp(ETA_V3)"                                                   
+    ##  [5] "Q=THETA_Q*exp(ETA_Q)"                                                      
+    ##  [6] "S2=V2"                                                                     
+    ##  [7] "d/dt(A_DEPOT)=-KA*A_DEPOT"                                                 
+    ##  [8] "d/dt(A_CENTRAL)=KA*A_DEPOT + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL"
+    ##  [9] "d/dt(A_PERIPHERAL)=-Q*A_PERIPHERAL/V3 + Q*A_CENTRAL/V2"                    
+    ## [10] "d/dt(A_OUTPUT)=CL*A_CENTRAL/V2"                                            
+    ## [11] "F=A_CENTRAL/S2"                                                            
+    ## [12] "CP=F"                                                                      
+    ## [13] "OBS_CP=CP*(EPS_PROP + 1)"                                                  
+    ## [14] "Y=OBS_CP"                                                                  
+    ## 
+    ## Slot "theta":
     ## THETA_KA THETA_CL THETA_V2 THETA_V3  THETA_Q 
-    ##        1        5       80       20        4
-
-``` r
-rxmod@omega
-```
-
+    ##        1        5       80       20        4 
+    ## 
+    ## Slot "omega":
     ##        ETA_KA ETA_CL ETA_V2 ETA_V3 ETA_Q
     ## ETA_KA  0.025  0.000  0.000  0.000 0.000
     ## ETA_CL  0.000  0.025  0.000  0.000 0.000
     ## ETA_V2  0.000  0.000  0.025  0.000 0.000
     ## ETA_V3  0.000  0.000  0.000  0.025 0.000
     ## ETA_Q   0.000  0.000  0.000  0.000 0.025
-
-``` r
-rxmod@sigma
-```
-
+    ## 
+    ## Slot "sigma":
     ##          EPS_PROP
     ## EPS_PROP    0.025
+
+### Export CAMPSIS model to mrgsolve
+
+``` r
+mrgmod <- model %>% export(dest="mrgsolve")
+mrgmod
+```
+
+    ## An object of class "mrgsolve_model"
+    ## Slot "param":
+    ## [1] "[PARAM] @annotated"       "THETA_KA : 1 : THETA_KA" 
+    ## [3] "THETA_CL : 5 : THETA_CL"  "THETA_V2 : 80 : THETA_V2"
+    ## [5] "THETA_V3 : 20 : THETA_V3" "THETA_Q : 4 : THETA_Q"   
+    ## 
+    ## Slot "cmt":
+    ## [1] "[CMT] @annotated"          "A_DEPOT : DEPOT"          
+    ## [3] "A_CENTRAL : CENTRAL"       "A_PERIPHERAL : PERIPHERAL"
+    ## [5] "A_OUTPUT : OUTPUT"        
+    ## 
+    ## Slot "main":
+    ## [1] "[MAIN]"                          "double KA=THETA_KA*exp(ETA_KA);"
+    ## [3] "double CL=THETA_CL*exp(ETA_CL);" "double V2=THETA_V2*exp(ETA_V2);"
+    ## [5] "double V3=THETA_V3*exp(ETA_V3);" "double Q=THETA_Q*exp(ETA_Q);"   
+    ## [7] "double S2=V2;"                  
+    ## 
+    ## Slot "ode":
+    ## [1] "[ODE]"                                                                     
+    ## [2] "dxdt_A_DEPOT=-KA*A_DEPOT;"                                                 
+    ## [3] "dxdt_A_CENTRAL=KA*A_DEPOT + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL;"
+    ## [4] "dxdt_A_PERIPHERAL=-Q*A_PERIPHERAL/V3 + Q*A_CENTRAL/V2;"                    
+    ## [5] "dxdt_A_OUTPUT=CL*A_CENTRAL/V2;"                                            
+    ## [6] "double F=A_CENTRAL/S2;"                                                    
+    ## 
+    ## Slot "omega":
+    ## [1] "[OMEGA] @annotated @block"     "ETA_KA : 0.025 : ETA_KA"      
+    ## [3] "ETA_CL : 0 0.025 : ETA_CL"     "ETA_V2 : 0 0 0.025 : ETA_V2"  
+    ## [5] "ETA_V3 : 0 0 0 0.025 : ETA_V3" "ETA_Q : 0 0 0 0 0.025 : ETA_Q"
+    ## 
+    ## Slot "sigma":
+    ## [1] "[SIGMA] @annotated @block"   "EPS_PROP : 0.025 : EPS_PROP"
+    ## 
+    ## Slot "table":
+    ## [1] "[TABLE]"                           "capture CP=F;"                    
+    ## [3] "capture OBS_CP=CP*(EPS_PROP + 1);" "capture Y=OBS_CP;"                
+    ## 
+    ## Slot "capture":
+    ## character(0)

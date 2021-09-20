@@ -4,7 +4,7 @@
 \alias{InitialCondition}
 \title{Create an initial condition.}
 \usage{
-InitialCondition(compartment, rhs)
+InitialCondition(compartment, rhs = "")
 }
 \arguments{
 \item{compartment}{compartment index}

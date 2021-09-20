@@ -7,10 +7,10 @@
 mrgsolveTable(model)
 }
 \arguments{
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
-TABLE block
+TABLE block if at least one line in error record, character(0) otherwise
 }
 \description{
 Get the TABLE block for mrgsolve.

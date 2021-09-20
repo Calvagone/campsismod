@@ -7,10 +7,10 @@
 mrgsolveParam(model)
 }
 \arguments{
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 }
 \value{
-character vector, each value is a line or character(0) if no param
+character vector, 1 parameter per line. First one is header [PARAM].
 }
 \description{
 Get the parameters block for mrgsolve.

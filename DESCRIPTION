@@ -8,7 +8,16 @@ Collate:
     'check.R'
     'generic.R'
     'generic_element_list.R'
+    'generic_element_position.R'
     'generic_list.R'
+    'model_statement.R'
+    'model_statements.R'
+    'model_unknown_statement.R'
+    'model_comment.R'
+    'model_line_break.R'
+    'model_equation.R'
+    'model_ode.R'
+    'model_if_statement.R'
     'compartment.R'
     'compartment_property.R'
     'compartment_properties.R'
@@ -22,13 +31,14 @@ Collate:
     'parameters.R'
     'code_record.R'
     'code_records.R'
-    'pmx_model.R'
+    'model_parser.R'
+    'campsis_model.R'
     'rxode_model.R'
     'rxode_conversion.R'
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.4.1
+Version: 0.5.0
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )

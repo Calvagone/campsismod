@@ -13,18 +13,40 @@ toFile <- function(code, path) {
   close(fileConn)
 }
 
-loadNonRegressionFile <- function(path) {
-  return(read.table(file=path, sep="@")[,1])
+campsisNonRegPath <- function(regFilename) {
+  return(paste0(testFolder, "non_regression/campsis/", regFilename))
 }
 
-nonRegressionPath <- function(regFilename) {
-  return(paste0(testFolder, "non_regression/", regFilename))
+mrgsolveNonRegPath <- function(regFilename) {
+  return(paste0(testFolder, "non_regression/mrgsolve/", regFilename, ".txt"))
 }
 
-modelRegressionTest <- function(model, regFilename) {
+rxodeNonRegPath <- function(regFilename) {
+  return(paste0(testFolder, "non_regression/rxode/", regFilename, ".txt"))
+}
+
+campsisNonRegTest <- function(model, regFilename) {
   if (overwriteNonRegressionFiles) {
-    model %>% write(file=nonRegressionPath(regFilename))
+    model %>% write(file=campsisNonRegPath(regFilename))
   }
-  expectedModel <- read.pmxmod(file=nonRegressionPath(regFilename))
+  expectedModel <- read.campsis(file=campsisNonRegPath(regFilename))
   expect_equal(model, expectedModel)
+}
+
+mrgsolveNonRegTest <- function(mrgmod, regFilename) {
+  mrgmodCode <- mrgmod %>% toString()
+  if (overwriteNonRegressionFiles) {
+    toFile(mrgmodCode, mrgsolveNonRegPath(regFilename))
+  }
+  expectedMrgmodCode <- readLines(con=mrgsolveNonRegPath(regFilename)) %>% paste0(collapse="\n")
+  expect_equal(mrgmodCode, expectedMrgmodCode)
+}
+
+rxodeNonRegTest <- function(rxmod, regFilename) {
+  rxmodCode <- rxmod@code %>% paste0(collapse="\n")
+  if (overwriteNonRegressionFiles) {
+    toFile(rxmodCode, rxodeNonRegPath(regFilename))
+  }
+  expectedRxmodCode <- readLines(con=rxodeNonRegPath(regFilename)) %>% paste0(collapse="\n")
+  expect_equal(rxmodCode, expectedRxmodCode)
 }

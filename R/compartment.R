@@ -40,11 +40,7 @@ Compartment <- function(index, name=NA) {
 
 #' @rdname getName
 setMethod("getName", signature=c("compartment"), definition=function(x) {
-  if (is.na(x@name)) {
-    return(paste0("A", "_", x@index))
-  } else {
-    return(paste0("A", "_", x@name))
-  }
+  return(paste0("A", "_", x@index))
 })
 
 #_______________________________________________________________________________
@@ -52,6 +48,19 @@ setMethod("getName", signature=c("compartment"), definition=function(x) {
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment"), definition=function(object) {
-  cat(paste0(object %>% getName(), " (CMT=", object@index, ")"))
+  cat(paste0(object %>% toString(), " (CMT=", object@index, ")"))
+})
+
+#_______________________________________________________________________________
+#----                             toString                                  ----
+#_______________________________________________________________________________
+
+#' @rdname toString
+setMethod("toString", signature=c("compartment"), definition=function(object, ...) {
+  if (is.na(object@name)) {
+    return(paste0("A", "_", object@index))
+  } else {
+    return(paste0("A", "_", object@name))
+  }
 })
 

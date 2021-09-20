@@ -1,14 +1,11 @@
 
 #' Get the parameters block for mrgsolve.
 #' 
-#' @param model PMX model
-#' @return character vector, each value is a line or character(0) if no param
+#' @param model CAMPSIS model
+#' @return character vector, 1 parameter per line. First one is header [PARAM].
 #' @export
 mrgsolveParam <- function(model) {
   params <- rxodeParams(model)
-  if (params %>% length()==0) {
-    return(character(0))
-  }
   retValue <- "[PARAM] @annotated"
   for (index in seq_len(length(params))) {
     param <- params[index]
@@ -19,21 +16,21 @@ mrgsolveParam <- function(model) {
 
 #' Get the compartment block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return character vector, each value is a line
 #' @export
 mrgsolveCompartment <- function(model) {
   compartments <- model@compartments
   retValue <- "[CMT] @annotated"
   for (compartment in compartments@list) {
-    retValue <- retValue %>% append(paste0(compartment %>% getName(), " : ", compartment@name))
+    retValue <- retValue %>% append(paste0(compartment %>% toString(), " : ", compartment@name))
   }
   return(retValue)
 }
 
 #' Get the OMEGA/SIGMA matrix for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @param type either omega or sigma
 #' @return named matrix or character(0) if matrix is empty
 #' @export
@@ -58,7 +55,7 @@ mrgsolveMatrix <- function(model, type="omega") {
 
 #' Get the MAIN block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return MAIN block
 #' @export
 mrgsolveMain <- function(model) {
@@ -70,13 +67,24 @@ mrgsolveMain <- function(model) {
   if (properties %>% length() > 0) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
-      compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+      compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
       equation <- paste0(property %>% toString(model=model, dest="mrgsolve"), ";")
       retValue <- retValue %>% append(equation)
     }
   }
   return(retValue)
 }
+
+#' Convert CAMPSIS comment style to C/C++ code.
+#' Only the first # is translated to //.
+#' 
+#' @param x any record line
+#' @return same line with comments translated to C/C++
+convertAnyComment <- function(x) {
+  return(sub(pattern="#", replacement="//", x=x))
+}
+
+
 
 #' Convert code record for mrgsolve.
 #' 
@@ -87,32 +95,23 @@ mrgsolveMain <- function(model) {
 #' @export
 mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
-  if (length(record) == 0) {
+  if (record %>% length() == 0) {
     return(retValue)
   }
-  for (index in seq_len(length(record@code))) {
-    line <- record@code[index]
-    if (isODE(line)) {
-      name <- extractTextBetweenBrackets(line)
-      rhs <- extractRhs(line)
-      line <- paste0("dxdt_", name, "=", rhs, ";")
-    } else if (isEquation(line)) {
-      if (capture) {
-        line <- paste0("capture ", line, ";")
-      } else {
-        line <- paste0("double ", line, ";")
-      }
-    } else {
-      line <- paste0(line, ";")
-    }
-    retValue <- retValue %>% append(line)
+  for (statement in record@statements@list) {
+    retValue <-
+      retValue %>% append(statement %>% toString(
+        dest = "mrgsolve",
+        init = !capture,
+        capture = capture
+      ))
   }
   return(retValue)
 }
 
 #' Get the ODE block for mrgsolve.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return ODE block
 #' @export
 mrgsolveOde <- function(model) {
@@ -124,12 +123,15 @@ mrgsolveOde <- function(model) {
 
 #' Get the TABLE block for mrgsolve.
 #'
-#' @param model PMX model
-#' @return TABLE block
+#' @param model CAMPSIS model
+#' @return TABLE block if at least one line in error record, character(0) otherwise
 #' @export
 mrgsolveTable <- function(model) {
   records <- model@model
   errorRecord <- records %>% getByName("ERROR")
+  if (errorRecord %>% length() == 0) {
+    return(character(0))
+  }
   retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)
 }
@@ -137,7 +139,7 @@ mrgsolveTable <- function(model) {
 #' Get the CAPTURE block for mrgsolve.
 #'
 #' @param outvars outvars from pmxsim
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
 mrgsolveCapture <- function(outvars, model) {
@@ -155,7 +157,8 @@ mrgsolveCapture <- function(outvars, model) {
 #' will be discarded.
 #'
 #' @param outvars character vector
-#' @param model PMX model
+#' @param model CAMPSIS model
+#' @importFrom purrr keep map_chr
 #' @return all variables to capture
 #'
 convertOutvarsToCapture <- function(outvars, model) {
@@ -163,12 +166,7 @@ convertOutvarsToCapture <- function(outvars, model) {
   error <- model@model %>% getByName("ERROR")
   list <- NULL
   if (length(error) > 0) {
-    for (line in error@code) {
-      if (isEquation(line)) {
-        lhs <- extractLhs(line) %>% trim()
-        list <- list %>% append(lhs)
-      }
-    }
+    list <- error@statements@list %>% purrr::keep(~is(.x, "equation")) %>% purrr::map_chr(~.x@lhs)
     outvars <- outvars[!(outvars %in% list)]
   }
   return(outvars)

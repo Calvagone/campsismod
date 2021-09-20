@@ -11,14 +11,17 @@ validateCompartmentCharacteristic <- function(object) {
 #' 
 #' @slot compartment related compartment index
 #' @slot rhs right-hand side formula
+#' @slot comment comment if any, single character string
 #' @export
 setClass(
   "compartment_property",
   representation(
     compartment = "integer",
-    rhs = "character"
+    rhs = "character",
+    comment = "character"
   ),
   contains="pmx_element",
+  prototype=prototype(comment=as.character(NA), rhs=""),
   validity=validateCompartmentCharacteristic 
 )
 
@@ -75,16 +78,16 @@ setMethod("toString", signature=c("compartment_property"), definition=function(o
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
   
   compartmentIndex <- object@compartment
-  compartment <- model@compartments %>% getByIndex(Compartment(index=compartmentIndex))
+  compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
   if (dest=="RxODE") {
-    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% getName(), ")=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% toString(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% getName(), "=", object@rhs))
-  } else if (dest=="pmxmod") {
-    return(paste0(compartment %>% getName(), "=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% toString(), "=", object@rhs))
+  } else if (dest=="campsis") {
+    return(paste0(compartment %>% toString(), "=", object@rhs))
   } else {
-    stop("Only RxODE, mrgsolve or pmxmod are supported")
+    UnsupportedDestException()
   }
 })
 
