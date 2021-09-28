@@ -28,6 +28,8 @@ setClass(
 #' @param str single character string
 #' @param object model statement
 #' @param dest destination engine, string
+#' @return single character string followed by comment
+#' @keywords internal
 appendComment <- function(str, object, dest) {
   comment <- object@comment
   if (is.na(comment)) {

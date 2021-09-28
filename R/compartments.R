@@ -45,6 +45,7 @@ setMethod("add", signature=c("compartments", "compartments"), definition=functio
 #' @param compartments1 base set of compartments
 #' @param compartments2 extra set of compartments to be appended
 #' @return the resulting set of compartments
+#' @keywords internal
 #' 
 appendCompartments <- function(compartments1, compartments2) {
   

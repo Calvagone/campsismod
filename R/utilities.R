@@ -62,6 +62,7 @@ isEquation <- function(x) {
 #' Return the IF-statement pattern.
 #' 
 #' @return pattern (regular expression)
+#' @keywords internal
 ifStatementPattern <- function() {
   return(paste0("if\\s*\\(.*\\)\\s*", variablePattern(), "\\s*="))
 }

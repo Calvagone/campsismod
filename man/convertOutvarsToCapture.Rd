@@ -19,3 +19,4 @@ all variables to capture
 Convert outvars argument to capture. Variables that are already in error block
 will be discarded.
 }
+\keyword{internal}

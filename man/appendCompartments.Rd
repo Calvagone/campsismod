@@ -17,3 +17,4 @@ the resulting set of compartments
 \description{
 Append compartments.
 }
+\keyword{internal}

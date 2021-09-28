@@ -17,3 +17,4 @@ a compartments object
 \description{
 Add ODE compartment to comparments object.
 }
+\keyword{internal}

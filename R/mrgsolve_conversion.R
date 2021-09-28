@@ -80,6 +80,7 @@ mrgsolveMain <- function(model) {
 #' 
 #' @param x any record line
 #' @return same line with comments translated to C/C++
+#' @keywords internal
 convertAnyComment <- function(x) {
   return(sub(pattern="#", replacement="//", x=x))
 }
@@ -160,7 +161,7 @@ mrgsolveCapture <- function(outvars, model) {
 #' @param model CAMPSIS model
 #' @importFrom purrr keep map_chr
 #' @return all variables to capture
-#'
+#' @keywords internal
 convertOutvarsToCapture <- function(outvars, model) {
   # List all variables that are already exported into mrgsolve TABLE block by pmxmod
   error <- model@model %>% getByName("ERROR")

@@ -16,6 +16,145 @@ navbar:
     left:
     - home
     - intro
+    - reference
     - articles
     - news
     right: github
+
+reference:
+
+- title: "CAMPSIS model"
+  contents:
+  - CampsisModel
+  - autoDetectNONMEM
+
+- title: "Code records"
+  contents:
+  - CodeRecords
+  - MainRecord
+  - OdeRecord
+  - ErrorRecord
+  - getRecordName
+  
+- title: "Statement type"
+  contents:
+  - Comment
+  - Equation
+  - IfStatement
+  - LineBreak
+  - Ode
+
+- title: "Parameters"
+  contents:
+  - Theta
+  - Omega
+  - Sigma
+  - as.data.frame
+  - getNameInModel
+  - getNONMEMName
+  - isDiag
+  - maxIndex
+  - minIndex
+  
+- title: "Compartments"
+  contents:
+  - Compartment
+  - Compartments
+  - getCompartmentIndex
+
+- title: "Compartment properties"
+  contents:
+  - Bioavailability
+  - InfusionDuration
+  - InfusionRate
+  - InitialCondition
+  - LagTime
+  - getPrefix
+  
+- title: "Generic list"
+  contents:
+  - add
+  - contains
+  - delete
+  - find
+  - indexOf
+  - getByIndex
+  - getByName
+  - getNames
+  - length
+  - replace
+  - sort
+  - default
+  
+- title: "Generic element"
+  contents:
+  - getName
+
+- title: "Generic methods"
+  contents:
+  - clean
+  - export
+  - disable
+  - fixOmega
+  
+- title: "Mrgsolve export"
+  contents:
+  - mrgsolveBlock
+  - mrgsolveCapture
+  - mrgsolveCompartment
+  - mrgsolveMain
+  - mrgsolveMatrix
+  - mrgsolveOde
+  - mrgsolveParam
+  - mrgsolveTable
+  
+- title: "Exported classes"
+  contents:
+  - campsis_model-class
+  - code_record-class
+  - comment-class
+  - compartment-class
+  - compartments-class
+  - compartment_bioavailability-class
+  - compartment_infusion_duration-class
+  - compartment_infusion_rate-class
+  - compartment_initial_condition-class
+  - compartment_lag_time-class
+  - compartment_properties-class
+  - compartment_property-class
+  - double_array_parameter-class
+  - duration_record-class
+  - equation-class
+  - error_record-class
+  - export_type-class
+  - f_record-class
+  - if_statement-class
+  - init_record-class
+  - lag_record-class
+  - line_break-class
+  - main_record-class
+  - pmx_element-class
+  - pmx_list-class
+  - pmx_position-class
+  - pmx_position_by_element-class
+  - pmx_position_by_index-class
+  - pmx_undefined_position-class
+
+- title: "Parsing utilities"
+  contents:
+  - extractLhs
+  - extractRhs
+  - extractTextBetweenBrackets
+  - hasComment
+  - isComment
+  - isEmptyLine
+  - isEquation
+  - isIfStatement
+  - isODE
+  - trim
+  
+- title: "Other exported methods"
+  contents:
+  - assertSingleCharacterString
+  - getNONMEMModelTemplate
+

@@ -38,7 +38,7 @@ Collate:
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )

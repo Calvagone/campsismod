@@ -17,3 +17,4 @@ same line with comments translated to C/C++
 Convert CAMPSIS comment style to C/C++ code.
 Only the first # is translated to //.
 }
+\keyword{internal}

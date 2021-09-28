@@ -17,3 +17,4 @@ the resulting CAMPSIS model
 \description{
 Append model (or simply add).
 }
+\keyword{internal}
