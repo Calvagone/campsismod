@@ -1,10 +1,10 @@
+# push:
+#     branches:
+#       - develop
 on:
-  push:
-    branches:
-      #- develop
   pull_request:
     branches:
-      #- main
+      - main
 
 name: test-coverage
 

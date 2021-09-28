@@ -139,6 +139,22 @@ reference:
   - pmx_position_by_element-class
   - pmx_position_by_index-class
   - pmx_undefined_position-class
+  - model_statement-class
+  - model_statements-class
+  - mrgsolve_type-class
+  - ode-class
+  - ode_record-class
+  - omega-class
+  - parameter-class
+  - parameters-class
+  - properties_record-class
+  - rate_record-class
+  - rxode_type-class
+  - sigma-class
+  - single_array_parameter-class
+  - statements_record-class
+  - theta-class
+  - unknown_statement-class
 
 - title: "Parsing utilities"
   contents:
