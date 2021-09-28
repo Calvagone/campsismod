@@ -1,0 +1,9 @@
+[MAIN]
+K=THETA_K*exp(ETA_K) # Elimination constant
+
+[ODE]
+d/dt(A_CENTRAL)=-K*A_CENTRAL
+
+[INIT]
+A_CENTRAL=1000 # Initial value
+

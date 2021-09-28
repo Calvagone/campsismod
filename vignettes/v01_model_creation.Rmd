@@ -1,0 +1,85 @@
+---
+title: "Create a minimalist model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Create a minimalist model}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+### Create a minimalist model in the Notepad++ editor
+
+For this exercise, we'll need the `campsis` package, which includes the `campsismod` package.
+
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+library(campsis)
+```
+
+Assume a very simple 1-compartment PK model with first-order eliminate rate `K`. Say this parameter has a typical value of log(2)/12≈0.06 (where 12 is the elimination half life) and has 15% CV. Let's also initiate the central compartment to 1000.
+
+
+This can be translated into the following CAMPSIS model (Notepad++ plugin can be downloaded here):
+
+![Minimalist model edited in Notepad++](resources/notepad_plugin_example.png)
+             
+Let's now create our `theta.csv` with our single parameter `K` as follows:
+
+![Edition of THETA's in Excel](resources/minimal_model_theta.png)
+           
+And finally, let's also create our `omega.csv` to include inter-individual variability on `K`:
+
+![Edition of OMEGA's in Excel](resources/minimal_model_omega.png)
+          
+This model can now be loaded and simulated by CAMPSIS.
+
+```{r, warning=FALSE, fig.align='center', fig.height=4, fig.width=8}
+model <- read.campsis("resources/minimalist_model/")
+dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
+results <- model %>% simulate(dataset=dataset, seed=1)
+spaghettiPlot(results, "A_CENTRAL")
+```
+
+
+### Create the same model programmatically
+
+The same model can be created programmatically. First, let's create an empty CAMPSIS model.
+
+```{r}
+model <- CampsisModel()
+```
+
+Then, let's define the equation of our model parameter `K`.
+
+```{r}
+model <- model %>% add(Equation("K", "THETA_K*exp(ETA_K)"))
+```
+
+We can add an ordinary differential equation as follows:
+
+```{r}
+model <- model %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
+```
+
+We can init the central compartment as well on the fly:
+
+```{r}
+model <- model %>% add(InitialCondition(compartment=1, "1000"))
+```
+
+Finally, let's define our `THETA_K` and `ETA_K`:
+
+```{r}
+model <- model %>% add(Theta("K", value=0.06))
+model <- model %>% add(Omega("K", value=15, type="cv%"))
+```
+
+This model can simulated by CAMPSIS as well. Powerful, isn't it?
+
+```{r, warning=FALSE, fig.align='center', fig.height=4, fig.width=8}
+model <- read.campsis("resources/minimalist_model/")
+dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
+results <- model %>% simulate(dataset=dataset, seed=2)
+spaghettiPlot(results, "A_CENTRAL")
+```

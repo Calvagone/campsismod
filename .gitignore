@@ -38,5 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# readme_tmp folder
-/readme_tmp/
+# Temporary folders & documentation
+/path_to_model_folder/
+/vignettes/path_to_model_folder/
+/docs/
