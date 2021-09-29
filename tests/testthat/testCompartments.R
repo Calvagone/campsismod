@@ -51,11 +51,26 @@ test_that("getCompartmentIndex method works as expected", {
 
 test_that("replace method may be used to adapt the name of a compartment", {
   model <- model_library$advan4_trans4 %>% add(Bioavailability(1, "0.75"))
-  model <- model %>% replace(Compartment(1, "ABS"))
+  
+  # Replace compartment and ODE
+  model <- model %>% replace(Compartment(1, "ABS")) %>% 
+    delete(Ode("A_DEPOT")) %>%
+    add(Ode("A_ABS", "-KA*ABS"), Position(Ode("A_CENTRAL"), after=FALSE))
+  
+  # Replace occurrence in CENTRAL compartment
+  central <- model %>% find(Ode("A_CENTRAL"))
+  central@rhs <- gsub(pattern="A_DEPOT", replacement="A_ABS", x=central@rhs)
+  model <- model %>% replace(central)
   
   # Check compartment has been correctly replaced
   compartment <- model %>% find(Compartment(1))
   expect_equal(compartment@name, "ABS")
+  
+  # Check 2 first ODE's
+  abs <- model %>% find(Ode("A_ABS"))
+  central <- model %>% find(Ode("A_CENTRAL"))
+  expect_equal(abs@rhs, "-KA*ABS")
+  expect_equal(central@rhs, "KA*A_ABS + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL")
   
   # Check bioavailability equation will be adapted too
   expect_equal(model %>% find(Bioavailability(1)) %>% toString(model=model, dest="campsis"), "A_ABS=0.75")

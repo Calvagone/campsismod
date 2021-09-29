@@ -175,6 +175,7 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 #' @param compartments compartments object
 #' @param ode ODE
 #' @return a compartments object
+#' @importFrom purrr discard map_chr
 #' @keywords internal
 #' 
 addODECompartment <- function(compartments, ode) {
@@ -182,6 +183,7 @@ addODECompartment <- function(compartments, ode) {
     stop("ode is not an ODE")
   }
   name <- ode@lhs
+  
   cmtIndex <- compartments %>% length() + 1
   if (startsWith(name, prefix="A_")) {
     name <- gsub("^A_", "", name)
@@ -192,7 +194,12 @@ addODECompartment <- function(compartments, ode) {
     stop(paste0("Compartment ", name, " does not start with 'A_'"))
   }
   compartment <- Compartment(index=cmtIndex, name=name)
-  compartments <- compartments %>% add(compartment)
+  names <- compartments@list %>% purrr::map_chr(~.x@name) %>% purrr::discard(is.na)
+  
+  # Add compartment only if not there yet
+  if (is.na(name) || !(name %in% names)) {
+    compartments <- compartments %>% add(compartment)
+  }
   return(compartments)
 }
 
