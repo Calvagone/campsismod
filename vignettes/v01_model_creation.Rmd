@@ -15,7 +15,7 @@ EXPORT_PNG <- FALSE
 
 ### Prerequisite
 
-For this exercise, we'll need the `campsismod` package. This package can be loaded a follows:
+For this exercise, we'll need the `campsismod` package. This package can be loaded as follows:
 
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
 library(campsismod)
