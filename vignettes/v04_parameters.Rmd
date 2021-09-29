@@ -1,0 +1,95 @@
+---
+title: "Adapt your parameters"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adapt your parameters}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+EXPORT_PNG <- FALSE
+```
+
+### Prerequisite
+
+The examples below require the package `campismod`.
+
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+library(campsismod)
+```
+
+### Retrieve your parameters
+
+The examples below are illustrated based on the reference 2-compartment PK model that you find in the built-in library. This model has 5 parameters. All these parameters have inter-individual variability defined.
+
+```{r}
+model <- model_library$advan4_trans4
+model
+```
+
+To retrieve a parameter by its name, just call the method `find` as follows:
+
+```{r}
+model %>% find(Theta("CL"))
+model %>% find(Omega("KA"))
+model %>% find(Sigma("PROP"))
+```
+
+These parameters can also alternatively be retrieved by their index(es). Use the specific method `getByIndex` created for that purpose:
+
+```{r}
+model@parameters %>% getByIndex(Theta(index=2))
+model@parameters %>% getByIndex(Omega(index=1, index2=1))
+model@parameters %>% getByIndex(Sigma(index=1, index2=1))
+```
+
+### Access parameter values
+
+Accessing parameter values is straightforward. Parameters have a slot `value` that may be accessed.
+
+```{r}
+thetaCL <- model %>% find(Theta("CL"))
+thetaCL@value
+```
+
+For OMEGA and SIGMA parameters, be careful; the interpretation of this value depends on the `type` of the parameter. It may be `var` (for a variance), `covar` (for a covariance), `sd` (for standard deviation), `cv` (value expressed as coefficient of variation), `cv%` (value expressed as coefficient of variation in percentage).  
+For a quick access to the value as variance or covariance, the method `standardise` can be called first on the parameter itself. This is especially useful for values expressed in CV or in standard deviation.
+
+```{r}
+theta <- Omega(name="TEST", index=1, index2=1, value=15, type="cv%")
+theta@value # 15 is returned
+
+theta_standardised <- theta %>% standardise() # Conversion to variance
+theta_standardised 
+theta_standardised@value
+```
+
+### Replace parameters
+
+Parameters can be replaced easily. Here are a few examples:
+
+```{r}
+model <- model %>% replace(Theta("KA", value=2)) # Previous value for KA was 1
+model <- model %>% replace(Omega("CL", value=20, type="cv%")) # Previous value was a variance of 0.025
+model
+```
+
+### Delete parameters
+
+Parameters can be deleted. Please note that it does not do anything to the equations. Also, the indexes won't be re-adjusted. Here are a few examples:
+
+```{r}
+model <- model %>% delete(Theta("KA"))
+model <- model %>% delete(Omega("CL"))
+model
+```
+
+As expected, this model will not be valid anymore:
+```{r}
+tryCatch({validObject(model, complete=TRUE)}, error=function(msg) {
+  print(msg)
+})
+```

@@ -10,9 +10,6 @@ output: github_document
 [![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://codecov.io/gh/Calvagone/campsismod)
 <!-- badges: end -->
   
-# campsismod
-Generic implementation of a drug model in pharmacometrics.
-
 ## Installation
 Install the latest stable release with the authentication token you have received:
   
@@ -20,31 +17,28 @@ Install the latest stable release with the authentication token you have receive
 devtools::install_github("Calvagone/campsismod", ref="main", auth_token="AUTH_TOKEN", force=TRUE)
 ```
 
-## Some examples
+## Basic examples
 
 ### Load example from model library
 
-First import the `campsismod` package:
+Load 2-compartment PK model from built-in model library:
 
-```{r, message=FALSE}
+```{r message=FALSE}
 library(campsismod)
-```
-
-Load 2-compartment MAIN model from built-in model library and show content:
-
-```{r}
 model <- model_library$advan4_trans4
-show(model)
 ```
 
 ### Write CAMPSIS model
 
-```{r}
+```{r message=FALSE, results='hide'}
 model %>% write(file="path_to_model_folder")
+```
+
+```{r}
 list.files("path_to_model_folder")
 ```
 
-### Read CAMPSIS model
+### Read and show CAMPSIS model
 
 ```{r}
 model <- read.campsis(file="path_to_model_folder")
