@@ -44,7 +44,7 @@ Authors@R: c(
   )
 Description: TODO.
 Depends: R (>= 4.0.0)
-Imports: assertthat, dplyr, plyr, purrr, tibble, tidyr
+Imports: assertthat, dplyr, magrittr, plyr, purrr, tibble, tidyr
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US

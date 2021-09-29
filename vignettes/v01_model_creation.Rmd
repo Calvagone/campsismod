@@ -9,13 +9,19 @@ editor_options:
   chunk_output_type: console
 ---
 
-### Create a minimalist model in the Notepad++ editor
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+EXPORT_PNG <- FALSE
+```
 
-For this exercise, we'll need the `campsis` package, which includes the `campsismod` package.
+### Prerequisite
+
+For this exercise, we'll need the `campsismod` package. This package can be loaded a follows:
 
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
-library(campsis)
+library(campsismod)
 ```
+
+### Create a minimalist model in the Notepad++ editor
 
 Assume a very simple 1-compartment PK model with first-order eliminate rate `K`. Say this parameter has a typical value of log(2)/12≈0.06 (where 12 is the elimination half life) and has 15% CV. Let's also initiate the central compartment to 1000.
 
@@ -32,15 +38,26 @@ And finally, let's also create our `omega.csv` to include inter-individual varia
 
 ![Edition of OMEGA's in Excel](resources/minimal_model_omega.png)
           
-This model can now be loaded and simulated by CAMPSIS.
+This model can now be loaded by `campsismod`...
 
-```{r, warning=FALSE, fig.align='center', fig.height=4, fig.width=8}
+```{r, eval=TRUE}
 model <- read.campsis("resources/minimalist_model/")
+```
+
+Let's simulated this model in CAMPSIS:
+
+```{r, eval=EXPORT_PNG}
+library(campsis)
 dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
 results <- model %>% simulate(dataset=dataset, seed=1)
 spaghettiPlot(results, "A_CENTRAL")
 ```
 
+```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
+ggplot2::ggsave(filename="resources/minimalist_example_sim1.png", width=7, height=3, dpi=100)
+```
+
+![](resources/minimalist_example_sim1.png)
 
 ### Create the same model programmatically
 
@@ -77,9 +94,15 @@ model <- model %>% add(Omega("K", value=15, type="cv%"))
 
 This model can simulated by CAMPSIS as well. Powerful, isn't it?
 
-```{r, warning=FALSE, fig.align='center', fig.height=4, fig.width=8}
-model <- read.campsis("resources/minimalist_model/")
+```{r, eval=EXPORT_PNG}
+library(campsis)
 dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
 results <- model %>% simulate(dataset=dataset, seed=2)
 spaghettiPlot(results, "A_CENTRAL")
 ```
+
+```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
+ggplot2::ggsave(filename="resources/minimalist_example_sim2.png", width=7, height=3, dpi=100)
+```
+
+![](resources/minimalist_example_sim2.png)
