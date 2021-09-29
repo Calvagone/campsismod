@@ -46,6 +46,8 @@ appendComment <- function(str, object, dest) {
 
 #' 
 #' Unknown destination engine exception.
+#'
+#' @keywords internal
 #' 
 UnsupportedDestException <- function() {
   stop("Only RxODE, mrgsolve or campsis are supported")

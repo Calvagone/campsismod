@@ -27,6 +27,8 @@ reference:
   contents:
   - CampsisModel
   - autoDetectNONMEM
+  - read.campsis
+  - read.model
 
 - title: "Code records"
   contents:
@@ -38,14 +40,17 @@ reference:
   
 - title: "Statement type"
   contents:
+  - ModelStatements
   - Comment
   - Equation
   - IfStatement
   - LineBreak
   - Ode
+  - UnknownStatement
 
 - title: "Parameters"
   contents:
+  - Parameters
   - Theta
   - Omega
   - Sigma
@@ -55,6 +60,11 @@ reference:
   - isDiag
   - maxIndex
   - minIndex
+  - read.allparameters
+  - read.parameters
+  - read.varcov
+  - writeParameters
+  - writeVarcov
   
 - title: "Compartments"
   contents:
@@ -85,8 +95,9 @@ reference:
   - replace
   - sort
   - default
+  - Position
   
-- title: "Generic element"
+- title: "Generic list element"
   contents:
   - getName
 
@@ -96,6 +107,11 @@ reference:
   - export
   - disable
   - fixOmega
+  - read
+  - select
+  - standardise
+  - toString
+  - write
   
 - title: "Mrgsolve export"
   contents:
@@ -107,6 +123,12 @@ reference:
   - mrgsolveOde
   - mrgsolveParam
   - mrgsolveTable
+  
+- title: "RxODE export"
+  contents:
+  - rxodeCode
+  - rxodeMatrix
+  - rxodeParams
   
 - title: "Exported classes"
   contents:
@@ -167,10 +189,21 @@ reference:
   - isEquation
   - isIfStatement
   - isODE
+  - parseIfStatement
+  - parseStatements
   - trim
+
+- title: "Model library"
+  contents:
+  - model_library
+  - getNONMEMModelTemplate
   
+- title: "Advanced use"
+  contents:
+  - updateCompartments
+
 - title: "Other exported methods"
   contents:
   - assertSingleCharacterString
-  - getNONMEMModelTemplate
+  - processExtraArg
 

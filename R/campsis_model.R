@@ -293,6 +293,7 @@ read.campsis <- function(file) {
 #' @param file path to folder
 #' @return a CAMPSIS model
 #' @export
+#' @keywords internal
 read.pmxmod <- function(file) {
   .Deprecated("read.campsis")
   return(read.campsis(file=file))

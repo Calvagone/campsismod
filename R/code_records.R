@@ -264,6 +264,8 @@ getRecordNames <- function() {
 #' 
 #' @param x character vector
 #' @return a character vector
+#' @keywords internal
+#' 
 removeTrailingLineBreaks <- function(x) {
   lenX <- x %>% length()
   if (lenX > 0) {

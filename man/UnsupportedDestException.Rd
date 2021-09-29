@@ -9,3 +9,4 @@ UnsupportedDestException()
 \description{
 Unknown destination engine exception.
 }
+\keyword{internal}

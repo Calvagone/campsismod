@@ -15,3 +15,4 @@ a character vector
 \description{
 Remove all trailing line breaks.
 }
+\keyword{internal}

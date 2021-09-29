@@ -6,11 +6,7 @@
 \usage{
 lhs \%>\% rhs
 }
-\arguments{
-\item{lhs}{symbol}
-
-\item{rhs}{magritt operator}
-}
 \description{
 Magritt operator for piping.
 }
+\keyword{internal}

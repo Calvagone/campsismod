@@ -9,3 +9,4 @@ UndefinedPosition()
 \description{
 Undefined position.
 }
+\keyword{internal}

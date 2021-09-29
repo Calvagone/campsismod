@@ -19,3 +19,4 @@ variance type
 \description{
 Process double array arguments.
 }
+\keyword{internal}

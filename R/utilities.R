@@ -40,6 +40,8 @@ isODE <- function(x) {
 #' Return the variable pattern.
 #' 
 #' @return pattern (regular expression)
+#' @keywords internal
+#' 
 variablePattern <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
