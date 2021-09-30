@@ -1,3 +1,7 @@
+resource_files:
+  - resources/results_mrgsolve.png
+  - resources/results_rxode.png
+  
 ## This file configures the building process for pkgdown::build_site()
 template:
   params:

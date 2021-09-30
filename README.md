@@ -90,9 +90,27 @@ show(model)
     ## A_PERIPHERAL (CMT=3)
     ## A_OUTPUT (CMT=4)
 
-### Export CAMPSIS model to RxODE or mrgsolve
+### Simulate with RxODE or mrgsolve
 
 ``` r
-rxmod <- model %>% export(dest="RxODE")
-mrgmod <- model %>% export(dest="mrgsolve")
+library(campsis)
+
+dataset <- Dataset(5) %>%
+  add(Bolus(time=0, amount=1000, ii=12, addl=2)) %>%
+  add(Observations(times=0:36))
+
+rxode <- model %>% simulate(dataset=dataset, dest="RxODE", seed=1)
+mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 ```
+
+``` r
+spaghettiPlot(rxode, "CP")
+```
+
+![RxODE simulation results](vignettes/resources/results_rxode.png)
+
+``` r
+spaghettiPlot(mrgsolve, "CP")
+```
+
+![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)

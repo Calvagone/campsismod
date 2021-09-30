@@ -9,6 +9,10 @@ output: github_document
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
 [![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://codecov.io/gh/Calvagone/campsismod)
 <!-- badges: end -->
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+EXPORT_PNG <- FALSE
+```
   
 ## Installation
 Install the latest stable release with the authentication token you have received:
@@ -45,9 +49,51 @@ model <- read.campsis(file="path_to_model_folder")
 show(model)
 ```
 
-### Export CAMPSIS model to RxODE or mrgsolve
+### Simulate with RxODE or mrgsolve
 
-```{r}
-rxmod <- model %>% export(dest="RxODE")
-mrgmod <- model %>% export(dest="mrgsolve")
+```{r, eval=EXPORT_PNG}
+library(campsis)
+
+dataset <- Dataset(5) %>%
+  add(Bolus(time=0, amount=1000, ii=12, addl=2)) %>%
+  add(Observations(times=0:36))
+
+rxode <- model %>% simulate(dataset=dataset, dest="RxODE", seed=1)
+mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 ```
+
+```{r, eval=EXPORT_PNG}
+spaghettiPlot(rxode, "CP")
+```
+
+```{r, echo=FALSE, results='hide'}
+file_vignette <- "vignettes/resources/results_rxode.png"
+```
+
+```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
+ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
+```
+
+```{r, echo=FALSE, results='hide'}
+#file.copy(file_vignette, "docs/articles/resources/")
+```
+
+![RxODE simulation results](vignettes/resources/results_rxode.png)
+
+```{r, eval=EXPORT_PNG}
+spaghettiPlot(mrgsolve, "CP")
+```
+
+```{r, echo=FALSE, results='hide'}
+file_vignette <- "vignettes/resources/results_mrgsolve.png"
+```
+
+```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
+ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
+```
+
+```{r, echo=FALSE, results='hide'}
+#file.copy(file_vignette, "docs/articles/resources/")
+```
+
+![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)
