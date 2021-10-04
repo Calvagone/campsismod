@@ -1,0 +1,148 @@
+---
+title: "Insight on the structural model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Insight on the structural model}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+EXPORT_PNG <- FALSE
+```
+
+This vignette attends to give a brief insight on the different statements that may be used to build a structural model, compatible with CAMPSIS.  
+The number of model statement types proposed in `campsismod` is rather limited, with the underlying idea of keeping our model simple and the translation to RxODE and mrgsolve as clean as possible.
+However, in a near future, new types of model statements will likely be supported.
+
+### Prerequisite
+
+The examples below require the package `campismod`.
+
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+library(campsismod)
+```
+
+### Equation
+
+Equations are described by 3 fields:
+
+- lhs: the left-hand side string, which corresponds to the variable name
+- rhs: the right-hand side string, which corresponds to the formula
+- comment: a possible comment
+
+Example:
+
+```{r}
+equation <- Equation("KA", "THETA_KA * exp(ETA_KA)", comment="This is my KA parameter")
+```
+
+The equivalent text form is:
+
+```{r}
+equation
+```
+
+### Ordinary differential equation (ODE)
+
+Similarly, Ordinary differential equations (ODE's) are described by 3 fields as well:
+
+- lhs: the left-hand side string, which corresponds to the variable name, must start with 'A_'
+- rhs: the right-hand side string, which corresponds to the derivative formula
+- comment: a possible comment
+
+Example:
+
+```{r}
+ode <- Ode("A_DEPOT", "-KA * A_DEPOT", comment="This is my depot compartment")
+```
+
+The equivalent text form is:
+
+```{r}
+ode
+```
+
+### Line break
+
+Line breaks can be added to a model to add clear separations between blocks of equations. It does not have any field.
+
+Example:
+
+```{r}
+linebreak <- LineBreak()
+```
+
+The equivalent text form is obviously a separation line.
+
+### Comment
+
+Comments can be specified at any place in the model. They have a unique field:
+
+- x: the comment you'd like to add
+
+Example:
+
+```{r}
+comment <- Comment("This is my first comment")
+```
+
+The equivalent text form is:
+
+```{r}
+comment
+```
+
+### If-statement
+
+If-statements allow a variable to take different values according to different specified conditions.
+
+- condition: the given condition
+- equation: an equation (see definition above)
+- comment: a possible comment
+
+Example:
+
+```{r}
+ifStatement <- IfStatement("COV==1", Equation("COV_EFFECT", "0.2"), comment="This is an if statement")
+```
+
+The equivalent text form is:
+
+```{r}
+ifStatement
+```
+
+A common use of the if-statements is to add covariate effects into the model. Here is an example:
+
+```{r}
+main <- MainRecord()
+main <- main %>%
+  add(Equation("COV_EFFECT", "0")) %>% # Initialisation
+  add(IfStatement("COV==1", Equation("COV_EFFECT", "0.1"))) %>%  # Covariate value is 1 in dataset
+  add(IfStatement("COV==2", Equation("COV_EFFECT", "0.2"))) %>%  # Covariate value is 2 in dataset
+  add(IfStatement("COV==3", Equation("COV_EFFECT", "0.3")))      # Covariate value is 3 in dataset
+```
+
+The equivalent text would then be:
+
+```{r}
+main
+```
+
+Please note that mrgsolve require all extra variables (like COV_EFFECT in the previous example) to be initialised to a predefined value, which makes a lot of sense in general.
+
+### Additional remarks
+
+Package `campsismod` does not check the equations from a grammar point of view. This work is delegated to the simulation engine (RxODE or mrgsolve) and C compiler.
+
+In general, respecting the few rules listed below will give you a successful compatibility with both engines:
+
+- All formula's and if-statement conditions must be written in C code
+- Functions included in the Math library of C are compatible (e.g. cos, sin, etc)
+- Use the pow function for writing exponents (^ is accepted in RxODE, not in mrgsolve)
+- Scientific notation for numbers is accepted (e.g. 2.51e-01)
+- Initialise all extra variables (see example in the section above)
+

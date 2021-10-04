@@ -99,6 +99,8 @@ setMethod("add", signature=c("parameters", "parameters"), definition=function(ob
 #' @param params1 base set of parameters
 #' @param params2 extra set of parameters to be appended
 #' @return the resulting set of parameters
+#' @keywords internal
+#' 
 appendParameters <- function(params1, params2) {
   paramNames1 <- params1 %>% getNames()
   paramNames2 <- params2 %>% getNames()
@@ -163,6 +165,7 @@ setMethod("clean", signature=c("parameters"), definition=function(object) {
 #' @param object parameters
 #' @param x single array parameter to match
 #' @return the same parameter is no match was found or the same parameter with updated index if a match was found
+#' @keywords internal
 matchSingleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && !is.na(x@name)) {
@@ -180,6 +183,7 @@ matchSingleArrayParameter <- function(object, x) {
 #' @param object parameters
 #' @param x double array parameter to match
 #' @return the same parameter is no match was found or the same parameter with updated indexes if a match was found
+#' @keywords internal
 matchDoubleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {

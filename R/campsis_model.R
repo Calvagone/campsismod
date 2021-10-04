@@ -73,6 +73,8 @@ setMethod("add", signature=c("campsis_model", "campsis_model"), definition=funct
 #' @param model1 base model
 #' @param model2 model to append
 #' @return the resulting CAMPSIS model
+#' @keywords internal
+#' 
 appendModel <- function(model1, model2) {
   # Append compartments (and included properties)
   model1@parameters <- model1@parameters %>% add(model2@parameters)
@@ -291,6 +293,7 @@ read.campsis <- function(file) {
 #' @param file path to folder
 #' @return a CAMPSIS model
 #' @export
+#' @keywords internal
 read.pmxmod <- function(file) {
   .Deprecated("read.campsis")
   return(read.campsis(file=file))

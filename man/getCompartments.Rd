@@ -17,3 +17,4 @@ a list of compartments
 Detect all compartments names from the code records.
 Only for model instantiation. Not exported.
 }
+\keyword{internal}

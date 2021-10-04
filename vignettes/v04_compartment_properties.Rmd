@@ -1,0 +1,128 @@
+---
+title: "Play with compartment properties"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Play with compartment properties}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+EXPORT_PNG <- FALSE
+```
+
+### Prerequisite
+
+For this vignette, please load the `campsismod` package and load the minimalist model that we have created in the first vignette.
+
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+library(campsismod)
+model <- read.campsis("resources/minimalist_model/")
+```
+
+### Create new compartment properties
+
+Let's invent a very basic scenario: we would like to infuse `1000` into the central compartment with a fixed rate of `100` and a fixed lag time of `2`.    
+First, we're going to delete the initial condition that we had in the minimalist model. This is done as follows:
+
+```{r}
+model_ <- model %>% delete(InitialCondition(compartment=1))
+model_
+```
+
+This is strictly equal as doing (if you prefer working with compartment names):
+
+```{r}
+model <- model %>% delete(InitialCondition(compartment= model %>% getCompartmentIndex("CENTRAL")))
+```
+
+We can now add a fixed rate for all infusions that go into the central compartment:
+
+```{r}
+model <- model %>% add(InfusionRate(compartment=1, "100"))
+```
+
+Finally, let's now add a constant lag time:
+
+```{r}
+model <- model %>% add(LagTime(compartment=1, "2"))
+```
+
+OK, this is how our model looks like now:
+
+```{r}
+model
+```
+
+### Simulate our model
+
+Let's now simulate a few individuals and show `A_CENTRAL`, i.e., the amount of drug in the central compartment.
+
+First, we need to define an infusion of `1000` in a CAMPSIS dataset, as well as the observations times.
+
+```{r, eval=EXPORT_PNG}
+library(campsis)
+dataset <- Dataset(5) %>% 
+  add(Infusion(time=0, amount=1000)) %>%
+  add(Observations(seq(0,36,by=0.5)))
+```
+
+Then, we can run the simulation.
+
+```{r, eval=EXPORT_PNG}
+results <- model %>% simulate(dataset=dataset, seed=1)
+spaghettiPlot(results, "A_CENTRAL")
+```
+
+```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
+ggplot2::ggsave(filename="resources/minimalist_example_cmt_properties.png", width=7, height=3, dpi=100)
+```
+
+![](resources/minimalist_example_cmt_properties.png)
+
+### A couple of useful functions in action
+
+As previously, let's demonstrate the use of a couple of interesting functions:  
+
+Check the existence of a compartment:
+
+```{r}
+model %>% contains(Compartment(1)) 
+# Or equivalenty:
+model %>% contains(Compartment(model %>% getCompartmentIndex("CENTRAL")))
+```
+
+Check the existence of a property:
+
+```{r}
+model %>% contains(InfusionRate(1))
+model %>% contains(InfusionDuration(1)) 
+```
+
+Find a compartment:
+
+```{r}
+model %>% find(Compartment(1)) 
+```
+
+Find a compartment property:
+
+```{r}
+model %>% find(InfusionRate(1)) 
+```
+
+Replace a compartment property:
+
+```{r}
+model %>% replace(InfusionRate(1, "200")) # Previous value of 100 is overridden
+```
+
+Interestingly, the name of a compartment can be replaced as follows:
+
+```{r}
+model %>% replace(Compartment(1, name="CENT")) %>%
+  delete(Ode("A_CENTRAL")) %>%
+  add(Ode("A_CENT", "-K*A_CENT"))
+```

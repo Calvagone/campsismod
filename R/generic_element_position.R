@@ -45,6 +45,7 @@ setClass(
 #' Undefined position.
 #' 
 #' @export
+#' @keywords internal
 UndefinedPosition <- function() {
   return(new("pmx_undefined_position", undefined=TRUE, by_index=FALSE, by_element=FALSE))
 }

@@ -46,6 +46,7 @@ setMethod("add", signature=c("code_records", "code_records"), definition=functio
 #' @param records1 base set of code records
 #' @param records2 extra set of code records to be appended
 #' @return the resulting set of code records
+#' @keywords internal
 #' 
 appendCodeRecords <- function(records1, records2) {
   for (record in (records2)@list) {
@@ -174,12 +175,15 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 #' @param compartments compartments object
 #' @param ode ODE
 #' @return a compartments object
+#' @importFrom purrr discard map_chr
+#' @keywords internal
 #' 
 addODECompartment <- function(compartments, ode) {
   if (!is(ode, "ode")) {
     stop("ode is not an ODE")
   }
   name <- ode@lhs
+  
   cmtIndex <- compartments %>% length() + 1
   if (startsWith(name, prefix="A_")) {
     name <- gsub("^A_", "", name)
@@ -190,7 +194,12 @@ addODECompartment <- function(compartments, ode) {
     stop(paste0("Compartment ", name, " does not start with 'A_'"))
   }
   compartment <- Compartment(index=cmtIndex, name=name)
-  compartments <- compartments %>% add(compartment)
+  names <- compartments@list %>% purrr::map_chr(~.x@name) %>% purrr::discard(is.na)
+  
+  # Add compartment only if not there yet
+  if (is.na(name) || !(name %in% names)) {
+    compartments <- compartments %>% add(compartment)
+  }
   return(compartments)
 }
 
@@ -199,6 +208,7 @@ addODECompartment <- function(compartments, ode) {
 #'
 #' @param records code records
 #' @return a list of compartments
+#' @keywords internal
 #' 
 getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
@@ -222,6 +232,7 @@ getCompartments <- function(records) {
 #' @param name record name to look at
 #' @param init empty characteristic, to be completed
 #' @return updated compartments object
+#' @keywords internal
 #' 
 addProperties <- function(compartments, records, name, init) {
   record <- records %>% getByName(name)
@@ -260,6 +271,8 @@ getRecordNames <- function() {
 #' 
 #' @param x character vector
 #' @return a character vector
+#' @keywords internal
+#' 
 removeTrailingLineBreaks <- function(x) {
   lenX <- x %>% length()
   if (lenX > 0) {

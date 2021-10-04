@@ -21,3 +21,4 @@ updated compartments object
 \description{
 Add properties to compartments object.
 }
+\keyword{internal}

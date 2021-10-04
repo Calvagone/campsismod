@@ -1,7 +1,7 @@
 
 #' Magritt operator for piping.
 #' 
-#' @param lhs symbol
-#' @param rhs magritt operator
+#' @importFrom magrittr `%>%`
 #' @export
+#' @keywords internal
 `%>%` <- magrittr::`%>%`

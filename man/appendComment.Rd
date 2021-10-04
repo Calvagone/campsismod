@@ -13,6 +13,10 @@ appendComment(str, object, dest)
 
 \item{dest}{destination engine, string}
 }
+\value{
+single character string followed by comment
+}
 \description{
 Append comment.
 }
+\keyword{internal}

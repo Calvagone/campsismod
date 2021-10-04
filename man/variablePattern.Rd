@@ -12,3 +12,4 @@ pattern (regular expression)
 \description{
 Return the variable pattern.
 }
+\keyword{internal}

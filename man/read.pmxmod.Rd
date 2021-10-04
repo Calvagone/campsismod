@@ -15,3 +15,4 @@ a CAMPSIS model
 \description{
 Read a CAMPSIS model (deprecated).
 }
+\keyword{internal}

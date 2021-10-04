@@ -148,7 +148,8 @@ setClass(
 #' @param index parameter index
 #' @param index2 second parameter index
 #' @param type variance type
-#' @return variance type  
+#' @return variance type
+#' @keywords internal
 #'
 processDoubleArrayArguments <- function(index, index2, type) {
   # Only 1 NA: NOK
