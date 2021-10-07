@@ -31,12 +31,12 @@ The following code will load our reference 2-compartment PK model.
 pk_model <- model_library$advan4_trans4
 ```
 
-### Load a compartment effect model
+### Load an effect-compartment model
 
-The effect compartment model can be downloaded here and loaded as follows:
+The effect-compartment model can be loaded from the model library as follows:
 
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
-pd_model <- read.campsis("resources/effect_cmt_model/")
+pd_model <- model_library$effect_cmt_model
 pd_model
 ```
 
