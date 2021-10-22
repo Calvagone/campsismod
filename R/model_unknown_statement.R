@@ -55,7 +55,7 @@ setMethod("toString", signature=c("unknown_statement"), definition=function(obje
     } else {
       retValue <- object@line
     }
-  } else if (dest=="RxODE" || dest=="mrgsolve") {
+  } else if (dest=="RxODE" || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- object@line
   } else {
     UnsupportedDestException()

@@ -70,6 +70,7 @@ setClass(
 #' 
 #' Statements record class.
 #' 
+#' @export
 setClass(
   "statements_record",
   representation(

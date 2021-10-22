@@ -35,7 +35,13 @@ appendComment <- function(str, object, dest) {
   if (is.na(comment)) {
     return(str)
   } else {
-    symbol <- ifelse(dest=="mrgsolve", "//", "#")
+    if (dest=="mrgsolve") {
+      symbol <- "//"
+    } else if (dest=="NONMEM") {
+      symbol <- ";"
+    } else {
+      symbol <- "#" # Both campsis and RxODE
+    }
     if (str=="") {
       return(paste0(symbol, " ", comment))
     } else {
