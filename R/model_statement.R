@@ -67,3 +67,12 @@ UnsupportedDestException <- function() {
 setMethod("show", signature=c("model_statement"), definition=function(object) {
   cat(object %>% toString(show=TRUE))
 })
+
+#_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  return(object)
+})

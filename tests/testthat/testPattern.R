@@ -1,0 +1,36 @@
+library(testthat)
+
+context("Test the different patterns that can be created to replace occurrences")
+
+test_that("Pattern object works as expected", {
+  str <- "ETA_KA + THETA_KA + ETA_KA + ETA_KA3 + ETA_KA"
+  pattern <- Pattern("ETA_KA")
+  expect_equal(pattern %>% as.character(), "ETA_KA")
+  expect_equal(str %>% replaceAll(pattern, "ETA_KA2"), "ETA_KA2 + THETA_KA2 + ETA_KA2 + ETA_KA23 + ETA_KA2")
+  
+  str <- "HELLO"
+  expect_equal(str %>% replaceAll(pattern, ""), "HELLO")
+})
+
+test_that("Variable pattern object works as expected", {
+  str <- "ETA_KA + THETA_KA + ETA_KA + ETA_KA3 + ETA_KA"
+  pattern <- VariablePattern("ETA_KA")
+  expect_equal(pattern %>% as.character(), "ETA_KA")
+  expect_equal(str %>% replaceAll(pattern, "ETA_KA2"), "ETA_KA2 + THETA_KA + ETA_KA2 + ETA_KA3 + ETA_KA2")
+  
+  str <- "HELLO"
+  expect_equal(str %>% replaceAll(pattern, ""), "HELLO")
+})
+
+test_that("Replace occurrences in model works as expected", {
+  model <- model_library$advan1_trans1
+  model <- model %>% add(LineBreak())
+  model <- model %>% add(Comment("Check replacement also works in IF-statement"))
+  model <- model %>% add(IfStatement("K==1", Equation("XX", "K*10")))
+  model <- model %>% replaceAll("K", "K2")
+  
+  expect_equal(model %>% find(Equation("K2")), Equation("K2", "THETA_K*exp(ETA_K)"))
+  expect_equal(model %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K2*A_CENTRAL"))
+  expect_equal(model %>% find(Ode("A_OUTPUT")), Ode("A_OUTPUT", "K2*A_CENTRAL"))
+  expect_equal(model %>% find(IfStatement("K2==1", Equation("XX"))), IfStatement("K2==1", Equation("XX", "K2*10")))
+})

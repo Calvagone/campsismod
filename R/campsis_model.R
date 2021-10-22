@@ -364,6 +364,22 @@ setMethod("replace", signature=c("campsis_model", "model_statement"), definition
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@model@list <- object@model@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+  return(object)
+})
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
+  object@model@list <- object@model@list %>% purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 

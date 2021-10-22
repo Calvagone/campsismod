@@ -10,6 +10,7 @@ Collate:
     'generic_element_list.R'
     'generic_element_position.R'
     'generic_list.R'
+    'pattern.R'
     'model_statement.R'
     'model_statements.R'
     'model_unknown_statement.R'

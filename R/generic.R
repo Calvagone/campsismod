@@ -110,6 +110,25 @@ setGeneric("read", function(file, ...) {
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' Replace all occurrences in object.
+#' 
+#' @param object generic object (e.g. model, code_record(s), etc.)
+#' @param pattern pattern to be replaced
+#' @param replacement replacement string
+#' @param ... extra arguments
+#' @export
+replaceAll <- function(object, pattern, replacement, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("replaceAll", function(object, pattern, replacement, ...) {
+  standardGeneric("replaceAll")
+})
+
+#_______________________________________________________________________________
 #----                                 select                                ----
 #_______________________________________________________________________________
 

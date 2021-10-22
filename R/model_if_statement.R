@@ -45,6 +45,17 @@ setMethod("getName", signature = c("if_statement"), definition = function(x) {
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("if_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@condition <- object@condition %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  object@equation <- object@equation %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
