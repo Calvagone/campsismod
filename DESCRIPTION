@@ -10,6 +10,7 @@ Collate:
     'generic_element_list.R'
     'generic_element_position.R'
     'generic_list.R'
+    'pattern.R'
     'model_statement.R'
     'model_statements.R'
     'model_unknown_statement.R'
@@ -38,7 +39,7 @@ Collate:
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.5.1
+Version: 0.6.0
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )

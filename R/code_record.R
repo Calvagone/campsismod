@@ -70,6 +70,7 @@ setClass(
 #' 
 #' Statements record class.
 #' 
+#' @export
 setClass(
   "statements_record",
   representation(
@@ -334,6 +335,16 @@ setMethod("length", signature=c("statements_record"), definition=function(x) {
 #' @rdname replace
 setMethod("replace", signature=c("statements_record", "model_statement"), definition=function(object, x) {
   object@statements <- object@statements %>% replace(x)
+  return(object)
+})
+
+#_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
   return(object)
 })
 

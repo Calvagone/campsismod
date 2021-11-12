@@ -46,6 +46,17 @@ setMethod("getName", signature = c("equation"), definition = function(x) {
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@lhs <- object@lhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  object@rhs <- object@rhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
@@ -56,7 +67,7 @@ setMethod("toString", signature=c("equation"), definition=function(object, ...) 
   init <- processExtraArg(args=args, name="init", default=TRUE)
   capture <- processExtraArg(args=args, name="capture", default=FALSE)
   
-  if (dest=="campsis" || dest=="RxODE") {
+  if (dest=="campsis" || dest=="RxODE" || dest=="NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0(object@lhs, "=", object@rhs, ";")

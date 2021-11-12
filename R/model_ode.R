@@ -51,10 +51,14 @@ setMethod("getName", signature = c("ode"), definition = function(x) {
 #' @rdname toString
 setMethod("toString", signature=c("ode"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
+  
   if (dest=="campsis" || dest=="RxODE") {
     retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")
+  } else if (dest=="NONMEM") {
+    retValue <- paste0("DADT(", model %>% getCompartmentIndex(gsub("A_", "", object@lhs)), ")", "=", object@rhs)
   } else {
     UnsupportedDestException()
   }

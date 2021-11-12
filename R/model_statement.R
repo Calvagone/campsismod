@@ -35,7 +35,13 @@ appendComment <- function(str, object, dest) {
   if (is.na(comment)) {
     return(str)
   } else {
-    symbol <- ifelse(dest=="mrgsolve", "//", "#")
+    if (dest=="mrgsolve") {
+      symbol <- "//"
+    } else if (dest=="NONMEM") {
+      symbol <- ";"
+    } else {
+      symbol <- "#" # Both campsis and RxODE
+    }
     if (str=="") {
       return(paste0(symbol, " ", comment))
     } else {
@@ -60,4 +66,13 @@ UnsupportedDestException <- function() {
 
 setMethod("show", signature=c("model_statement"), definition=function(object) {
   cat(object %>% toString(show=TRUE))
+})
+
+#_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  return(object)
 })
