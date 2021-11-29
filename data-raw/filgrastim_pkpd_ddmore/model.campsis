@@ -101,11 +101,3 @@ A_11=BM70
 A_12=BM80
 A_13=BM90
 A_14=NB0
-
-[ERROR]
-ZNB=A_14
-ZNT=A_10 + A_11 + A_12 + A_13 + A_14 + A_5 + A_6 + A_7 + A_8 + A_9
-RRTOT=KSI*ZNT
-BBB=-A_2/VD + KD + RRTOT
-ZCP=-0.5*BBB + 0.5*sqrt(4*A_2*KD/VD + pow(BBB, 2))
-
