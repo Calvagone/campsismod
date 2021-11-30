@@ -27,7 +27,7 @@ Assume a very simple 1-compartment PK model with first-order eliminate rate `K`.
 
 This can be translated into the following CAMPSIS model (
 ```{r echo=FALSE}
-xfun::embed_file('../npp_plugin/campsis_npp_plugin.xml', text="download Notepad++ plugin for CAMPSIS")
+xfun::embed_file('resources/campsis_npp_plugin.xml', text="download Notepad++ plugin for CAMPSIS")
 ```
 ):
 
