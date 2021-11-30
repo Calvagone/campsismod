@@ -39,18 +39,18 @@ Collate:
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.6.0
+Version: 0.6.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
-Description: TODO.
+Description: Generic implementation of a drug model in pharmacometrics
 Depends: R (>= 4.0.0)
 Imports: assertthat, dplyr, magrittr, plyr, purrr, tibble, tidyr
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-Suggests: devtools, knitr, pkgdown, rmarkdown, roxygen2, testthat
+Suggests: devtools, knitr, pkgdown, rmarkdown, roxygen2, testthat, xfun
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 URL: https://github.com/Calvagone/campsismod

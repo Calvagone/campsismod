@@ -159,15 +159,16 @@ reference:
   - lag_record-class
   - line_break-class
   - main_record-class
+  - model_statement-class
+  - model_statements-class
+  - mrgsolve_type-class
+  - pattern-class
   - pmx_element-class
   - pmx_list-class
   - pmx_position-class
   - pmx_position_by_element-class
   - pmx_position_by_index-class
   - pmx_undefined_position-class
-  - model_statement-class
-  - model_statements-class
-  - mrgsolve_type-class
   - ode-class
   - ode_record-class
   - omega-class
@@ -181,6 +182,7 @@ reference:
   - statements_record-class
   - theta-class
   - unknown_statement-class
+  - variable_pattern-class 
 
 - title: "Parsing utilities"
   contents:
@@ -197,6 +199,12 @@ reference:
   - parseStatements
   - trim
 
+- title: "Replace occurrences"
+  contents:
+  - replaceAll
+  - Pattern
+  - VariablePattern
+
 - title: "Model library"
   contents:
   - model_library
@@ -210,4 +218,3 @@ reference:
   contents:
   - assertSingleCharacterString
   - processExtraArg
-

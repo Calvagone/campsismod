@@ -7,11 +7,10 @@
 
 ## Installation
 
-Install the latest stable release with the authentication token you have
-received:
+Install the latest stable release using `devtools`:
 
 ``` r
-devtools::install_github("Calvagone/campsismod", ref="main", auth_token="AUTH_TOKEN", force=TRUE)
+devtools::install_github("Calvagone/campsismod")
 ```
 
 ## Basic examples
