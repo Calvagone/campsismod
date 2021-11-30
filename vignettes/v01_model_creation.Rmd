@@ -25,8 +25,11 @@ library(campsismod)
 
 Assume a very simple 1-compartment PK model with first-order eliminate rate `K`. Say this parameter has a typical value of log(2)/12≈0.06 (where 12 is the elimination half life) and has 15% CV. Let's also initiate the central compartment to 1000.
 
-
-This can be translated into the following CAMPSIS model (Notepad++ plugin can be downloaded here):
+This can be translated into the following CAMPSIS model (
+```{r echo=FALSE}
+xfun::embed_file('../npp_plugin/campsis_npp_plugin.xml', text="download Notepad++ plugin for CAMPSIS")
+```
+):
 
 ![Minimalist model edited in Notepad++](resources/notepad_plugin_example.png)
              
