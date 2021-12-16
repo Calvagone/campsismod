@@ -320,7 +320,13 @@ read.model <- function(file) {
       recordDelimiter <- getRecordDelimiter(line)
       
       # Create empty record and add it to list
-      record <- new(paste0(tolower(recordDelimiter), "_record"))
+      record <-
+        tryCatch({
+          new(paste0(tolower(recordDelimiter), "_record"))
+        },
+        error = function(cond) {
+          stop(paste0("Record delimiter '", recordDelimiter, "' is unknown."))
+        })
       records@list <- c(records@list, record)
       
       # Add lines to previous record
@@ -340,14 +346,6 @@ read.model <- function(file) {
     addContentToRecord(records@list[[lastRecordIndex]], content)
   
   return(records)
-}
-
-isRecordDelimiter <- function(line) {
-  return(grepl("^s*\\[.*\\]s*$", line))
-}
-
-getRecordDelimiter <- function(line) {
-  return(gsub("\\[(.*)\\]","\\1", line))
 }
 
 #_______________________________________________________________________________

@@ -189,12 +189,14 @@ reference:
   - extractLhs
   - extractRhs
   - extractTextBetweenBrackets
+  - getRecordDelimiter
   - hasComment
   - isComment
   - isEmptyLine
   - isEquation
   - isIfStatement
   - isODE
+  - isRecordDelimiter
   - parseIfStatement
   - parseStatements
   - trim

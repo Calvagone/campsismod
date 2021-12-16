@@ -53,3 +53,16 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initia
   # Check equality  
   expect_equal(model, model2)
 })
+
+test_that("Parsing non standard record delimiters works as expected", {
+  model <- expect_warning(read.campsis(paste0(testFolder, "custom/", "non_standard_record_delimiters/")),
+                          regexp="No file '(theta|omega|sigma)\\.csv' could be found") # Only first warning is checked
+  expect_equal(model %>% find(MainRecord()) %>% length(), 3)
+  expect_equal(model %>% find(OdeRecord()) %>% length(), 3)
+  expect_equal(model %>% find(ErrorRecord()) %>% length(), 1)
+})
+
+test_that("Parsing unknown record delimiters must raise an error", {
+  expect_error(read.campsis(paste0(testFolder, "custom/", "unknow_record_delimiters/")),
+               regexp="Record delimiter 'PK' is unknown")
+})
