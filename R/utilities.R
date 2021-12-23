@@ -156,3 +156,21 @@ isComment <- function(x) {
 isEmptyLine <- function(x) {
   return(grepl("^\\s*$", x=x))
 }
+
+#' Is record delimiter.
+#' 
+#' @param line any line, single character value
+#' @return a logical value
+#' @export
+isRecordDelimiter <- function(line) {
+  return(grepl("^\\s*\\[.*\\]\\s*$", line))
+}
+
+#' Get record delimiter.
+#' 
+#' @param line any line, single character value
+#' @return the record delimiter between brackets
+#' @export
+getRecordDelimiter <- function(line) {
+  return(gsub("\\[(.*)\\]","\\1", line) %>% trim())
+}

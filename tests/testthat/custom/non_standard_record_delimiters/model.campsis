@@ -1,0 +1,12 @@
+ [MAIN] 
+K=THETA_1*exp(ETA_K)
+V=THETA_2*exp(ETA_V)
+S1=V
+
+[  ODE ] 
+d/dt(A_CENTRAL)=-K*A_CENTRAL
+d/dt(A_OUTPUT)=K*A_CENTRAL
+CP=A_CENTRAL/V
+
+    [ERROR  ] 
+OBS_CP=CP*(EPS_PROP + 1)

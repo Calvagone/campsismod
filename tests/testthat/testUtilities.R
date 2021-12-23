@@ -65,3 +65,28 @@ test_that("isIfStatement works well", {
   line <- " if(ID == 30) TVCL = THETA_7*pow(0.009*TBW, THETA_8)"
   expect_true(isIfStatement(line))
 })
+
+test_that("isRecordDelimiter works well", {
+  line <- "[MAIN]"
+  expect_true(isRecordDelimiter(line))
+  
+  line <- " [MAIN] "
+  expect_true(isRecordDelimiter(line))
+  
+  line <- " [  MAIN\t]"
+  expect_true(isRecordDelimiter(line))
+  
+  line <- "{MAIN]"
+  expect_false(isRecordDelimiter(line))
+})
+
+test_that("getRecordDelimiter works well", {
+  line <- "[MAIN]"
+  expect_equal(getRecordDelimiter(line), "MAIN")
+  
+  line <- " [MAIN\t] "
+  expect_equal(getRecordDelimiter(line), "MAIN")
+  
+  line <- " [  MAIN  ]"
+  expect_equal(getRecordDelimiter(line), "MAIN")
+})

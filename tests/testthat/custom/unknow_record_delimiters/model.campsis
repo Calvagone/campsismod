@@ -1,0 +1,4 @@
+[PK] 
+K=THETA_1*exp(ETA_K)
+V=THETA_2*exp(ETA_V)
+S1=V
