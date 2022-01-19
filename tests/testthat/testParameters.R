@@ -328,3 +328,13 @@ test_that("Max index on empty list works and returns an integer", {
   expect_true(is.integer(index))
   expect_equal(index, 0)
 })
+
+test_that("Parameters encoded with locale 'French' (semi-colon used as delimiter in CSV file) can be read properly", {
+  
+  # Model with parameters that were saved into CSV files on laptop with locale French
+  # This model correspond to advan1_trans1
+  model <- read.campsis(paste0(testFolder, "custom/", "csv_locale_french"))
+
+  # Let's compare it with original model from model library
+  expect_equal(model, model_library$advan1_trans1)
+})
