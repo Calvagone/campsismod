@@ -163,7 +163,7 @@ isEmptyLine <- function(x) {
 #' @return a logical value
 #' @export
 isRecordDelimiter <- function(line) {
-  return(grepl("^\\s*\\[.*\\]\\s*$", line))
+  return(grepl("^\\s*\\[.*\\]((\\s*)|(\\s*#.*))$", line))
 }
 
 #' Get record delimiter.
@@ -172,5 +172,5 @@ isRecordDelimiter <- function(line) {
 #' @return the record delimiter between brackets
 #' @export
 getRecordDelimiter <- function(line) {
-  return(gsub("\\[(.*)\\]","\\1", line) %>% trim())
+  return(gsub("\\[(.*)\\](.*)","\\1", line) %>% trim())
 }

@@ -78,6 +78,15 @@ test_that("isRecordDelimiter works well", {
   
   line <- "{MAIN]"
   expect_false(isRecordDelimiter(line))
+  
+  line <- "[MAIN]# COMMENT1 "
+  expect_true(isRecordDelimiter(line))
+  
+  line <- "[MAIN] #COMMENT2 "
+  expect_true(isRecordDelimiter(line))
+  
+  line <- "[MAIN] A=1"
+  expect_false(isRecordDelimiter(line))
 })
 
 test_that("getRecordDelimiter works well", {
@@ -88,5 +97,8 @@ test_that("getRecordDelimiter works well", {
   expect_equal(getRecordDelimiter(line), "MAIN")
   
   line <- " [  MAIN  ]"
+  expect_equal(getRecordDelimiter(line), "MAIN")
+  
+  line <- "[MAIN] # MAIN block"
   expect_equal(getRecordDelimiter(line), "MAIN")
 })

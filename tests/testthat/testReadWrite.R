@@ -66,3 +66,21 @@ test_that("Parsing unknown record delimiters must raise an error", {
   expect_error(read.campsis(paste0(testFolder, "custom/", "unknow_record_delimiters/")),
                regexp="Record delimiter 'PK' is unknown")
 })
+
+test_that("Record delimiters may accept comments", {
+  model <- expect_warning(read.campsis(paste0(testFolder, "custom/", "record_delimiters_with_comment/")),
+                          regexp="No file '(theta|omega|sigma)\\.csv' could be found") # Only first warning is checked
+
+  expect_equal(model %>% find(MainRecord()) %>% .@comment, "MAIN block")
+  expect_equal(model %>% find(OdeRecord()) %>% .@comment, "ODE block")
+  expect_equal(model %>% find(ErrorRecord()) %>% .@comment, "ERROR block")
+  
+  expect_true("[MAIN] # MAIN block" %in% capture.output(show(model)))
+  expect_true("[ODE] # ODE block" %in% capture.output(show(model)))
+  expect_true("[ERROR] # ERROR block" %in% capture.output(show(model)))
+  
+  # Please note that comments will be LOST for all properties record delimiters
+  # This is because compartment properties are 'modeled' all-together in model@compartments@properties  
+})
+
+

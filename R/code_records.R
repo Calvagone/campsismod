@@ -317,12 +317,19 @@ read.model <- function(file) {
   for (index in seq_along(allLines)) {
     line <- allLines[index]
     if (isRecordDelimiter(line)) {
+      # Extract record delimiter
       recordDelimiter <- getRecordDelimiter(line)
+      
+      # Extract a possible comment
+      comment <- as.character(NA)
+      if (hasComment(line)) {
+        comment <- extractRhs(line, split="#") %>% trim()
+      }
       
       # Create empty record and add it to list
       record <-
         tryCatch({
-          new(paste0(tolower(recordDelimiter), "_record"))
+          new(paste0(tolower(recordDelimiter), "_record"), comment=comment)
         },
         error = function(cond) {
           stop(paste0("Record delimiter '", recordDelimiter, "' is unknown."))
@@ -420,7 +427,10 @@ setMethod("write", signature=c("code_records", "character"), definition=function
   # Write code record
   code <- NULL
   for (record in object@list) {
-    code <- code %>% append(paste0("[", record %>% getName(), "]"))
+    # Add record delimiter
+    code <- code %>% append(writeRecordDelimiter(record))
+    
+    # Add all statements
     for (statement in record@statements@list) {
       code <- code %>% append(statement %>% toString())
     }
