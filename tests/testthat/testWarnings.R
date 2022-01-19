@@ -39,3 +39,21 @@ test_that("Error displayed if model file has an IF-statement in a properties rec
   modelName <- "if_in_properties_record"
   expect_error(suppressWarnings(read.campsis(paste0(testFolder, "custom/", modelName))), regexp="IF-statement detected in properties record")
 })
+
+test_that("Parsing a CAMPSIS model with an incomplete final line shouldn't raise any warning", {
+  # This model contains the following files:
+  # CAMPSIS model file with incomplete final line
+  # File theta.csv with incomplete final line
+  # Correct file omega.csv
+  # Correct file sigma.csv
+  
+  modelName <- "incomplete_final_line/"
+  model <- read.campsis(paste0(testFolder, "custom/", modelName))
+  
+  # Check MAIN and ODE record can be found
+  expect_true(!is.null(model %>% find(MainRecord())))
+  expect_true(!is.null(model %>% find(OdeRecord())))
+  
+  # Check both theta's K and V have been loaded correctly
+  expect_equal(model@parameters %>% select("theta") %>% length(), 2)
+})

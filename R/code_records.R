@@ -309,7 +309,7 @@ addContentToRecord <- function(record, content) {
 #' @return records object
 #' @export
 read.model <- function(file) {
-  allLines <- readLines(con=file)
+  allLines <- readLines(con=file, warn=FALSE)
   records <- CodeRecords()
   
   # Read all records
