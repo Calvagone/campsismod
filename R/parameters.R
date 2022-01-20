@@ -594,7 +594,7 @@ setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=F
 #' @rdname standardise
 setMethod("standardise", signature=c("parameters"), definition=function(object, ...) {
   list <- object@list %>% purrr::map(.f=function(param) {
-    return(param %>% standardise())
+    return(param %>% standardise(parameters=object))
   })
   retValue <- Parameters()
   retValue@list <- list

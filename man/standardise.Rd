@@ -11,7 +11,7 @@ standardise(object, ...)
 
 \S4method{standardise}{theta}(object, ...)
 
-\S4method{standardise}{double_array_parameter}(object, ...)
+\S4method{standardise}{double_array_parameter}(object, parameters = NULL, ...)
 
 \S4method{standardise}{parameters}(object, ...)
 }
