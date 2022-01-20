@@ -157,13 +157,23 @@ isEmptyLine <- function(x) {
   return(grepl("^\\s*$", x=x))
 }
 
-#' Is record delimiter.
+#' Is strict record delimiter. A strict record delimiter is any line starting 
+#' with [...] and followed by nothing but spaces or a possible comment.
+#' 
+#' @param line any line, single character value
+#' @return a logical value
+#' @export
+isStrictRecordDelimiter <- function(line) {
+  return(grepl("^\\s*\\[.*\\]((\\s*)|(\\s*#.*))$", line))
+}
+
+#' Is record delimiter. A record delimiter is any line starting with [...].
 #' 
 #' @param line any line, single character value
 #' @return a logical value
 #' @export
 isRecordDelimiter <- function(line) {
-  return(grepl("^\\s*\\[.*\\]((\\s*)|(\\s*#.*))$", line))
+  return(grepl("^\\s*\\[.*\\].*$", line))
 }
 
 #' Get record delimiter.

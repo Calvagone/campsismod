@@ -311,12 +311,12 @@ addContentToRecord <- function(record, content) {
 read.model <- function(file) {
   allLines <- readLines(con=file, warn=FALSE)
   records <- CodeRecords()
-  
+
   # Read all records
   lastLineIndexInPrevRecord <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
-    if (isRecordDelimiter(line)) {
+    if (isStrictRecordDelimiter(line)) {
       # Extract record delimiter
       recordDelimiter <- getRecordDelimiter(line)
       
@@ -332,7 +332,7 @@ read.model <- function(file) {
           new(paste0(tolower(recordDelimiter), "_record"), comment=comment)
         },
         error = function(cond) {
-          stop(paste0("Record delimiter '", recordDelimiter, "' is unknown."))
+          stop(paste0("Record delimiter '", recordDelimiter, "' is unknown"))
         })
       records@list <- c(records@list, record)
       
@@ -342,13 +342,29 @@ read.model <- function(file) {
         prevRecordIndex <- records %>% length() - 1
         records@list[[prevRecordIndex]] <-
           addContentToRecord(records@list[[prevRecordIndex]], content)
+      } else  {
+        # If no last record is present, check if content is detected:
+        # i.e. anything but blank line(s) or CAMPSIS comment(s) before the first
+        # record delimiter
+        # If content is detected, throw an error
+        if (lastLineIndexInPrevRecord==1 && index > 1) {
+          content <- allLines[1:(index-1)]
+          if (any(!grepl("^((\\s*)|(\\s*#.*))$", x=content))) {
+            stop("Missing record delimiter at beginning of model")
+          }
+        }
       }
       lastLineIndexInPrevRecord <- index
+    } else if (isRecordDelimiter(line)) {
+      stop(paste0("Record delimiter '", line, "' is not valid"))
     }
   }
   # Filling in with lines of last record
   content <- allLines[(lastLineIndexInPrevRecord + 1):length(allLines)]
   lastRecordIndex <- records %>% length()
+  if (lastRecordIndex==0) {
+    stop("No record delimiter found in model")
+  }
   records@list[[lastRecordIndex]] <-
     addContentToRecord(records@list[[lastRecordIndex]], content)
   

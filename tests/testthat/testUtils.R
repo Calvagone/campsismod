@@ -50,3 +50,10 @@ rxodeNonRegTest <- function(rxmod, regFilename) {
   expectedRxmodCode <- readLines(con=rxodeNonRegPath(regFilename)) %>% paste0(collapse="\n")
   expect_equal(rxmodCode, expectedRxmodCode)
 }
+
+readCampsisModelNoParams <- function(file) {
+  # Only first warning is actually checked
+  model <- expect_warning(read.campsis(file),
+                          regexp="No file '(theta|omega|sigma)\\.csv' could be found")
+  return(model)
+}

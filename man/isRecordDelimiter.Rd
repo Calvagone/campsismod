@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{isRecordDelimiter}
 \alias{isRecordDelimiter}
-\title{Is record delimiter.}
+\title{Is record delimiter. A record delimiter is any line starting with [...].}
 \usage{
 isRecordDelimiter(line)
 }
@@ -13,5 +13,5 @@ isRecordDelimiter(line)
 a logical value
 }
 \description{
-Is record delimiter.
+Is record delimiter. A record delimiter is any line starting with [...].
 }
