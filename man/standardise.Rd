@@ -19,6 +19,8 @@ standardise(object, ...)
 \item{object}{generic object}
 
 \item{...}{extra arguments needed for standardisation}
+
+\item{parameters}{the list of parameters, to be provided only if parameter type is 'cor'}
 }
 \value{
 standardised object

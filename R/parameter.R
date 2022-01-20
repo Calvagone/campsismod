@@ -174,8 +174,8 @@ processDoubleArrayArguments <- function(index, index2, type) {
 #' @param index2 second parameter index
 #' @param value parameter value
 #' @param fix parameter was fixed in estimation, logical value
-#' @param type variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'
-#' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for to 'SAME' OMEGA's
+#' @param type variance type: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv\%'
+#' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for 'SAME' OMEGA's
 #' @return an OMEGA parameter  
 #' @export
 Omega <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL, same=NA) {
@@ -397,6 +397,7 @@ setMethod("standardise", signature=c("theta"), definition=function(object, ...) 
 })
 
 #' @rdname standardise
+#' @param parameters the list of parameters, to be provided only if parameter type is 'cor'
 setMethod("standardise", signature=c("double_array_parameter"), definition=function(object, parameters=NULL, ...) {
   type <- object@type
   index <- object@index
@@ -419,7 +420,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
     } else if (type == "cv%") {
       retValue@value <- log((object@value/100)^2+1)
     } else {
-      stop("Type should be one of: 'var', 'sd', 'covar', 'cv' or 'cv%'")
+      stop("Type should be one of: 'var', 'sd', 'cv' or 'cv%'")
     }
     retValue@type <- "var"
   } else {
