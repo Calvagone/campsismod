@@ -25,9 +25,9 @@ Omega(
 
 \item{fix}{parameter was fixed in estimation, logical value}
 
-\item{type}{variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'}
+\item{type}{variance type: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv\%'}
 
-\item{same}{NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for to 'SAME' OMEGA's}
+\item{same}{NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for 'SAME' OMEGA's}
 }
 \value{
 an OMEGA parameter

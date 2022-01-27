@@ -442,11 +442,13 @@ dataframeToParameter <- function(row, type) {
 #' @param file path to CSV file
 #' @param type parameter type: 'theta', 'omega' or 'sigma'
 #' @return parameters sub list
+#' @importFrom readr read_delim
 #' @export
 read.parameters <- function(file, type) {
   assertthat::assert_that(type %in% c("theta", "omega", "sigma"),
                           msg="Type must be one of these: 'theta', 'omega' or 'sigma'")
-  df <- read.csv(file=file) %>% dplyr::mutate(ROWID=dplyr::row_number())
+  df <- readr::read_delim(file=file, lazy=FALSE, show_col_types=FALSE, progress=FALSE) %>%
+    dplyr::mutate(ROWID=dplyr::row_number())
   list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
   attributes(list) <- NULL
   return(new("parameters", list=list))
@@ -592,7 +594,7 @@ setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=F
 #' @rdname standardise
 setMethod("standardise", signature=c("parameters"), definition=function(object, ...) {
   list <- object@list %>% purrr::map(.f=function(param) {
-    return(param %>% standardise())
+    return(param %>% standardise(parameters=object))
   })
   retValue <- Parameters()
   retValue@list <- list

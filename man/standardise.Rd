@@ -11,7 +11,7 @@ standardise(object, ...)
 
 \S4method{standardise}{theta}(object, ...)
 
-\S4method{standardise}{double_array_parameter}(object, ...)
+\S4method{standardise}{double_array_parameter}(object, parameters = NULL, ...)
 
 \S4method{standardise}{parameters}(object, ...)
 }
@@ -19,6 +19,8 @@ standardise(object, ...)
 \item{object}{generic object}
 
 \item{...}{extra arguments needed for standardisation}
+
+\item{parameters}{the list of parameters, to be provided only if parameter type is 'cor'}
 }
 \value{
 standardised object

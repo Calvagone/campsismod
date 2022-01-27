@@ -41,10 +41,11 @@ checkPropertiesRecord <- function(object) {
 setClass(
   "code_record",
   representation(
+    comment = "character",
     statements = "model_statements"
   ),
   contains = "pmx_element",
-  prototype = prototype(statements=ModelStatements()),
+  prototype = prototype(statements=ModelStatements(), comment=as.character(NA)),
   validity = checkCodeRecord
 )
 
@@ -354,6 +355,18 @@ setMethod("replaceAll", signature=c("code_record", "pattern", "character"), defi
 
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
-  cat("[", object %>% getName(), "]\n", sep="")
+  cat(writeRecordDelimiter(object), "\n", sep="")
   show(object@statements)
 })
+
+#' 
+#' Write record delimiter line.
+#' 
+#' @param object code record
+#' @return a record delimiter line
+#' @keywords internal
+writeRecordDelimiter <- function(object) {
+  recordDelimiter <- paste0("[", object %>% getName(), "]")
+  recordDelimiter <- recordDelimiter %>% appendComment(object=object, dest="campsis")
+  return(recordDelimiter)
+}

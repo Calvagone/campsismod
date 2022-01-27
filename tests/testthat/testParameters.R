@@ -328,3 +328,34 @@ test_that("Max index on empty list works and returns an integer", {
   expect_true(is.integer(index))
   expect_equal(index, 0)
 })
+
+test_that("Parameters encoded with locale 'French' (semi-colon used as delimiter in CSV file) can be read properly", {
+  
+  # Model with parameters that were saved into CSV files on laptop with locale French
+  # This model correspond to advan1_trans1
+  model <- read.campsis(paste0(testFolder, "custom/", "csv_locale_french"))
+
+  # Let's compare it with original model from model library
+  expect_equal(model, model_library$advan1_trans1)
+})
+
+test_that("Standardise method works as expected", {
+  
+  params1 <- Parameters() %>%
+    add(Omega(name="CL", value=0.2, type="sd")) %>%
+    add(Omega(name="V", value=0.3^2, type="var")) %>%
+    add(Omega(name="CL_V", index=1, index2=2, value=0.25, type="cor"))
+  
+  params2 <- Parameters() %>%
+    add(Omega(name="CL", value=0.2, type="sd")) %>%
+    add(Omega(name="V", value=0.3^2, type="var")) %>%
+    add(Omega(name="CL_V", index=1, index2=2, value=0.015, type="covar"))
+  
+  params_expected <- Parameters() %>%
+    add(Omega(name="CL", value=0.2^2, type="var")) %>%
+    add(Omega(name="V", value=0.3^2, type="var")) %>%
+    add(Omega(name="CL_V", index=1, index2=2, value=0.015, type="covar"))
+  
+  expect_equal(params1 %>% standardise(), params_expected)
+  expect_equal(params2 %>% standardise(), params_expected)
+})

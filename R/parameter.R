@@ -52,24 +52,24 @@ setClass(
 validateDoubleArrayParameter <- function(object) {
   check1 <- expectOne(object, "type")
   check2 <-
-    if (object@type %in% c("var", "sd", "covar", "cv", "cv%")) {
+    if (object@type %in% c("var", "sd", "covar", "cor", "cv", "cv%")) {
       character()
     } else {
-      "Type should be one of: 'var', 'sd', 'covar', 'cv' or 'cv%'"
+      "Type should be one of: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv%'"
     }
   check3 <- 
     if (is.na(object@index) && is.na(object@index2)) {
       character() # Don't go further
-    } else if (object@index != object@index2 && !(object@type %in% c("covar"))) {
-      paste0("Parameter type must be 'covar' (index:", object@index, ", index2:", object@index2, ")")
+    } else if (object@index != object@index2 && !(object@type %in% c("covar", "cor"))) {
+      paste0("Parameter type must be 'covar' or 'cor' (index:", object@index, ", index2:", object@index2, ")")
     } else {
       character()
     }
   check4 <- 
     if (is.na(object@index) && is.na(object@index2)) {
       character() # Don't go further
-    } else if (object@index == object@index2 && object@type %in% c("covar")) {
-      paste0("Parameter type can't be 'covar' (index:", object@index, ", index2:", object@index2, ")")
+    } else if (object@index == object@index2 && object@type %in% c("covar", "cor")) {
+      paste0("Parameter type can't be 'covar' nor 'cor' (index:", object@index, ", index2:", object@index2, ")")
     } else {
       character()
     }
@@ -174,8 +174,8 @@ processDoubleArrayArguments <- function(index, index2, type) {
 #' @param index2 second parameter index
 #' @param value parameter value
 #' @param fix parameter was fixed in estimation, logical value
-#' @param type variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'
-#' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for to 'SAME' OMEGA's
+#' @param type variance type: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv\%'
+#' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for 'SAME' OMEGA's
 #' @return an OMEGA parameter  
 #' @export
 Omega <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL, same=NA) {
@@ -397,7 +397,8 @@ setMethod("standardise", signature=c("theta"), definition=function(object, ...) 
 })
 
 #' @rdname standardise
-setMethod("standardise", signature=c("double_array_parameter"), definition=function(object, ...) {
+#' @param parameters the list of parameters, to be provided only if parameter type is 'cor'
+setMethod("standardise", signature=c("double_array_parameter"), definition=function(object, parameters=NULL, ...) {
   type <- object@type
   index <- object@index
   index2 <- object@index2
@@ -419,14 +420,24 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
     } else if (type == "cv%") {
       retValue@value <- log((object@value/100)^2+1)
     } else {
-      stop("Type should be one of: 'var', 'sd', 'covar', 'cv' or 'cv%'")
+      stop("Type should be one of: 'var', 'sd', 'cv' or 'cv%'")
     }
     retValue@type <- "var"
   } else {
     if (type == "covar") {
       # Do nothing
+      
+    } else if (type == "cor") {
+      if (is.null(parameters)) {
+        stop("Argument 'parameters' is needed to convert a covariance into a correlation")
+      }
+      # Retrieve both omega's on the diagonal related to index and index2
+      # Make sure to standardise them to variances first
+      omega1 <- parameters %>% getByIndex(Omega(index=object@index, index2=object@index)) %>% standardise()
+      omega2 <- parameters %>% getByIndex(Omega(index=object@index2, index2=object@index2)) %>% standardise()
+      retValue@value <- object@value*sqrt(omega1@value)*sqrt(omega2@value)
     } else {
-      stop(paste0("Type of parameter ", object@value %>% getName(), " must be 'covar'"))
+      stop(paste0("Type of parameter ", object@value %>% getName(), " must be 'covar' or 'cor'"))
     }
     retValue@type <- "covar"
   }

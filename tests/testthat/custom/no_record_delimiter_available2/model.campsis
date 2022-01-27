@@ -1,0 +1,3 @@
+# My model
+K=THETA_K*exp(ETA_K)
+V=THETA_V*exp(ETA_V)

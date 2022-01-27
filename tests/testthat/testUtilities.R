@@ -66,18 +66,28 @@ test_that("isIfStatement works well", {
   expect_true(isIfStatement(line))
 })
 
-test_that("isRecordDelimiter works well", {
+test_that("isStrictRecordDelimiter works well", {
   line <- "[MAIN]"
-  expect_true(isRecordDelimiter(line))
+  expect_true(isStrictRecordDelimiter(line))
   
   line <- " [MAIN] "
-  expect_true(isRecordDelimiter(line))
+  expect_true(isStrictRecordDelimiter(line))
   
   line <- " [  MAIN\t]"
-  expect_true(isRecordDelimiter(line))
+  expect_true(isStrictRecordDelimiter(line))
   
   line <- "{MAIN]"
-  expect_false(isRecordDelimiter(line))
+  expect_false(isStrictRecordDelimiter(line))
+  
+  line <- "[MAIN]# COMMENT1 "
+  expect_true(isStrictRecordDelimiter(line))
+  
+  line <- "[MAIN] #COMMENT2 "
+  expect_true(isStrictRecordDelimiter(line))
+  
+  line <- "[MAIN] A=1"
+  expect_false(isStrictRecordDelimiter(line))
+  expect_true(isRecordDelimiter(line))
 })
 
 test_that("getRecordDelimiter works well", {
@@ -88,5 +98,8 @@ test_that("getRecordDelimiter works well", {
   expect_equal(getRecordDelimiter(line), "MAIN")
   
   line <- " [  MAIN  ]"
+  expect_equal(getRecordDelimiter(line), "MAIN")
+  
+  line <- "[MAIN] # MAIN block"
   expect_equal(getRecordDelimiter(line), "MAIN")
 })
