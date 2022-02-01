@@ -1,6 +1,7 @@
 Package: campsismod
 Type: Package
 Collate:
+    'global_functions.R'
     'data.R'
     'model_library.R'
     'utilities.R'
@@ -45,7 +46,7 @@ Authors@R: c(
   )
 Description: Generic implementation of a drug model in pharmacometrics
 Depends: R (>= 4.0.0)
-Imports: assertthat, dplyr, magrittr, plyr, purrr, readr, tibble, tidyr
+Imports: assertthat, dplyr, magrittr, methods, plyr, purrr, readr, tibble, tidyr, utils
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
