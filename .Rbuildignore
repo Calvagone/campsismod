@@ -3,3 +3,6 @@
 ^npp_plugin$
 ^\.github$
 ^data-raw$
+^README.Rmd$
+^_pkgdown.yml$
+^path_to_model_folder$

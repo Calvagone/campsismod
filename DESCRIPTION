@@ -43,7 +43,7 @@ Version: 0.7.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
-Description: Generic implementation of a drug model in pharmacometrics
+Description: Generic implementation of a drug model in pharmacometrics.
 Depends: R (>= 4.0.0)
 Imports: assertthat, dplyr, magrittr, methods, plyr, purrr, readr, tibble, tidyr, utils
 License: file LICENSE
