@@ -1,4 +1,6 @@
 
+# campsismod <img src='man/figures/logo.png' align="right" height="125" />
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)

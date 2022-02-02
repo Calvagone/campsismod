@@ -197,6 +197,7 @@ reference:
   - isIfStatement
   - isODE
   - isRecordDelimiter
+  - isStrictRecordDelimiter
   - parseIfStatement
   - parseStatements
   - trim
@@ -210,7 +211,6 @@ reference:
 - title: "Model library"
   contents:
   - model_library
-  - getNONMEMModelTemplate
   
 - title: "Advanced use"
   contents:
