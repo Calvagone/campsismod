@@ -96,7 +96,7 @@ extractTextBetweenBrackets <- function(x) {
 #' 
 #' @param x character value
 #' @param split character where to split
-#' @return right-hand side expressionn
+#' @return right-hand side expression
 #' @export
 extractRhs <- function(x, split="=") {
   assertSingleCharacterString(x)

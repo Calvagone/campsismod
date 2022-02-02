@@ -333,7 +333,7 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 #----                         getNameInModel                                ----
 #_______________________________________________________________________________
 
-#' Get name of parameter in the PMX model.
+#' Get name of parameter in CAMPSIS model.
 #' 
 #' @param x element to know the name
 #' @return the name of this element

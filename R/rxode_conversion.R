@@ -33,7 +33,7 @@ rxodeCode <- function(model) {
 
 #' Get the parameters vector for RxODE.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @return named vector with THETA values
 #' @export
 rxodeParams <- function(model) {
@@ -70,7 +70,7 @@ rxodeParams <- function(model) {
 
 #' Get the matrix for RxODE.
 #' 
-#' @param model PMX model
+#' @param model CAMPSIS model
 #' @param type either omega or sigma
 #' @return named matrix
 #' @export

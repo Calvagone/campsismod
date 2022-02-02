@@ -5,7 +5,7 @@
 \alias{getNameInModel,theta-method}
 \alias{getNameInModel,omega-method}
 \alias{getNameInModel,sigma-method}
-\title{Get name of parameter in the PMX model.}
+\title{Get name of parameter in CAMPSIS model.}
 \usage{
 getNameInModel(x)
 
@@ -22,5 +22,5 @@ getNameInModel(x)
 the name of this element
 }
 \description{
-Get name of parameter in the PMX model.
+Get name of parameter in CAMPSIS model.
 }

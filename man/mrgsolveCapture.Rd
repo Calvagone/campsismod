@@ -7,7 +7,7 @@
 mrgsolveCapture(outvars, model)
 }
 \arguments{
-\item{outvars}{outvars from pmxsim}
+\item{outvars}{outvars in method simulate}
 
 \item{model}{CAMPSIS model}
 }

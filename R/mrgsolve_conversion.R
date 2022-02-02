@@ -139,7 +139,7 @@ mrgsolveTable <- function(model) {
 
 #' Get the CAPTURE block for mrgsolve.
 #'
-#' @param outvars outvars from pmxsim
+#' @param outvars outvars in method simulate
 #' @param model CAMPSIS model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export

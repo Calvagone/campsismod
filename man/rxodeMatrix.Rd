@@ -7,7 +7,7 @@
 rxodeMatrix(model, type = "omega")
 }
 \arguments{
-\item{model}{PMX model}
+\item{model}{CAMPSIS model}
 
 \item{type}{either omega or sigma}
 }

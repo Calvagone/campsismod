@@ -170,7 +170,7 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
-#' Add ODE compartment to comparments object.
+#' Add ODE compartment to compartments object.
 #'
 #' @param compartments compartments object
 #' @param ode ODE

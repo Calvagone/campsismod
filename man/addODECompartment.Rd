@@ -2,7 +2,7 @@
 % Please edit documentation in R/code_records.R
 \name{addODECompartment}
 \alias{addODECompartment}
-\title{Add ODE compartment to comparments object.}
+\title{Add ODE compartment to compartments object.}
 \usage{
 addODECompartment(compartments, ode)
 }
@@ -15,6 +15,6 @@ addODECompartment(compartments, ode)
 a compartments object
 }
 \description{
-Add ODE compartment to comparments object.
+Add ODE compartment to compartments object.
 }
 \keyword{internal}
