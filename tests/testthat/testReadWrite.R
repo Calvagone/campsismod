@@ -16,7 +16,7 @@ writePath <- function(advan, trans) {
 test_that("Write/Read ADVAN1 TRANS1", {
   advan <- 1
   trans <- 1
-  model <- getNONMEMModelTemplate(advan, trans)
+  model <- model_library[[paste0("advan", advan, "_trans", trans)]]
   
   # write
   model %>% write(file=writePath(advan, trans))
@@ -31,7 +31,7 @@ test_that("Write/Read ADVAN1 TRANS1", {
 test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initial conditions", {
   advan <- 4
   trans <- 4
-  model <- getNONMEMModelTemplate(advan, trans)
+  model <- model_library[[paste0("advan", advan, "_trans", trans)]]
   
   # Add a few properties
   model <- model %>% add(LagTime(1, "ALAG1"))

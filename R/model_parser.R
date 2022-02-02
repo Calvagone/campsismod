@@ -56,7 +56,7 @@ parseIfStatement <- function(line, comment=as.character(NA)) {
   line <- line %>% trim()
   
   # Lhs/rhs extraction
-  tmp1 <- regexpr(pattern=paste0("^", ifStatementPattern()), line, ignore.case=TRUE)
+  tmp1 <- regexpr(pattern=paste0("^", ifStatementPatternStr()), line, ignore.case=TRUE)
   equalSymbolIndex <- attr(tmp1, "match.length")
   lhs <- substring(line, first=1, last=equalSymbolIndex - 1) %>% trim()
   rhs <- substring(line, first=equalSymbolIndex + 1, last=nchar(line)) %>% trim()
@@ -66,7 +66,7 @@ parseIfStatement <- function(line, comment=as.character(NA)) {
   firstParenthesisIndex <- attr(tmp2, "match.length")
   
   # Identify variable start
-  variableStartIndex <- regexpr(paste0(variablePattern(), "$"), lhs) %>% as.integer()
+  variableStartIndex <- regexpr(paste0(variablePatternStr(), "$"), lhs) %>% as.integer()
   
   # Identify condition
   conditionWithParentheses <- substring(lhs, first=firstParenthesisIndex, last=variableStartIndex-1) %>% trim()

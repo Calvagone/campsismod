@@ -37,12 +37,12 @@ isODE <- function(x) {
   return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
-#' Return the variable pattern.
+#' Return the variable pattern (string form).
 #' 
 #' @return pattern (regular expression)
 #' @keywords internal
 #' 
-variablePattern <- function() {
+variablePatternStr <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
@@ -58,15 +58,15 @@ isEquation <- function(x) {
     return(FALSE)
   }
   variable <- parts[1] %>% trim()
-  return(grepl(pattern=paste0("^", variablePattern(), "$"), x=variable))
+  return(grepl(pattern=paste0("^", variablePatternStr(), "$"), x=variable))
 }
 
-#' Return the IF-statement pattern.
+#' Return the IF-statement pattern (string form).
 #' 
 #' @return pattern (regular expression)
 #' @keywords internal
-ifStatementPattern <- function() {
-  return(paste0("if\\s*\\(.*\\)\\s*", variablePattern(), "\\s*="))
+ifStatementPatternStr <- function() {
+  return(paste0("if\\s*\\(.*\\)\\s*", variablePatternStr(), "\\s*="))
 }
 
 #' Say if line in record is an IF-statement.
@@ -75,7 +75,7 @@ ifStatementPattern <- function() {
 #' @return logical value
 #' @export
 isIfStatement <- function(x) {
-  return(grepl(pattern=paste0("^", ifStatementPattern()), x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern=paste0("^", ifStatementPatternStr()), x=trim(x), ignore.case=TRUE))
 }
 
 #' Extract text between brackets.
