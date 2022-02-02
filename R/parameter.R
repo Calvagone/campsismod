@@ -412,7 +412,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       retValue@value <- object@value ^ 2
     
     } else if (type == "covar") {
-      stop(paste0("Type of parameter ", x %>% getName(), " can't be 'covar'"))
+      stop(paste0("Type of parameter ", object %>% getName(), " can't be 'covar'"))
     
     } else if (type == "cv") {
       retValue@value <- log(object@value^2+1)
@@ -437,7 +437,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       omega2 <- parameters %>% getByIndex(Omega(index=object@index2, index2=object@index2)) %>% standardise()
       retValue@value <- object@value*sqrt(omega1@value)*sqrt(omega2@value)
     } else {
-      stop(paste0("Type of parameter ", object@value %>% getName(), " must be 'covar' or 'cor'"))
+      stop(paste0("Type of parameter ", object %>% getName(), " must be 'covar' or 'cor'"))
     }
     retValue@type <- "covar"
   }

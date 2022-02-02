@@ -27,5 +27,7 @@
 #'    \item{filgrastim_pkpd_krzyzanski}{PK/PD model of filgrastim (Krzyzanski et al., see URL below)}
 #'    \item{my_model1}{Example of 2-compartment PK model with variance-covariance matrix}
 #' }
-#' @source \url{https://www.iconplc.com/innovation/nonmem/, http://repository.ddmore.eu/model/DDMODEL00000077, https://calvagone.github.io/campsis.doc/}
+#' @source \url{https://www.iconplc.com/innovation/nonmem/}
+#' @source \url{http://repository.ddmore.eu/model/DDMODEL00000077/}
+#' @source \url{https://calvagone.github.io/campsis.doc/}
 "model_library"
