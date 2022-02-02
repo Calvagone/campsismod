@@ -3,11 +3,6 @@
 #----                          parameter class                              ----
 #_______________________________________________________________________________
 
-validateParameter <- function(object) {
-  check1 <- expectOneForAll(object, c("name", "index", "fix", "value"))
-  return(check1)
-}
-
 #' 
 #' Parameter class. Any parameter in a pharmacometric model.
 #' 
@@ -26,13 +21,15 @@ setClass(
   ),
   contains = "pmx_element",
   prototype = prototype(name=as.character(NA), index=as.integer(NA), value=as.numeric(NA), fix=FALSE),
-  validity = validateParameter
+  validity = function(object) {
+    check <- expectOneForAll(object, c("name", "index", "fix", "value"))
+    return(check)
+  }
 )
 
 #_______________________________________________________________________________
 #----                   single_array_parameter class                        ----
 #_______________________________________________________________________________
-
 
 #' 
 #' Single-array parameter class. This parameter has a single index value.
@@ -49,33 +46,6 @@ setClass(
 #----                   double_array_parameter class                        ----
 #_______________________________________________________________________________
 
-validateDoubleArrayParameter <- function(object) {
-  check1 <- expectOne(object, "type")
-  check2 <-
-    if (object@type %in% c("var", "sd", "covar", "cor", "cv", "cv%")) {
-      character()
-    } else {
-      "Type should be one of: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv%'"
-    }
-  check3 <- 
-    if (is.na(object@index) && is.na(object@index2)) {
-      character() # Don't go further
-    } else if (object@index != object@index2 && !(object@type %in% c("covar", "cor"))) {
-      paste0("Parameter type must be 'covar' or 'cor' (index:", object@index, ", index2:", object@index2, ")")
-    } else {
-      character()
-    }
-  check4 <- 
-    if (is.na(object@index) && is.na(object@index2)) {
-      character() # Don't go further
-    } else if (object@index == object@index2 && object@type %in% c("covar", "cor")) {
-      paste0("Parameter type can't be 'covar' nor 'cor' (index:", object@index, ", index2:", object@index2, ")")
-    } else {
-      character()
-    }
-  return(c(check1, check2, check3, check4))
-}
-
 #' 
 #' Double-array parameter class. This parameter has 2 indexes. 
 #' It can thus be used to define correlations between parameters.
@@ -89,7 +59,32 @@ setClass(
   ),
   contains = "single_array_parameter",
   prototype = prototype(type="var"),
-  validity = validateDoubleArrayParameter
+  validity = function(object) {
+    check1 <- expectOne(object, "type")
+    check2 <-
+      if (object@type %in% c("var", "sd", "covar", "cor", "cv", "cv%")) {
+        character()
+      } else {
+        "Type should be one of: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv%'"
+      }
+    check3 <- 
+      if (is.na(object@index) && is.na(object@index2)) {
+        character() # Don't go further
+      } else if (object@index != object@index2 && !(object@type %in% c("covar", "cor"))) {
+        paste0("Parameter type must be 'covar' or 'cor' (index:", object@index, ", index2:", object@index2, ")")
+      } else {
+        character()
+      }
+    check4 <- 
+      if (is.na(object@index) && is.na(object@index2)) {
+        character() # Don't go further
+      } else if (object@index == object@index2 && object@type %in% c("covar", "cor")) {
+        paste0("Parameter type can't be 'covar' nor 'cor' (index:", object@index, ", index2:", object@index2, ")")
+      } else {
+        character()
+      }
+    return(c(check1, check2, check3, check4))
+  }
 )
 
 #_______________________________________________________________________________
@@ -124,10 +119,6 @@ Theta <- function(name=NA, index=NA, value=NA, fix=FALSE) {
 #----                                omega                                  ----
 #_______________________________________________________________________________
 
-validateOmega <- function(object) {
-  return(expectOne(object, "same"))
-}
-
 #'
 #' Omega parameter class.
 #' 
@@ -139,7 +130,9 @@ setClass(
   ),
   contains = "double_array_parameter",
   prototype = prototype(same=as.logical(NA), index2=as.integer(NA)),
-  validity = validateOmega
+  validity = function(object) {
+    return(expectOne(object, "same"))
+  }
 )
 
 #' 
