@@ -6,3 +6,4 @@
 ^README.Rmd$
 ^_pkgdown.yml$
 ^path_to_model_folder$
+^LICENSE\.md$

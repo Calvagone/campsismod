@@ -46,7 +46,7 @@ Authors@R: c(
 Description: Generic implementation of a drug model in pharmacometrics.
 Depends: R (>= 4.0.0)
 Imports: assertthat, dplyr, magrittr, methods, plyr, purrr, readr, tibble, tidyr, utils
-License: use_gpl3_license()
+License: GPL (>= 3)
 Encoding: UTF-8
 Language: en-US
 LazyData: true
