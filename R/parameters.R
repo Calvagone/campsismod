@@ -462,8 +462,8 @@ read.parameters <- function(file, type) {
 #' @export
 read.varcov <- function(file) {
   dataframe <- read.csv(file=file)
-  row.names(dataframe) <- dataframe$X
-  matrix <- dataframe %>% select(-X) %>% as.matrix()
+  row.names(dataframe) <- dataframe[,1] # First column contains parameter names
+  matrix <- dataframe[,-1] %>% as.matrix()
   assertthat::assert_that(all(rownames(matrix)==colnames(matrix)), 
       msg="Row names are different than column names in variance-covariance matrix")
   return(matrix)

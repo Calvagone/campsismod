@@ -9,29 +9,41 @@ advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))
 }
 
-writePath <- function(advan, trans) {
-  return(paste0(testFolder, "write/models/", advanFilename(advan, trans, ext="")))
+writePath <- function(modelName) {
+  return(paste0(testFolder, "write/models/", modelName))
 }
 
 test_that("Write/Read ADVAN1 TRANS1", {
-  advan <- 1
-  trans <- 1
-  model <- model_library[[paste0("advan", advan, "_trans", trans)]]
+  modelName <- "advan1_trans1"
+  model <- model_library[[modelName]]
   
   # write
-  model %>% write(file=writePath(advan, trans))
+  model %>% write(file=writePath(modelName))
   
   # read
-  model2 <- read.campsis(file=writePath(advan, trans))
+  model2 <- read.campsis(file=writePath(modelName))
 
   # Check equality  
   expect_equal(model, model2)
 })
 
-test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initial conditions", {
-  advan <- 4
-  trans <- 4
-  model <- model_library[[paste0("advan", advan, "_trans", trans)]]
+test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
+  modelName <- "my_model1"
+  model <- model_library[[modelName]]
+  
+  # write
+  model %>% write(file=writePath(modelName))
+  
+  # read
+  model2 <- read.campsis(file=writePath(modelName))
+  
+  # Check equality  
+  expect_equal(model, model2)
+})
+
+test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
+  modelName <- "advan4_trans4"
+  model <- model_library[[modelName]]
   
   # Add a few properties
   model <- model %>% add(LagTime(1, "ALAG1"))
@@ -44,10 +56,10 @@ test_that("Write/Read ADVAN4 TRANS4, add compartment characteristics, add initia
   model <- model %>% sort()
   
   # Write
-  model %>% write(file=writePath(advan, trans))
+  model %>% write(file=writePath(modelName))
   prop <- model@compartments@properties
   # Read
-  model2 <- read.campsis(file=writePath(advan, trans))
+  model2 <- read.campsis(file=writePath(modelName))
   prop2 <- model2@compartments@properties
   
   # Check equality  
