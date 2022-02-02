@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
-[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://codecov.io/gh/Calvagone/campsismod)
+[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://app.codecov.io/gh/Calvagone/campsismod)
 <!-- badges: end -->
 
 ## Installation
@@ -106,10 +106,16 @@ mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 spaghettiPlot(rxode, "CP")
 ```
 
+    #> Warning in file.create(to[okay]): impossible de créer le fichier 'docs/articles/
+    #> resources/', à cause de 'No such file or directory'
+
 ![RxODE simulation results](vignettes/resources/results_rxode.png)
 
 ``` r
 spaghettiPlot(mrgsolve, "CP")
 ```
+
+    #> Warning in file.create(to[okay]): impossible de créer le fichier 'docs/articles/
+    #> resources/', à cause de 'No such file or directory'
 
 ![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)
