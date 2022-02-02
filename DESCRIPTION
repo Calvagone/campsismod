@@ -1,7 +1,7 @@
 Package: campsismod
 Type: Package
 Collate:
-    'global_functions.R'
+    'global.R'
     'data.R'
     'model_library.R'
     'utilities.R'
@@ -40,7 +40,7 @@ Collate:
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
 Title: CAMPSIS Model Package
-Version: 0.7.0
+Version: 0.7.1
 Authors@R: c(
   person("Nicolas", "Luyckx", role = c("aut", "cre"), email = "nicolas.luyckx@calvagone.com")
   )
