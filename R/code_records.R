@@ -429,6 +429,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #_______________________________________________________________________________
 
 #' @rdname write
+#' @importFrom utils write.table
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
   # The model is needed to get the compartment properties
   model <- processExtraArg(args=list(...), name="model")
@@ -452,7 +453,7 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     }
     code <- code %>% append("") # write.table will add a new line
   }
-  write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+  utils::write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
 })
 
 

@@ -15,9 +15,10 @@ assertSingleCharacterString <- function(x) {
 #' @param default default value if argument is not present
 #' @param mandatory mandatory argument, logical value
 #' @return requested argument value
+#' @importFrom utils hasName
 #' @export
 processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
-  if (hasName(args, name)) {
+  if (utils::hasName(args, name)) {
     retValue <- args[[name]]
   } else {
     if (is.null(default) && mandatory) {

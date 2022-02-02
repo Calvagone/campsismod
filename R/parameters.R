@@ -459,9 +459,10 @@ read.parameters <- function(file, type) {
 #' @param file path to CSV file
 #' @return variance-covariance matrix
 #' @importFrom assertthat assert_that
+#' @importFrom utils read.csv
 #' @export
 read.varcov <- function(file) {
-  dataframe <- read.csv(file=file)
+  dataframe <- utils::read.csv(file=file)
   row.names(dataframe) <- dataframe[,1] # First column contains parameter names
   matrix <- dataframe[,-1] %>% as.matrix()
   assertthat::assert_that(all(rownames(matrix)==colnames(matrix)), 
@@ -612,6 +613,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' @param ... extra arguments, like defaultDf for empty parameters list
 #' @return TRUE if success
 #' @importFrom dplyr select_if
+#' @importFrom utils write.csv
 writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
@@ -621,7 +623,7 @@ writeParameters <- function(object, file, ...) {
   if (nrow(df)==0) {
     df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
   }
-  write.csv(df, file=file, row.names=FALSE)
+  utils::write.csv(df, file=file, row.names=FALSE)
   return(TRUE)
 }
 
@@ -630,8 +632,9 @@ writeParameters <- function(object, file, ...) {
 #' @param object matrix
 #' @param file filename
 #' @return TRUE if success
+#' @importFrom utils write.csv
 writeVarcov <- function(object, file) {
-  write.csv(object, file=file)
+  utils::write.csv(object, file=file)
   return(TRUE)
 }
 

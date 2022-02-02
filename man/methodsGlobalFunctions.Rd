@@ -3,12 +3,12 @@
 \name{methodsGlobalFunctions}
 \alias{methodsGlobalFunctions}
 \title{A empty method only used to declare some of the global function definitions
-contained in the package 'methods'.}
+contained in the package 'methods', which are used intensively.}
 \usage{
 methodsGlobalFunctions()
 }
 \description{
 A empty method only used to declare some of the global function definitions
-contained in the package 'methods'.
+contained in the package 'methods', which are used intensively.
 }
 \keyword{internal}
