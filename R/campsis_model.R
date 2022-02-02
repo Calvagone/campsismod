@@ -282,7 +282,7 @@ read.campsis <- function(file) {
   model <- model %>% updateCompartments()
   
   # Validate the whole model
-  validObject(model, complete=TRUE)
+  methods::validObject(model, complete=TRUE)
   
   return(model)
 }

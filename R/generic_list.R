@@ -5,7 +5,7 @@
 validatePmxList <- function(object) {
   check <- expectOne(object, "type")
   for (elem in object@list) {
-    validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
+    methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
   }
   return(check)
 }
@@ -50,7 +50,7 @@ setGeneric("add", function(object, x, ...) {
 #' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
-  if (validObject(x)) {
+  if (methods::validObject(x)) {
     if (!is(x, object@type)) {
       stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
     

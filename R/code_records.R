@@ -294,7 +294,7 @@ addContentToRecord <- function(record, content) {
     record@statements <- parseStatements(content)
     # Because properties records are transient and will not be part of the final model
     # We validate here the content
-    validObject(record, complete=TRUE)
+    methods::validObject(record, complete=TRUE)
   } else if (is(record, "statements_record")) {
     record@statements <- parseStatements(content)
   } else {

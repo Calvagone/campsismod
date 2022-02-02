@@ -76,7 +76,7 @@ setMethod("add", signature=c("parameters", "single_array_parameter"), definition
     maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
     x@index <- as.integer(maxIndex + 1)
   }
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname add
@@ -86,7 +86,7 @@ setMethod("add", signature=c("parameters", "double_array_parameter"), definition
     x@index <- as.integer(maxIndex + 1)
     x@index2 <- as.integer(maxIndex + 1)
   }
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname add
@@ -199,13 +199,13 @@ matchDoubleArrayParameter <- function(object, x) {
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
   x <- matchSingleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
   x <- matchDoubleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #_______________________________________________________________________________
@@ -514,13 +514,13 @@ read.allparameters <- function(folder) {
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
   x <- matchSingleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
   x <- matchDoubleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #_______________________________________________________________________________
@@ -571,7 +571,7 @@ setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=F
   types <- x@list %>% purrr::map_chr(~as.character(class(.x)))
   indexes1 <- x@list %>% purrr::map_int(~.x@index)
   indexes2 <- x@list %>% purrr::map_int(.f=function(.x){
-    if("index2" %in% slotNames(.x)) {
+    if("index2" %in% methods::slotNames(.x)) {
       return(.x@index2)
     } else {
       return(as.integer(0))
