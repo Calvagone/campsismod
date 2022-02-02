@@ -1,14 +1,7 @@
-resource_files:
-  - resources/results_mrgsolve.png
-  - resources/results_rxode.png
-  
-## This file configures the building process for pkgdown::build_site()
-template:
-  params:
-    noindex: false # tells search engines to index the site
 
-home:
-  strip_header: true
+template:
+  bootstrap: 5
+  bootswatch: spacelab
 
 development:
   mode: auto  # detect based on version number

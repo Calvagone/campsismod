@@ -1,17 +1,16 @@
 ---
-pagetitle: "CAMPSIS model"
-date: ""
-author: ""
 output: github_document
 ---
 
-```{r chunk-name, include=FALSE}
+```{r, echo = FALSE}
 knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
   fig.path = "man/figures/"
 )
 ```
 
-# campsismod <img src='man/figures/logo.png' align="right" height="125" />
+# campsismod <img src='man/figures/logo.png' align="right" alt="" width="120" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
