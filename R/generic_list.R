@@ -81,10 +81,7 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
 
 #' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
-  for (element in x@list) {
-    object <- object %>% add(element)
-  }
-  return(object)
+  return(object %>% add(x@list))
 })
 
 #' @rdname add
@@ -121,6 +118,19 @@ setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function
     object@list[[index]] <- x
   } else {
     stop(paste("Element", x %>% getName(), "does not exist."))
+  }
+  return(object)
+})
+
+#' @rdname replace
+setMethod("replace", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
+  return(object %>% replace(x@list))
+})
+
+#' @rdname replace
+setMethod("replace", signature=c("pmx_list", "list"), definition=function(object, x) {
+  for (element in x) {
+    object <- object %>% replace(element)
   }
   return(object)
 })

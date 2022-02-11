@@ -4,6 +4,8 @@
 \name{replace}
 \alias{replace}
 \alias{replace,pmx_list,pmx_element-method}
+\alias{replace,pmx_list,pmx_list-method}
+\alias{replace,pmx_list,list-method}
 \alias{replace,compartments,compartment_property-method}
 \alias{replace,parameters,single_array_parameter-method}
 \alias{replace,parameters,double_array_parameter-method}
@@ -19,6 +21,10 @@
 replace(object, x)
 
 \S4method{replace}{pmx_list,pmx_element}(object, x)
+
+\S4method{replace}{pmx_list,pmx_list}(object, x)
+
+\S4method{replace}{pmx_list,list}(object, x)
 
 \S4method{replace}{compartments,compartment_property}(object, x)
 

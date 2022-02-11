@@ -106,16 +106,10 @@ mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 spaghettiPlot(rxode, "CP")
 ```
 
-    #> Warning in file.create(to[okay]): impossible de créer le fichier 'docs/articles/
-    #> resources/', à cause de 'No such file or directory'
-
 ![RxODE simulation results](vignettes/resources/results_rxode.png)
 
 ``` r
 spaghettiPlot(mrgsolve, "CP")
 ```
-
-    #> Warning in file.create(to[okay]): impossible de créer le fichier 'docs/articles/
-    #> resources/', à cause de 'No such file or directory'
 
 ![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)

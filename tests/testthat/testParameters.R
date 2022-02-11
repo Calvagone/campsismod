@@ -98,7 +98,7 @@ test_that("Disable method (IIV/RUV)", {
   model <- model %>% disable("RUV")
   expect_equal((model@parameters %>% find(Sigma(name="PROP")))@value, 0)
   
-  expect_error(model %>% disable("SOMETHING"))
+  expect_error(model %>% disable("SOMETHING"), regexp="Only these variabilities can be disabled")
 })
 
 test_that("Disable method (VARCOV)", {

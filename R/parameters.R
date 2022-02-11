@@ -213,6 +213,7 @@ setMethod("delete", signature=c("parameters", "double_array_parameter"), definit
 #_______________________________________________________________________________
 
 #' @rdname disable
+#' @importFrom purrr discard keep map
 setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
   variabilities <- c("IIV", "IOV", "RUV", "VARCOV", "VARCOV_OMEGA", "VARCOV_SIGMA")
   msg <- paste0("Only these variabilities can be disabled: ", paste0("'", variabilities, "'", collapse=", "))
@@ -221,28 +222,33 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
   
   # Disable IIV
   if ("IIV" %in% x) {
-    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
-      param@value <- 0
-      object <<- object %>% replace(param)
-    })
+    omega_ <- (object %>% select("omega"))@list %>%
+      purrr::map(.f=function(param) {
+          param@value <- 0
+          return(param)
+        })
+    object <- object %>% replace(omega_)
   }
   
   # Disable IOV (note that IOV is a subset of IIV)
   if ("IOV" %in% x) {
-    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
-      if (!is.na(param@same)) {
-        param@value <- 0
-        object <<- object %>% replace(param)
-      }
-    })
+    omega_ <- (object %>% select("omega"))@list %>%
+      purrr::discard(.p=~is.na(.x@same)) %>%
+      purrr::map(.f=function(param) {
+          param@value <- 0
+          return(param)
+        })
+    object <- object %>% replace(omega_)
   }
   
   # Disable RUV
   if ("RUV" %in% x) {
-    (object%>% select("sigma"))@list %>% purrr::map(.f=function(param) {
-      param@value <- 0
-      object <<- object %>% replace(param)
-    })
+    sigma_ <- (object%>% select("sigma"))@list %>%
+      purrr::map(.f=function(param) {
+        param@value <- 0
+        return(param)
+      })
+    object <- object %>% replace(sigma_)
   }
   
   # Disable VARCOV (variance covariance matrix)
@@ -253,21 +259,22 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
   # Disable all omegas or sigmas in varcov
   varcovOmega <- "VARCOV_OMEGA" %in% x
   varcovSigma <- "VARCOV_SIGMA" %in% x
+  
   if (varcovOmega || varcovSigma) {
-
-    # Retrieve varcov parameters
-    varcovParams <- colnames(object@varcov) %>% purrr::map(.f=function(.x) {
-      return(object %>% getByName(.x))
-    })
+    # Retrieve varcov parameters to remove
+    varcovParams <- colnames(object@varcov) %>%
+      purrr::map(.f=function(.x) {
+        return(object %>% getByName(.x))
+      }) %>%
+      purrr::keep(.p=~(is(.x, "omega") && varcovOmega) ||
+                    (is(.x, "sigma") && varcovSigma))
     
-    # Remove these params if condition is met
-    varcovParams %>% purrr::map(.f=function(.x) {
-      if ((is(.x, "omega") && varcovOmega) || (is(.x, "sigma") && varcovSigma)) {
-        index <- which(colnames(object@varcov) == .x %>% getName())
-        object@varcov <<- object@varcov[-index, ]
-        object@varcov <<- object@varcov[, -index]
-      }
-    })
+    # Retrieve the corresponding indexes in the matrix
+    indexesToRemove <- varcovParams %>%
+      purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% getName()))
+    
+    # Update variance-covariance matrix
+    object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove]
   }
   
   return(object)
