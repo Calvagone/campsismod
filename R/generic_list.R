@@ -13,6 +13,8 @@ validatePmxList <- function(object) {
 #' 
 #' PMX list class.
 #' 
+#' @slot list effective list which will contain the elements
+#' @slot type type of the elements this list may contain
 #' @export
 setClass(
   "pmx_list",
@@ -33,7 +35,7 @@ setClass(
 #' @param object list object
 #' @param x element to add
 #' @param ... extra arguments, unused by this generic list
-#' @return object
+#' @return modified list object
 #' @export
 #' @rdname add
 add <- function(object, x, ...) {
@@ -287,7 +289,7 @@ setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(ob
 #' Get element names from list.
 #' 
 #' @param object list object
-#' @return character vector
+#' @return character vector with all the element names of this list
 #' @export
 #' @rdname getNames
 getNames <- function(object) {
@@ -310,6 +312,7 @@ setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
 #' Return the length of this list.
 #' 
 #' @param x list object
+#' @return the length of this list, integer value
 #' @rdname length
 setMethod("length", signature=c("pmx_list"), definition=function(x) {
   return(length(x@list))

@@ -6,6 +6,9 @@
 \usage{
 ModelStatements()
 }
+\value{
+a model statements object
+}
 \description{
 Create an empty list of model statements.
 }

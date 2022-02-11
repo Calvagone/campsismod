@@ -2,15 +2,18 @@
 % Please edit documentation in R/generic.R
 \name{read}
 \alias{read}
-\title{Read generic object.}
+\title{Generic read method to read data from a file or a folder.}
 \usage{
 read(file, ...)
 }
 \arguments{
-\item{file}{path where to read the file}
+\item{file}{path to the file or folder to be read}
 
 \item{...}{extra arguments}
 }
+\value{
+the object representation of the data contained in the file
+}
 \description{
-Read generic object.
+Generic read method to read data from a file or a folder.
 }

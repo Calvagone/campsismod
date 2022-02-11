@@ -7,3 +7,13 @@
 \description{
 CAMPSIS model class.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{model}}{a list of code records}
+
+\item{\code{parameters}}{model parameters}
+
+\item{\code{compartments}}{model compartments}
+}}
+

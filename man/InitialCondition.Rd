@@ -12,7 +12,7 @@ InitialCondition(compartment, rhs = "")
 \item{rhs}{right-hand side part of the equation}
 }
 \value{
-initial condition object
+an initial condition property
 }
 \description{
 Create an initial condition.

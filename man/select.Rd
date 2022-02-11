@@ -6,7 +6,7 @@
 \alias{select,data.frame-method}
 \alias{select,compartment_properties-method}
 \alias{select,parameters-method}
-\title{Select something from given object.}
+\title{Get a subset of an object.}
 \usage{
 select(object, ...)
 
@@ -22,8 +22,8 @@ select(object, ...)
 \item{...}{arguments to select}
 }
 \value{
-filtered object
+subset of an object
 }
 \description{
-Select something from given object.
+Get a subset of an object.
 }

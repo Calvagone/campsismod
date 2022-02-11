@@ -10,7 +10,7 @@ VariablePattern(x)
 \item{x}{variable name}
 }
 \value{
-a pattern
+a variable pattern
 }
 \description{
 Create a variable pattern.

@@ -44,6 +44,9 @@ replaceAll(object, pattern, replacement, ...)
 
 \item{...}{extra arguments}
 }
+\value{
+the same object with all occurrences replaced
+}
 \description{
 Replace all occurrences in object.
 }

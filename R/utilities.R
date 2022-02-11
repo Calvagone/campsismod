@@ -2,6 +2,7 @@
 #' Assert the given character vector is a single character string.
 #' 
 #' @param x single character string
+#' @return no return value
 #' @importFrom assertthat assert_that
 #' @export
 assertSingleCharacterString <- function(x) {

@@ -122,6 +122,7 @@ Theta <- function(name=NA, index=NA, value=NA, fix=FALSE) {
 #'
 #' Omega parameter class.
 #' 
+#' @slot same logical value, tell if this omega is the same as the previous one
 #' @export
 setClass(
   "omega",
@@ -272,7 +273,7 @@ setMethod("isDiag", signature(object = "double_array_parameter"), function(objec
 #' Get NONMEM name.
 #' 
 #' @param object generic object
-#' @return NONMEM name
+#' @return the NONMEM name associated with this object
 #' @export
 #' @rdname getNONMEMName
 getNONMEMName <- function(object) {
@@ -333,10 +334,10 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 #----                         getNameInModel                                ----
 #_______________________________________________________________________________
 
-#' Get name of parameter in CAMPSIS model.
+#' Get the name of the given parameter in the CAMPSIS model.
 #' 
 #' @param x element to know the name
-#' @return the name of this element
+#' @return the name of this parameter
 #' @export
 #' @rdname getNameInModel 
 getNameInModel <- function(x) {

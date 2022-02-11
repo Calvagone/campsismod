@@ -68,7 +68,7 @@ add(object, x, ...)
 \item{pos}{position where x needs to be added in list}
 }
 \value{
-object
+modified list object
 }
 \description{
 Add element to list.

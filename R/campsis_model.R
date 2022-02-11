@@ -5,6 +5,9 @@
 
 #' CAMPSIS model class.
 #' 
+#' @slot model a list of code records
+#' @slot parameters model parameters
+#' @slot compartments model compartments
 #' @export
 setClass(
   "campsis_model",

@@ -9,6 +9,9 @@ OdeRecord(code = character())
 \arguments{
 \item{code}{code record}
 }
+\value{
+an ODE code record
+}
 \description{
 Create ODE code record.
 }

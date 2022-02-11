@@ -20,7 +20,7 @@ disable(object, x, ...)
 \item{...}{extra arguments needed for disabling}
 }
 \value{
-standardised object
+object with some disabled features
 }
 \description{
 Disable.

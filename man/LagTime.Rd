@@ -12,7 +12,7 @@ LagTime(compartment, rhs = "")
 \item{rhs}{right-hand side part of the equation}
 }
 \value{
-lag time
+a lag time property
 }
 \description{
 Create a lag time for the specified compartment.

@@ -45,7 +45,7 @@ validateParameters <- function(object) {
 #' 
 #' Parameters class.
 #' 
-#' @slot varcov attached variance-covariance matrix for these parameters
+#' @slot varcov associated variance-covariance matrix
 #' @export
 setClass(
   "parameters",

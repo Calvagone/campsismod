@@ -38,6 +38,9 @@ checkPropertiesRecord <- function(object) {
 #' - properties record (lag, duration, rate & bioavailability properties)
 #' - statements record (main, ode & error records)
 #' 
+#' @slot comment a comment, single character value
+#' @slot statements model statements
+#' 
 setClass(
   "code_record",
   representation(
@@ -125,6 +128,7 @@ setClass(
 #' Create ODE code record.
 #' 
 #' @param code code record
+#' @return an ODE code record
 #' @export
 OdeRecord <- function(code=character()) {
   return(new("ode_record", statements=parseStatements(code)))
@@ -226,6 +230,7 @@ setClass(
 #' Create ERROR code record.
 #' 
 #' @param code code record
+#' @return an ERROR code record
 #' @export
 ErrorRecord <- function(code=character()) {
   return(new("error_record", statements=parseStatements(code)))
@@ -352,7 +357,6 @@ setMethod("replaceAll", signature=c("code_record", "pattern", "character"), defi
 #_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
-
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
   cat(writeRecordDelimiter(object), "\n", sep="")

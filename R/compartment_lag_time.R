@@ -24,7 +24,7 @@ setClass(
 #'
 #' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
-#' @return lag time
+#' @return a lag time property
 #' @export
 LagTime <- function(compartment, rhs="") {
   return(new("compartment_lag_time", compartment=as.integer(compartment), rhs=rhs))

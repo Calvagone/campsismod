@@ -54,6 +54,7 @@ appendComment <- function(str, object, dest) {
 #' Unknown destination engine exception.
 #'
 #' @keywords internal
+#' @return no return value
 #' 
 UnsupportedDestException <- function() {
   stop("Only RxODE, mrgsolve or campsis are supported")
@@ -62,7 +63,6 @@ UnsupportedDestException <- function() {
 #_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
-
 
 setMethod("show", signature=c("model_statement"), definition=function(object) {
   cat(object %>% toString(show=TRUE))

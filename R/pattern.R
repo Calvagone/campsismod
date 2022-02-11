@@ -50,7 +50,7 @@ setClass(
 #' Create a variable pattern.
 #' 
 #' @param x variable name
-#' @return a pattern
+#' @return a variable pattern
 #' @export
 VariablePattern <- function(x) {
   return(new("variable_pattern", x))

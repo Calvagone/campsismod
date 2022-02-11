@@ -23,7 +23,7 @@ setClass(
 #'
 #' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
-#' @return details about infusion rate
+#' @return an infusion rate property
 #' @export
 InfusionRate <- function(compartment, rhs="") {
   return(new("compartment_infusion_rate", compartment=as.integer(compartment), rhs=rhs))

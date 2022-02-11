@@ -13,3 +13,11 @@ Code record class. See this code record as an abstract class.
 - properties record (lag, duration, rate & bioavailability properties)
 - statements record (main, ode & error records)
 }
+\section{Slots}{
+
+\describe{
+\item{\code{comment}}{a comment, single character value}
+
+\item{\code{statements}}{model statements}
+}}
+

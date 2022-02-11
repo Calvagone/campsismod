@@ -9,6 +9,9 @@ assertSingleCharacterString(x)
 \arguments{
 \item{x}{single character string}
 }
+\value{
+no return value
+}
 \description{
 Assert the given character vector is a single character string.
 }

@@ -27,6 +27,9 @@ getRecordName(object)
 \arguments{
 \item{object}{generic object}
 }
+\value{
+the name of the record
+}
 \description{
 Get record name.
 }

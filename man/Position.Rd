@@ -11,6 +11,9 @@ Position(x, after = TRUE)
 
 \item{after}{element to be added will be added after x (if after is TRUE) or before x (if after is FALSE)}
 }
+\value{
+a position object
+}
 \description{
 Element position in list.
 }

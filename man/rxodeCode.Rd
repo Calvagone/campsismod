@@ -10,7 +10,7 @@ rxodeCode(model)
 \item{model}{CAMPSIS model}
 }
 \value{
-code for RxODE
+corresponding model code for RxODE
 }
 \description{
 Get code for RxODE.

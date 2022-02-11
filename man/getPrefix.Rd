@@ -29,6 +29,9 @@ getPrefix(object, ...)
 
 \item{...}{e.g. dest='mrgsolve'}
 }
+\value{
+the prefix of this object
+}
 \description{
 Get prefix.
 }

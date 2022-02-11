@@ -23,7 +23,7 @@ setClass(
 #'
 #' @param compartment compartment index
 #' @param rhs right-hand side part of the equation
-#' @return initial condition object
+#' @return an initial condition property
 #' @export
 InitialCondition <- function(compartment, rhs="") {
   return(new("compartment_initial_condition", compartment=as.integer(compartment), rhs=rhs))

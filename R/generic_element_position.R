@@ -44,6 +44,7 @@ setClass(
 #' 
 #' Undefined position.
 #' 
+#' @return an undefined position object
 #' @export
 #' @keywords internal
 UndefinedPosition <- function() {
@@ -93,6 +94,7 @@ setClass(
 #' 
 #' @param x either an integer position or an list element
 #' @param after element to be added will be added after x (if after is TRUE) or before x (if after is FALSE)
+#' @return a position object
 #' @export
 Position <- function(x, after=TRUE) {
   if (is(x, "pmx_element")) {

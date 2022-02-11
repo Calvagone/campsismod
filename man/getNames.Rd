@@ -13,7 +13,7 @@ getNames(object)
 \item{object}{list object}
 }
 \value{
-character vector
+character vector with all the element names of this list
 }
 \description{
 Get element names from list.
