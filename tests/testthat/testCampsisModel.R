@@ -3,10 +3,7 @@ library(testthat)
 
 context("Test CAMPSIS model")
 
-testFolder <<- ""
-overwriteNonRegressionFiles <<- FALSE
-
-source(paste0(testFolder, "testUtils.R"))
+source(paste0("", "testUtils.R"))
 
 test_that("add method works well", {
   

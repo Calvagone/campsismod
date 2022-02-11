@@ -3,10 +3,7 @@ library(testthat)
 
 context("Test the conversion to mrgsolve")
 
-testFolder <<- ""
-overwriteNonRegressionFiles <<- FALSE
-
-source(paste0(testFolder, "testUtils.R"))
+source(paste0("", "testUtils.R"))
 
 test_that("Export method works (2-cpt model, comments)", {
   regFilename = "2_cpt_model_abs_comments"

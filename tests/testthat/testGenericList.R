@@ -2,7 +2,7 @@ library(testthat)
 
 context("Test the generic list")
 
-testFolder <<- ""
+source(paste0("", "testUtils.R"))
 
 test_that("GetByIndex method works well", {
   model <- model_library$advan4_trans4

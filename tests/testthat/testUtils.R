@@ -7,6 +7,9 @@
 # reticulate::py_config()
 # version <- pharmpy["__version__"]
 
+testFolder <- ""
+overwriteNonRegressionFiles <- FALSE
+
 toFile <- function(code, path) {
   fileConn <- file(path)
   writeLines(code, fileConn)

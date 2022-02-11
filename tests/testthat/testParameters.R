@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test all methods from the parameters class")
 
-testFolder <<- ""
+source(paste0("", "testUtils.R"))
 
 test_that("Write/Read THETA's", {
   
