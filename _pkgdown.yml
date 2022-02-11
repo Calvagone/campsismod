@@ -100,7 +100,6 @@ reference:
 
 - title: "Generic methods"
   contents:
-  - clean
   - export
   - disable
   - fixOmega
