@@ -7,9 +7,3 @@
 \description{
 Comment class. A statement starting with #.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{comment}}{a comment associated to this model statement}
-}}
-

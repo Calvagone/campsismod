@@ -10,7 +10,6 @@ validateComment <- function(object) {
 #' 
 #' Comment class. A statement starting with #.
 #' 
-#' @slot comment a comment associated to this model statement
 #' @export
 setClass(
   "comment",

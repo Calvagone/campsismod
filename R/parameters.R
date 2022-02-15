@@ -45,7 +45,7 @@ validateParameters <- function(object) {
 #' 
 #' Parameters class.
 #' 
-#' @slot varcov attached variance-covariance matrix for these parameters
+#' @slot varcov associated variance-covariance matrix
 #' @export
 setClass(
   "parameters",
@@ -76,7 +76,7 @@ setMethod("add", signature=c("parameters", "single_array_parameter"), definition
     maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
     x@index <- as.integer(maxIndex + 1)
   }
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname add
@@ -86,7 +86,7 @@ setMethod("add", signature=c("parameters", "double_array_parameter"), definition
     x@index <- as.integer(maxIndex + 1)
     x@index2 <- as.integer(maxIndex + 1)
   }
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname add
@@ -132,30 +132,6 @@ appendParameters <- function(params1, params2) {
 }
 
 #_______________________________________________________________________________
-#----                                 clean                                ----
-#_______________________________________________________________________________
-
-#' Clean
-#' 
-#' @param object generic object
-#' @return cleaned object
-#' @export
-#' @rdname clean
-clean <- function(object) {
-  stop("No default function is provided")
-}
-
-setGeneric("clean", function(object) {
-  standardGeneric("clean")
-})
-
-#' @rdname clean
-setMethod("clean", signature=c("parameters"), definition=function(object) {
-  attributes(object@list) <- NULL
-  return(object)
-})
-
-#_______________________________________________________________________________
 #----                             delete                                    ----
 #_______________________________________________________________________________
 
@@ -199,13 +175,13 @@ matchDoubleArrayParameter <- function(object, x) {
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
   x <- matchSingleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
   x <- matchDoubleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #_______________________________________________________________________________
@@ -213,6 +189,7 @@ setMethod("delete", signature=c("parameters", "double_array_parameter"), definit
 #_______________________________________________________________________________
 
 #' @rdname disable
+#' @importFrom purrr discard keep map
 setMethod("disable", signature=c("parameters", "character"), definition=function(object, x, ...) {
   variabilities <- c("IIV", "IOV", "RUV", "VARCOV", "VARCOV_OMEGA", "VARCOV_SIGMA")
   msg <- paste0("Only these variabilities can be disabled: ", paste0("'", variabilities, "'", collapse=", "))
@@ -221,28 +198,33 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
   
   # Disable IIV
   if ("IIV" %in% x) {
-    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
-      param@value <- 0
-      object <<- object %>% replace(param)
-    })
+    omega_ <- (object %>% select("omega"))@list %>%
+      purrr::map(.f=function(param) {
+          param@value <- 0
+          return(param)
+        })
+    object <- object %>% replace(omega_)
   }
   
   # Disable IOV (note that IOV is a subset of IIV)
   if ("IOV" %in% x) {
-    (object%>% select("omega"))@list %>% purrr::map(.f=function(param) {
-      if (!is.na(param@same)) {
-        param@value <- 0
-        object <<- object %>% replace(param)
-      }
-    })
+    omega_ <- (object %>% select("omega"))@list %>%
+      purrr::discard(.p=~is.na(.x@same)) %>%
+      purrr::map(.f=function(param) {
+          param@value <- 0
+          return(param)
+        })
+    object <- object %>% replace(omega_)
   }
   
   # Disable RUV
   if ("RUV" %in% x) {
-    (object%>% select("sigma"))@list %>% purrr::map(.f=function(param) {
-      param@value <- 0
-      object <<- object %>% replace(param)
-    })
+    sigma_ <- (object%>% select("sigma"))@list %>%
+      purrr::map(.f=function(param) {
+        param@value <- 0
+        return(param)
+      })
+    object <- object %>% replace(sigma_)
   }
   
   # Disable VARCOV (variance covariance matrix)
@@ -253,21 +235,22 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
   # Disable all omegas or sigmas in varcov
   varcovOmega <- "VARCOV_OMEGA" %in% x
   varcovSigma <- "VARCOV_SIGMA" %in% x
+  
   if (varcovOmega || varcovSigma) {
-
-    # Retrieve varcov parameters
-    varcovParams <- colnames(object@varcov) %>% purrr::map(.f=function(.x) {
-      return(object %>% getByName(.x))
-    })
+    # Retrieve varcov parameters to remove
+    varcovParams <- colnames(object@varcov) %>%
+      purrr::map(.f=function(.x) {
+        return(object %>% getByName(.x))
+      }) %>%
+      purrr::keep(.p=~(is(.x, "omega") && varcovOmega) ||
+                    (is(.x, "sigma") && varcovSigma))
     
-    # Remove these params if condition is met
-    varcovParams %>% purrr::map(.f=function(.x) {
-      if ((is(.x, "omega") && varcovOmega) || (is(.x, "sigma") && varcovSigma)) {
-        index <- which(colnames(object@varcov) == .x %>% getName())
-        object@varcov <<- object@varcov[-index, ]
-        object@varcov <<- object@varcov[, -index]
-      }
-    })
+    # Retrieve the corresponding indexes in the matrix
+    indexesToRemove <- varcovParams %>%
+      purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% getName()))
+    
+    # Update variance-covariance matrix
+    object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove]
   }
   
   return(object)
@@ -293,46 +276,58 @@ setGeneric("fixOmega", function(object) {
 
 #' @rdname fixOmega
 setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
+  
   # First order parameters
-  tmp <- object %>% sort()
+  object <- object %>% sort()
 
   # We need at least to elements
-  if (length(tmp@list) < 2) {
+  if (length(object@list) < 2) {
     return(object)
   }
   
+  # Select omega's only
+  omegas <- object %>% select("omega")
+  
   # Checking all 'same' are NA's
-  sameVector <- (tmp %>% select("omega"))@list %>% purrr::map_lgl(.f=~.x@same)
+  sameVector <- omegas@list %>% purrr::map_lgl(.f=~.x@same)
   assertthat::assert_that(all(is.na(sameVector)), msg="all 'same' must be NA")
 
-    # Copy object and clear list of parameters
-  parameters <- Parameters()
+  # New list of omega's, add first omega into the list 
+  omegas_ <- Parameters()
+  omegas_ <- omegas_ %>% add(omegas@list[[1]])
   
   # Fix NA problems
-  # .x is the accumulating value
-  # .y is element in the list
-  purrr::accumulate(.x=tmp@list, .f=function(.x, .y) {
-    xIsOmega <- (class(.x) %>% as.character())=="omega"
-    yIsOmega <- (class(.y) %>% as.character())=="omega"
-    if (xIsOmega && yIsOmega) {
-      if (is.na(.y@value)) {
-        .y@value <- .x@value
-        .y@same <- TRUE
-        if (is.na(.x@same)) {
-          .x@same <- FALSE
-          parameters <<- parameters %>% replace(.x)
-        }
-      }
-      if (is.na(.y@fix)) {
-        .y@fix <- .x@fix
+  # .x is the accumulated results or initial value (a 'parameters' object here)
+  # .y next value in sequence (an omega here)
+  returned_omega_ <- purrr::accumulate(.x=omegas@list[2:length(omegas@list)], .f=function(.x, .y) {
+    lastOmega <- .x@list[[.x@list %>% length()]]
+    currentOmega <- .y
+    
+    # Is my current omega SAME as previous?
+    if (is.na(currentOmega@value)) {
+      currentOmega@value <- lastOmega@value
+      currentOmega@same <- TRUE
+      if (is.na(lastOmega@same)) {
+        lastOmega@same <- FALSE
+        # Update first SAME omega
+        .x <- .x %>% replace(lastOmega) 
       }
     }
-     
-    parameters <<- parameters %>% add(.y)
-    return(.y)
-  }, .init=tmp@list[[1]])
+    # Update slot 'fix' based on last omega
+    if (is.na(currentOmega@fix)) {
+      currentOmega@fix <- lastOmega@fix
+    }
+    
+    # Accumulate here
+    .x <- .x %>% add(currentOmega)
+    
+    return(.x)
+  }, .init=omegas_)
+  
+  # Replace all previous omega's by new ones
+  object <- object %>% replace(returned_omega_)
 
-  return(parameters %>% clean())
+  return(object)
 })
 
 #_______________________________________________________________________________
@@ -459,11 +454,12 @@ read.parameters <- function(file, type) {
 #' @param file path to CSV file
 #' @return variance-covariance matrix
 #' @importFrom assertthat assert_that
+#' @importFrom utils read.csv
 #' @export
 read.varcov <- function(file) {
-  dataframe <- read.csv(file=file)
-  row.names(dataframe) <- dataframe$X
-  matrix <- dataframe %>% select(-X) %>% as.matrix()
+  dataframe <- utils::read.csv(file=file)
+  row.names(dataframe) <- dataframe[,1] # First column contains parameter names
+  matrix <- dataframe[,-1] %>% as.matrix()
   assertthat::assert_that(all(rownames(matrix)==colnames(matrix)), 
       msg="Row names are different than column names in variance-covariance matrix")
   return(matrix)
@@ -499,7 +495,11 @@ read.allparameters <- function(folder) {
     warning(paste0("No file 'sigma.csv' could be found."))
   }
 
-  parameters <- new("parameters", list=c(theta@list, omega@list, sigma@list)) %>% clean()
+  parameters <-  Parameters() %>%
+    add(theta) %>%
+    add(omega) %>%
+    add(sigma)
+
   if (file.exists(varcovPath)) {
     varcov <- read.varcov(varcovPath)
     parameters@varcov <- varcov
@@ -514,13 +514,13 @@ read.allparameters <- function(folder) {
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
   x <- matchSingleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
   x <- matchDoubleArrayParameter(object, x)
-  return(callNextMethod(object, x))
+  return(methods::callNextMethod(object, x))
 })
 
 #_______________________________________________________________________________
@@ -571,7 +571,7 @@ setMethod("sort", signature=c("parameters"), definition=function(x, decreasing=F
   types <- x@list %>% purrr::map_chr(~as.character(class(.x)))
   indexes1 <- x@list %>% purrr::map_int(~.x@index)
   indexes2 <- x@list %>% purrr::map_int(.f=function(.x){
-    if("index2" %in% slotNames(.x)) {
+    if("index2" %in% methods::slotNames(.x)) {
       return(.x@index2)
     } else {
       return(as.integer(0))
@@ -612,6 +612,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' @param ... extra arguments, like defaultDf for empty parameters list
 #' @return TRUE if success
 #' @importFrom dplyr select_if
+#' @importFrom utils write.csv
 writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
@@ -621,7 +622,7 @@ writeParameters <- function(object, file, ...) {
   if (nrow(df)==0) {
     df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
   }
-  write.csv(df, file=file, row.names=FALSE)
+  utils::write.csv(df, file=file, row.names=FALSE)
   return(TRUE)
 }
 
@@ -630,8 +631,9 @@ writeParameters <- function(object, file, ...) {
 #' @param object matrix
 #' @param file filename
 #' @return TRUE if success
+#' @importFrom utils write.csv
 writeVarcov <- function(object, file) {
-  write.csv(object, file=file)
+  utils::write.csv(object, file=file)
   return(TRUE)
 }
 

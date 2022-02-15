@@ -19,7 +19,7 @@ getNONMEMName(object)
 \item{object}{generic object}
 }
 \value{
-NONMEM name
+the NONMEM name associated with this object
 }
 \description{
 Get NONMEM name.

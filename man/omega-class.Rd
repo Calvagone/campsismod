@@ -7,3 +7,9 @@
 \description{
 Omega parameter class.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{same}}{logical value, tell if this omega is the same as the previous one}
+}}
+

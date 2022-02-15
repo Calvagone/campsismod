@@ -5,7 +5,7 @@
 validatePmxList <- function(object) {
   check <- expectOne(object, "type")
   for (elem in object@list) {
-    validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
+    methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
   }
   return(check)
 }
@@ -13,6 +13,8 @@ validatePmxList <- function(object) {
 #' 
 #' PMX list class.
 #' 
+#' @slot list effective list which will contain the elements
+#' @slot type type of the elements this list may contain
 #' @export
 setClass(
   "pmx_list",
@@ -33,7 +35,7 @@ setClass(
 #' @param object list object
 #' @param x element to add
 #' @param ... extra arguments, unused by this generic list
-#' @return object
+#' @return modified list object
 #' @export
 #' @rdname add
 add <- function(object, x, ...) {
@@ -50,7 +52,7 @@ setGeneric("add", function(object, x, ...) {
 #' @param pos position where x needs to be added in list
 #' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
-  if (validObject(x)) {
+  if (methods::validObject(x)) {
     if (!is(x, object@type)) {
       stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
     
@@ -79,10 +81,7 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
 
 #' @rdname add
 setMethod("add", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
-  for (element in x@list) {
-    object <- object %>% add(element)
-  }
-  return(object)
+  return(object %>% add(x@list))
 })
 
 #' @rdname add
@@ -119,6 +118,19 @@ setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function
     object@list[[index]] <- x
   } else {
     stop(paste("Element", x %>% getName(), "does not exist."))
+  }
+  return(object)
+})
+
+#' @rdname replace
+setMethod("replace", signature=c("pmx_list", "pmx_list"), definition=function(object, x) {
+  return(object %>% replace(x@list))
+})
+
+#' @rdname replace
+setMethod("replace", signature=c("pmx_list", "list"), definition=function(object, x) {
+  for (element in x) {
+    object <- object %>% replace(element)
   }
   return(object)
 })
@@ -287,7 +299,7 @@ setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(ob
 #' Get element names from list.
 #' 
 #' @param object list object
-#' @return character vector
+#' @return character vector with all the element names of this list
 #' @export
 #' @rdname getNames
 getNames <- function(object) {
@@ -310,6 +322,7 @@ setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
 #' Return the length of this list.
 #' 
 #' @param x list object
+#' @return the length of this list, integer value
 #' @rdname length
 setMethod("length", signature=c("pmx_list"), definition=function(x) {
   return(length(x@list))

@@ -12,7 +12,7 @@ extractRhs(x, split = "=")
 \item{split}{character where to split}
 }
 \value{
-right-hand side expressionn
+right-hand side expression
 }
 \description{
 Extract right-hand-side expression.

@@ -10,6 +10,6 @@ Parameters class.
 \section{Slots}{
 
 \describe{
-\item{\code{varcov}}{attached variance-covariance matrix for these parameters}
+\item{\code{varcov}}{associated variance-covariance matrix}
 }}
 

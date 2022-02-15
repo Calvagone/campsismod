@@ -12,6 +12,9 @@
 \arguments{
 \item{x}{list object}
 }
+\value{
+the length of this list, integer value
+}
 \description{
 Return the length of this list.
 }

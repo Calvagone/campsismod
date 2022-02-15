@@ -12,7 +12,7 @@ InfusionRate(compartment, rhs = "")
 \item{rhs}{right-hand side part of the equation}
 }
 \value{
-details about infusion rate
+an infusion rate property
 }
 \description{
 Create an infusion rate.

@@ -12,7 +12,7 @@ InfusionDuration(compartment, rhs = "")
 \item{rhs}{right-hand side part of the equation}
 }
 \value{
-details about infusion duration
+an infusion duration property
 }
 \description{
 Create an infusion duration.

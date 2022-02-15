@@ -1,19 +1,14 @@
-resource_files:
-  - resources/results_mrgsolve.png
-  - resources/results_rxode.png
-  
-## This file configures the building process for pkgdown::build_site()
-template:
-  params:
-    noindex: false # tells search engines to index the site
 
-home:
-  strip_header: true
+template:
+  bootstrap: 5
+  bootswatch: spacelab
 
 development:
   mode: auto  # detect based on version number
   version_label: warning
   version_tooltip: ""
+  
+url: https://calvagone.github.io/campsismod.doc/
 
 navbar:
   structure:
@@ -107,7 +102,6 @@ reference:
 
 - title: "Generic methods"
   contents:
-  - clean
   - export
   - disable
   - fixOmega
@@ -197,6 +191,7 @@ reference:
   - isIfStatement
   - isODE
   - isRecordDelimiter
+  - isStrictRecordDelimiter
   - parseIfStatement
   - parseStatements
   - trim
@@ -210,7 +205,6 @@ reference:
 - title: "Model library"
   contents:
   - model_library
-  - getNONMEMModelTemplate
   
 - title: "Advanced use"
   contents:

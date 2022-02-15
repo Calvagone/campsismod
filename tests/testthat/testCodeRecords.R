@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test all methods from the code records class")
 
-testFolder <<- ""
+source(paste0("", "testUtils.R"))
 
 test_that("Check records can be added correctly into the CAMPSIS model", {
   

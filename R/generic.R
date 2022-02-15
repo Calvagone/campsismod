@@ -29,7 +29,7 @@ setGeneric("autoDetectNONMEM", function(object, ...) {
 #' @param object generic object
 #' @param x what needs to be disabled
 #' @param ... extra arguments needed for disabling
-#' @return standardised object
+#' @return object with some disabled features
 #' @export
 #' @rdname disable
 disable <- function(object, x, ...) {
@@ -96,10 +96,11 @@ setGeneric("getCompartmentIndex", function(object, name) {
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
-#' Read generic object.
+#' Generic read method to read data from a file or a folder.
 #' 
-#' @param file path where to read the file
+#' @param file path to the file or folder to be read
 #' @param ... extra arguments
+#' @return the object representation of the data contained in the file
 #' @export
 read <- function(file, ...) {
   stop("No default function is provided")
@@ -119,6 +120,7 @@ setGeneric("read", function(file, ...) {
 #' @param pattern pattern to be replaced
 #' @param replacement replacement string
 #' @param ... extra arguments
+#' @return the same object with all occurrences replaced
 #' @export
 replaceAll <- function(object, pattern, replacement, ...) {
   stop("No default function is provided")
@@ -132,11 +134,11 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
 #----                                 select                                ----
 #_______________________________________________________________________________
 
-#' Select something from given object.
+#' Get a subset of an object.
 #' 
 #' @param object generic object
 #' @param ... arguments to select
-#' @return filtered object
+#' @return subset of an object
 #' @export
 #' @rdname select
 select <- function(object, ...) {
@@ -175,7 +177,7 @@ setGeneric("standardise", function(object, ...) {
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
-#' ToString generic method
+#' ToString generic method.
 #' 
 #' @param object generic object
 #' @param ... extra arguments needed for toString conversion
@@ -194,11 +196,12 @@ setGeneric("toString", function(object, ...) {
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
-#' Write generic object.
+#' Write generic object to files.
 #' 
 #' @param object generic object
-#' @param file path of the output dir or ZIP filename
+#' @param file path of the output file or directory
 #' @param ... extra arguments
+#' @return logical value, TRUE for success, FALSE for failure
 #' @export
 #' @rdname write
 write <- function(object, file, ...) {

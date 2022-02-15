@@ -1,13 +1,20 @@
 ---
-pagetitle: "CAMPSIS model"
-date: ""
-author: ""
 output: github_document
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+# campsismod <img src='man/figures/logo.png' align="right" alt="" width="120" />
+
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
-[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://codecov.io/gh/Calvagone/campsismod)
+[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://app.codecov.io/gh/Calvagone/campsismod)
 <!-- badges: end -->
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}

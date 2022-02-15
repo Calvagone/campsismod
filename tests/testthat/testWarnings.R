@@ -3,9 +3,7 @@ library(testthat)
 
 context("Check warnings are displayed in some particular cases")
 
-testFolder <<- ""
-
-source(paste0(testFolder, "testUtils.R"))
+source(paste0("", "testUtils.R"))
 
 test_that("Warnings displayed when model contains unknown statements (1)", {
   modelName <- "unknown_statement_hello"

@@ -7,3 +7,11 @@
 \description{
 PMX list class.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{list}}{effective list which will contain the elements}
+
+\item{\code{type}}{type of the elements this list may contain}
+}}
+

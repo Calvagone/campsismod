@@ -6,6 +6,9 @@
 \usage{
 UndefinedPosition()
 }
+\value{
+an undefined position object
+}
 \description{
 Undefined position.
 }

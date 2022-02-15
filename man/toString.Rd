@@ -15,7 +15,7 @@
 \alias{toString,compartment_property-method}
 \alias{toString,compartment_initial_condition-method}
 \alias{toString,mrgsolve_model-method}
-\title{ToString generic method}
+\title{ToString generic method.}
 \usage{
 toString(object, ...)
 
@@ -48,5 +48,5 @@ toString(object, ...)
 character value/vector
 }
 \description{
-ToString generic method
+ToString generic method.
 }

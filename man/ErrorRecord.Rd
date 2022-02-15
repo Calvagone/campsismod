@@ -9,6 +9,9 @@ ErrorRecord(code = character())
 \arguments{
 \item{code}{code record}
 }
+\value{
+an ERROR code record
+}
 \description{
 Create ERROR code record.
 }

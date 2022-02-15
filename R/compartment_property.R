@@ -33,6 +33,7 @@ setClass(
 #' 
 #' @param object generic object
 #' @param ... e.g. dest='mrgsolve'
+#' @return the prefix of this object
 #' @export
 #' @rdname getPrefix
 getPrefix <- function(object, ...) {
@@ -50,6 +51,7 @@ setGeneric("getPrefix", function(object, ...) {
 #' Get record name.
 #' 
 #' @param object generic object
+#' @return the name of the record
 #' @export
 #' @rdname getRecordName
 getRecordName <- function(object) {

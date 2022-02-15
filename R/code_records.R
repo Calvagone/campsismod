@@ -170,7 +170,7 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 #----                          getCompartments                              ----
 #_______________________________________________________________________________
 
-#' Add ODE compartment to comparments object.
+#' Add ODE compartment to compartments object.
 #'
 #' @param compartments compartments object
 #' @param ode ODE
@@ -294,7 +294,7 @@ addContentToRecord <- function(record, content) {
     record@statements <- parseStatements(content)
     # Because properties records are transient and will not be part of the final model
     # We validate here the content
-    validObject(record, complete=TRUE)
+    methods::validObject(record, complete=TRUE)
   } else if (is(record, "statements_record")) {
     record@statements <- parseStatements(content)
   } else {
@@ -429,6 +429,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #_______________________________________________________________________________
 
 #' @rdname write
+#' @importFrom utils write.table
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
   # The model is needed to get the compartment properties
   model <- processExtraArg(args=list(...), name="model")
@@ -452,7 +453,7 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     }
     code <- code %>% append("") # write.table will add a new line
   }
-  write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
+  utils::write.table(x=code, file=file, row.names=FALSE, col.names=FALSE, quote=FALSE)
 })
 
 

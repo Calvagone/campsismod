@@ -5,6 +5,9 @@
 
 #' CAMPSIS model class.
 #' 
+#' @slot model a list of code records
+#' @slot parameters model parameters
+#' @slot compartments model compartments
 #' @export
 setClass(
   "campsis_model",
@@ -282,7 +285,7 @@ read.campsis <- function(file) {
   model <- model %>% updateCompartments()
   
   # Validate the whole model
-  validObject(model, complete=TRUE)
+  methods::validObject(model, complete=TRUE)
   
   return(model)
 }

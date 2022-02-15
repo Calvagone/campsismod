@@ -6,7 +6,7 @@
 \alias{write,parameters,character-method}
 \alias{write,code_records,character-method}
 \alias{write,campsis_model,character-method}
-\title{Write generic object.}
+\title{Write generic object to files.}
 \usage{
 write(object, file, ...)
 
@@ -19,10 +19,13 @@ write(object, file, ...)
 \arguments{
 \item{object}{generic object}
 
-\item{file}{path of the output dir or ZIP filename}
+\item{file}{path of the output file or directory}
 
 \item{...}{extra arguments}
 }
+\value{
+logical value, TRUE for success, FALSE for failure
+}
 \description{
-Write generic object.
+Write generic object to files.
 }

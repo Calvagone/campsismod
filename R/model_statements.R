@@ -21,8 +21,9 @@ setClass(
 )
 
 #' 
-#'Create an empty list of model statements.
+#' Create an empty list of model statements.
 #' 
+#' @return a model statements object
 #' @export
 ModelStatements <- function() {
   return(new("model_statements"))

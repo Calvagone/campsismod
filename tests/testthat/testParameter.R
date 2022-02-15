@@ -95,7 +95,32 @@ test_that("Standardise method works as expected", {
   expect_error(omega %>% standardise(), regexp="Argument 'parameters' is needed to convert a covariance into a correlation")
 })
 
-
-
-
-
+test_that("Malformed omega is not valid and can't be standardised", {
+  omega1 <- Omega(index=1, index2=2, value=0, type="covar")
+  
+  # Force type to be unknown
+  omega1@type <- "unknown"
+  
+  # Check omega is not valid
+  expect_error(validObject(omega1), regexp="Parameter type must be 'covar' or 'cor'")
+  
+  # Check omega can't be standardised
+  expect_error(omega1 %>% standardise(), regexp="Type of parameter OMEGA_1_2 must be 'covar' or 'cor'")
+  
+  omega2 <- Omega(index=2, index2=2, value=0, type="var")
+  
+  # Force type to be unknown
+  omega2@type <- "unknown"
+  
+  # Check omega is not valid
+  expect_error(validObject(omega2), regexp="Type should be one of: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv%'")
+  
+  # Check omega can't be standardised
+  expect_error(omega2 %>% standardise(), regexp="Type should be one of: 'var', 'sd', 'cv' or 'cv%'")
+  
+  # Force type to be covar
+  omega2@type <- "covar"
+  
+  # Check omega can't be standardised
+  expect_error(omega2 %>% standardise(), regexp="Type of parameter OMEGA_2_2 can't be 'covar'")
+})

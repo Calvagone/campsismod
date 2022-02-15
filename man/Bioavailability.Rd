@@ -12,7 +12,7 @@ Bioavailability(compartment, rhs = "")
 \item{rhs}{right-hand side part of the equation}
 }
 \value{
-bioavailability
+a bioavailability property
 }
 \description{
 Create a bioavailability for the specified compartment.

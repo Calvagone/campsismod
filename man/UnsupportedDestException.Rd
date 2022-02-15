@@ -6,6 +6,9 @@
 \usage{
 UnsupportedDestException()
 }
+\value{
+no return value
+}
 \description{
 Unknown destination engine exception.
 }
