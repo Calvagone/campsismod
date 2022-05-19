@@ -151,3 +151,27 @@ test_that("Add IF-statements at specific locations in the model", {
   expect_equal(main@statements %>% getByIndex(5), if3)
   expect_equal(main@statements %>% getByIndex(6), Equation("S1", "V"))
 })
+
+test_that("Add model statements into the given code record", {
+  
+  model <- model_library$advan1_trans1
+  
+  cp <- Equation("CP", "A_CENTRAL/S1")
+  
+  model <- model %>%
+    delete(Equation("F")) %>%
+    delete(cp)
+  
+  # Add CP as first equation of ODE block
+  model1 <- model %>% add(cp, pos=Position(OdeRecord(), after=FALSE))
+  
+  # Add CP as last equation of ODE block
+  model2 <- model %>% add(cp, pos=Position(OdeRecord(), after=TRUE))
+  
+  # Retrieve respective ODE blocks and check where is CP
+  ode1 <- model1 %>% find(OdeRecord())
+  expect_equal(ode1@statements %>% getByIndex(1), cp)
+  
+  ode2 <- model2 %>% find(OdeRecord())
+  expect_equal(ode2@statements %>% getByIndex(3), cp)
+})
