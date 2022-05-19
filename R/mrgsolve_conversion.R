@@ -96,7 +96,7 @@ convertAnyComment <- function(x) {
 #' @export
 mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
-  if (record %>% length() == 0) {
+  if (is.null(record)) {
     return(retValue)
   }
   for (statement in record@statements@list) {
@@ -118,6 +118,11 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 mrgsolveOde <- function(model) {
   records <- model@model
   odeRecord <- records %>% getByName("ODE")
+  
+  # Automatically replace simulation time 't' (default in CAMPSIS) by SOLVERTIME
+  if (!is.null(odeRecord)) {
+    odeRecord <- odeRecord %>% campsismod::replaceAll(pattern=VariablePattern("t"), replacement="SOLVERTIME")
+  }
   retValue <- mrgsolveBlock(odeRecord, init="[ODE]")
   return(retValue)
 }
@@ -130,7 +135,7 @@ mrgsolveOde <- function(model) {
 mrgsolveTable <- function(model) {
   records <- model@model
   errorRecord <- records %>% getByName("ERROR")
-  if (errorRecord %>% length() == 0) {
+  if (is.null(errorRecord)) {
     return(character(0))
   }
   retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
@@ -166,7 +171,7 @@ convertOutvarsToCapture <- function(outvars, model) {
   # List all variables that are already exported into mrgsolve TABLE block by pmxmod
   error <- model@model %>% getByName("ERROR")
   list <- NULL
-  if (length(error) > 0) {
+  if (!is.null(error)) {
     list <- error@statements@list %>% purrr::keep(~is(.x, "equation")) %>% purrr::map_chr(~.x@lhs)
     outvars <- outvars[!(outvars %in% list)]
   }

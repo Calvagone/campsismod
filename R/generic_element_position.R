@@ -92,7 +92,8 @@ setClass(
 #' 
 #' Element position in list.
 #' 
-#' @param x either an integer position or an list element
+#' @param x either an integer position (useful to add an element in a code record at a specified position) or
+#'  an model element (element can be a model statement or a code record)
 #' @param after element to be added will be added after x (if after is TRUE) or before x (if after is FALSE)
 #' @return a position object
 #' @export

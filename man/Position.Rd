@@ -7,7 +7,8 @@
 Position(x, after = TRUE)
 }
 \arguments{
-\item{x}{either an integer position or an list element}
+\item{x}{either an integer position (useful to add an element in a code record at a specified position) or
+an model element (element can be a model statement or a code record)}
 
 \item{after}{element to be added will be added after x (if after is TRUE) or before x (if after is FALSE)}
 }

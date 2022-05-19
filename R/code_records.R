@@ -70,7 +70,8 @@ findRecordByPosition <- function(object, pos) {
       # Return first record
       return(record)
     } else if (pos@by_element) {
-      # Return record if contains element
+      # Element here should be a model statement
+      # Check if current record contains the given element
       if (record %>% find(pos@element) %>% length() > 0) {
         return(record)
       }
@@ -102,9 +103,32 @@ setMethod("add", signature=c("code_records", "model_statement"), definition=func
       object <- object %>% add(record) %>% sort()
     }
   } else {
-    record <- object %>% findRecordByPosition(pos)
-    record <- record %>% add(x, pos=pos)
-    object <- object %>% replace(record)
+    
+    if (pos@by_element && is(pos@element, "code_record")) {
+      # Special case (position by code record element)
+      record <- object %>% find(pos@element)
+      newRecordNeeded <- is.null(record)
+      if (newRecordNeeded) {
+        record <- pos@element
+      }
+      if (pos@after) {
+        record <- record %>% add(x) # x is appended to the end
+      } else {
+        record <- record %>% add(x, Position(1, after=FALSE)) # x added at the beginning
+      }
+      if (newRecordNeeded) {
+        object <- object %>% add(record)
+      } else {
+        object <- object %>% replace(record)
+      }
+      
+    } else {
+      # Usual case (position by index or model statement element)
+      record <- object %>% findRecordByPosition(pos)
+      record <- record %>% add(x, pos=pos)
+      object <- object %>% replace(record)
+    }
+    
   }
   return(object)
 })
