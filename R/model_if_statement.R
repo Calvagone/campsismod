@@ -7,9 +7,9 @@ validateIfStatement <- function(object) {
   return(expectOne(object, "condition"))
 }
 
-#' 
+#'
 #' If-statement class. Any statement in the form if (condition) A = B.
-#' 
+#'
 #' @slot condition IF statement condition
 #' @slot equation any equation or ODE
 #' @export
@@ -23,9 +23,9 @@ setClass(
   validity = validateIfStatement
 )
 
-#' 
+#'
 #' Create a new IF-statement.
-#' 
+#'
 #' @param condition condition, single character string
 #' @param equation equation if condition is met
 #' @param comment comment if any, single character string
@@ -62,7 +62,7 @@ setMethod("replaceAll", signature=c("if_statement", "pattern", "character"), def
 #' @rdname toString
 setMethod("toString", signature=c("if_statement"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve") {
+  if (dest=="campsis" || dest=="rxode2" || dest=="mrgsolve") {
     retValue <- paste0("if (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))
   } else if (dest=="NONMEM") {
     retValue <- paste0("IF (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))

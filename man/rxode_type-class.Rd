@@ -3,7 +3,7 @@
 \docType{class}
 \name{rxode_type-class}
 \alias{rxode_type-class}
-\title{RxODE export type class.}
+\title{rxode2 export type class.}
 \description{
-RxODE export type class.
+rxode2 export type class.
 }

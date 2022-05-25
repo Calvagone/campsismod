@@ -7,9 +7,9 @@ validateLagTime <- function(object) {
   return(TRUE)
 }
 
-#' 
+#'
 #' Compartment lag time class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_lag_time",
@@ -45,7 +45,7 @@ setMethod("getName", signature = c("compartment_lag_time"), definition = functio
 
 #' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_lag_time"), definition = function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
+  dest <- processExtraArg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("ALAG")
   } else {

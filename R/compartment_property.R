@@ -6,9 +6,9 @@ validateCompartmentCharacteristic <- function(object) {
   return(expectOneForAll(object, c("compartment", "rhs")))
 }
 
-#' 
+#'
 #' Compartment property class.
-#' 
+#'
 #' @slot compartment related compartment index
 #' @slot rhs right-hand side formula
 #' @slot comment comment if any, single character string
@@ -22,7 +22,7 @@ setClass(
   ),
   contains="pmx_element",
   prototype=prototype(comment=as.character(NA), rhs=""),
-  validity=validateCompartmentCharacteristic 
+  validity=validateCompartmentCharacteristic
 )
 
 #_______________________________________________________________________________
@@ -30,7 +30,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' Get prefix.
-#' 
+#'
 #' @param object generic object
 #' @param ... e.g. dest='mrgsolve'
 #' @return the prefix of this object
@@ -49,7 +49,7 @@ setGeneric("getPrefix", function(object, ...) {
 #_______________________________________________________________________________
 
 #' Get record name.
-#' 
+#'
 #' @param object generic object
 #' @return the name of the record
 #' @export
@@ -78,11 +78,11 @@ setMethod("show", signature=c("compartment_property"), definition=function(objec
 setMethod("toString", signature=c("compartment_property"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
-  
+
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-  
-  if (dest=="RxODE") {
+
+  if (dest=="rxode2") {
     return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% toString(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% toString(), "=", object@rhs))

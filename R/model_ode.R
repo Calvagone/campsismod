@@ -11,9 +11,9 @@ validateOde <- function(object) {
   }
 }
 
-#' 
+#'
 #' ODE class. Any statement in the form d/dt(A_CMT) = B.
-#' 
+#'
 #' @export
 setClass(
   "ode",
@@ -23,9 +23,9 @@ setClass(
   validity = validateOde
 )
 
-#' 
+#'
 #' Create a new ordinary differential equation (ODE).
-#' 
+#'
 #' @param lhs left-hand side variable corresponding to derivative name, must start with 'A_'
 #' @param rhs right-hand side expression corresponding to derivative value
 #' @param comment comment if any, single character string
@@ -52,8 +52,8 @@ setMethod("getName", signature = c("ode"), definition = function(x) {
 setMethod("toString", signature=c("ode"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
   model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
-  
-  if (dest=="campsis" || dest=="RxODE") {
+
+  if (dest=="campsis" || dest=="rxode2") {
     retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")

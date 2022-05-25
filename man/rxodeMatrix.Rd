@@ -2,7 +2,7 @@
 % Please edit documentation in R/rxode_conversion.R
 \name{rxodeMatrix}
 \alias{rxodeMatrix}
-\title{Get the OMEGA/SIGMA matrix for RxODE.}
+\title{Get the OMEGA/SIGMA matrix for rxode2.}
 \usage{
 rxodeMatrix(model, type = "omega")
 }
@@ -15,5 +15,5 @@ rxodeMatrix(model, type = "omega")
 omega/sigma named matrix
 }
 \description{
-Get the OMEGA/SIGMA matrix for RxODE.
+Get the OMEGA/SIGMA matrix for rxode2.
 }

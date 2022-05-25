@@ -6,9 +6,9 @@ validateInitialCondition <- function(object) {
   return(TRUE)
 }
 
-#' 
+#'
 #' Compartment initial condition class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_initial_condition",
@@ -72,18 +72,18 @@ setMethod("show", signature=c("compartment_initial_condition"), definition=funct
 setMethod("toString", signature=c("compartment_initial_condition"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
-  
+
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-  
-  if (dest=="RxODE") {
+
+  if (dest=="rxode2") {
     return(paste0(compartment %>% toString(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(compartment %>% toString(), "_0=", object@rhs))
   } else if (dest=="pmxmod") {
     return(paste0(compartment %>% toString(), "=", object@rhs))
   } else {
-    stop("Only RxODE, mrgsolve or pmxmod are supported")
+    stop("Only rxode2, mrgsolve or pmxmod are supported")
   }
 })
 

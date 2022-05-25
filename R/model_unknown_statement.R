@@ -6,9 +6,9 @@ validateUnknownStatement <- function(object) {
   return(expectOne(object, "line"))
 }
 
-#' 
+#'
 #' Unknown statement class. Any statement not recognized by campsismod.
-#' 
+#'
 #' @export
 setClass(
   "unknown_statement",
@@ -19,9 +19,9 @@ setClass(
   validity = validateUnknownStatement
 )
 
-#' 
+#'
 #' Create a new ordinary differential equation (ODE).
-#' 
+#'
 #' @param line line which was not recognised
 #' @param comment comment if any, single character string
 #' @return an unknown statement
@@ -36,7 +36,7 @@ UnknownStatement <- function(line, comment=as.character(NA)) {
 
 #' @rdname getName
 setMethod("getName", signature = c("unknown_statement"), definition = function(x) {
-  return(as.character(NA)) # unknown statement non-identifiable 
+  return(as.character(NA)) # unknown statement non-identifiable
 })
 
 #_______________________________________________________________________________
@@ -55,7 +55,7 @@ setMethod("toString", signature=c("unknown_statement"), definition=function(obje
     } else {
       retValue <- object@line
     }
-  } else if (dest=="RxODE" || dest=="mrgsolve" || dest=="NONMEM") {
+  } else if (dest=="rxode2" || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- object@line
   } else {
     UnsupportedDestException()

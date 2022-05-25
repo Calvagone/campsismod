@@ -47,13 +47,13 @@ show(model)
 
 The `MAIN` record is the part of the model where your model parameters are defined. The `ODE` record is where your ordinary differential equations (ODE) go, as well as any equation depending on the simulation time. The `ERROR` record is the place where the error model is defined. The model parameters are then shown, followed by the all the compartments.
  
-### Export CAMPSIS model to RxODE
+### Export CAMPSIS model to rxode2
 
-`campsismod` has powerful export capabilities to `RxODE` and `mrgsolve`, the 2 simulation engines supported by `campsis`.
-The following code exports the model to `RxODE`. Please note that this step is implicit in CAMPSIS when you call the `simulate` method with your preferred simulation engine.
+`campsismod` has powerful export capabilities to `rxode2` and `mrgsolve`, the 2 simulation engines supported by `campsis`.
+The following code exports the model to `rxode2`. Please note that this step is implicit in CAMPSIS when you call the `simulate` method with your preferred simulation engine.
 
 ```{r}
-rxmod <- model %>% export(dest="RxODE")
+rxmod <- model %>% export(dest="rxode2")
 rxmod
 ```
 

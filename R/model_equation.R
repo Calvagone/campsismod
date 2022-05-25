@@ -7,9 +7,9 @@ validateEquation <- function(object) {
   return(expectOne(object, c("lhs", "rhs")))
 }
 
-#' 
+#'
 #' Equation class. Any statement in the form A = B.
-#' 
+#'
 #' @slot lhs left-hand side expression
 #' @slot rhs right-hand side expression
 #' @export
@@ -24,9 +24,9 @@ setClass(
   validity = validateEquation
 )
 
-#' 
+#'
 #' Create a new equation.
-#' 
+#'
 #' @param lhs left-hand side variable corresponding to the assigned variable name
 #' @param rhs right-hand side expression corresponding to a formula
 #' @param comment comment if any, single character string
@@ -66,8 +66,8 @@ setMethod("toString", signature=c("equation"), definition=function(object, ...) 
   dest <- processExtraArg(args=args, name="dest", default="campsis")
   init <- processExtraArg(args=args, name="init", default=TRUE)
   capture <- processExtraArg(args=args, name="capture", default=FALSE)
-  
-  if (dest=="campsis" || dest=="RxODE" || dest=="NONMEM") {
+
+  if (dest=="campsis" || dest=="rxode2" || dest=="NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0(object@lhs, "=", object@rhs, ";")

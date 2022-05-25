@@ -4,7 +4,7 @@
 #_______________________________________________________________________________
 
 #' CAMPSIS model class.
-#' 
+#'
 #' @slot model a list of code records
 #' @slot parameters model parameters
 #' @slot compartments model compartments
@@ -19,7 +19,7 @@ setClass(
 )
 
 #' Create a new CAMPSIS model.
-#' 
+#'
 #' @return a CAMPSIS model, empty
 #' @export
 CampsisModel <- function() {
@@ -36,10 +36,10 @@ setMethod("add", signature=c("campsis_model", "compartment_property"), definitio
   if (is.null(compartment)) {
     stop(paste0("Unable to find compartment ", x@compartment, " in CAMPSIS model"))
   }
-  
+
   # Add characteristic (delegate to add method in compartments class)
-  object@compartments <- object@compartments %>% add(x) 
-  
+  object@compartments <- object@compartments %>% add(x)
+
   return(object)
 })
 
@@ -72,19 +72,19 @@ setMethod("add", signature=c("campsis_model", "campsis_model"), definition=funct
 })
 
 #' Append model (or simply add).
-#' 
+#'
 #' @param model1 base model
 #' @param model2 model to append
 #' @return the resulting CAMPSIS model
 #' @keywords internal
-#' 
+#'
 appendModel <- function(model1, model2) {
   # Append compartments (and included properties)
   model1@parameters <- model1@parameters %>% add(model2@parameters)
-  
+
   # Append code records
   model1@model <- model1@model %>% add(model2@model)
-  
+
   # Append compartments (and included properties)
   model1@compartments <- model1@compartments %>% add(model2@compartments)
   return(model1)
@@ -98,7 +98,7 @@ appendModel <- function(model1, model2) {
 setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(object, ...) {
   main <- object@model %>% getByName("MAIN")
   numberOfCmts <- object@compartments %>% length()
-  
+
   for (cmtIndex in seq_len(numberOfCmts)) {
     # Search for bioavailability
     fVar <- paste0("F", cmtIndex)
@@ -121,7 +121,7 @@ setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(
       object <- object %>% add(LagTime(cmtIndex, rhs=alagVar))
     }
   }
-  
+
   return(object)
 })
 
@@ -176,24 +176,24 @@ setMethod("disable", signature=c("campsis_model", "character"), definition=funct
 #----                           export_type                                 ----
 #_______________________________________________________________________________
 
-#' RxODE export type class.
-#' 
+#' rxode2 export type class.
+#'
 #' @export
 setClass(
   "rxode_type",
   representation(
   ),
-  contains="export_type" 
+  contains="export_type"
 )
 
 #' Mrgsolve export type class.
-#' 
+#'
 #' @export
 setClass(
   "mrgsolve_type",
   representation(
   ),
-  contains="export_type" 
+  contains="export_type"
 )
 
 #_______________________________________________________________________________
@@ -202,12 +202,12 @@ setClass(
 
 #' @rdname export
 setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, outvars=NULL) {
-  if (dest=="RxODE") {
+  if (dest=="rxode2") {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
     return(object %>% export(new("mrgsolve_type"), outvars=outvars))
   } else {
-    stop("Only RxODE and mrgsolve are supported for now")
+    stop("Only rxode2 and mrgsolve are supported for now")
   }
 })
 
@@ -254,7 +254,7 @@ setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), defi
 #_______________________________________________________________________________
 
 #' Read a CAMPSIS model.
-#' 
+#'
 #' @param file path to folder
 #' @return a CAMPSIS model
 #' @export
@@ -263,11 +263,11 @@ read.campsis <- function(file) {
   if (dir.exists(file)) {
     folder <- file
   } else if (file.exists(file)) {
-    
+
   } else {
     stop("file is not a ZIP file nor a valid folder")
   }
-  
+
   # model.campsis and model.pmx are both accepted
   modelPath <- file.path(folder, "model.campsis")
   if (!file.exists(modelPath)) {
@@ -277,22 +277,22 @@ read.campsis <- function(file) {
       stop(paste0("Model file couln't be found."))
     }
   }
-  
+
   # Construct CAMPSIS model
   records <- read.model(file=modelPath)
   parameters <- read.allparameters(folder=folder)
   model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
   model <- model %>% updateCompartments()
-  
+
   # Validate the whole model
   methods::validObject(model, complete=TRUE)
-  
+
   return(model)
 }
 
 
 #' Read a CAMPSIS model (deprecated).
-#' 
+#'
 #' @param file path to folder
 #' @return a CAMPSIS model
 #' @export
@@ -304,26 +304,26 @@ read.pmxmod <- function(file) {
 
 #' Update compartments list from the persisted records.
 #' Exported especially for package pmxtran. However, this method should not be called.
-#' 
+#'
 #' @param model CAMPSIS model
 #' @return an updated CAMPSIS model, with an updated compartments list
 #' @export
 updateCompartments <- function(model) {
   if (!is(model, "campsis_model")) {
-    stop("model is not a CAMPSIS model")   
+    stop("model is not a CAMPSIS model")
   }
   records <- model@model
-  
+
   # Get list of compartments
   compartments <- records %>% getCompartments()
-  
+
   # Extract characteristics
   compartments <- compartments %>% addProperties(records, "F", init=Bioavailability(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "LAG", init=LagTime(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
   compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
-  
+
   # Remove properties records because information is found in properties
   records@list <- records@list %>% purrr::keep(~!is(.x, "properties_record"))
 
@@ -402,13 +402,13 @@ setMethod("show", signature=c("campsis_model"), definition=function(object) {
 setMethod("sort", signature=c("campsis_model"), definition=function(x, decreasing=FALSE, ...) {
   # Sort code records
   x@model <- x@model %>% sort()
-  
+
   # Sort compartments (properties will be sorted correctly)
   x@compartments <- x@compartments %>% sort()
-  
+
   # Sort parameters
   x@parameters <- x@parameters %>% sort()
-  
+
   return(x)
 })
 
@@ -423,7 +423,7 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
   parameters <- object@parameters
 
   if (zip) {
-    
+
   } else {
     if (dir.exists(file)) {
       # do nothing

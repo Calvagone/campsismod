@@ -6,9 +6,9 @@ validateInfusionRate <- function(object) {
   return(TRUE)
 }
 
-#' 
+#'
 #' Compartment infusion rate class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_infusion_rate",
@@ -44,7 +44,7 @@ setMethod("getName", signature = c("compartment_infusion_rate"), definition = fu
 
 #' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
+  dest <- processExtraArg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("R")
   } else {

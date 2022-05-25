@@ -7,9 +7,9 @@ validateModelStatement <- function(object) {
   return(expectOne(object, c("comment")))
 }
 
-#' 
+#'
 #' Model statement class. Any statement in a code record.
-#' 
+#'
 #' @slot comment a comment associated to this model statement
 #' @export
 setClass(
@@ -22,9 +22,9 @@ setClass(
   validity = validateModelStatement
 )
 
-#' 
+#'
 #' Append comment.
-#' 
+#'
 #' @param str single character string
 #' @param object model statement
 #' @param dest destination engine, string
@@ -40,7 +40,7 @@ appendComment <- function(str, object, dest) {
     } else if (dest=="NONMEM") {
       symbol <- ";"
     } else {
-      symbol <- "#" # Both campsis and RxODE
+      symbol <- "#" # Both campsis and rxode2
     }
     if (str=="") {
       return(paste0(symbol, " ", comment))
@@ -50,14 +50,14 @@ appendComment <- function(str, object, dest) {
   }
 }
 
-#' 
+#'
 #' Unknown destination engine exception.
 #'
 #' @keywords internal
 #' @return no return value
-#' 
+#'
 UnsupportedDestException <- function() {
-  stop("Only RxODE, mrgsolve or campsis are supported")
+  stop("Only rxode2, mrgsolve or campsis are supported")
 }
 
 #_______________________________________________________________________________
