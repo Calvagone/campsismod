@@ -349,6 +349,22 @@ setMethod("getByIndex", signature=c("parameters", "parameter"), definition=funct
 })
 
 #_______________________________________________________________________________
+#----                          getUncertainty                               ----
+#_______________________________________________________________________________
+
+#' @importFrom tibble tibble
+#' @rdname getUncertainty
+setMethod("getUncertainty", signature=c("parameters"), definition=function(object, ...) {
+  varcov <- object@varcov
+  if (object %>% length() == 0) {
+    return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
+  } else {
+    return(object@list %>%
+             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov)))
+  }
+})
+
+#_______________________________________________________________________________
 #----                                minIndex                               ----
 #_______________________________________________________________________________
 
@@ -548,7 +564,12 @@ setMethod("show", signature=c("parameters"), definition=function(object) {
   omegas <- object %>% select("omega")
   sigmas <- object %>% select("sigma")
   cat("THETA's:\n")
-  print(purrr::map_df(thetas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+  thetasDf <- purrr::map_df(thetas@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  uncertainty <- thetas %>% getUncertainty()
+  if (any(!is.na(uncertainty$se))) {
+    thetasDf <- dplyr::bind_cols(thetasDf, uncertainty %>% dplyr::select(-"name")) 
+  }
+  print(thetasDf)
   cat("OMEGA's:\n")
   print(purrr::map_df(omegas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
   cat("SIGMA's:\n")

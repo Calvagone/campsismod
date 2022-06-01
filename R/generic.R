@@ -93,6 +93,25 @@ setGeneric("getCompartmentIndex", function(object, name) {
 })
 
 #_______________________________________________________________________________
+#----                           getUncertainty                              ----
+#_______________________________________________________________________________
+
+#' Get uncertainty on the parameters.
+#' 
+#' @param object generic object
+#' @param ... extra arguments
+#' @return data frame with standard error (se) and relative standard error (rse%) columns 
+#' @export
+#' @rdname getUncertainty
+getUncertainty <- function(object, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("getUncertainty", function(object, ...) {
+  standardGeneric("getUncertainty")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
