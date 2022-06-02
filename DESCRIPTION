@@ -30,6 +30,7 @@ Imports:
     plyr,
     purrr,
     readr,
+    tibble,
     utils
 Suggests: 
     devtools,
