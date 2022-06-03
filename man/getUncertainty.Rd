@@ -20,6 +20,8 @@ getUncertainty(object, ...)
 \item{object}{generic object}
 
 \item{...}{extra arguments}
+
+\item{varcov}{variance covariance matrix}
 }
 \value{
 data frame with standard error (se) and relative standard error (rse%) columns

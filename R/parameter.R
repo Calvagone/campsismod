@@ -385,6 +385,7 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 #----                           getUncertainty                              ----
 #_______________________________________________________________________________
 
+#' @param varcov variance covariance matrix
 #' @importFrom tibble tibble
 #' @rdname getUncertainty
 setMethod("getUncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
