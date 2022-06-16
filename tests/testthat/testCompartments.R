@@ -76,3 +76,10 @@ test_that("replace method may be used to adapt the name of a compartment", {
   expect_equal(model %>% find(Bioavailability(1)) %>% toString(model=model, dest="campsis"), "A_ABS=0.75")
 })
 
+test_that("toString method works as expected on compartment", {
+  cmt <- Compartment(index=1)
+  expect_equal(cmt %>% toString(), "A_1")
+  
+  cmt <- Compartment(index=1, name="CENTRAL")
+  expect_equal(cmt %>% toString(), "A_CENTRAL")
+})

@@ -3,10 +3,6 @@
 #----                   compartment_bioavailability class                   ----
 #_______________________________________________________________________________
 
-validateBioavailability <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Compartment bioavailability class.
 #' 
@@ -16,7 +12,9 @@ setClass(
   representation(
   ),
   contains = "compartment_property",
-  validity=validateBioavailability
+  validity=function(object) {
+    return(TRUE)
+  }
 )
 
 #'

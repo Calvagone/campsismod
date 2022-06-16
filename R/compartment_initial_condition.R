@@ -2,10 +2,6 @@
 #----               compartment_initial_condition class                     ----
 #_______________________________________________________________________________
 
-validateInitialCondition <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Compartment initial condition class.
 #' 
@@ -15,7 +11,9 @@ setClass(
   representation(
   ),
   contains = "compartment_property",
-  validity=validateInitialCondition
+  validity=function(object) {
+    return(TRUE)
+  }
 )
 
 #'

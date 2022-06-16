@@ -2,10 +2,6 @@
 #----                     unknown_statement class                           ----
 #_______________________________________________________________________________
 
-validateUnknownStatement <- function(object) {
-  return(expectOne(object, "line"))
-}
-
 #' 
 #' Unknown statement class. Any statement not recognized by campsismod.
 #' 
@@ -16,7 +12,9 @@ setClass(
     line = "character"
   ),
   contains = "model_statement",
-  validity = validateUnknownStatement
+  validity = function(object) {
+    return(expectOne(object, "line"))
+  }
 )
 
 #' 

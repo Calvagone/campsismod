@@ -3,10 +3,6 @@
 #----                        if_statement class                             ----
 #_______________________________________________________________________________
 
-validateIfStatement <- function(object) {
-  return(expectOne(object, "condition"))
-}
-
 #' 
 #' If-statement class. Any statement in the form if (condition) A = B.
 #' 
@@ -20,7 +16,9 @@ setClass(
     equation = "equation"
   ),
   contains = "model_statement",
-  validity = validateIfStatement
+  validity = function(object) {
+    return(expectOne(object, "condition"))
+  }
 )
 
 #' 

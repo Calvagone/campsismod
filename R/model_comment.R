@@ -3,10 +3,6 @@
 #----                           comment class                               ----
 #_______________________________________________________________________________
 
-validateComment <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Comment class. A statement starting with #.
 #' 
@@ -16,7 +12,9 @@ setClass(
   representation(
   ),
   contains = "model_statement",
-  validity = validateComment
+  validity = function(object) {
+    return(TRUE)
+  }
 )
 
 #' 

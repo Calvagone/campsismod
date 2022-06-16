@@ -3,10 +3,6 @@
 #----                     compartment_lag_time class                        ----
 #_______________________________________________________________________________
 
-validateLagTime <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Compartment lag time class.
 #' 
@@ -16,7 +12,9 @@ setClass(
   representation(
   ),
   contains = "compartment_property",
-  validity=validateLagTime
+  validity=function(object) {
+    return(TRUE)
+  }
 )
 
 #'

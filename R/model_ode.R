@@ -3,14 +3,6 @@
 #----                             ode class                                 ----
 #_______________________________________________________________________________
 
-validateOde <- function(object) {
-  if (startsWith(object@lhs, "A_")) {
-    return(TRUE)
-  } else {
-    return("Derivative name must start with 'A_'")
-  }
-}
-
 #' 
 #' ODE class. Any statement in the form d/dt(A_CMT) = B.
 #' 
@@ -20,7 +12,13 @@ setClass(
   representation(
   ),
   contains = "equation",
-  validity = validateOde
+  validity = function(object) {
+    if (startsWith(object@lhs, "A_")) {
+      return(TRUE)
+    } else {
+      return("Derivative name must start with 'A_'")
+    }
+  }
 )
 
 #' 

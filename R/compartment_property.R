@@ -2,10 +2,6 @@
 #----                   compartment_property class                    ----
 #_______________________________________________________________________________
 
-validateCompartmentCharacteristic <- function(object) {
-  return(expectOneForAll(object, c("compartment", "rhs")))
-}
-
 #' 
 #' Compartment property class.
 #' 
@@ -22,7 +18,9 @@ setClass(
   ),
   contains="pmx_element",
   prototype=prototype(comment=as.character(NA), rhs=""),
-  validity=validateCompartmentCharacteristic 
+  validity=function(object) {
+    return(expectOneForAll(object, c("compartment", "rhs")))
+  } 
 )
 
 #_______________________________________________________________________________
