@@ -355,12 +355,26 @@ setMethod("getByIndex", signature=c("parameters", "parameter"), definition=funct
 #' @importFrom tibble tibble
 #' @rdname getUncertainty
 setMethod("getUncertainty", signature=c("parameters"), definition=function(object, ...) {
-  varcov <- object@varcov
-  if (object %>% length() == 0) {
+  varcov <- object %>% getVarCov()
+  if (is.null(varcov)) {
     return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
   } else {
     return(object@list %>%
              purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov)))
+  }
+})
+
+#_______________________________________________________________________________
+#----                             getVarCov                                 ----
+#_______________________________________________________________________________
+
+#' @rdname getVarCov
+setMethod("getVarCov", signature=c("parameters"), definition=function(object) {
+  varcov <- object@varcov
+  if (varcov %>% length() == 0) {
+    return(NULL)
+  } else {
+    return(varcov)
   }
 })
 
@@ -559,27 +573,26 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("parameters"), definition=function(object) {
-  thetas <- object %>% select("theta")
-  omegas <- object %>% select("omega")
-  sigmas <- object %>% select("sigma")
-  cat("THETA's:\n")
-  thetasDf <- purrr::map_df(thetas@list, .f=as.data.frame, row.names=character(), optional=FALSE)
-  uncertainty <- thetas %>% getUncertainty()
+showUncertaintyOnParameters <- function(parameters) {
+  retValue <- purrr::map_df(parameters@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+  uncertainty <- parameters %>% getUncertainty()
   if (any(!is.na(uncertainty$se))) {
-    thetasDf <- dplyr::bind_cols(thetasDf, uncertainty %>% dplyr::select(-"name")) 
+    retValue <- dplyr::bind_cols(retValue, uncertainty %>% dplyr::select(-"name")) 
   }
-  print(thetasDf)
+  return(retValue)
+}
+
+setMethod("show", signature=c("parameters"), definition=function(object) {
+  cat("THETA's:\n")
+  print(showUncertaintyOnParameters(object %>% select("theta")))
   cat("OMEGA's:\n")
-  print(purrr::map_df(omegas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
+  print(showUncertaintyOnParameters(object %>% select("omega")))
   cat("SIGMA's:\n")
-  print(purrr::map_df(sigmas@list, .f=as.data.frame, row.names=character(), optional=FALSE))
-  
-  if (object@varcov %>% length() == 0) {
+  print(showUncertaintyOnParameters(object %>% select("sigma")))
+  if (is.null(object %>% getVarCov())) {
     cat("No variance-covariance matrix\n")
   } else {
-    cat("Variance-covariance matrix:\n")
-    show(object@varcov)
+    cat("Variance-covariance matrix available (see ?getVarCov)\n")
   }
 })
 

@@ -112,6 +112,24 @@ setGeneric("getUncertainty", function(object, ...) {
 })
 
 #_______________________________________________________________________________
+#----                             getVarCov                                 ----
+#_______________________________________________________________________________
+
+#' Get variance-covariance matrix.
+#' 
+#' @param object generic object
+#' @return a variance-covariance matrix (data frame) or NULL if no matrix present
+#' @export
+#' @rdname getVarCov
+getVarCov <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("getVarCov", function(object) {
+  standardGeneric("getVarCov")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

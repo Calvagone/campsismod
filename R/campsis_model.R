@@ -259,6 +259,15 @@ setMethod("getUncertainty", signature=c("campsis_model"), definition=function(ob
 })
 
 #_______________________________________________________________________________
+#----                             getVarCov                                 ----
+#_______________________________________________________________________________
+
+#' @rdname getVarCov
+setMethod("getVarCov", signature=c("campsis_model"), definition=function(object) {
+  return(object@parameters %>% getVarCov())
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
