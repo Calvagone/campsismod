@@ -1,0 +1,5 @@
+name,index,index2,value,fix,type
+BASE,1,1,10,FALSE,cv%
+POWER,2,2,10,FALSE,cv%
+MTT,3,3,10,FALSE,cv%
+SLOPE,4,4,10,FALSE,cv%

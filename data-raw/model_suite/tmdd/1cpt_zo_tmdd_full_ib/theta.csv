@@ -1,0 +1,9 @@
+"name","index","value","fix"
+"DUR",1,1e-05,TRUE
+"CL",2,0.008,FALSE
+"VC",3,0.8,FALSE
+"RBSL",4,200,FALSE
+"KSYN",5,30,FALSE
+"KON",6,0.05,FALSE
+"KINT",7,0.2,FALSE
+"PROP_RUV",8,0.1,FALSE

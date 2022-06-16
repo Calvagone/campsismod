@@ -1,0 +1,10 @@
+"name","index","value","fix"
+"TAU",1,50,FALSE
+"SH",2,5,FALSE
+"VC",3,60,FALSE
+"VP",4,10,FALSE
+"Q",5,2,FALSE
+"VMAX",6,50,FALSE
+"KM",7,10,FALSE
+"CL",8,3,FALSE
+"PROP_RUV",9,0.1,FALSE
