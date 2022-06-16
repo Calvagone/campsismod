@@ -575,9 +575,12 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 
 showUncertaintyOnParameters <- function(parameters) {
   retValue <- purrr::map_df(parameters@list, .f=as.data.frame, row.names=character(), optional=FALSE)
-  uncertainty <- parameters %>% getUncertainty()
-  if (any(!is.na(uncertainty$se))) {
-    retValue <- dplyr::bind_cols(retValue, uncertainty %>% dplyr::select(-"name")) 
+  if (parameters %>% length() > 0) {
+    uncertainty <- parameters %>% getUncertainty()
+    # Show uncertainty if at least one parameter has uncertainty
+    if (any(!is.na(uncertainty$se))) {
+      retValue <- dplyr::bind_cols(retValue, uncertainty %>% dplyr::select(-"name")) 
+    }
   }
   return(retValue)
 }
