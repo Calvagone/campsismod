@@ -2,32 +2,11 @@
 #----                     code_record class (ABSTRACT)                      ----
 #_______________________________________________________________________________
 
-checkCodeRecord <- function(object) {
-  return(TRUE)
-}
-
 checkNonODERecord <- function(object) {
   hasODE <- object@statements@list %>% purrr::map_lgl(~is(.x, "ode")) %>% any()
   errors <- character(0)
   if (hasODE) {
     errors <- errors %>% append("ODE detected in non ODE record")
-  }
-  return(errors)
-}
-
-checkPropertiesRecord <- function(object) {
-  hasODE <- object@statements@list %>% purrr::map_lgl(~is(.x, "ode")) %>% any()
-  hasUnknownStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()
-  hasIfStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "if_statement")) %>% any()
-  errors <- character(0)
-  if (hasODE) {
-    errors <- errors %>% append("ODE detected in properties record")
-  }
-  if (hasUnknownStatement) {
-    errors <- errors %>% append("Unknown statement detected in properties record")
-  }
-  if (hasIfStatement) {
-    errors <- errors %>% append("IF-statement detected in properties record")
   }
   return(errors)
 }
@@ -49,7 +28,9 @@ setClass(
   ),
   contains = "pmx_element",
   prototype = prototype(statements=ModelStatements(), comment=as.character(NA)),
-  validity = checkCodeRecord
+  validity = function(object) {
+    return(TRUE)
+  }
 )
 
 #_______________________________________________________________________________
@@ -64,7 +45,22 @@ setClass(
   representation(
   ),
   contains = "code_record",
-  validity = checkPropertiesRecord
+  validity = function(object) {
+    hasODE <- object@statements@list %>% purrr::map_lgl(~is(.x, "ode")) %>% any()
+    hasUnknownStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()
+    hasIfStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "if_statement")) %>% any()
+    errors <- character(0)
+    if (hasODE) {
+      errors <- errors %>% append("ODE detected in properties record")
+    }
+    if (hasUnknownStatement) {
+      errors <- errors %>% append("Unknown statement detected in properties record")
+    }
+    if (hasIfStatement) {
+      errors <- errors %>% append("IF-statement detected in properties record")
+    }
+    return(errors)
+  }
 )
 
 #_______________________________________________________________________________
@@ -81,8 +77,6 @@ setClass(
   ),
   contains = "code_record"
 )
-
-
 
 #_______________________________________________________________________________
 #----                           MAIN record                                 ----
