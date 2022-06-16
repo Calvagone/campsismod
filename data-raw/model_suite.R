@@ -2,7 +2,7 @@
 pattern <- "[^.*\\.R]$"
 
 model_suite <- list()
-categories <- c("literature", "nonmem", "other", "pd", "pk", "tmdd")
+categories <- c("pk", "pd", "tmdd", "nonmem", "literature", "other")
 
 for (category in categories) {
   model_suite[[category]] <- list()
