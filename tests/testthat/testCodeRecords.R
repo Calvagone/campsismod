@@ -75,7 +75,7 @@ test_that("Create very basic model on the fly", {
 
 test_that("Equations can be removed", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   expect_equal(model %>% find(MainRecord()) %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% delete(Equation("S1"))
@@ -84,7 +84,7 @@ test_that("Equations can be removed", {
 
 test_that("Equations can be replaced", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   expect_equal(model %>% find(MainRecord()) %>% length(), 3) # 3 equations: K, V, S1
   
   model <- model %>% replace(Equation("S1", "V/1000"))
@@ -94,7 +94,7 @@ test_that("Equations can be replaced", {
 
 test_that("Equations can be added at a specific position", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   
   model1 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("V")))
   model2 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(Equation("S1"), after=FALSE))
@@ -120,7 +120,7 @@ test_that("Equations can be added at a specific position", {
 
 test_that("Find method works well to search for a specific equation", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   equation <- model %>% find(Equation("V"))
   expect_equal(equation@rhs, "THETA_V*exp(ETA_V)")
   
@@ -130,14 +130,14 @@ test_that("Find method works well to search for a specific equation", {
 
 test_that("Contains method can be used to check the existence of an equation", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   expect_true(model %>% contains(Equation("V")))
   expect_false(model %>% contains(Equation("V2")))
 })
 
 test_that("Add IF-statements at specific locations in the model", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   
   if1 <- IfStatement("COV==1", Equation("V", "V*1.0"))
   if2 <- IfStatement("COV==2", Equation("V", "V*1.1"))
@@ -159,7 +159,7 @@ test_that("Add IF-statements at specific locations in the model", {
 
 test_that("Add model statements into the given code record", {
   
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   
   cp <- Equation("CP", "A_CENTRAL/S1")
   

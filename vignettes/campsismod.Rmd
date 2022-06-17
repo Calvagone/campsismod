@@ -20,7 +20,7 @@ library(campsismod)
 Load 2-compartment PK model from built-in model library and show content.
 
 ```{r}
-model <- model_library$advan4_trans4
+model <- model_suite$pk$`2cpt_fo`
 show(model)
 ```
 

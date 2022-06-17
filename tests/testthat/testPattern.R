@@ -23,7 +23,7 @@ test_that("Variable pattern object works as expected", {
 })
 
 test_that("Replace occurrences in model works as expected", {
-  model <- model_library$advan1_trans1
+  model <- model_suite$nonmem$advan1_trans1
   model <- model %>% add(LineBreak())
   model <- model %>% add(Comment("Check replacement also works in IF-statement"))
   model <- model %>% add(IfStatement("K==1", Equation("XX", "K*10")))
