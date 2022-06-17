@@ -25,31 +25,6 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                     pmx_undefined_position class                      ----
-#_______________________________________________________________________________
-
-#' 
-#' PMX undefined position class.
-#' 
-#' @export
-setClass(
-  "pmx_undefined_position",
-  representation(
-  ),
-  contains="pmx_position"
-)
-
-#' 
-#' Undefined position.
-#' 
-#' @return an undefined position object
-#' @export
-#' @keywords internal
-UndefinedPosition <- function() {
-  return(new("pmx_undefined_position", undefined=TRUE, by_index=FALSE, by_element=FALSE))
-}
-
-#_______________________________________________________________________________
 #----                      pmx_position_by_index class                      ----
 #_______________________________________________________________________________
 

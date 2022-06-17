@@ -266,6 +266,12 @@ setMethod("delete", signature=c("statements_record", "model_statement"), definit
   return(object)
 })
 
+#' @rdname delete
+setMethod("delete", signature=c("statements_record", "integer"), definition=function(object, x) {
+  object@statements <- object@statements %>% delete(x)
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                                find                                   ----
 #_______________________________________________________________________________

@@ -111,6 +111,11 @@ test_that("Equations can be added at a specific position", {
   model6 <- model %>% add(Equation("V2", "THETA_V2*exp(ETA_V2)"), Position(3, after=FALSE))
   
   expect_equal(model5, model6)
+  
+  # Delete the added equation (by index vs by equation, works only at the level of the code record)
+  main1 <- model1 %>% find(MainRecord())
+  main2 <- model2 %>% find(MainRecord())
+  expect_equal(main1 %>% delete(3L), main2 %>% delete(Equation("V2")))
 })
 
 test_that("Find method works well to search for a specific equation", {
@@ -174,4 +179,7 @@ test_that("Add model statements into the given code record", {
   
   ode2 <- model2 %>% find(OdeRecord())
   expect_equal(ode2@statements %>% getByIndex(3), cp)
+  
+  # x in Position() must be either a PMX element or an integer
+  expect_error(Position(data.frame(), after=FALSE), regexp="x can only be a PMX element or an integer position")
 })

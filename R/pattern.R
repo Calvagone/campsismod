@@ -2,13 +2,6 @@
 #----                           pattern class                               ----
 #_______________________________________________________________________________
 
-validatePattern <- function(object) {
-  if (object %>% as.character() %>% length()!=1) {
-    return("Invalid pattern. Pattern must be a single character string.")
-  }
-  return(TRUE)
-}
-
 #' 
 #' Pattern class.
 #' 
@@ -18,7 +11,12 @@ setClass(
   representation(
   ),
   contains="character",
-  validity=validatePattern
+  validity=function(object) {
+    if (object %>% as.character() %>% length()!=1) {
+      return("Invalid pattern. Pattern must be a single character string.")
+    }
+    return(TRUE)
+  }
 )
 
 #' 
