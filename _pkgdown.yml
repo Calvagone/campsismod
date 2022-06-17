@@ -56,6 +56,8 @@ reference:
   - as.data.frame
   - getNameInModel
   - getNONMEMName
+  - getUncertainty
+  - getVarCov
   - isDiag
   - maxIndex
   - minIndex
@@ -162,7 +164,6 @@ reference:
   - pmx_position-class
   - pmx_position_by_element-class
   - pmx_position_by_index-class
-  - pmx_undefined_position-class
   - ode-class
   - ode_record-class
   - omega-class
@@ -202,8 +203,9 @@ reference:
   - Pattern
   - VariablePattern
 
-- title: "Model library"
+- title: "Model libraries"
   contents:
+  - model_suite
   - model_library
   
 - title: "Advanced use"

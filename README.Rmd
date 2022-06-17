@@ -81,7 +81,7 @@ file_vignette <- "vignettes/resources/results_rxode.png"
 ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
 ```
 
-```{r, eval=EXPORT_PNG, results='hide'}
+```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}
 file.copy(file_vignette, "docs/articles/resources/")
 ```
 
@@ -99,7 +99,7 @@ file_vignette <- "vignettes/resources/results_mrgsolve.png"
 ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
 ```
 
-```{r, eval=EXPORT_PNG, results='hide'}
+```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}
 file.copy(file_vignette, "docs/articles/resources/")
 ```
 

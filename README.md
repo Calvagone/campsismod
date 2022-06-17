@@ -113,18 +113,10 @@ mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 spaghettiPlot(rxode, "CONC")
 ```
 
-``` r
-file.copy(file_vignette, "docs/articles/resources/")
-```
-
 ![RxODE simulation results](vignettes/resources/results_rxode.png)
 
 ``` r
 spaghettiPlot(mrgsolve, "CONC")
-```
-
-``` r
-file.copy(file_vignette, "docs/articles/resources/")
 ```
 
 ![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)
