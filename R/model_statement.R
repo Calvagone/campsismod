@@ -3,10 +3,6 @@
 #----                       model_statement class                           ----
 #_______________________________________________________________________________
 
-validateModelStatement <- function(object) {
-  return(expectOne(object, c("comment")))
-}
-
 #' 
 #' Model statement class. Any statement in a code record.
 #' 
@@ -19,7 +15,9 @@ setClass(
   ),
   contains = "pmx_element",
   prototype = prototype(comment=as.character(NA)),
-  validity = validateModelStatement
+  validity = function(object) {
+    return(expectOne(object, c("comment")))
+  }
 )
 
 #' 

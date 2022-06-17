@@ -250,6 +250,24 @@ setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), defi
 })
 
 #_______________________________________________________________________________
+#----                          getUncertainty                               ----
+#_______________________________________________________________________________
+
+#' @rdname getUncertainty
+setMethod("getUncertainty", signature=c("campsis_model"), definition=function(object, ...) {
+  return(object@parameters %>% getUncertainty(...))
+})
+
+#_______________________________________________________________________________
+#----                             getVarCov                                 ----
+#_______________________________________________________________________________
+
+#' @rdname getVarCov
+setMethod("getVarCov", signature=c("campsis_model"), definition=function(object) {
+  return(object@parameters %>% getVarCov())
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

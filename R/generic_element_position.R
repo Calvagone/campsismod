@@ -2,14 +2,6 @@
 #----                         pmx_position class                            ----
 #_______________________________________________________________________________
 
-validatePmxPosition <- function(object) {
-  check1 <- expectOne(object, "undefined")
-  check2 <- expectOne(object, "by_index")
-  check3 <- expectOne(object, "by_element")
-  check4 <- expectOne(object, "after")
-  return(c(check1, check2, check3, check4))
-}
-
 #' 
 #' PMX position class.
 #' 
@@ -23,42 +15,18 @@ setClass(
     after = "logical"
   ),
   prototype=prototype(after=TRUE),
-  validity=validatePmxPosition
+  validity=function(object) {
+    check1 <- expectOne(object, "undefined")
+    check2 <- expectOne(object, "by_index")
+    check3 <- expectOne(object, "by_element")
+    check4 <- expectOne(object, "after")
+    return(c(check1, check2, check3, check4))
+  }
 )
-
-#_______________________________________________________________________________
-#----                     pmx_undefined_position class                      ----
-#_______________________________________________________________________________
-
-#' 
-#' PMX undefined position class.
-#' 
-#' @export
-setClass(
-  "pmx_undefined_position",
-  representation(
-  ),
-  contains="pmx_position"
-)
-
-#' 
-#' Undefined position.
-#' 
-#' @return an undefined position object
-#' @export
-#' @keywords internal
-UndefinedPosition <- function() {
-  return(new("pmx_undefined_position", undefined=TRUE, by_index=FALSE, by_element=FALSE))
-}
 
 #_______________________________________________________________________________
 #----                      pmx_position_by_index class                      ----
 #_______________________________________________________________________________
-
-validatePmxPositionByIndex <- function(object) {
-  check <- expectOne(object, "index")
-  return(check)
-}
 
 #' 
 #' PMX position by index class.
@@ -70,7 +38,10 @@ setClass(
     index = "integer"
   ),
   contains="pmx_position",
-  validity=validatePmxPositionByIndex
+  validity=function(object) {
+    check <- expectOne(object, "index")
+    return(check)
+  }
 )
 
 #_______________________________________________________________________________

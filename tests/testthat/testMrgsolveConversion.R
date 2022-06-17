@@ -7,7 +7,7 @@ source(paste0("", "testUtils.R"))
 
 test_that("Export method works (2-cpt model, comments)", {
   regFilename = "2_cpt_model_abs_comments"
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   
   # Add some comments/line breaks programmatically
   main <- model@model %>% getByName("MAIN")
@@ -30,7 +30,7 @@ test_that("Export method works (2-cpt model, comments)", {
 test_that("Export method works (2-cpt model, if-statements)", {
   regFilename = "2_cpt_model_abs_if_statements"
   
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% delete(Equation("KA"))
   model <- model %>% add(Equation("KA", "0"))
   model <- model %>% add(IfStatement("OCC==1", Equation("KA", "THETA_KA*1.5*exp(ETA_KA)")))
@@ -41,7 +41,7 @@ test_that("Export method works (2-cpt model, if-statements)", {
 })
 
 test_that("No table block exported if empty error block", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% delete(ErrorRecord())  
   mrgmod <- model %>% export(dest="mrgsolve")
   expect_equal(mrgmod@table, character(0))

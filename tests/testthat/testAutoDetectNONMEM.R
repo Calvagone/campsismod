@@ -3,7 +3,7 @@ library(testthat)
 context("Test the auto-detect NONMEM function")
 
 test_that("Bioavailability is well recognised", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% add(Equation("F1", "0.75"))
   model <- model %>% autoDetectNONMEM()
   property <- model %>% find(Bioavailability(1))
@@ -11,7 +11,7 @@ test_that("Bioavailability is well recognised", {
 })
 
 test_that("Infusion duration is well recognised", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% add(Equation("D2", "1"))
   model <- model %>% autoDetectNONMEM()
   property <- model %>% find(InfusionDuration(2))
@@ -19,7 +19,7 @@ test_that("Infusion duration is well recognised", {
 })
 
 test_that("Infusion rate is well recognised", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% add(Equation("R2", "500"))
   model <- model %>% autoDetectNONMEM()
   property <- model %>% find(InfusionRate(2))
@@ -27,7 +27,7 @@ test_that("Infusion rate is well recognised", {
 })
 
 test_that("Infusion rate is well recognised", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model <- model %>% add(Equation("ALAG1", "2"))
   model <- model %>% autoDetectNONMEM()
   property <- model %>% find(LagTime(1))

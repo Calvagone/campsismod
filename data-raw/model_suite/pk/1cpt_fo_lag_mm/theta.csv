@@ -1,0 +1,7 @@
+"name","index","value","fix"
+"LAG",1,1,FALSE
+"KA",2,1,FALSE
+"VMAX",3,50,FALSE
+"VC",4,60,FALSE
+"KM",5,10,FALSE
+"PROP_RUV",6,0.1,FALSE

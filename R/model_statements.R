@@ -3,10 +3,6 @@
 #----                       model_statements class                          ----
 #_______________________________________________________________________________
 
-validateModelStatements <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Model statements class. A list of statements.
 #' 
@@ -17,7 +13,9 @@ setClass(
   ),
   contains = "pmx_list",
   prototype = prototype(type="model_statement"),
-  validity = validateModelStatements
+  validity = function(object) {
+    return(TRUE)
+  }
 )
 
 #' 

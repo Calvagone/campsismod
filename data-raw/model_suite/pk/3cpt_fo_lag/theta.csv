@@ -1,0 +1,10 @@
+"name","index","value","fix"
+"LAG",1,1,FALSE
+"KA",2,1,FALSE
+"VC",3,60,FALSE
+"VP",4,10,FALSE
+"Q",5,2,FALSE
+"VP_",6,90,FALSE
+"Q_",7,0.8,FALSE
+"CL",8,3,FALSE
+"PROP_RUV",9,0.1,FALSE

@@ -2,14 +2,6 @@
 #----                         pmx_list class                             ----
 #_______________________________________________________________________________
 
-validatePmxList <- function(object) {
-  check <- expectOne(object, "type")
-  for (elem in object@list) {
-    methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
-  }
-  return(check)
-}
-
 #' 
 #' PMX list class.
 #' 
@@ -23,7 +15,13 @@ setClass(
     type="character" # Interface / Main class type
   ),
   prototype=prototype(list=list()),
-  validity= validatePmxList
+  validity=function(object) {
+    check <- expectOne(object, "type")
+    for (elem in object@list) {
+      methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
+    }
+    return(check)
+  }
 )
 
 #_______________________________________________________________________________
@@ -43,9 +41,6 @@ add <- function(object, x, ...) {
 }
 
 setGeneric("add", function(object, x, ...) {
-  # if (is.null(pos)) {
-  #   pos <- UndefinedPosition()
-  # }
   standardGeneric("add")
 })
 

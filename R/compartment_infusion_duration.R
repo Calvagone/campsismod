@@ -2,10 +2,6 @@
 #----                   compartment_infusion_duration class                 ----
 #_______________________________________________________________________________
 
-validateInfusionDuration <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Compartment infusion duration class.
 #' 
@@ -15,7 +11,9 @@ setClass(
   representation(
   ),
   contains = "compartment_property",
-  validity=validateInfusionDuration
+  validity=function(object) {
+    return(TRUE)
+  }
 )
 
 #'

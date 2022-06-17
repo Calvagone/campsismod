@@ -26,7 +26,7 @@ library(campsismod)
 The examples below are illustrated based on the reference 2-compartment PK model that you find in the built-in library. This model has 5 parameters. All these parameters have inter-individual variability defined.
 
 ```{r}
-model <- model_library$advan4_trans4
+model <- model_suite$pk$`2cpt_fo`
 model
 ```
 
@@ -35,13 +35,13 @@ To retrieve a parameter by its name, just call the method `find` as follows:
 ```{r}
 model %>% find(Theta("CL"))
 model %>% find(Omega("KA"))
-model %>% find(Sigma("PROP"))
+model %>% find(Sigma("RUV_FIX"))
 ```
 
 These parameters can also alternatively be retrieved by their index(es). Use the specific method `getByIndex` created for that purpose:
 
 ```{r}
-model@parameters %>% getByIndex(Theta(index=2))
+model@parameters %>% getByIndex(Theta(index=5))
 model@parameters %>% getByIndex(Omega(index=1, index2=1))
 model@parameters %>% getByIndex(Sigma(index=1, index2=1))
 ```
@@ -73,7 +73,7 @@ Parameters can be replaced easily. Here are a few examples:
 
 ```{r}
 model <- model %>% replace(Theta("KA", value=2)) # Previous value for KA was 1
-model <- model %>% replace(Omega("CL", value=20, type="cv%")) # Previous value was a variance of 0.025
+model <- model %>% replace(Omega("CL", value=20, type="cv%")) # Previous value was a 25% CV
 model
 ```
 

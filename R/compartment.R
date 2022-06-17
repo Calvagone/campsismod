@@ -2,10 +2,6 @@
 #----                         compartment class                             ----
 #_______________________________________________________________________________
 
-validateCompartment <- function(object) {
-  return(expectOneForAll(object, c("name", "index")))
-}
-
 #' 
 #' Compartment class.
 #' 
@@ -20,7 +16,9 @@ setClass(
   ),
   contains = "pmx_element",
   prototype = prototype(name=as.character(NA)),
-  validity = validateCompartment
+  validity = function(object) {
+    return(expectOneForAll(object, c("name", "index")))
+  }
 )
 
 #' 

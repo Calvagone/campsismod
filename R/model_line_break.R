@@ -2,10 +2,6 @@
 #----                         line_break class                              ----
 #_______________________________________________________________________________
 
-validateLineBreak <- function(object) {
-  return(TRUE)
-}
-
 #' 
 #' Line-break class. A linebreak in the model.
 #' 
@@ -15,7 +11,9 @@ setClass(
   representation(
   ),
   contains = "model_statement",
-  validity = validateLineBreak
+  validity = function(object) {
+    return(TRUE)
+  }
 )
 
 #' 

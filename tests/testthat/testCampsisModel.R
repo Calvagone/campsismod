@@ -7,7 +7,7 @@ source(paste0("", "testUtils.R"))
 
 test_that("add method works well", {
   
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   
   # Add a parameter
   model <- model %>% add(Theta(name="XX", index=6, value=1))
@@ -22,7 +22,7 @@ test_that("add method works well", {
 
 test_that("replace method works well", {
   
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   
   # Replace a parameter (1)
   model <- model %>% replace(Theta(name="KA", index=1, value=1.5))
@@ -51,7 +51,7 @@ test_that("replace method works well", {
 
 test_that("delete method works well", {
   
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   
   # Delete a parameter
   updatedModel <- model %>% delete(Theta(name="KA"))
@@ -79,16 +79,16 @@ test_that("delete method works well", {
 })
 
 test_that("add method on PMX model, exceptions on parameters names", {
-  model1 <- model_library$advan4_trans4
-  model2 <- model_library$advan1_trans1
+  model1 <- model_suite$nonmem$advan4_trans4
+  model2 <- model_suite$nonmem$advan1_trans1
   expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): SIGMA_PROP")
 })
 
 test_that("add method on PMX model, exceptions on compartment names", {
-  model1 <- model_library$advan4_trans4
+  model1 <- model_suite$nonmem$advan4_trans4
   model1@parameters@list <- model1@parameters@list[-(model1@parameters %>% length())] # Remove SIGMA PROP
   
-  model2 <- model_library$advan1_trans1
+  model2 <- model_suite$nonmem$advan1_trans1
   model2@parameters@list <- model2@parameters@list[-(model2@parameters %>% length())] # Remove SIGMA PROP
   
   expect_error(model1 %>% add(model2), regexp="Element 'ODE \\(A_CENTRAL\\)' is already present.")
@@ -98,7 +98,7 @@ test_that("add method on PMX model, exceptions on compartment names", {
 test_that("add effect compartment model to PK model using add method", {
   regFilename <- "pk_pd_appended"
   
-  pk <- model_library$advan4_trans4
+  pk <- model_suite$nonmem$advan4_trans4
   pk <- pk %>% add(Bioavailability(1, "0.75"))
   
   pd <- new("campsis_model") %>%
@@ -122,7 +122,7 @@ test_that("add effect compartment model to PK model using add method", {
 })
 
 test_that("Valid object method works depending on complete argument", {
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   model@parameters@list[[1]]@index <- c(1,1) %>% as.integer()
   
   expect_true(validObject(model))

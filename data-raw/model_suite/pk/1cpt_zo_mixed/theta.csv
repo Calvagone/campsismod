@@ -1,0 +1,7 @@
+"name","index","value","fix"
+"DUR",1,4,FALSE
+"VMAX",2,50,FALSE
+"VC",3,60,FALSE
+"KM",4,10,FALSE
+"CL",5,3,FALSE
+"PROP_RUV",6,0.1,FALSE

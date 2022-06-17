@@ -9,6 +9,7 @@
 \alias{delete,parameters,single_array_parameter-method}
 \alias{delete,parameters,double_array_parameter-method}
 \alias{delete,statements_record,model_statement-method}
+\alias{delete,statements_record,integer-method}
 \alias{delete,code_records,model_statement-method}
 \alias{delete,campsis_model,compartment_property-method}
 \alias{delete,campsis_model,parameter-method}
@@ -29,6 +30,8 @@ delete(object, x)
 \S4method{delete}{parameters,double_array_parameter}(object, x)
 
 \S4method{delete}{statements_record,model_statement}(object, x)
+
+\S4method{delete}{statements_record,integer}(object, x)
 
 \S4method{delete}{code_records,model_statement}(object, x)
 

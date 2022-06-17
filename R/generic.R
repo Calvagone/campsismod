@@ -93,6 +93,43 @@ setGeneric("getCompartmentIndex", function(object, name) {
 })
 
 #_______________________________________________________________________________
+#----                           getUncertainty                              ----
+#_______________________________________________________________________________
+
+#' Get uncertainty on the parameters.
+#' 
+#' @param object generic object
+#' @param ... extra arguments
+#' @return data frame with standard error (se) and relative standard error (rse%) columns 
+#' @export
+#' @rdname getUncertainty
+getUncertainty <- function(object, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("getUncertainty", function(object, ...) {
+  standardGeneric("getUncertainty")
+})
+
+#_______________________________________________________________________________
+#----                             getVarCov                                 ----
+#_______________________________________________________________________________
+
+#' Get variance-covariance matrix.
+#' 
+#' @param object generic object
+#' @return a variance-covariance matrix (data frame) or NULL if no matrix present
+#' @export
+#' @rdname getVarCov
+getVarCov <- function(object) {
+  stop("No default function is provided")
+}
+
+setGeneric("getVarCov", function(object) {
+  standardGeneric("getVarCov")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

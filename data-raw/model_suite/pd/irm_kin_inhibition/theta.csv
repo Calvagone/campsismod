@@ -1,0 +1,4 @@
+name,index,value,fix
+IC50,1,15,FALSE
+KIN,2,0.05,FALSE
+KOUT,3,0.01,FALSE

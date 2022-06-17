@@ -28,7 +28,7 @@ library(campsismod)
 The following code will load our reference 2-compartment PK model.
 
 ```{r}
-pk_model <- model_library$advan4_trans4
+pk_model <- model_suite$pk$`2cpt_fo`
 ```
 
 ### Load an effect-compartment model
@@ -36,7 +36,7 @@ pk_model <- model_library$advan4_trans4
 The effect-compartment model can be loaded from the model library as follows:
 
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
-pd_model <- model_library$effect_cmt_model
+pd_model <- model_suite$pd$effect_cmt_model
 pd_model
 ```
 
@@ -44,7 +44,7 @@ This PD model has a variable `PK_CONC`, that needs to be linked with the PK conc
 Therefore, we need to adapt it as follows:
 
 ```{r}
-pd_model <- pd_model %>% replace(Equation("PK_CONC", "A_CENTRAL/S2"))
+pd_model <- pd_model %>% replace(Equation("PK_CONC", "A_CENTRAL/VC"))
 ```
 
 ### Append PD model to PK model
@@ -66,11 +66,11 @@ dataset <- Dataset(25) %>%
   add(Bolus(time=0, amount=1000, compartment=1, ii=12, addl=2)) %>%
   add(Observations(times=0:36))
 results <- pkpd_model %>% simulate(dataset=dataset, seed=1)
-shadedPlot(results, "CP")
+shadedPlot(results, "CONC")
 ```
 
 ```{r, eval=EXPORT_PNG}
-shadedPlot(results, "CP")
+shadedPlot(results, "CONC")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}

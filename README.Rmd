@@ -36,7 +36,7 @@ Load 2-compartment PK model from built-in model library:
 
 ```{r message=FALSE}
 library(campsismod)
-model <- model_library$advan4_trans4
+model <- model_suite$pk$`2cpt_fo`
 ```
 
 ### Write CAMPSIS model
@@ -70,7 +70,7 @@ mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 ```
 
 ```{r, eval=EXPORT_PNG}
-spaghettiPlot(rxode, "CP")
+spaghettiPlot(rxode, "CONC")
 ```
 
 ```{r, echo=FALSE, results='hide'}
@@ -81,14 +81,14 @@ file_vignette <- "vignettes/resources/results_rxode.png"
 ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
 ```
 
-```{r, echo=EXPORT_PNG, results='hide'}
+```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}
 file.copy(file_vignette, "docs/articles/resources/")
 ```
 
 ![RxODE simulation results](vignettes/resources/results_rxode.png)
 
 ```{r, eval=EXPORT_PNG}
-spaghettiPlot(mrgsolve, "CP")
+spaghettiPlot(mrgsolve, "CONC")
 ```
 
 ```{r, echo=FALSE, results='hide'}
@@ -99,7 +99,7 @@ file_vignette <- "vignettes/resources/results_mrgsolve.png"
 ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
 ```
 
-```{r, echo=EXPORT_PNG, results='hide'}
+```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}
 file.copy(file_vignette, "docs/articles/resources/")
 ```
 

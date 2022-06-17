@@ -85,7 +85,7 @@ test_that("Sort method", {
 
 test_that("Disable method (IIV/RUV)", {
   
-  model <- model_library$advan4_trans4
+  model <- model_suite$nonmem$advan4_trans4
   
   model <- model %>% disable("IIV")
   expect_equal((model@parameters %>% find(Omega(name="KA")))@value, 0)
@@ -103,7 +103,7 @@ test_that("Disable method (IIV/RUV)", {
 
 test_that("Disable method (VARCOV)", {
   
-  model <- model_library$my_model1
+  model <- model_suite$other$my_model1
   expect_equal(model@parameters@varcov %>% length(), 49) # 7*7 matrix
   
   model <- model %>% disable("VARCOV")
@@ -112,7 +112,7 @@ test_that("Disable method (VARCOV)", {
 
 test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
   
-  model <- model_library$my_model1
+  model <- model_suite$other$my_model1
   expect_equal(model@parameters@varcov %>% length(), 49) # 7*7 matrix
   
   model <- model %>% disable("VARCOV_OMEGA")
@@ -122,7 +122,7 @@ test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
   expect_equal(model@parameters@varcov %>% length(), 16) # 1 SIGMA removed
   
   # All at once
-  model <- model_library$my_model1
+  model <- model_suite$other$my_model1
   model <- model %>% disable(c("VARCOV_OMEGA", "VARCOV_SIGMA"))
   expect_equal(model@parameters@varcov %>% length(), 16)
 })
@@ -336,7 +336,7 @@ test_that("Parameters encoded with locale 'French' (semi-colon used as delimiter
   model <- read.campsis(paste0(testFolder, "custom/", "csv_locale_french"))
 
   # Let's compare it with original model from model library
-  expect_equal(model, model_library$advan1_trans1)
+  expect_equal(model, model_suite$nonmem$advan1_trans1)
 })
 
 test_that("Standardise method works as expected", {

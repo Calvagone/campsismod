@@ -3,10 +3,6 @@
 #----                          equation class                               ----
 #_______________________________________________________________________________
 
-validateEquation <- function(object) {
-  return(expectOne(object, c("lhs", "rhs")))
-}
-
 #' 
 #' Equation class. Any statement in the form A = B.
 #' 
@@ -21,7 +17,9 @@ setClass(
   ),
   contains = "model_statement",
   prototype = prototype(rhs=""),
-  validity = validateEquation
+  validity = function(object) {
+    return(expectOne(object, c("lhs", "rhs")))
+  }
 )
 
 #' 
