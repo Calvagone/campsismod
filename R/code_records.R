@@ -336,7 +336,7 @@ read.model <- function(file=NULL, text=NULL) {
     allLines <- readLines(con=file, warn=FALSE)
   } else if (!is.null(text)) {
     if (text %>% length() == 1) {
-      allLines <- strsplit(text, split="[\r\n]+")[[1]]
+      allLines <- strsplit(text, split="(\r\n)|(\r)|(\n)")[[1]]
     } else {
       allLines <- text
     }
