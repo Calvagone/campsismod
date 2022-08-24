@@ -4,10 +4,12 @@
 \alias{read.model}
 \title{Read model file.}
 \usage{
-read.model(file)
+read.model(file = NULL, text = NULL)
 }
 \arguments{
-\item{file}{path to records}
+\item{file}{path to file 'model.campsis'}
+
+\item{text}{model file as text, character (single or multiple lines)}
 }
 \value{
 records object
