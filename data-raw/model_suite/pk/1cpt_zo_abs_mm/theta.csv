@@ -1,7 +1,7 @@
 "name","index","value","fix"
-"KA",1,1,FALSE
-"DUR",2,4,FALSE
-"VMAX",3,50,FALSE
-"VC",4,60,FALSE
+"DUR",1,4,FALSE
+"KA",2,1,FALSE
+"VC",3,60,FALSE
+"VMAX",4,50,FALSE
 "KM",5,10,FALSE
 "PROP_RUV",6,0.1,FALSE

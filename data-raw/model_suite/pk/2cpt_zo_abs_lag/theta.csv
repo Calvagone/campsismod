@@ -1,7 +1,7 @@
 "name","index","value","fix"
 "LAG",1,1,FALSE
-"KA",2,1,FALSE
-"DUR",3,4,FALSE
+"DUR",2,4,FALSE
+"KA",3,1,FALSE
 "VC",4,60,FALSE
 "VP",5,10,FALSE
 "Q",6,2,FALSE

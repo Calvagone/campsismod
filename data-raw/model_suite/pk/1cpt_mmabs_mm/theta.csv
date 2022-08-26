@@ -1,7 +1,7 @@
 "name","index","value","fix"
 "VMABS",1,50,FALSE
 "KMABS",2,5,FALSE
-"VMAX",3,50,FALSE
-"VC",4,60,FALSE
+"VC",3,60,FALSE
+"VMAX",4,50,FALSE
 "KM",5,10,FALSE
 "PROP_RUV",6,0.1,FALSE

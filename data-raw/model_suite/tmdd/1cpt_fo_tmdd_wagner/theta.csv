@@ -1,7 +1,7 @@
 "name","index","value","fix"
 "KA",1,0.1,FALSE
-"CL",2,0.008,FALSE
-"VC",3,0.8,FALSE
+"VC",2,0.8,FALSE
+"CL",3,0.008,FALSE
 "RBSL",4,200,FALSE
 "KD",5,0.5,FALSE
 "KINT",6,0.2,FALSE
