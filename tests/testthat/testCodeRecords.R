@@ -183,3 +183,38 @@ test_that("Add model statements into the given code record", {
   # x in Position() must be either a PMX element or an integer
   expect_error(Position(data.frame(), after=FALSE), regexp="x can only be a PMX element or an integer position")
 })
+
+test_that("Method read.model can parse a model from a character vector", {
+  
+  expected <- model_suite$pk$`1cpt_fo`
+  
+  input <- "
+[MAIN]
+TVKA=THETA_KA
+TVVC=THETA_VC
+TVCL=THETA_CL
+TVPROP_RUV=THETA_PROP_RUV
+
+KA=TVKA * exp(ETA_KA)
+VC=TVVC * exp(ETA_VC)
+CL=TVCL * exp(ETA_CL)
+PROP_RUV=TVPROP_RUV
+
+[ODE]
+d/dt(A_ABS)=-KA*A_ABS
+d/dt(A_CENTRAL)=KA*A_ABS - CL/VC*A_CENTRAL
+
+[ERROR]
+CONC=A_CENTRAL/VC
+if (CONC <= 0.001) CONC=0.001
+IPRED=log(CONC)
+W=PROP_RUV
+Y=IPRED + W*EPS_RUV_FIX
+"
+  # text can be a single string
+  expect_equal(read.model(text=input), expected@model)
+  
+  # text can be a character vector
+  expect_equal(read.model(text=(input %>% strsplit(split="\n"))[[1]]), expected@model)
+
+})

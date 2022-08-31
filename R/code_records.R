@@ -327,11 +327,23 @@ addContentToRecord <- function(record, content) {
 
 #' Read model file.
 #' 
-#' @param file path to records
+#' @param file path to file 'model.campsis'
+#' @param text model file as text, character (single or multiple lines)
 #' @return records object
 #' @export
-read.model <- function(file) {
-  allLines <- readLines(con=file, warn=FALSE)
+read.model <- function(file=NULL, text=NULL) {
+  if (!is.null(file)) {
+    allLines <- readLines(con=file, warn=FALSE)
+  } else if (!is.null(text)) {
+    if (text %>% length() == 1) {
+      allLines <- strsplit(text, split="(\r\n)|(\r)|(\n)")[[1]]
+    } else {
+      allLines <- text
+    }
+  } else {
+    stop("Please provide argument 'file' or 'text'")
+  }
+  
   records <- CodeRecords()
 
   # Read all records

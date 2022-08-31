@@ -1,7 +1,7 @@
 "name","index","value","fix"
 "DUR",1,1e-05,TRUE
-"CL",2,0.008,FALSE
-"VC",3,0.8,FALSE
+"VC",2,0.8,FALSE
+"CL",3,0.008,FALSE
 "RBSL",4,200,FALSE
 "KSYN",5,30,FALSE
 "KSS",6,0.5,FALSE
