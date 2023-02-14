@@ -48,6 +48,15 @@ variablePatternStr <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
+#' Return the variable pattern (string form), without the first character.
+#' 
+#' @return pattern (regular expression)
+#' @keywords internal
+#' 
+variablePatternNoStartStr <- function() {
+  return("[a-zA-Z0-9_]*")
+}
+
 #' Say if line in record is an equation not.
 #' 
 #' @param x character value

@@ -23,13 +23,19 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
   if (!is.character(suffix) && length(suffix) != 1) {
     stop("suffix must be a single character value")
   }
+  if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=suffix))) {
+    stop(paste0("suffix '", suffix, "' is not a valid suffix"))
+  }
   if (is.null(separator)) {
     separator <- "_" # Default value
-  } else (
+  } else {
     if (!is.character(separator) && length(separator) != 1) {
       stop("separator must be a single character value")
     }
-  )
+    if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=separator))) {
+      stop(paste0("separator '", separator, "' is not a valid separator"))
+    }
+  }
   standardGeneric("addSuffix")
 })
 

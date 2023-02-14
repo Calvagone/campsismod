@@ -26,6 +26,12 @@ test_that("Add suffix to parameters is working as expected", {
     add(Omega(name=NA, index=2, index2=1, fix=FALSE, value=0.5, type="cor"))
   
   expect_equal(updatedParameters, expectedParameters)
+  
+  # Separator can't be a dot for instance
+  expect_error(parameters %>% addSuffix("A", separator="."), regexp="is not a valid separator")
+  
+  # Suffix can't contain a dot neither
+  expect_error(parameters %>% addSuffix(".A"), regexp="is not a valid suffix")
 })
 
 test_that("Add suffix to a code record is working as expected", {
