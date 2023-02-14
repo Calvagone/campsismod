@@ -186,3 +186,18 @@ isRecordDelimiter <- function(line) {
 getRecordDelimiter <- function(line) {
   return(gsub("\\[(.*)\\](.*)","\\1", line) %>% trim())
 }
+
+#' Get record equation names
+#' 
+#' @param record any code record
+#' @return a character vector with the equation names
+#' @export
+getRecordEquationNames <- function(record) {
+  retValue <- NULL
+  for (statement in record@statements@list) {
+    if (is(statement, "equation") && !(is(statement, "ode"))) {
+      retValue <- c(retValue, statement@lhs)
+    }
+  }
+  return(retValue)
+}

@@ -80,6 +80,7 @@ Collate:
     'code_records.R'
     'model_parser.R'
     'campsis_model.R'
+    'model_add_suffix.R'
     'rxode_model.R'
     'rxode_conversion.R'
     'mrgsolve_model.R'
