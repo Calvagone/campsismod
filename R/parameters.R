@@ -99,11 +99,24 @@ setMethod("add", signature=c("parameters", "parameters"), definition=function(ob
 #' @param params1 base set of parameters
 #' @param params2 extra set of parameters to be appended
 #' @return the resulting set of parameters
+#' @importFrom purrr discard map_chr 
 #' @keywords internal
 #' 
 appendParameters <- function(params1, params2) {
-  paramNames1 <- params1 %>% getNames()
-  paramNames2 <- params2 %>% getNames()
+  getParameterNamesInModel <- function(parameters) {
+    retValue <- parameters@list %>%
+      purrr::map_chr(.f=function(parameter) {
+        if (is(parameter, "double_array_parameter") && !isDiag(parameter)) {
+          return(NA)
+        } else {
+          return(parameter %>% getNameInModel())
+        }
+      }) %>%
+      purrr::discard(~is.na(.x))
+    return(retValue)
+  }
+  paramNames1 <- getParameterNamesInModel(params1)
+  paramNames2 <- getParameterNamesInModel(params2)
   
   checkCollisionOnParams <- paramNames1 %in% paramNames2
   if (any(checkCollisionOnParams)) {
