@@ -2,14 +2,18 @@
 #' Get the parameters block for mrgsolve.
 #' 
 #' @param model CAMPSIS model
+#' @param extra_params extra parameter names to be added. By default, they will be assigned a zero value.
 #' @return character vector, 1 parameter per line. First one is header [PARAM].
 #' @export
-mrgsolveParam <- function(model) {
+mrgsolveParam <- function(model, extra_params=character(0)) {
   params <- rxodeParams(model)
   retValue <- "[PARAM] @annotated"
-  for (index in seq_len(length(params))) {
+  for (index in seq_along(params)) {
     param <- params[index]
     retValue <- retValue %>% append(paste0(names(param), " : ", as.numeric(param), " : ", names(param)))
+  }
+  for (param in extra_params) {
+    retValue <- retValue %>% append(paste0(param, " : ", as.numeric(0), " : ", param))
   }
   return(retValue)
 }

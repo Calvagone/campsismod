@@ -10,11 +10,11 @@
 \usage{
 export(object, dest, ...)
 
-\S4method{export}{campsis_model,character}(object, dest, outvars = NULL)
+\S4method{export}{campsis_model,character}(object, dest, ...)
 
 \S4method{export}{campsis_model,rxode_type}(object, dest, ...)
 
-\S4method{export}{campsis_model,mrgsolve_type}(object, dest, outvars = NULL)
+\S4method{export}{campsis_model,mrgsolve_type}(object, dest, outvars = NULL, extra_params = character(0))
 }
 \arguments{
 \item{object}{generic object}
@@ -24,6 +24,8 @@ export(object, dest, ...)
 \item{...}{optional arguments}
 
 \item{outvars}{additional variables to capture}
+
+\item{extra_params}{extra parameter names to be added. By default, they will be assigned a zero value.}
 }
 \value{
 specific object depending on given destination

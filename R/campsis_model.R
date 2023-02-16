@@ -201,11 +201,11 @@ setClass(
 #_______________________________________________________________________________
 
 #' @rdname export
-setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, outvars=NULL) {
+setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, ...) {
   if (dest=="RxODE") {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
-    return(object %>% export(new("mrgsolve_type"), outvars=outvars))
+    return(object %>% export(new("mrgsolve_type"), ...))
   } else {
     stop("Only RxODE and mrgsolve are supported for now")
   }

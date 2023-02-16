@@ -4,10 +4,12 @@
 \alias{mrgsolveParam}
 \title{Get the parameters block for mrgsolve.}
 \usage{
-mrgsolveParam(model)
+mrgsolveParam(model, extra_params = character(0))
 }
 \arguments{
 \item{model}{CAMPSIS model}
+
+\item{extra_params}{extra parameter names to be added. By default, they will be assigned a zero value.}
 }
 \value{
 character vector, 1 parameter per line. First one is header [PARAM].
