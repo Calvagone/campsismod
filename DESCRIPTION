@@ -1,7 +1,7 @@
 Type: Package
 Package: campsismod
 Title: Generic Implementation of a PK/PD Model
-Version: 0.9.1
+Version: 1.0.0
 Authors@R: 
     person("Nicolas", "Luyckx", , "nicolas.luyckx@calvagone.com", role = c("aut", "cre"))
 Description: A generic, easy-to-use and expandable implementation of a
@@ -80,6 +80,7 @@ Collate:
     'code_records.R'
     'model_parser.R'
     'campsis_model.R'
+    'model_add_suffix.R'
     'rxode_model.R'
     'rxode_conversion.R'
     'mrgsolve_model.R'

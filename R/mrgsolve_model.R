@@ -18,12 +18,13 @@ setClass(
 #_______________________________________________________________________________
 
 #' @param outvars additional variables to capture
+#' @param extra_params extra parameter names to be added. By default, they will be assigned a zero value.
 #' @rdname export
-setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL) {
+setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL, extra_params=character(0)) {
   return(
     new(
       "mrgsolve_model",
-      param = mrgsolveParam(object),
+      param = mrgsolveParam(object, extra_params=extra_params),
       cmt = mrgsolveCompartment(object),
       main = mrgsolveMain(object),
       ode = mrgsolveOde(object),

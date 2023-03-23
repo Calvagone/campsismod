@@ -48,6 +48,15 @@ variablePatternStr <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
+#' Return the variable pattern (string form), without the first character.
+#' 
+#' @return pattern (regular expression)
+#' @keywords internal
+#' 
+variablePatternNoStartStr <- function() {
+  return("[a-zA-Z0-9_]*")
+}
+
 #' Say if line in record is an equation not.
 #' 
 #' @param x character value
@@ -185,4 +194,19 @@ isRecordDelimiter <- function(line) {
 #' @export
 getRecordDelimiter <- function(line) {
   return(gsub("\\[(.*)\\](.*)","\\1", line) %>% trim())
+}
+
+#' Get record equation names
+#' 
+#' @param record any code record
+#' @return a character vector with the equation names
+#' @export
+getRecordEquationNames <- function(record) {
+  retValue <- NULL
+  for (statement in record@statements@list) {
+    if (is(statement, "equation") && !(is(statement, "ode"))) {
+      retValue <- c(retValue, statement@lhs)
+    }
+  }
+  return(retValue)
 }

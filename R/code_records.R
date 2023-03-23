@@ -426,7 +426,7 @@ setMethod("replace", signature=c("code_records", "model_statement"), definition=
 
 #' @rdname replaceAll
 setMethod("replaceAll", signature=c("code_records", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@code_records@list <- object@code_records@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+  object@list <- object@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
   return(object)
 })
 

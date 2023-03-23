@@ -78,13 +78,30 @@ test_that("delete method works well", {
   expect_false(updatedMain %>% contains(Equation("S2")))
 })
 
-test_that("add method on PMX model, exceptions on parameters names", {
+test_that("add method on Campsis model, exceptions on parameters names", {
   model1 <- model_suite$nonmem$advan4_trans4
   model2 <- model_suite$nonmem$advan1_trans1
-  expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): SIGMA_PROP")
+  expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): EPS_PROP")
+  
+  model1 <- model_suite$nonmem$advan1_trans1
+  model2 <- model_suite$nonmem$advan1_trans1
+  expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): THETA_K, THETA_V, ETA_K, ETA_V, EPS_PROP")
+  
+  # Unnamed correlations should not be an issue when merging models
+  model1 <- model_suite$nonmem$advan1_trans1 %>%
+    addSuffix(suffix="1") %>%
+    add(Omega(index=2, index2=1, value=0.5, type="cor"))
+  model2 <- model_suite$nonmem$advan1_trans1 %>%
+    addSuffix(suffix="2") %>%
+    add(Omega(index=2, index2=1, value=0.5, type="cor"))
+  resultingModel <- model1 %>% add(model2)
+  
+  # Check correlations are still there at the correct omega indexes
+  expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=2, index2=1)) %>% .@type, "cor")
+  expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=4, index2=3)) %>% .@type, "cor") 
 })
 
-test_that("add method on PMX model, exceptions on compartment names", {
+test_that("add method on Campsis model, exceptions on compartment names", {
   model1 <- model_suite$nonmem$advan4_trans4
   model1@parameters@list <- model1@parameters@list[-(model1@parameters %>% length())] # Remove SIGMA PROP
   
