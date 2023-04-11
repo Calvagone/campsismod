@@ -1,3 +1,8 @@
+# campsismod 1.0.0
+
+* New method 'addSuffix' to combine several models #61
+* Code review: extra parameters to mrgsolve model #62
+
 # campsismod 0.9.1
 
 * Regenerate model suite #59
