@@ -210,3 +210,23 @@ getRecordEquationNames <- function(record) {
   }
   return(retValue)
 }
+
+#' Check is vector has NA's only.
+#' 
+#' @param x any vector
+#' @return TRUE if all values are NA, FALSE otherwise
+#' @export
+allNa <- function(x) {
+  return(all(is.na(x)))
+}
+
+#' Remove given column(s) if it has only NA's.
+#' 
+#' @param x any data frame
+#' @param column column name(s)
+#' @return updated data frame
+#' @importFrom dplyr any_of where
+#' @export
+removeNaColumn <- function(x, column) {
+  return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(allNa))))
+}

@@ -15,7 +15,7 @@ writePath <- function(modelName) {
 
 test_that("Write/Read ADVAN1 TRANS1", {
   modelName <- "advan1_trans1"
-  model <- model_library[[modelName]]
+  model <- model_suite$nonmem[[modelName]]
   
   # write
   model %>% write(file=writePath(modelName))
@@ -29,7 +29,7 @@ test_that("Write/Read ADVAN1 TRANS1", {
 
 test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
   modelName <- "my_model1"
-  model <- model_library[[modelName]]
+  model <- model_suite$other[[modelName]]
   
   # write
   model %>% write(file=writePath(modelName))
@@ -43,7 +43,7 @@ test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
 
 test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
   modelName <- "advan4_trans4"
-  model <- model_library[[modelName]]
+  model <- model_suite$nonmem[[modelName]]
   
   # Add a few properties
   model <- model %>% add(LagTime(1, "ALAG1"))

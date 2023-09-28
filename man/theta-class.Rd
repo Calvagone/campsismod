@@ -7,3 +7,9 @@
 \description{
 Theta parameter class.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{unit}}{parameter unit}
+}}
+

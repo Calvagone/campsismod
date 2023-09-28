@@ -462,13 +462,17 @@ setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
 dataframeToParameter <- function(row, type) {
   param <- NULL
   name <- ifelse(is.null(row$name), NA, row$name) # Optional
+  label <- ifelse(is.null(row$label), as.character(NA), row$label) # Optional
+  unit <- ifelse(is.null(row$unit), as.character(NA), row$unit) # Optional
+  comment <- ifelse(is.null(row$comment), as.character(NA), row$comment) # Optional
+  
   if (type=="theta") {
-    param <- Theta(name=name, index=row$index, value=row$value, fix=row$fix)
+    param <- Theta(name=name, index=row$index, value=row$value, fix=row$fix, label=label, unit=unit, comment=comment)
   } else if(type=="omega") {
     same <- ifelse(is.null(row$same), NA, row$same) # Optional
-    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, same=same)
+    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, same=same, label=label, comment=comment)
   } else if(type=="sigma") {
-    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type)
+    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, label=label, comment=comment)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }
@@ -586,8 +590,10 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-showUncertaintyOnParameters <- function(parameters) {
-  retValue <- purrr::map_df(parameters@list, .f=as.data.frame, row.names=character(), optional=FALSE)
+showUncertaintyOnParameters <- function(parameters, discard_na_columns=NULL) {
+  retValue <- purrr::map_df(parameters@list, .f=as.data.frame, row.names=character(), optional=FALSE) %>%
+    removeNaColumn(discard_na_columns)
+  
   if (parameters %>% length() > 0) {
     uncertainty <- parameters %>% getUncertainty()
     # Show uncertainty if at least one parameter has uncertainty
@@ -600,11 +606,11 @@ showUncertaintyOnParameters <- function(parameters) {
 
 setMethod("show", signature=c("parameters"), definition=function(object) {
   cat("THETA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("theta")))
+  print(showUncertaintyOnParameters(object %>% select("theta"), discard_na_columns=c("label", "unit", "comment")))
   cat("OMEGA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("omega")))
+  print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("same", "label", "comment")))
   cat("SIGMA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("sigma")))
+  print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("label", "comment")))
   if (is.null(object %>% getVarCov())) {
     cat("No variance-covariance matrix\n")
   } else {
@@ -661,20 +667,23 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' @param file filename
 #' @param ... extra arguments, like defaultDf for empty parameters list
 #' @return TRUE if success
-#' @importFrom dplyr select_if
+#' @importFrom dplyr any_of select where 
 #' @importFrom utils write.csv
 writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
-  # Get rid of column if all NA
-  df <- df %>% dplyr::select_if(.predicate=~!(is.logical(.x) && all(is.na(.x))))
-
+  # Get rid of specific columns if all NA
+  naColumns <- c("fix", "same", "label", "unit", "comment")
+  df <- df %>% removeNaColumn(naColumns)
+  
   if (nrow(df)==0) {
     df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
   }
   utils::write.csv(df, file=file, row.names=FALSE)
   return(TRUE)
 }
+
+
 
 #' Write variance-covariance matrix.
 #' 

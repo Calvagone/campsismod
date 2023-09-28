@@ -145,3 +145,10 @@ test_that("Valid object method works depending on complete argument", {
   expect_true(validObject(model))
   expect_error(validObject(model, complete=TRUE))
 })
+
+test_that("Parameters can be annotated (label, unit, comment)", {
+  model <- model_suite$pk$'1cpt_fo'
+
+  model  
+  
+})

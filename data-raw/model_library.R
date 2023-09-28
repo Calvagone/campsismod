@@ -1,5 +1,6 @@
 
 all_models <- list.files(path="data-raw", pattern="[^.*\\.R]$")
+all_models <- all_models[!all_models %in% "model_suite"]
 
 model_library <- list()
 

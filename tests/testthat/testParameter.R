@@ -62,7 +62,8 @@ test_that("As.data.frame method", {
   theta1 <- Theta(name="CL", index=1)
   df <- theta1 %>% as.data.frame(row.names=character(), optional=F)
   
-  expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), fix=FALSE), df)
+  expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), fix=FALSE,
+                          label=as.character(NA), unit=as.character(NA), comment=as.character(NA)), df)
 })
 
 test_that("Standardise method works as expected", {
