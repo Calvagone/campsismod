@@ -65,3 +65,23 @@ test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
   # Check equality  
   expect_equal(model, model2)
 })
+
+test_that("Model parameters can be annotated and persisted (fields label, unit, comment)", {
+  model <- model_suite$pk$'1cpt_fo'
+  modelName <- "model_1cpt_fo_annotated"
+  
+  model <- model %>%
+    replace(Theta(name="KA", value=1, label="Absorption rate", unit="/h")) %>%
+    replace(Omega(name="KA", value=25, type="cv%", label="IIV on absorption")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, fix=TRUE, label="Proportional error", comment="Fixed epsilon, multiplied by THETA_PROP_RUV in model code."))
+  
+  # Write
+  model %>% write(file=writePath(modelName))
+  
+  # Read
+  model2 <- read.campsis(file=writePath(modelName))
+  
+  # Check equality  
+  expect_equal(model, model2)
+  
+})
