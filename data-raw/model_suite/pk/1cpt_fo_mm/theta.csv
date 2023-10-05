@@ -1,6 +1,6 @@
-"name","index","value","fix"
-"KA",1,1,FALSE
-"VC",2,60,FALSE
-"VMAX",3,50,FALSE
-"KM",4,10,FALSE
-"PROP_RUV",5,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"KA",2,1,FALSE,"Absorption rate","1/h"
+"VC",3,10,FALSE,"Volume of central compartment","L"
+"VMAX",4,20,FALSE,"Maximal elimination rate","mg/h"
+"KM",5,5,FALSE,"Concentration at 50% max. elimination","mg/L"

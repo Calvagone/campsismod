@@ -1,0 +1,8 @@
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"TAU",2,5,FALSE,"Weibull parameter",NA
+"SH",3,2,FALSE,"Weibull shape parameter",NA
+"VC",4,10,FALSE,"Volume of central compartment","L"
+"VP",5,40,FALSE,"Volume of peripheral compartment","L"
+"Q",6,20,FALSE,"Inter-compartment flow","L/h"
+"CL",7,3,FALSE,"Clearance","L/h"

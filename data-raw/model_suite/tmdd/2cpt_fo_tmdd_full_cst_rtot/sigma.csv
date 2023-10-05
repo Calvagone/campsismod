@@ -1,2 +1,2 @@
 "name","index","index2","value","fix","type"
-"RUV_FIX",1,1,1,TRUE,"var"
+"PROP_RUV",1,1,0.1,FALSE,"sd"

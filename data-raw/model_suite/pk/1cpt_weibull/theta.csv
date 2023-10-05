@@ -1,6 +1,6 @@
-"name","index","value","fix"
-"TAU",1,50,FALSE
-"SH",2,5,FALSE
-"VC",3,60,FALSE
-"CL",4,3,FALSE
-"PROP_RUV",5,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"KA",2,1,FALSE,"Absorption rate","1/h"
+"GAM",3,0.5,FALSE,"Weibull shape parameter",NA
+"VC",4,10,FALSE,"Volume of central compartment","L"
+"CL",5,3,FALSE,"Clearance","L/h"

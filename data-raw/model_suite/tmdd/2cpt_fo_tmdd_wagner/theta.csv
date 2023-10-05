@@ -1,10 +1,10 @@
-"name","index","value","fix"
-"KA",1,0.1,FALSE
-"VC",2,0.8,FALSE
-"VP",3,3,FALSE
-"Q",4,0.1,FALSE
-"CL",5,0.008,FALSE
-"RBSL",6,200,FALSE
-"KD",7,0.5,FALSE
-"KINT",8,0.2,FALSE
-"PROP_RUV",9,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,0.6,FALSE,"Bioavailability",NA
+"KA",2,0.2,FALSE,"Absorption rate","1/h"
+"VC",3,3,FALSE,"Volume of central compartment","L"
+"VP",4,3,FALSE,"Volume of peripheral compartment","L"
+"Q",5,0.5,FALSE,"Inter-compartment flow","L/h"
+"CL",6,0.5,FALSE,"Linear clearance","L/h"
+"R0",7,20,FALSE,"Baseline target concentration","nM"
+"KD",8,1,FALSE,"Dissociation constant","nM"
+"KINT",9,1,FALSE,"Internalization/Degredation rate of drug-target complex","1/d"

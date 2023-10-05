@@ -1,12 +1,12 @@
-"name","index","value","fix"
-"DUR",1,4,FALSE
-"KA",2,1,FALSE
-"VC",3,60,FALSE
-"VP",4,10,FALSE
-"Q",5,2,FALSE
-"VP_",6,90,FALSE
-"Q_",7,0.8,FALSE
-"CL",8,3,FALSE
-"VMAX",9,50,FALSE
-"KM",10,10,FALSE
-"PROP_RUV",11,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"DUR",2,4,FALSE,"Duration of 0-order input","h"
+"KA",3,1,FALSE,"Absorption rate","1/h"
+"VC",4,10,FALSE,"Volume of central compartment","L"
+"VP",5,40,FALSE,"Volume of peripheral compartment","L"
+"Q",6,20,FALSE,"Inter-compartment flow","L/h"
+"VP2",7,200,FALSE,"Volume of peripheral compartment 2","L"
+"Q2",8,10,FALSE,"Inter-compartment flow 2","L/h"
+"CL",9,3,FALSE,"Clearance","L/h"
+"VMAX",10,20,FALSE,"Maximal elimination rate","mg/h"
+"KM",11,5,FALSE,"Concentration at 50% max. elimination","mg/L"
