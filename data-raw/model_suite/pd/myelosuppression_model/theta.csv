@@ -1,0 +1,5 @@
+"name","index","value","fix",label,unit
+CIRC0,1,5000,FALSE,Baseline neutrophil count,cells/uL
+GAMMA,2,0.15,FALSE,Exponent of feedback loop,NA
+MTT,3,90,FALSE,Mean transit time,1/h
+SLOPE,4,0.005,FALSE,Slope of drug effect,1/ng/mL

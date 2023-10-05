@@ -1,4 +1,5 @@
-name,index,value,fix
-IC50,1,15,FALSE
-KIN,2,0.05,FALSE
-KOUT,3,0.01,FALSE
+"name","index","value","fix",label,unit
+"IC50",1,15,FALSE,Concentration at 50% of IMAX,ng/mL
+"KOUT",2,0.1,FALSE,Rate of decline of response,1/h
+"IMAX",3,1,FALSE,Maximum inhibition,NA
+"BL",4,100,FALSE,Baseline,NA

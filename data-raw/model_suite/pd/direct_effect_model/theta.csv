@@ -1,5 +1,5 @@
-name,index,value,fix
-EMAX,1,100,FALSE
-EC50,2,10,FALSE
-GAMMA,3,1.5,FALSE
-E0,4,20,FALSE
+name,index,value,fix,label,unit
+EMAX,1,100,FALSE,Maximum effect,NA
+EC50,2,10,FALSE,Concentration at 50% of EMAX,ng/mL
+GAMMA,3,1.5,FALSE,Hill coefficient,NA
+E0,4,20,FALSE,Baseline,NA

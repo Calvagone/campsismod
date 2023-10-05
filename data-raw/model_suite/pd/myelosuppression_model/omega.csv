@@ -1,0 +1,5 @@
+name,index,index2,value,fix,type
+CIRC0,1,1,40,FALSE,cv%
+GAMMA,2,2,0,FALSE,cv%
+MTT,3,3,15,FALSE,cv%
+SLOPE,4,4,25,FALSE,cv%

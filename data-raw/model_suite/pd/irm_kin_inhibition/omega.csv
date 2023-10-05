@@ -1,4 +1,5 @@
-name,index,index2,value,fix,type
-IC50,1,1,10,FALSE,cv%
-KIN,2,2,10,FALSE,cv%
-KOUT,3,3,10,FALSE,cv%
+"name","index","index2","value","fix","type"
+"IC50",1,1,25,FALSE,"cv%"
+"KOUT",2,2,25,FALSE,"cv%"
+"IMAX",3,3,0,FALSE,"cv%"
+"BL",4,4,25,FALSE,"cv%"
