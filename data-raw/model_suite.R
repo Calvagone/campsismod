@@ -15,7 +15,7 @@ for (category in categories) {
     subCategories <- c("nonmem", "other", "pk")
     for (subCategory in subCategories) {
       model_suite[[category]][[subCategory]] <- list()
-      
+
       for (model in list.files(path=paste0("data-raw/model_suite/", category, "/", subCategory), pattern=pattern)) {
         model_suite[[category]][[subCategory]][[model]] <- campsismod::read.campsis(file=paste0("data-raw/model_suite/", category, "/", subCategory, "/", model))
       }
