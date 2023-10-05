@@ -74,11 +74,11 @@ test_that("Add suffix to compartments is working as expected", {
 
 test_that("Add suffix to a Campsis model is working as expected", {
   
-  modelA <- model_suite$pk$`1cpt_zo_abs_lag` %>%
+  modelA <- model_suite$testing$pk$`1cpt_zo_abs_lag` %>%
     addSuffix("1", separator="") %>%
     add(LineBreak())
   
-  modelB <- model_suite$pk$`1cpt_zo_abs_lag` %>%
+  modelB <- model_suite$testing$pk$`1cpt_zo_abs_lag` %>%
     addSuffix("2", separator="")
   
   modelAB <- modelA %>%

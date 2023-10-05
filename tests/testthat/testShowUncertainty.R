@@ -6,7 +6,7 @@ context("Showing uncertainty on parameters works as expected")
 test_that("Showing uncertainty in the console works as expected", {
 
   # This model has a variance-covariance matrix
-  model <- model_suite$other$`2cpt_zo_allo_metab_effect_on_cl`
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl`
   
   expect_true(any(grepl(pattern="Variance-covariance matrix available", x=capture.output(show(model)))))
   expect_true(any(grepl(pattern="se\\s+rse%", x=capture.output(show(model@parameters %>% select("theta"))))))
@@ -14,7 +14,7 @@ test_that("Showing uncertainty in the console works as expected", {
   expect_false(any(grepl(pattern="se\\s+rse%", x=capture.output(show(model@parameters %>% select("sigma"))))))
   
   # This model doesn't have a variance-covariance matrix
-  model <- model_suite$pk$`2cpt_zo`
+  model <- model_suite$testing$pk$`2cpt_zo`
   
   expect_true(any(grepl(pattern="No variance-covariance matrix", x=capture.output(show(model)))))
   expect_false(any(grepl(pattern="se\\s+rse%", x=capture.output(show(model)))))
@@ -24,7 +24,7 @@ test_that("Showing uncertainty in the console works as expected", {
 test_that("Method getUncertainty works as expected", {
   
   # This model has a variance-covariance matrix
-  model <- model_suite$other$`2cpt_zo_allo_metab_effect_on_cl`
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl`
   
   uncertainty <- model %>% getUncertainty() %>% dplyr::mutate_if(.predicate=is.numeric, .funs=~signif(.x, digits=2))
   expected <- tibble::tibble(name=c("THETA_METAB_CL", "THETA_DUR", "THETA_VC", "THETA_VP", "THETA_Q", "THETA_CL", "THETA_PROP_RUV", "OMEGA_DUR", "OMEGA_VC", "OMEGA_CL", "SIGMA_RUV_FIX"),
@@ -33,7 +33,7 @@ test_that("Method getUncertainty works as expected", {
   expect_equal(uncertainty, expected)
   
   # This model doesn't have a variance-covariance matrix
-  model <- model_suite$pk$`2cpt_zo`
+  model <- model_suite$testing$pk$`2cpt_zo`
   
   uncertainty <- model %>% getUncertainty()
   expected <- tibble::tibble(name=character(0),
