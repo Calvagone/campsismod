@@ -3,4 +3,4 @@
 "EC50",2,10,FALSE,Concentration at 50% of EMAX,ng/mL
 "GAMMA",3,1.5,FALSE,Hill coefficient,NA
 "E0",4,20,FALSE,Baseline,NA
-"KE0",5,0,FALSE,Effect compartment delay rate,1/h
+"KE0",5,0.5,FALSE,Effect compartment delay rate,1/h

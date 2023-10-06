@@ -3,4 +3,4 @@
 "EC50",2,2,10,FALSE,"cv%"
 "GAMMA",3,3,10,FALSE,"cv%"
 "E0",4,4,10,FALSE,"cv%"
-"KE0",5,5,0,FALSE,"var"
+"KE0",5,5,10,FALSE,"cv%"
