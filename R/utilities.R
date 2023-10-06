@@ -201,6 +201,7 @@ getRecordDelimiter <- function(line) {
 #' @param record any code record
 #' @return a character vector with the equation names
 #' @export
+#' @keywords internal
 getRecordEquationNames <- function(record) {
   retValue <- NULL
   for (statement in record@statements@list) {
@@ -216,6 +217,7 @@ getRecordEquationNames <- function(record) {
 #' @param x any vector
 #' @return TRUE if all values are NA, FALSE otherwise
 #' @export
+#' @keywords internal
 allNa <- function(x) {
   return(all(is.na(x)))
 }
@@ -227,6 +229,7 @@ allNa <- function(x) {
 #' @return updated data frame
 #' @importFrom dplyr any_of where
 #' @export
+#' @keywords internal
 removeNaColumn <- function(x, column) {
   return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(allNa))))
 }

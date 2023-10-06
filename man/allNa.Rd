@@ -15,3 +15,4 @@ TRUE if all values are NA, FALSE otherwise
 \description{
 Check is vector has NA's only.
 }
+\keyword{internal}

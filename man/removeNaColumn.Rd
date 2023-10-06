@@ -17,3 +17,4 @@ updated data frame
 \description{
 Remove given column(s) if it has only NA's.
 }
+\keyword{internal}

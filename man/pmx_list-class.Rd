@@ -15,3 +15,4 @@ PMX list class.
 \item{\code{type}}{type of the elements this list may contain}
 }}
 
+\keyword{internal}

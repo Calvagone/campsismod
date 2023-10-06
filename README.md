@@ -5,6 +5,12 @@
 
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
 [![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://app.codecov.io/gh/Calvagone/campsismod)
+[![CRAN
+version](http://www.r-pkg.org/badges/version/campsismod)](https://cran.r-project.org/package=campsismod)
+[![CRAN total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/campsismod)](https://cran.r-project.org/package=campsismod)
+[![CRAN total
+downloads](https://cranlogs.r-pkg.org/badges/campsismod)](https://cran.r-project.org/package=campsismod)
 <!-- badges: end -->
 
 ## Installation
@@ -43,51 +49,52 @@ list.files("path_to_model_folder")
 model <- read.campsis(file="path_to_model_folder")
 show(model)
 #> [MAIN]
+#> TVBIO=THETA_BIO
 #> TVKA=THETA_KA
 #> TVVC=THETA_VC
 #> TVVP=THETA_VP
 #> TVQ=THETA_Q
 #> TVCL=THETA_CL
-#> TVPROP_RUV=THETA_PROP_RUV
 #> 
+#> BIO=TVBIO
 #> KA=TVKA * exp(ETA_KA)
 #> VC=TVVC * exp(ETA_VC)
 #> VP=TVVP * exp(ETA_VP)
 #> Q=TVQ * exp(ETA_Q)
 #> CL=TVCL * exp(ETA_CL)
-#> PROP_RUV=TVPROP_RUV
 #> 
 #> [ODE]
 #> d/dt(A_ABS)=-KA*A_ABS
 #> d/dt(A_CENTRAL)=KA*A_ABS + Q/VP*A_PERIPHERAL - Q/VC*A_CENTRAL - CL/VC*A_CENTRAL
 #> d/dt(A_PERIPHERAL)=Q/VC*A_CENTRAL - Q/VP*A_PERIPHERAL
 #> 
+#> [F]
+#> A_ABS=BIO
+#> 
 #> [ERROR]
 #> CONC=A_CENTRAL/VC
 #> if (CONC <= 0.001) CONC=0.001
-#> IPRED=log(CONC)
-#> W=PROP_RUV
-#> Y=IPRED + W*EPS_RUV_FIX
+#> CONC_ERR=CONC*(1 + EPS_PROP_RUV)
 #> 
 #> 
 #> THETA's:
-#>       name index value   fix
-#> 1       KA     1   1.0 FALSE
-#> 2       VC     2  60.0 FALSE
-#> 3       VP     3  10.0 FALSE
-#> 4        Q     4   2.0 FALSE
-#> 5       CL     5   3.0 FALSE
-#> 6 PROP_RUV     6   0.1 FALSE
+#>   name index value   fix                            label unit
+#> 1  BIO     1     1 FALSE                  Bioavailability <NA>
+#> 2   KA     2     1 FALSE                  Absorption rate  1/h
+#> 3   VC     3    10 FALSE    Volume of central compartment    L
+#> 4   VP     4    40 FALSE Volume of peripheral compartment    L
+#> 5    Q     5    20 FALSE           Inter-compartment flow  L/h
+#> 6   CL     6     3 FALSE                        Clearance  L/h
 #> OMEGA's:
-#>   name index index2 value   fix type same
-#> 1   KA     1      1    25 FALSE  cv%   NA
-#> 2   VC     2      2    25 FALSE  cv%   NA
-#> 3   VP     3      3    25 FALSE  cv%   NA
-#> 4    Q     4      4    25 FALSE  cv%   NA
-#> 5   CL     5      5    25 FALSE  cv%   NA
+#>   name index index2 value   fix type
+#> 1   KA     1      1    25 FALSE  cv%
+#> 2   VC     2      2    25 FALSE  cv%
+#> 3   VP     3      3    25 FALSE  cv%
+#> 4    Q     4      4    25 FALSE  cv%
+#> 5   CL     5      5    25 FALSE  cv%
 #> SIGMA's:
-#>      name index index2 value  fix type
-#> 1 RUV_FIX     1      1     1 TRUE  var
+#>       name index index2 value   fix type
+#> 1 PROP_RUV     1      1   0.1 FALSE   sd
 #> No variance-covariance matrix
 #> 
 #> Compartments:
@@ -113,10 +120,18 @@ mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
 spaghettiPlot(rxode, "CONC")
 ```
 
-![RxODE simulation results](vignettes/resources/results_rxode.png)
+<figure>
+<img src="vignettes/resources/results_rxode.png"
+alt="RxODE simulation results" />
+<figcaption aria-hidden="true">RxODE simulation results</figcaption>
+</figure>
 
 ``` r
 spaghettiPlot(mrgsolve, "CONC")
 ```
 
-![mrgsolve simulation results](vignettes/resources/results_mrgsolve.png)
+<figure>
+<img src="vignettes/resources/results_mrgsolve.png"
+alt="mrgsolve simulation results" />
+<figcaption aria-hidden="true">mrgsolve simulation results</figcaption>
+</figure>

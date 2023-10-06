@@ -15,3 +15,4 @@ a character vector with the equation names
 \description{
 Get record equation names
 }
+\keyword{internal}
