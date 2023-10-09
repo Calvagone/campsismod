@@ -1,7 +1,0 @@
-"name","index","value","fix","label","unit"
-"LAG",1,1,FALSE,"Lag time","h"
-"BIO",2,1,FALSE,"Bioavailability",NA
-"DUR",3,4,FALSE,"Duration of 0-order input","h"
-"KA",4,1,FALSE,"Absorption rate","1/h"
-"VC",5,10,FALSE,"Volume of central compartment","L"
-"CL",6,3,FALSE,"Clearance","L/h"
