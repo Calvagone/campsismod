@@ -6,4 +6,4 @@
 "R0",5,20,FALSE,"Baseline target concentration","nM"
 "KON",6,50,FALSE,"Association rate","1/nM/day"
 "KD",7,1,FALSE,"Dissociation constant","nM"
-"KINT",8,1,FALSE,"Internalization/Degredation rate of drug-target complex","1/d"
+"KINT",8,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"

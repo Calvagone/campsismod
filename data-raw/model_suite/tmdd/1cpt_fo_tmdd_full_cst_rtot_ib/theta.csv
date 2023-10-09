@@ -5,4 +5,4 @@
 "CL",4,0.5,FALSE,"Linear clearance","L/h"
 "R0",5,20,FALSE,"Baseline target concentration","nM"
 "KON",6,50,FALSE,"Association rate","1/nM/day"
-"KINT",7,1,FALSE,"Internalization/Degredation rate of drug-target complex","1/d"
+"KINT",7,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"

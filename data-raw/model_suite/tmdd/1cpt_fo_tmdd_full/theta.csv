@@ -7,4 +7,4 @@
 "KDEG",6,2,FALSE,"Degradation rate of free target","1/d"
 "KON",7,50,FALSE,"Association rate","1/nM/day"
 "KD",8,1,FALSE,"Dissociation constant","nM"
-"KINT",9,1,FALSE,"Internalization/Degredation rate of drug-target complex","1/d"
+"KINT",9,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"
