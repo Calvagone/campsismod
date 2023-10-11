@@ -12,7 +12,9 @@ VC=TVVC * exp(ETA_VC)
 CL=TVCL * exp(ETA_CL)
 
 [ODE]
-WF=1-exp(-pow(KA*(t-TDOS),GAM))
+TSUB=t - TDOS
+if (TSUB < 0) TSUB=0
+WF=1-exp(-pow(KA*TSUB,GAM))
 d/dt(A_ABS)=-WF*A_ABS
 d/dt(A_CENTRAL)=WF*A_ABS - CL/VC*A_CENTRAL
 
