@@ -19,8 +19,6 @@ A list with all the models:
 \url{https://calvagone.github.io/campsis.doc/}
 
 \url{https://www.iconplc.com/solutions/technologies/nonmem/}
-
-\url{http://repository.ddmore.eu/model/DDMODEL00000077/}
 }
 \usage{
 model_suite

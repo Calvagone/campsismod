@@ -16,5 +16,4 @@
 #' }
 #' @source \url{https://calvagone.github.io/campsis.doc/}
 #' @source \url{https://www.iconplc.com/solutions/technologies/nonmem/}
-#' @source \url{http://repository.ddmore.eu/model/DDMODEL00000077/}
 "model_suite"
