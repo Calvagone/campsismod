@@ -80,7 +80,7 @@ ggplot2::ggsave(filename="resources/pkpd_model_concentration.png", width=7, heig
 ![PK concentration](resources/pkpd_model_concentration.png)
 
 ```{r, eval=EXPORT_PNG}
-shadedPlot(results, "A_EFFECT")
+shadedPlot(results, "EFFECT")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
