@@ -103,7 +103,7 @@ show(model)
 #> A_PERIPHERAL (CMT=3)
 ```
 
-### Simulate with RxODE or mrgsolve
+### Simulate with rxode2 or mrgsolve
 
 ``` r
 library(campsis)
@@ -112,8 +112,8 @@ dataset <- Dataset(5) %>%
   add(Bolus(time=0, amount=1000, ii=12, addl=2)) %>%
   add(Observations(times=0:36))
 
-rxode <- model %>% simulate(dataset=dataset, dest="RxODE", seed=1)
-mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=1)
+rxode <- model %>% simulate(dataset=dataset, dest="rxode2", seed=0)
+mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=0)
 ```
 
 ``` r
