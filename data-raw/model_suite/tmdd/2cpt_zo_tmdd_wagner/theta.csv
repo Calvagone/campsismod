@@ -1,10 +1,9 @@
-"name","index","value","fix"
-"DUR",1,1e-05,TRUE
-"VC",2,0.8,FALSE
-"VP",3,3,FALSE
-"Q",4,0.1,FALSE
-"CL",5,0.008,FALSE
-"RBSL",6,200,FALSE
-"KD",7,0.5,FALSE
-"KINT",8,0.2,FALSE
-"PROP_RUV",9,0.1,FALSE
+"name","index","value","fix","label","unit"
+"DUR",1,1e-05,TRUE,"Duration of 0-order input","h"
+"VC",2,3,FALSE,"Volume of central compartment","L"
+"VP",3,3,FALSE,"Volume of peripheral compartment","L"
+"Q",4,0.5,FALSE,"Inter-compartment flow","L/h"
+"CL",5,0.5,FALSE,"Linear clearance","L/h"
+"R0",6,20,FALSE,"Baseline target concentration","nM"
+"KD",7,1,FALSE,"Dissociation constant","nM"
+"KINT",8,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"

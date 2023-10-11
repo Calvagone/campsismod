@@ -201,6 +201,7 @@ getRecordDelimiter <- function(line) {
 #' @param record any code record
 #' @return a character vector with the equation names
 #' @export
+#' @keywords internal
 getRecordEquationNames <- function(record) {
   retValue <- NULL
   for (statement in record@statements@list) {
@@ -209,4 +210,26 @@ getRecordEquationNames <- function(record) {
     }
   }
   return(retValue)
+}
+
+#' Check is vector has NA's only.
+#' 
+#' @param x any vector
+#' @return TRUE if all values are NA, FALSE otherwise
+#' @export
+#' @keywords internal
+allNa <- function(x) {
+  return(all(is.na(x)))
+}
+
+#' Remove given column(s) if it has only NA's.
+#' 
+#' @param x any data frame
+#' @param column column name(s)
+#' @return updated data frame
+#' @importFrom dplyr any_of where
+#' @export
+#' @keywords internal
+removeNaColumn <- function(x, column) {
+  return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(allNa))))
 }

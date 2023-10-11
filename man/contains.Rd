@@ -27,3 +27,4 @@ logical value, TRUE or FALSE
 \description{
 Check if an element exists in list.
 }
+\keyword{internal}

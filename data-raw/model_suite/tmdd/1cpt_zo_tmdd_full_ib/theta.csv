@@ -1,9 +1,8 @@
-"name","index","value","fix"
-"DUR",1,1e-05,TRUE
-"VC",2,0.8,FALSE
-"CL",3,0.008,FALSE
-"RBSL",4,200,FALSE
-"KSYN",5,30,FALSE
-"KON",6,0.05,FALSE
-"KINT",7,0.2,FALSE
-"PROP_RUV",8,0.1,FALSE
+"name","index","value","fix","label","unit"
+"DUR",1,1e-05,TRUE,"Duration of 0-order input","h"
+"VC",2,3,FALSE,"Volume of central compartment","L"
+"CL",3,0.5,FALSE,"Linear clearance","L/h"
+"R0",4,20,FALSE,"Baseline target concentration","nM"
+"KDEG",5,2,FALSE,"Degradation rate of free target","1/d"
+"KON",6,50,FALSE,"Association rate","1/nM/day"
+"KINT",7,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"

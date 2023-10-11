@@ -15,7 +15,7 @@ writePath <- function(modelName) {
 
 test_that("Write/Read ADVAN1 TRANS1", {
   modelName <- "advan1_trans1"
-  model <- model_library[[modelName]]
+  model <- model_suite$testing$nonmem[[modelName]]
   
   # write
   model %>% write(file=writePath(modelName))
@@ -29,7 +29,7 @@ test_that("Write/Read ADVAN1 TRANS1", {
 
 test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
   modelName <- "my_model1"
-  model <- model_library[[modelName]]
+  model <- model_suite$testing$other[[modelName]]
   
   # write
   model %>% write(file=writePath(modelName))
@@ -43,7 +43,7 @@ test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
 
 test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
   modelName <- "advan4_trans4"
-  model <- model_library[[modelName]]
+  model <- model_suite$testing$nonmem[[modelName]]
   
   # Add a few properties
   model <- model %>% add(LagTime(1, "ALAG1"))
@@ -64,4 +64,24 @@ test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
   
   # Check equality  
   expect_equal(model, model2)
+})
+
+test_that("Model parameters can be annotated and persisted (fields label, unit, comment)", {
+  model <- model_suite$testing$pk$'1cpt_fo'
+  modelName <- "model_1cpt_fo_annotated"
+  
+  model <- model %>%
+    replace(Theta(name="KA", value=1, label="Absorption rate", unit="/h")) %>%
+    replace(Omega(name="KA", value=25, type="cv%", label="IIV on absorption")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, fix=TRUE, label="Proportional error", comment="Fixed epsilon, multiplied by THETA_PROP_RUV in model code."))
+  
+  # Write
+  model %>% write(file=writePath(modelName))
+  
+  # Read
+  model2 <- read.campsis(file=writePath(modelName))
+  
+  # Check equality  
+  expect_equal(model, model2)
+  
 })

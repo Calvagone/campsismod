@@ -1,9 +1,9 @@
-"name","index","value","fix"
-"KA",1,1,FALSE
-"VC",2,60,FALSE
-"VP",3,10,FALSE
-"Q",4,2,FALSE
-"CL",5,3,FALSE
-"VMAX",6,50,FALSE
-"KM",7,10,FALSE
-"PROP_RUV",8,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"KA",2,1,FALSE,"Absorption rate","1/h"
+"VC",3,10,FALSE,"Volume of central compartment","L"
+"VP",4,40,FALSE,"Volume of peripheral compartment","L"
+"Q",5,20,FALSE,"Inter-compartment flow","L/h"
+"CL",6,3,FALSE,"Clearance","L/h"
+"VMAX",7,20,FALSE,"Maximal elimination rate","mg/h"
+"KM",8,5,FALSE,"Concentration at 50% max. elimination","mg/L"

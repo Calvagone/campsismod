@@ -1,5 +1,5 @@
-name,index,value,fix
-EMAX,1,1,FALSE
-EC50,2,15,FALSE
-KIN,3,0.05,FALSE
-KOUT,4,0.01,FALSE
+"name","index","value","fix",label,unit
+"KOUT",1,0.1,FALSE,Rate of decline of response,1/h
+"BL",2,100,FALSE,Baseline,NA
+"EC50",3,20,FALSE,Concentration at 50% of EMAX,ng/mL
+"EMAX",4,1,FALSE,Maximum stimulation,NA

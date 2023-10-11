@@ -13,7 +13,7 @@ test_that("All structural elements can be converted to NONMEM (this is still a b
   ifStatement <- IfStatement("COV.EQ.1", equation=Equation("COV_EFFECT", "0.1"), comment="This is a comment")
   expect_equal(ifStatement %>% toString(dest=dest), "IF (COV.EQ.1) COV_EFFECT=0.1 ; This is a comment")
   
-  model <- model_suite$nonmem$advan1_trans1
+  model <- model_suite$testing$nonmem$advan1_trans1
   central <- model %>% find(Ode("A_CENTRAL"))  
   expect_equal(central %>% toString(dest=dest, model=model), "DADT(1)=-K*A_CENTRAL")
   

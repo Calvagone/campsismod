@@ -1,3 +1,13 @@
+# campsismod 1.1.0
+
+* Revise model suite #66
+* Add label, unit and comment fields to parameters #65
+
+# campsismod 1.0.0
+
+* New method 'addSuffix' to combine several models #61
+* Code review: extra parameters to mrgsolve model #62
+
 # campsismod 0.9.1
 
 * Regenerate model suite #59

@@ -8,6 +8,7 @@
 #' @slot list effective list which will contain the elements
 #' @slot type type of the elements this list may contain
 #' @export
+#' @keywords internal
 setClass(
   "pmx_list",
   representation(
@@ -201,6 +202,7 @@ setMethod("getByName", signature=c("pmx_list", "character"), definition=function
 #' @return logical value, TRUE or FALSE
 #' @export
 #' @rdname contains
+#' @keywords internal
 contains <- function(object, x) {
   stop("No default function is provided")
 }
@@ -319,6 +321,7 @@ setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
 #' @param x list object
 #' @return the length of this list, integer value
 #' @rdname length
+#' @keywords internal
 setMethod("length", signature=c("pmx_list"), definition=function(x) {
   return(length(x@list))
 })

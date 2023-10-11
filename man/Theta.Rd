@@ -4,7 +4,15 @@
 \alias{Theta}
 \title{Create a THETA parameter.}
 \usage{
-Theta(name = NA, index = NA, value = NA, fix = FALSE)
+Theta(
+  name = NA,
+  index = NA,
+  value = NA,
+  fix = FALSE,
+  label = NA,
+  unit = NA,
+  comment = NA
+)
 }
 \arguments{
 \item{name}{parameter name, e.g. CL (prefix THETA will be added automatically)}
@@ -14,6 +22,12 @@ Theta(name = NA, index = NA, value = NA, fix = FALSE)
 \item{value}{parameter value}
 
 \item{fix}{parameter was fixed in estimation, logical value}
+
+\item{label}{parameter label, optional}
+
+\item{unit}{parameter unit, optional}
+
+\item{comment}{any comment, optional}
 }
 \value{
 a THETA parameter

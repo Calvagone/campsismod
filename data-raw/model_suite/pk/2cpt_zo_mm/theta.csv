@@ -1,8 +1,7 @@
-"name","index","value","fix"
-"DUR",1,4,FALSE
-"VC",2,60,FALSE
-"VP",3,10,FALSE
-"Q",4,2,FALSE
-"VMAX",5,50,FALSE
-"KM",6,10,FALSE
-"PROP_RUV",7,0.1,FALSE
+"name","index","value","fix","label","unit"
+"DUR",1,4,FALSE,"Duration of 0-order input","h"
+"VC",2,10,FALSE,"Volume of central compartment","L"
+"VP",3,40,FALSE,"Volume of peripheral compartment","L"
+"Q",4,20,FALSE,"Inter-compartment flow","L/h"
+"VMAX",5,20,FALSE,"Maximal elimination rate","mg/h"
+"KM",6,5,FALSE,"Concentration at 50% max. elimination","mg/L"

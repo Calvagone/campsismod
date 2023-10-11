@@ -17,5 +17,9 @@ Parameter class. Any parameter in a pharmacometric model.
 \item{\code{value}}{parameter value (e.g. the estimated value from a modelling tool)}
 
 \item{\code{fix}}{logical value, say if parameter was fixed in the modelling phase}
+
+\item{\code{label}}{parameter label, any string}
+
+\item{\code{comment}}{any comment on this parameter, any string}
 }}
 

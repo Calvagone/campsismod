@@ -28,6 +28,7 @@ reference:
   - autoDetectNONMEM
   - read.campsis
   - read.model
+  - addSuffix
 
 - title: "Code records"
   contents:
@@ -85,14 +86,12 @@ reference:
 - title: "Generic list"
   contents:
   - add
-  - contains
   - delete
   - find
   - indexOf
   - getByIndex
   - getByName
   - getNames
-  - length
   - replace
   - sort
   - default
@@ -160,7 +159,6 @@ reference:
   - mrgsolve_type-class
   - pattern-class
   - pmx_element-class
-  - pmx_list-class
   - pmx_position-class
   - pmx_position_by_element-class
   - pmx_position_by_index-class
@@ -203,10 +201,9 @@ reference:
   - Pattern
   - VariablePattern
 
-- title: "Model libraries"
+- title: "Model library"
   contents:
   - model_suite
-  - model_library
   
 - title: "Advanced use"
   contents:

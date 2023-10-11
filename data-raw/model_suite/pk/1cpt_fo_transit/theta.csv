@@ -1,5 +1,6 @@
-"name","index","value","fix"
-"MTT",1,10,FALSE
-"VC",2,60,FALSE
-"CL",3,3,FALSE
-"PROP_RUV",4,0.1,FALSE
+"name","index","value","fix","label","unit"
+"BIO",1,1,FALSE,"Bioavailability",NA
+"MTT",2,10,FALSE,"Mean transit time","h"
+"KA",3,1,FALSE,"Absorption rate","1/h"
+"VC",4,10,FALSE,"Volume of central compartment","L"
+"CL",5,3,FALSE,"Clearance","L/h"

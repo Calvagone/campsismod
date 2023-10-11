@@ -11,7 +11,9 @@ Omega(
   value = NA,
   fix = FALSE,
   type = NULL,
-  same = NA
+  same = NA,
+  label = NA,
+  comment = NA
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ Omega(
 \item{type}{variance type: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv\%'}
 
 \item{same}{NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for 'SAME' OMEGA's}
+
+\item{label}{parameter label, optional}
+
+\item{comment}{any comment, optional}
 }
 \value{
 an OMEGA parameter

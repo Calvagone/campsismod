@@ -1,5 +1,4 @@
-"name","index","value","fix"
-"DUR",1,4,FALSE
-"VC",2,60,FALSE
-"CL",3,3,FALSE
-"PROP_RUV",4,0.1,FALSE
+"name","index","value","fix","label","unit"
+"DUR",1,4,FALSE,"Duration of 0-order input","h"
+"VC",2,10,FALSE,"Volume of central compartment","L"
+"CL",3,3,FALSE,"Clearance","L/h"
