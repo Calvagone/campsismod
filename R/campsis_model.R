@@ -390,13 +390,27 @@ setMethod("replace", signature=c("campsis_model", "model_statement"), definition
 
 #' @rdname replaceAll
 setMethod("replaceAll", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@model@list <- object@model@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+  # Call 'replaceAll' on each code record
+  object@model@list <- object@model@list %>%
+    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+  
+  # Call 'replaceAll' on each compartment property
+  object@compartments@properties@list <- object@compartments@properties@list %>%
+    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+  
   return(object)
 })
 
 #' @rdname replaceAll
 setMethod("replaceAll", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
-  object@model@list <- object@model@list %>% purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+  # Call 'replaceAll' on each code record
+  object@model@list <- object@model@list %>%
+    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+  
+  # Call 'replaceAll' on each compartment property
+  object@compartments@properties@list <- object@compartments@properties@list %>%
+    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+  
   return(object)
 })
 

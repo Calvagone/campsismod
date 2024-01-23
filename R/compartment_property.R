@@ -61,6 +61,16 @@ setGeneric("getRecordName", function(object) {
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("compartment_property", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@rhs <- object@rhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                               show                                    ----
 #_______________________________________________________________________________
 
