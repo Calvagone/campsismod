@@ -1,3 +1,7 @@
+# campsismod 1.1.1
+
+* Function 'replaceAll' not replacing occurrences in compartment properties #74
+
 # campsismod 1.1.0
 
 * Revise model suite #66

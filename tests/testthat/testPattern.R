@@ -34,3 +34,16 @@ test_that("Replace occurrences in model works as expected", {
   expect_equal(model %>% find(Ode("A_OUTPUT")), Ode("A_OUTPUT", "K2*A_CENTRAL"))
   expect_equal(model %>% find(IfStatement("K2==1", Equation("XX"))), IfStatement("K2==1", Equation("XX", "K2*10")))
 })
+
+test_that("Function replaceAll also replaces occurrences in compartment properties", {
+  model <- model_suite$pk$'1cpt_fo'
+  
+  model <- model %>% 
+    replaceAll("BIO", "BIO2")
+  
+  # Make sure BIO2 equation is there
+  expect_equal(model %>% campsismod::find(Equation("BIO2")), Equation("BIO2", "TVBIO"))
+  
+  # Make sure compartment property was updated well
+  expect_equal(model %>% find(Bioavailability(compartment=1)), Bioavailability(compartment=1, rhs="BIO2"))  
+})
