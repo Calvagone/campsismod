@@ -4,7 +4,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/Calvagone/campsismod/workflows/R-CMD-check/badge.svg)](https://github.com/Calvagone/campsismod/actions)
-[![codecov](https://codecov.io/gh/Calvagone/campsismod/branch/main/graph/badge.svg?token=7DHBRQD7AG)](https://app.codecov.io/gh/Calvagone/campsismod)
+[![Codecov test
+coverage](https://codecov.io/gh/Calvagone/campsismod/graph/badge.svg)](https://app.codecov.io/gh/Calvagone/campsismod)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/campsismod)](https://cran.r-project.org/package=campsismod)
 [![CRAN total
@@ -122,8 +123,8 @@ spaghettiPlot(rxode, "CONC")
 
 <figure>
 <img src="vignettes/resources/results_rxode.png"
-alt="RxODE simulation results" />
-<figcaption aria-hidden="true">RxODE simulation results</figcaption>
+alt="rxode2 simulation results" />
+<figcaption aria-hidden="true">rxode2 simulation results</figcaption>
 </figure>
 
 ``` r
