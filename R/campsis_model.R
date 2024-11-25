@@ -176,7 +176,7 @@ setMethod("disable", signature=c("campsis_model", "character"), definition=funct
 #----                           export_type                                 ----
 #_______________________________________________________________________________
 
-#' RxODE export type class.
+#' RxODE/rxode2 export type class.
 #' 
 #' @export
 setClass(
@@ -202,12 +202,12 @@ setClass(
 
 #' @rdname export
 setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, ...) {
-  if (dest=="RxODE") {
+  if (isRxODE(dest)) {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
     return(object %>% export(new("mrgsolve_type"), ...))
   } else {
-    stop("Only RxODE and mrgsolve are supported for now")
+    stop("Only rxode2 (previously RxODE) and mrgsolve are currently supported")
   }
 })
 

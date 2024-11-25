@@ -74,14 +74,12 @@ setMethod("toString", signature=c("compartment_initial_condition"), definition=f
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
-  if (dest=="RxODE") {
+  if (isRxODE(dest)) {
     return(paste0(compartment %>% toString(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(compartment %>% toString(), "_0=", object@rhs))
-  } else if (dest=="pmxmod") {
-    return(paste0(compartment %>% toString(), "=", object@rhs))
   } else {
-    stop("Only RxODE, mrgsolve or pmxmod are supported")
+    stop("Only rxode2 (previously RxODE) and mrgsolve are currently supported")
   }
 })
 

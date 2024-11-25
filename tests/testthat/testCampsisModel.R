@@ -133,9 +133,6 @@ test_that("add effect compartment model to PK model using add method", {
   pkpd <- pk %>% add(pd)
   
   campsisNonRegTest(pkpd, regFilename)
-  # dataset <- Dataset(1) %>% add(Bolus(0, 100)) %>% add(Observations(0:48))
-  # results <- pkpd %>% simulate(dataset=dataset, dest="RxODE", seed=1)
-  # spaghettiPlot(results, "A_EFFECT")
 })
 
 test_that("Valid object method works depending on complete argument", {

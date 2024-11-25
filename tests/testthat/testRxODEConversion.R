@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test the conversion to RxODE")
+context("Test the conversion to rxode2")
 
 source(paste0("", "testUtils.R"))
 
@@ -24,7 +24,7 @@ test_that("Export method works (2-cpt model, comments)", {
   model <- model %>% add(InitialCondition(compartment=2, rhs="50"))
   
   # Code comparison
-  rxmod <- model %>% export(dest="RxODE")
+  rxmod <- model %>% export(dest="rxode2")
   rxodeNonRegTest(rxmod, regFilename)
   
   # Theta vector comparison
@@ -54,6 +54,10 @@ test_that("Export method works (2-cpt model, if-statements)", {
   model <- model %>% add(IfStatement("OCC==3", Equation("KA", "THETA_KA*0.1*exp(ETA_KA)")))
   
   # Code comparison
+  rxmod <- model %>% export(dest="rxode2")
+  rxodeNonRegTest(rxmod, regFilename)
+  
+  # RxODE still accepted temporarily
   rxmod <- model %>% export(dest="RxODE")
   rxodeNonRegTest(rxmod, regFilename)
 })

@@ -65,7 +65,7 @@ setMethod("toString", signature=c("equation"), definition=function(object, ...) 
   init <- processExtraArg(args=args, name="init", default=TRUE)
   capture <- processExtraArg(args=args, name="capture", default=FALSE)
   
-  if (dest=="campsis" || dest=="RxODE" || dest=="NONMEM") {
+  if (dest=="campsis" || isRxODE(dest) || dest=="NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0(object@lhs, "=", object@rhs, ";")

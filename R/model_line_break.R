@@ -41,7 +41,7 @@ setMethod("getName", signature = c("line_break"), definition = function(x) {
 #' @rdname toString
 setMethod("toString", signature=c("line_break"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve" || dest=="NONMEM") {
+  if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- ""
   } else {
     UnsupportedDestException()

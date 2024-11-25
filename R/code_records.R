@@ -14,7 +14,7 @@ setClass(
                                        purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()) %>% any()
     if (hasUnknownStatements) {
       warning(
-        "Model code contains unknown statements. Conversion to RxODE and mrgsolve may lead to errors."
+        "Model code contains unknown statements. Conversion to rxode2 and mrgsolve may lead to errors."
       )
     }
     return(TRUE)

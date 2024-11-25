@@ -2,7 +2,7 @@
 % Please edit documentation in R/rxode_conversion.R
 \name{rxodeParams}
 \alias{rxodeParams}
-\title{Get the parameters vector for RxODE.}
+\title{Get the parameters vector for rxode2.}
 \usage{
 rxodeParams(model)
 }
@@ -13,5 +13,5 @@ rxodeParams(model)
 named vector with THETA values
 }
 \description{
-Get the parameters vector for RxODE.
+Get the parameters vector for rxode2.
 }
