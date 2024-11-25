@@ -22,7 +22,7 @@ navbar:
 
 reference:
 
-- title: "CAMPSIS model"
+- title: "Campsis model"
   contents:
   - CampsisModel
   - autoDetectNONMEM
