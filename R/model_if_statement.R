@@ -60,7 +60,7 @@ setMethod("replaceAll", signature=c("if_statement", "pattern", "character"), def
 #' @rdname toString
 setMethod("toString", signature=c("if_statement"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || dest=="RxODE" || dest=="mrgsolve") {
+  if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve") {
     retValue <- paste0("if (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))
   } else if (dest=="NONMEM") {
     retValue <- paste0("IF (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))

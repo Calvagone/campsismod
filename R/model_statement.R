@@ -38,7 +38,7 @@ appendComment <- function(str, object, dest) {
     } else if (dest=="NONMEM") {
       symbol <- ";"
     } else {
-      symbol <- "#" # Both campsis and RxODE
+      symbol <- "#" # Both campsis and rxode2
     }
     if (str=="") {
       return(paste0(symbol, " ", comment))
@@ -55,7 +55,7 @@ appendComment <- function(str, object, dest) {
 #' @return no return value
 #' 
 UnsupportedDestException <- function() {
-  stop("Only RxODE, mrgsolve or campsis are supported")
+  stop("Only rxode2 (previously RxODE), mrgsolve or campsis are supported")
 }
 
 #_______________________________________________________________________________

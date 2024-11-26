@@ -51,7 +51,7 @@ setMethod("toString", signature=c("ode"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
   model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
   
-  if (dest=="campsis" || dest=="RxODE") {
+  if (dest=="campsis" || isRxODE(dest)) {
     retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")

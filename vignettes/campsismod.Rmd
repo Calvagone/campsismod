@@ -1,8 +1,8 @@
 ---
-title: "Get started with CAMPSIS model"
+title: "Get started with Campsis model"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Get started with CAMPSIS model}
+  %\VignetteIndexEntry{Get started with Campsis model}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -24,9 +24,9 @@ model <- model_suite$pk$`2cpt_fo`
 show(model)
 ```
 
-### Write CAMPSIS model
+### Write Campsis model
 
-A CAMPSIS model can be persisted on your local drive as follows:
+A Campsis model can be persisted on your local drive as follows:
 
 ```{r}
 model %>% write(file="path_to_model_folder")
@@ -35,9 +35,9 @@ list.files("path_to_model_folder")
 
 As shown, the output directory will contain the model (all code records) and 1 `csv` file per type of parameter (THETA, OMEGA and SIGMA). 
 
-### Read CAMPSIS model
+### Read Campsis model
 
-To read a CAMPSIS model from your local drive, use the `read.campsis` function.
+To read a Campsis model from your local drive, use the `read.campsis` function.
 The exact same model should be retrieved.
 
 ```{r}
@@ -47,17 +47,17 @@ show(model)
 
 The `MAIN` record is the part of the model where your model parameters are defined. The `ODE` record is where your ordinary differential equations (ODE) go, as well as any equation depending on the simulation time. The `ERROR` record is the place where the error model is defined. The model parameters are then shown, followed by the all the compartments.
  
-### Export CAMPSIS model to RxODE
+### Export Campsis model to rxode2
 
-`campsismod` has powerful export capabilities to `RxODE` and `mrgsolve`, the 2 simulation engines supported by `campsis`.
-The following code exports the model to `RxODE`. Please note that this step is implicit in CAMPSIS when you call the `simulate` method with your preferred simulation engine.
+`campsismod` has powerful export capabilities to `rxode2` and `mrgsolve`, the 2 simulation engines supported by `campsis`.
+The following code exports the model to `rxode2`. Please note that this step is implicit in Campsis when you call the `simulate` method with your preferred simulation engine.
 
 ```{r}
-rxmod <- model %>% export(dest="RxODE")
+rxmod <- model %>% export(dest="rxode2")
 rxmod
 ```
 
-### Export CAMPSIS model to mrgsolve
+### Export Campsis model to mrgsolve
 
 The following code exports the model to `mrgsolve` (text form).
 

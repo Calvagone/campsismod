@@ -60,7 +60,7 @@ model
 
 Let's now simulate a few individuals and show `A_CENTRAL`, i.e., the amount of drug in the central compartment.
 
-First, we need to define an infusion of `1000` in a CAMPSIS dataset, as well as the observations times.
+First, we need to define an infusion of `1000` in a Campsis dataset, as well as the observations times.
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)

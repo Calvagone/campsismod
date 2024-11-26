@@ -43,7 +43,7 @@ setMethod("getName", signature = c("compartment_bioavailability"), definition = 
 
 #' @rdname getPrefix
 setMethod("getPrefix", signature = c("compartment_bioavailability"), definition = function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="RxODE")
+  dest <- processExtraArg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("F")
   } else {

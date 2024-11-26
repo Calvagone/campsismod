@@ -30,15 +30,5 @@ test_that("Time-dependent ODE's are correctly translated", {
                 "dxdt_A_ABS=-WF*A_ABS;",
                 "dxdt_A_CENTRAL=WF*A_ABS - CL/VC*A_CENTRAL;",
                 "double CP=A_CENTRAL/VC;")
-  
-  # Possibly run a simulation with Campsis
-  # ds <- Dataset(1) %>%
-  #   add(Bolus(time=0, amount=100)) %>%
-  #   add(Observations(0:24)) %>%
-  #   add(Covariate("DOSE", 100))
-  # 
-  # spaghettiPlot(simulate(model=model, dataset=ds, dest="mrgsolve", outvars="CP"), "CP")
-  # spaghettiPlot(simulate(model=model, dataset=ds, dest="RxODE", outvars="CP"), "CP")
-    
 })
 

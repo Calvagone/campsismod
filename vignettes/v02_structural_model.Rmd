@@ -13,8 +13,8 @@ editor_options:
 EXPORT_PNG <- FALSE
 ```
 
-This vignette attends to give a brief insight on the different statements that may be used to build a structural model, compatible with CAMPSIS.  
-The number of model statement types proposed in `campsismod` is rather limited, with the underlying idea of keeping our model simple and the translation to RxODE and mrgsolve as clean as possible.
+This vignette attends to give a brief insight on the different statements that may be used to build a structural model, compatible with Campsis.  
+The number of model statement types proposed in `campsismod` is rather limited, with the underlying idea of keeping our model simple and the translation to rxode2 and mrgsolve as clean as possible.
 However, in a near future, new types of model statements will likely be supported.
 
 ### Prerequisite
@@ -136,13 +136,13 @@ Please note that mrgsolve require all extra variables (like COV_EFFECT in the pr
 
 ### Additional remarks
 
-Package `campsismod` does not check the equations from a grammar point of view. This work is delegated to the simulation engine (RxODE or mrgsolve) and C compiler.
+Package `campsismod` does not check the equations from a grammar point of view. This work is delegated to the simulation engine (rxode2 or mrgsolve) and C compiler.
 
 In general, respecting the few rules listed below will give you a successful compatibility with both engines:
 
 - All formula's and if-statement conditions must be written in C code
 - Functions included in the Math library of C are compatible (e.g. cos, sin, etc)
-- Use the pow function for writing exponents (^ is accepted in RxODE, not in mrgsolve)
+- Use the pow function for writing exponents (^ is accepted in rxode2, not in mrgsolve)
 - Scientific notation for numbers is accepted (e.g. 2.51e-01)
 - Initialise all extra variables (see example in the section above)
 

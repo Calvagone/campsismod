@@ -25,9 +25,9 @@ library(campsismod)
 
 Assume a very simple 1-compartment PK model with first-order eliminate rate `K`. Say this parameter has a typical value of log(2)/12≈0.06 (where 12 is the elimination half life) and has 15% CV. Let's also initiate the central compartment to 1000.
 
-This can be translated into the following CAMPSIS model (
+This can be translated into the following Campsis model (
 ```{r echo=FALSE}
-xfun::embed_file('resources/campsis_npp_plugin.xml', text="download Notepad++ plugin for CAMPSIS")
+xfun::embed_file('resources/campsis_npp_plugin.xml', text="download Notepad++ plugin for Campsis")
 ```
 ):
 
@@ -47,7 +47,7 @@ This model can now be loaded by `campsismod`...
 model <- read.campsis("resources/minimalist_model/")
 ```
 
-Let's simulated this model in CAMPSIS:
+Let's simulated this model in Campsis:
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)
@@ -64,7 +64,7 @@ ggplot2::ggsave(filename="resources/minimalist_example_sim1.png", width=7, heigh
 
 ### Create the same model programmatically
 
-The same model can be created programmatically. First, let's create an empty CAMPSIS model.
+The same model can be created programmatically. First, let's create an empty Campsis model.
 
 ```{r}
 model <- CampsisModel()
@@ -95,7 +95,7 @@ model <- model %>% add(Theta("K", value=0.06))
 model <- model %>% add(Omega("K", value=15, type="cv%"))
 ```
 
-This model can simulated by CAMPSIS as well. Powerful, isn't it?
+This model can simulated by Campsis as well. Powerful, isn't it?
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)

@@ -233,3 +233,14 @@ allNa <- function(x) {
 removeNaColumn <- function(x, column) {
   return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(allNa))))
 }
+
+#' Check if the destination engine is RxODE or rxode2.
+#' Note that rxode2 is the successor of RxODE.
+#' 
+#' @param dest destination engine
+#' @return TRUE if RxODE or rxode2, FALSE otherwise
+#' @export
+#' @keywords internal
+isRxODE <- function(dest) {
+  return(dest %in% c("RxODE", "rxode2"))
+}

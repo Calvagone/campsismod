@@ -1,3 +1,9 @@
+# campsismod 1.1.2
+
+* Code coverage does not appear on codecov.io #77
+* Accept dest='rxode2' in addition to 'RxODE' #78
+* Update pkgdown documentation #79
+
 # campsismod 1.1.1
 
 * Function 'replaceAll' not replacing occurrences in compartment properties #74
