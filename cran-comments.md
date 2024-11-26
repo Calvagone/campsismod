@@ -1,12 +1,12 @@
 ## Test environments
-* local R installation, R 4.3.1
-* ubuntu-20.04 (GitHub Actions), R 4.3.1
-* windows-latest (GitHub Actions), R 4.3.1
-* Windows Server 2022, R-devel, 64 bit (R-hub)
-* Ubuntu Linux 20.04.1 LTS, R-release, GCC (R-hub)
-* Fedora Linux, R-devel, clang, gfortran (R-hub)
+* local R installation, R 4.4.1
+* ubuntu-latest (GitHub Actions), R 4.4.2
+* windows-latest (GitHub Actions), R 4.4.2
+* macos-latest (GitHub Actions), R 4.4.2
+* win-builder (devtools::check_win_devel), R 4.4.2
+
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 note
 
 * This is a new release.
