@@ -99,7 +99,8 @@ setMethod("add", signature=c("parameters", "parameters"), definition=function(ob
 #' @param params1 base set of parameters
 #' @param params2 extra set of parameters to be appended
 #' @return the resulting set of parameters
-#' @importFrom purrr discard map_chr 
+#' @importFrom purrr discard map_chr
+#' @importFrom assertthat are_equal
 #' @keywords internal
 #' 
 appendParameters <- function(params1, params2) {
@@ -141,6 +142,31 @@ appendParameters <- function(params1, params2) {
     sigma@index2 <- sigma@index2 + sigmaMax
     params1 <- params1 %>% add(sigma)
   }
+
+  # Merge variance-covariance matrices
+  varcov1 <- params1@varcov
+  varcov2 <- params2@varcov
+  
+  if (length(varcov1) == 0 && length(varcov2) > 0) {
+    varcov <- varcov2
+  } else if (length(varcov2) == 0 && length(varcov1) > 0) {
+    varcov <- varcov1
+  } else if (length(varcov1) == 0 && length(varcov2) == 0) {
+    varcov <- matrix(numeric(0), nrow=0, ncol=0)
+  } else {
+    dimnames1 <- dimnames(varcov1)
+    assertthat::are_equal(dimnames1[[1]], dimnames1[[2]])
+    dimnames2 <- dimnames(varcov2)
+    assertthat::are_equal(dimnames2[[1]], dimnames2[[2]])
+    dimnames <- list(c(dimnames1[[1]], dimnames2[[1]]), c(dimnames1[[2]], dimnames2[[2]]))
+    totalDim <- length(dimnames[[1]])
+    varcov <- matrix(numeric(length(totalDim)^2), nrow=totalDim, ncol=totalDim)
+    dimnames(varcov) <- dimnames
+    varcov[seq_along(dimnames1[[1]]), seq_along(dimnames1[[1]])] <- varcov1
+    varcov[length(dimnames1[[1]]) + seq_along(dimnames2[[1]]), length(dimnames1[[1]]) + seq_along(dimnames2[[1]])] <- varcov2
+  }
+  params1@varcov <- varcov
+
   return(params1 %>% sort())
 }
 
