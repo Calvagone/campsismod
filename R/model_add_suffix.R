@@ -40,6 +40,7 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
 })
 
 #' @rdname addSuffix
+#' @importFrom assertthat are_equal
 setMethod("addSuffix", signature=c("parameters", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
@@ -65,6 +66,15 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
       }
     }
   }
+  
+  # Update variance-covariance matrix
+  varcov <- object@varcov
+  if (length(varcov) > 0) {
+    varcovDimNames <- dimnames(varcov)
+    assertthat::are_equal(varcovDimNames[[1]], varcovDimNames[[2]])
+    dimnames(varcov) <- list(paste0(varcovDimNames[[1]], separator, suffix), paste0(varcovDimNames[[2]], separator, suffix))
+  }
+  retValue@varcov <- varcov
   
   # Return updated parameters or updated model if model was provided
   if (is.null(model)) {

@@ -13,6 +13,7 @@ test_that("Add suffix to parameters is working as expected", {
     add(Omega(name="CL", index=1, index2=1, fix=FALSE, value=0.1)) %>%
     add(Omega(name="V", index=2, index2=2, fix=FALSE, value=0.1)) %>%
     add(Omega(name=NA, index=2, index2=1, fix=FALSE, value=0.5, type="cor"))
+  parameters@varcov <- matrix(dimnames=list("THETA_CL", "THETA_CL"), data=0.1)
   
   updatedParameters <- parameters %>%
     addSuffix("A")
@@ -24,6 +25,7 @@ test_that("Add suffix to parameters is working as expected", {
     add(Omega(name="CL_A", index=1, index2=1, fix=FALSE, value=0.1)) %>%
     add(Omega(name="V_A", index=2, index2=2, fix=FALSE, value=0.1)) %>%
     add(Omega(name=NA, index=2, index2=1, fix=FALSE, value=0.5, type="cor"))
+  expectedParameters@varcov <- matrix(dimnames=list("THETA_CL_A", "THETA_CL_A"), data=0.1)
   
   expect_equal(updatedParameters, expectedParameters)
   
