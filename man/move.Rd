@@ -4,6 +4,8 @@
 \alias{move}
 \alias{move,code_records,model_statement,pmx_position-method}
 \alias{move,code_records,list,pmx_position-method}
+\alias{move,code_records,model_statements,pmx_position-method}
+\alias{move,code_records,code_record,pmx_position-method}
 \alias{move,campsis_model,ANY,pmx_position-method}
 \title{Move element 'x' from object to a certain place.}
 \usage{
@@ -12,6 +14,10 @@ move(object, x, to, ...)
 \S4method{move}{code_records,model_statement,pmx_position}(object, x, to, ...)
 
 \S4method{move}{code_records,list,pmx_position}(object, x, to, ...)
+
+\S4method{move}{code_records,model_statements,pmx_position}(object, x, to, ...)
+
+\S4method{move}{code_records,code_record,pmx_position}(object, x, to, ...)
 
 \S4method{move}{campsis_model,ANY,pmx_position}(object, x, to, ...)
 }
