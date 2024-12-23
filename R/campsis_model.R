@@ -96,7 +96,9 @@ appendModel <- function(model1, model2) {
 
 #' @rdname addRSE
 setMethod("addRSE", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
-  return(object@parameters %>% addRSE(parameter=parameter, value=value, ...))
+  object@parameters <- object@parameters %>%
+    addRSE(parameter=parameter, value=value, ...)
+  return(object)
 })
 
 #_______________________________________________________________________________
