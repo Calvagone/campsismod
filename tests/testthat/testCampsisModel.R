@@ -143,3 +143,38 @@ test_that("Valid object method works depending on complete argument", {
   expect_error(validObject(model, complete=TRUE))
 })
 
+test_that("Method 'add' properly merges variance-covariance matrices", {
+  modelA <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    addSuffix("A") %>%
+    disable("VARCOV_OMEGA")
+  
+  modelB <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    addSuffix("B")
+  
+  model <- modelA %>%
+    add(modelB)
+  
+  varcov <- model %>%
+    getVarCov()
+  
+  varcovExpected <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    getVarCov()
+  
+  # Check variance-covariance content
+  expect_equal(as.numeric(varcov[1:7, 1:7]), as.numeric(varcovExpected[1:7, 1:7]))
+  expect_equal(as.numeric(varcov[8:17, 8:17]), as.numeric(varcovExpected))
+  dimnames <- dimnames(varcov)
+  expect_equal(dimnames[[1]], dimnames[[2]])
+  
+  expected <- c("THETA_METAB_CL_A", "THETA_DUR_A", "THETA_VC_A", "THETA_VP_A", "THETA_Q_A", "THETA_CL_A", "THETA_PROP_RUV_A",
+                "THETA_METAB_CL_B", "THETA_DUR_B", "THETA_VC_B", "THETA_VP_B", "THETA_Q_B", "THETA_CL_B", "THETA_PROP_RUV_B",
+                "OMEGA_DUR_B", "OMEGA_VC_B", "OMEGA_CL_B")
+  expect_equal(expected, dimnames[[1]])
+  
+  # Add the empty model to the model with variance-covariance matrix
+  expect_equal(as.numeric(modelB %>% add(CampsisModel()) %>% getVarCov()), as.numeric(varcovExpected))
+  
+  # Add the model with variance-covariance matrix to the empty model
+  expect_equal(as.numeric(CampsisModel() %>% add(modelB) %>% getVarCov()), as.numeric(varcovExpected))
+})
+

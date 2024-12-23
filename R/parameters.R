@@ -156,14 +156,20 @@ appendParameters <- function(params1, params2) {
   } else {
     dimnames1 <- dimnames(varcov1)
     assertthat::are_equal(dimnames1[[1]], dimnames1[[2]])
+    colnames1 <- dimnames1[[1]]
+     
     dimnames2 <- dimnames(varcov2)
     assertthat::are_equal(dimnames2[[1]], dimnames2[[2]])
-    dimnames <- list(c(dimnames1[[1]], dimnames2[[1]]), c(dimnames1[[2]], dimnames2[[2]]))
-    totalDim <- length(dimnames[[1]])
+    colnames2 <- dimnames2[[1]]
+    
+    colnames <- c(colnames1, colnames2)
+    totalDim <- length(colnames)
+    
     varcov <- matrix(numeric(length(totalDim)^2), nrow=totalDim, ncol=totalDim)
-    dimnames(varcov) <- dimnames
-    varcov[seq_along(dimnames1[[1]]), seq_along(dimnames1[[1]])] <- varcov1
-    varcov[length(dimnames1[[1]]) + seq_along(dimnames2[[1]]), length(dimnames1[[1]]) + seq_along(dimnames2[[1]])] <- varcov2
+    dimnames(varcov) <- list(colnames, colnames)
+    
+    varcov[seq_along(colnames1), seq_along(colnames1)] <- varcov1
+    varcov[length(colnames1) + seq_along(colnames2), length(colnames1) + seq_along(colnames2)] <- varcov2
   }
   params1@varcov <- varcov
 
