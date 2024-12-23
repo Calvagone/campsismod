@@ -3,24 +3,24 @@ library(testthat)
 
 context("Test all methods that may be applied on compartments")
 
-test_that("add method can't be used to add a compartment (add an ODE instead)", {
+test_that("Method 'add' can't be used to add a compartment (add an ODE instead)", {
   model <- model_suite$testing$nonmem$advan4_trans4
   expect_error(model %>% add(Compartment(index=model@compartments %>% length() + 1, name="OUTPUT2")),
                regexp="No default function is provided")
 })
 
-test_that("contains method works with compartments", {
+test_that("Method 'contains' works with compartments", {
   model <- model_suite$testing$nonmem$advan4_trans4
   expect_true(model %>% contains(Compartment(1)))
   expect_false(model %>% contains(Compartment(5)))
 })
 
-test_that("delete method can't be used to delete a compartment (at least for now)", {
+test_that("Method 'delete' can't be used to delete a compartment (at least for now)", {
   model <- model_suite$testing$nonmem$advan4_trans4
   expect_error(model %>% delete(Compartment(index=1)), regexp="No default function is provided")
 })
 
-test_that("find method may return a compartment", {
+test_that("Method 'find' may return a compartment", {
   # Example 1
   model <- model_suite$testing$nonmem$advan4_trans4
   compartment <- model %>% find(Compartment(index=2))
@@ -39,7 +39,7 @@ test_that("find method may return a compartment", {
   expect_equal(compartment2@name, "OUTPUT")
 })
 
-test_that("getCompartmentIndex method works as expected", {
+test_that("Method 'getCompartmentIndex' works as expected", {
   model <- model_suite$testing$nonmem$advan4_trans4
   index_depot <- model %>% getCompartmentIndex("DEPOT")
   index_central <- model %>% getCompartmentIndex("CENTRAL")
@@ -49,7 +49,7 @@ test_that("getCompartmentIndex method works as expected", {
   expect_error(model %>% getCompartmentIndex("XX"), regexp="Compartment XX not found")
 })
 
-test_that("replace method may be used to adapt the name of a compartment", {
+test_that("Method 'replace' can be used to adapt the name of a compartment", {
   model <- model_suite$testing$nonmem$advan4_trans4 %>% add(Bioavailability(1, "0.75"))
   
   # Replace compartment and ODE
@@ -76,7 +76,7 @@ test_that("replace method may be used to adapt the name of a compartment", {
   expect_equal(model %>% find(Bioavailability(1)) %>% toString(model=model, dest="campsis"), "A_ABS=0.75")
 })
 
-test_that("toString method works as expected on compartment", {
+test_that("Method 'toString' works as expected on compartment", {
   cmt <- Compartment(index=1)
   expect_equal(cmt %>% toString(), "A_1")
   

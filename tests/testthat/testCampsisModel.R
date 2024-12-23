@@ -1,11 +1,11 @@
 
 library(testthat)
 
-context("Test CAMPSIS model")
+context("Test utilities on the Campsis model")
 
 source(paste0("", "testUtils.R"))
 
-test_that("add method works well", {
+test_that("Method 'add' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -20,7 +20,7 @@ test_that("add method works well", {
   # expect_equal(model@model %>% length(), 4)
 })
 
-test_that("replace method works well", {
+test_that("Method 'replace' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -49,7 +49,7 @@ test_that("replace method works well", {
   expect_equal((model@compartments@properties %>% getByIndex(1))@rhs, "0.50")
 })
 
-test_that("delete method works well", {
+test_that("Method 'delete' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -78,7 +78,7 @@ test_that("delete method works well", {
   expect_false(updatedMain %>% contains(Equation("S2")))
 })
 
-test_that("add method on Campsis model, exceptions on parameters names", {
+test_that("Method 'add' on Campsis model, exceptions on parameters names", {
   model1 <- model_suite$testing$nonmem$advan4_trans4
   model2 <- model_suite$testing$nonmem$advan1_trans1
   expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): EPS_PROP")
@@ -101,7 +101,7 @@ test_that("add method on Campsis model, exceptions on parameters names", {
   expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=4, index2=3)) %>% .@type, "cor") 
 })
 
-test_that("add method on Campsis model, exceptions on compartment names", {
+test_that("Method 'add' on Campsis model, exceptions on compartment names", {
   model1 <- model_suite$testing$nonmem$advan4_trans4
   model1@parameters@list <- model1@parameters@list[-(model1@parameters %>% length())] # Remove SIGMA PROP
   
@@ -112,7 +112,7 @@ test_that("add method on Campsis model, exceptions on compartment names", {
   #expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate compartment name\\(s\\): A_CENTRAL, A_OUTPUT")
 })
 
-test_that("add effect compartment model to PK model using add method", {
+test_that("Add effect compartment model to PK model using add method", {
   regFilename <- "pk_pd_appended"
   
   pk <- model_suite$testing$nonmem$advan4_trans4
