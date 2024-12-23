@@ -149,6 +149,27 @@ setGeneric("getVarCov", function(object) {
 })
 
 #_______________________________________________________________________________
+#----                              move                                     ----
+#_______________________________________________________________________________
+
+#' Move element 'x' from object to a certain place.
+#' 
+#' @param object generic object (e.g. model, code records, etc.)
+#' @param x element to move
+#' @param to destination (e.g. a position)
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname move
+move <- function(object, x, to, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("move", function(object, x, to, ...) {
+  standardGeneric("move")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 

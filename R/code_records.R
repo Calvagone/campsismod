@@ -178,7 +178,6 @@ setMethod("delete", signature=c("code_records", "model_statement"), definition=f
 
 #' @rdname find
 setMethod("find", signature=c("code_records", "model_statement"), definition=function(object, x) {
-  copy <- object
   for (record in object@list) {
     statement <- record %>% find(x)
     if (!is.null(statement)) {
@@ -284,6 +283,58 @@ addProperties <- function(compartments, records, name, init) {
 getRecordNames <- function() {
   return(c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR"))
 }
+
+#_______________________________________________________________________________
+#----                              move                                     ----
+#_______________________________________________________________________________
+
+#' @rdname move
+setMethod("move", signature=c("code_records", "model_statement", "pmx_position"), definition=function(object, x, to, ...) {
+  # Find statement
+  statement <- object %>%
+    find(x)
+  if (is.null(statement)) {
+    stop(paste("Statement", x %>% getName(), "not found in model"))
+  }
+  
+  # Delete statement
+  object <- object %>%
+    delete(x)
+  
+  # Add statement at right position
+  object <- object %>%
+    add(statement, pos=to)
+  
+  return(object)
+})
+
+#' @rdname move
+setMethod("move", signature=c("code_records", "list", "pmx_position"), definition=function(object, x, to, ...) {
+  for (statement in x) {
+    object <- object %>%
+      move(x=statement, to=to, ...)
+  }
+  return(object)
+})
+
+#' @rdname move
+setMethod("move", signature=c("code_records", "model_statements", "pmx_position"), definition=function(object, x, to, ...) {
+  object <- object %>%
+    move(x=x@list, to=to, ...)
+  return(object)
+})
+
+#' @rdname move
+setMethod("move", signature=c("code_records", "code_record", "pmx_position"), definition=function(object, x, to, ...) {
+  record <- object %>%
+    find(x)
+  if (is.null(record)) {
+    stop(paste("Record", x %>% getName(), "not found in model"))
+  }
+  object <- object %>%
+    move(x=record@statements, to=to, ...)
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                                read.model                             ----

@@ -189,5 +189,27 @@ test_that("Method 'addRSE' works as expected", {
   expect_equal(tibble::tibble(name=c("THETA_CL", "THETA_Q"), se=c(0.5, 0.4), `rse%`=c(10, 10)), uncertainty)
 })
 
+test_that("Method 'move' works as expected", {
+  # Move CP from error block to ODE block
+  model <- model_suite$testing$nonmem$advan4_trans4 %>%
+    move(Equation("CP"), Position(OdeRecord()))
+  
+  # Check that CP is now in the ODE block
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("CP")))
+  
+  # Check that CP is not in the error block
+  expect_false(model %>% find(ErrorRecord()) %>% contains(Equation("CP")))
+  
+  # Move the error block to the ODE block
+  model <- model_suite$testing$nonmem$advan4_trans4 %>%
+    move(ErrorRecord(), Position(OdeRecord()))
+  
+  # Check error block is empty
+  expect_equal(model %>% find(ErrorRecord()) %>% length(), 0)
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("CP")))
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("OBS_CP")))
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("Y")))
+})
+
 
 

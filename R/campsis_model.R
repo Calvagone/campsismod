@@ -279,6 +279,16 @@ setMethod("getVarCov", signature=c("campsis_model"), definition=function(object)
 })
 
 #_______________________________________________________________________________
+#----                              move                                     ----
+#_______________________________________________________________________________
+
+#' @rdname move
+setMethod("move", signature=c("campsis_model", "ANY", "pmx_position"), definition=function(object, x, to, ...) {
+  object@model <- object@model %>% move(x=x, to=to, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
