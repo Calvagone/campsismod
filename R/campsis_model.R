@@ -91,6 +91,15 @@ appendModel <- function(model1, model2) {
 }
 
 #_______________________________________________________________________________
+#----                             addRSE                                    ----
+#_______________________________________________________________________________
+
+#' @rdname addRSE
+setMethod("addRSE", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+  return(object@parameters %>% addRSE(parameter=parameter, value=value, ...))
+})
+
+#_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________
 

@@ -1,4 +1,23 @@
+#_______________________________________________________________________________
+#----                               addRSE                                  ----
+#_______________________________________________________________________________
 
+#' Add relative standard error (RSE) to the specified parameter.
+#' 
+#' @param object model or parameters object
+#' @param parameter parameter object (Theta, Omega or Sigma)
+#' @param value RSE value, in percent
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname addRSE
+addRSE <- function(object, parameter, value, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("addRSE", function(object, parameter, value, ...) {
+  standardGeneric("addRSE")
+})
 #_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________

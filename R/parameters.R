@@ -146,18 +146,26 @@ appendParameters <- function(params1, params2) {
   # Merge variance-covariance matrices
   varcov1 <- params1@varcov
   varcov2 <- params2@varcov
-  
+  params1@varcov <- appendVarcov(varcov1, varcov2)
+
+  return(params1 %>% sort())
+}
+
+appendVarcov <- function(varcov1, varcov2) {
   if (length(varcov1) == 0 && length(varcov2) > 0) {
-    varcov <- varcov2
+    return(varcov2)
+  
   } else if (length(varcov2) == 0 && length(varcov1) > 0) {
-    varcov <- varcov1
+    return(varcov1)
+  
   } else if (length(varcov1) == 0 && length(varcov2) == 0) {
-    varcov <- matrix(numeric(0), nrow=0, ncol=0)
+    return(matrix(numeric(0), nrow=0, ncol=0))
+  
   } else {
     dimnames1 <- dimnames(varcov1)
     assertthat::are_equal(dimnames1[[1]], dimnames1[[2]])
     colnames1 <- dimnames1[[1]]
-     
+    
     dimnames2 <- dimnames(varcov2)
     assertthat::are_equal(dimnames2[[1]], dimnames2[[2]])
     colnames2 <- dimnames2[[1]]
@@ -170,11 +178,33 @@ appendParameters <- function(params1, params2) {
     
     varcov[seq_along(colnames1), seq_along(colnames1)] <- varcov1
     varcov[length(colnames1) + seq_along(colnames2), length(colnames1) + seq_along(colnames2)] <- varcov2
+    return(varcov)
   }
-  params1@varcov <- varcov
-
-  return(params1 %>% sort())
 }
+
+#_______________________________________________________________________________
+#----                             addRSE                                    ----
+#_______________________________________________________________________________
+
+#' @rdname addRSE
+setMethod("addRSE", signature=c("parameters", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+  parameter_ <- object %>%
+    find(parameter)
+  
+  if (is.null(parameter_)) {
+    stop("Parameter ", parameter %>% getNameInModel(), " not found in model")
+  }
+  
+  # Define variance-covariance matrix (single value)
+  varcov <- matrix((value/100*abs(parameter_@value))^2, nrow=1, ncol=1)
+  name <- parameter_ %>% getNameInModel()
+  dimnames(varcov) <- list(name, name)
+  
+  # Update variance-covariance matrix
+  object@varcov <- appendVarcov(object@varcov, varcov)
+  
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                             delete                                    ----
