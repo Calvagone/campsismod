@@ -59,10 +59,10 @@ test_that("OMEGA index2 can't be NA", {
 })
 
 test_that("As.data.frame method", {
-  theta1 <- Theta(name="CL", index=1)
+  theta1 <- Theta(name="CL", index=1, min=0, max=Inf)
   df <- theta1 %>% as.data.frame(row.names=character(), optional=F)
   
-  expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), fix=FALSE,
+  expect_equal(data.frame(name="CL", index=1, value=as.numeric(NA), min=as.numeric(0), max=as.numeric(Inf), fix=FALSE,
                           label=as.character(NA), unit=as.character(NA), comment=as.character(NA)), df)
 })
 

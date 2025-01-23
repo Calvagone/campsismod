@@ -9,6 +9,8 @@
 #' @slot name parameter name, optional (although recommended)
 #' @slot index parameter index, integer
 #' @slot value parameter value (e.g. the estimated value from a modelling tool)
+#' @slot min minimum value for this parameter when parameter uncertainty is enabled
+#' @slot max maximum value for this parameter when parameter uncertainty is enabled
 #' @slot fix logical value, say if parameter was fixed in the modelling phase
 #' @slot label parameter label, any string
 #' @slot comment any comment on this parameter, any string
@@ -19,12 +21,15 @@ setClass(
     name = "character",
     index = "integer",
     value = "numeric",
+    min = "numeric",
+    max = "numeric",
     fix = "logical",
     label = "character",
     comment = "character"
   ),
   contains = "pmx_element",
-  prototype = prototype(name=as.character(NA), index=as.integer(NA), value=as.numeric(NA), fix=FALSE,
+  prototype = prototype(name=as.character(NA), index=as.integer(NA),
+                        value=as.numeric(NA), min=as.numeric(NA), max=as.numeric(NA), fix=FALSE,
                         label=as.character(NA), unit=as.character(NA), comment=as.character(NA)),
   validity = function(object) {
     check <- expectOneForAll(object, c("name", "index", "fix", "value", "label", "comment"))
@@ -115,14 +120,17 @@ setClass(
 #' @param name parameter name, e.g. CL (prefix THETA will be added automatically)
 #' @param index parameter index
 #' @param value parameter value
+#' @param min minimum value for this parameter when parameter uncertainty is enabled
+#' @param max maximum value for this parameter when parameter uncertainty is enabled
 #' @param fix parameter was fixed in estimation, logical value
 #' @param label parameter label, optional
 #' @param unit parameter unit, optional
 #' @param comment any comment, optional
 #' @return a THETA parameter  
 #' @export
-Theta <- function(name=NA, index=NA, value=NA, fix=FALSE, label=NA, unit=NA, comment=NA) {
-  return(new("theta", name=as.character(name), index=as.integer(index), value=as.numeric(value), fix=fix,
+Theta <- function(name=NA, index=NA, value=NA, min=NA, max=NA, fix=FALSE, label=NA, unit=NA, comment=NA) {
+  return(new("theta", name=as.character(name), index=as.integer(index),
+             value=as.numeric(value), min=as.numeric(min), max=as.numeric(max), fix=fix,
              label=as.character(label), unit=as.character(unit), comment=as.character(comment)))
 }
 
@@ -178,6 +186,8 @@ processDoubleArrayArguments <- function(index, index2, type) {
 #' @param index parameter index
 #' @param index2 second parameter index
 #' @param value parameter value
+#' @param min minimum value for this parameter when parameter uncertainty is enabled
+#' @param max maximum value for this parameter when parameter uncertainty is enabled
 #' @param fix parameter was fixed in estimation, logical value
 #' @param type variance type: 'var', 'sd', 'covar', 'cor', 'cv' or 'cv\%'
 #' @param same NA by default, FALSE for first OMEGA followed by 'SAME' OMEGA's, TRUE for 'SAME' OMEGA's
@@ -185,10 +195,10 @@ processDoubleArrayArguments <- function(index, index2, type) {
 #' @param comment any comment, optional
 #' @return an OMEGA parameter  
 #' @export
-Omega <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL, same=NA, label=NA, comment=NA) {
+Omega <- function(name=NA, index=NA, index2=NA, value=NA, min=NA, max=NA, fix=FALSE, type=NULL, same=NA, label=NA, comment=NA) {
   type <- processDoubleArrayArguments(index=index, index2=index2, type=type)
   return(new("omega", name=as.character(name), index=as.integer(index), index2=as.integer(index2),
-             value=as.numeric(value), fix=fix, type=type, same=as.logical(same),
+             value=as.numeric(value), min=as.numeric(min), max=as.numeric(max), fix=fix, type=type, same=as.logical(same),
              label=as.character(label), comment=as.character(comment)))
 }
 
@@ -213,16 +223,18 @@ setClass(
 #' @param index parameter index
 #' @param index2 second parameter index
 #' @param value parameter value
+#' @param min minimum value for this parameter when parameter uncertainty is enabled
+#' @param max maximum value for this parameter when parameter uncertainty is enabled
 #' @param fix parameter was fixed in estimation, logical value
 #' @param type variance type: 'var', 'sd', 'covar', 'cv' or 'cv\%'
 #' @param label parameter label, optional
 #' @param comment any comment, optional
 #' @return a SIGMA parameter  
 #' @export
-Sigma <- function(name=NA, index=NA, index2=NA, value=NA, fix=FALSE, type=NULL, label=NA, comment=NA) {
+Sigma <- function(name=NA, index=NA, index2=NA, value=NA, min=NA, max=NA, fix=FALSE, type=NULL, label=NA, comment=NA) {
   type <- processDoubleArrayArguments(index=index, index2=index2, type=type)
   return(new("sigma", name=as.character(name), index=as.integer(index), index2=as.integer(index2),
-             value=as.numeric(value), fix=fix, type=type,
+             value=as.numeric(value), min=as.numeric(min), max=as.numeric(max), fix=fix, type=type,
              label=as.character(label), comment=as.character(comment)))
 }
 
@@ -249,17 +261,17 @@ setGeneric("as.data.frame", function(x, row.names=NULL, optional=FALSE, ...) {
 
 #' @rdname as.data.frame
 setMethod("as.data.frame", signature("theta", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
-  return(data.frame(name=x@name, index=x@index, value=x@value, fix=x@fix, label=x@label, unit=x@unit, comment=x@comment))
+  return(data.frame(name=x@name, index=x@index, value=x@value, min=x@min, max=x@max, fix=x@fix, label=x@label, unit=x@unit, comment=x@comment))
 })
 
 #' @rdname as.data.frame
 setMethod("as.data.frame", signature("omega", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
-  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type, same=x@same, label=x@label, comment=x@comment))
+  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, min=x@min, max=x@max, fix=x@fix, type=x@type, same=x@same, label=x@label, comment=x@comment))
 })
 
 #' @rdname as.data.frame
 setMethod("as.data.frame", signature("sigma", "character", "logical"), function(x, row.names=NULL, optional=FALSE, ...) {
-  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, fix=x@fix, type=x@type, label=x@label, comment=x@comment))
+  return(data.frame(name=x@name, index=x@index, index2=x@index2, value=x@value, min=x@min, max=x@max, fix=x@fix, type=x@type, label=x@label, comment=x@comment))
 })
 
 #_______________________________________________________________________________

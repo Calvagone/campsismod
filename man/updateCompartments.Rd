@@ -8,10 +8,10 @@ Exported especially for package pmxtran. However, this method should not be call
 updateCompartments(model)
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
-an updated CAMPSIS model, with an updated compartments list
+an updated Campsis model, with an updated compartments list
 }
 \description{
 Update compartments list from the persisted records.

@@ -3,7 +3,7 @@
 #----                         campsis_model class                           ----
 #_______________________________________________________________________________
 
-#' CAMPSIS model class.
+#' Campsis model class.
 #' 
 #' @slot model a list of code records
 #' @slot parameters model parameters
@@ -18,9 +18,9 @@ setClass(
   )
 )
 
-#' Create a new CAMPSIS model.
+#' Create a new Campsis model.
 #' 
-#' @return a CAMPSIS model, empty
+#' @return a Campsis model, empty
 #' @export
 CampsisModel <- function() {
   return(new("campsis_model"))
@@ -34,7 +34,7 @@ CampsisModel <- function() {
 setMethod("add", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
   compartment <- object@compartments %>% find(Compartment(index=x@compartment))
   if (is.null(compartment)) {
-    stop(paste0("Unable to find compartment ", x@compartment, " in CAMPSIS model"))
+    stop(paste0("Unable to find compartment ", x@compartment, " in Campsis model"))
   }
   
   # Add characteristic (delegate to add method in compartments class)
@@ -75,7 +75,7 @@ setMethod("add", signature=c("campsis_model", "campsis_model"), definition=funct
 #' 
 #' @param model1 base model
 #' @param model2 model to append
-#' @return the resulting CAMPSIS model
+#' @return the resulting Campsis model
 #' @keywords internal
 #' 
 appendModel <- function(model1, model2) {
@@ -330,10 +330,10 @@ read.campsis <- function(file) {
 }
 
 
-#' Read a CAMPSIS model (deprecated).
+#' Read a Campsis model (deprecated).
 #' 
 #' @param file path to folder
-#' @return a CAMPSIS model
+#' @return a Campsis model
 #' @export
 #' @keywords internal
 read.pmxmod <- function(file) {
@@ -344,12 +344,12 @@ read.pmxmod <- function(file) {
 #' Update compartments list from the persisted records.
 #' Exported especially for package pmxtran. However, this method should not be called.
 #' 
-#' @param model CAMPSIS model
-#' @return an updated CAMPSIS model, with an updated compartments list
+#' @param model Campsis model
+#' @return an updated Campsis model, with an updated compartments list
 #' @export
 updateCompartments <- function(model) {
   if (!is(model, "campsis_model")) {
-    stop("model is not a CAMPSIS model")   
+    stop("model is not a Campsis model")   
   }
   records <- model@model
   

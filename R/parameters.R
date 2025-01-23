@@ -668,11 +668,11 @@ showUncertaintyOnParameters <- function(parameters, discard_na_columns=NULL) {
 
 setMethod("show", signature=c("parameters"), definition=function(object) {
   cat("THETA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("theta"), discard_na_columns=c("label", "unit", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("theta"), discard_na_columns=c("min", "max", "label", "unit", "comment")))
   cat("OMEGA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("same", "label", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("min", "max", "same", "label", "comment")))
   cat("SIGMA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("label", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("min", "max", "label", "comment")))
   if (is.null(object %>% getVarCov())) {
     cat("No variance-covariance matrix\n")
   } else {
@@ -735,7 +735,7 @@ writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
   # Get rid of specific columns if all NA
-  naColumns <- c("fix", "same", "label", "unit", "comment")
+  naColumns <- c("min", "max", "fix", "same", "label", "unit", "comment")
   df <- df %>% removeNaColumn(naColumns)
   
   if (nrow(df)==0) {

@@ -3,9 +3,9 @@
 \docType{class}
 \name{campsis_model-class}
 \alias{campsis_model-class}
-\title{CAMPSIS model class.}
+\title{Campsis model class.}
 \description{
-CAMPSIS model class.
+Campsis model class.
 }
 \section{Slots}{
 

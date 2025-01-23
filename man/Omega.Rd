@@ -9,6 +9,8 @@ Omega(
   index = NA,
   index2 = NA,
   value = NA,
+  min = NA,
+  max = NA,
   fix = FALSE,
   type = NULL,
   same = NA,
@@ -24,6 +26,10 @@ Omega(
 \item{index2}{second parameter index}
 
 \item{value}{parameter value}
+
+\item{min}{minimum value for this parameter when parameter uncertainty is enabled}
+
+\item{max}{maximum value for this parameter when parameter uncertainty is enabled}
 
 \item{fix}{parameter was fixed in estimation, logical value}
 
