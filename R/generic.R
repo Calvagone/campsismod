@@ -208,6 +208,27 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
 })
 
 #_______________________________________________________________________________
+#----                           replicate                                   ----
+#_______________________________________________________________________________
+
+#' Replicate generic object.
+#' 
+#' @param object generic object
+#' @param n number of replicates required
+#' @param ... extra arguments
+#' @return object replicated n times
+#' @export
+#' @rdname replicate
+replicate <- function(object, n, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("replicate", function(object, n, ...) {
+  n <- as.integer(n)
+  standardGeneric("replicate")
+})
+
+#_______________________________________________________________________________
 #----                                 select                                ----
 #_______________________________________________________________________________
 
