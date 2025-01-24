@@ -436,6 +436,17 @@ setMethod("replaceAll", signature=c("campsis_model", "character", "character"), 
 })
 
 #_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("campsis_model", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  object@parameters <- object@parameters %>%
+    setMinMax(parameter=parameter, min=min, max=max, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 

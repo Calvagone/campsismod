@@ -28,6 +28,7 @@ Imports:
     assertthat,
     dplyr,
     magrittr,
+    MASS,
     methods,
     plyr,
     purrr,

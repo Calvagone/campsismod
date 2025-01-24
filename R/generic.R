@@ -253,6 +253,30 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' Set the minimum and maximum value on a model parameter.
+#' 
+#' @param object model or parameters object
+#' @param parameter parameter object (Theta, Omega or Sigma)
+#' @param min minimum value for this parameter when parameter uncertainty is enabled
+#' @param max maximum value for this parameter when parameter uncertainty is enabled
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname setMinMax
+setMinMax <- function(object, parameter, min, max, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("setMinMax", function(object, parameter, min, max, ...) {
+  min <- as.numeric(min)
+  max <- as.numeric(max)
+  standardGeneric("setMinMax")
+})
+
+#_______________________________________________________________________________
 #----                            standardise                                ----
 #_______________________________________________________________________________
 

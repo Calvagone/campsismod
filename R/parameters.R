@@ -649,6 +649,30 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("parameters", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  parameter_ <- object %>%
+    find(parameter)
+  
+  if (is.null(parameter_)) {
+    stop("Parameter ", parameter %>% getNameInModel(), " not found in model")
+  }
+  
+  # Replace old values
+  parameter_@min <- min
+  parameter_@max <- max
+  
+  # Replace old parameter
+  object <- object %>%
+    replace(parameter_)
+  
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
