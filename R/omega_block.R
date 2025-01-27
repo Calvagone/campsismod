@@ -25,7 +25,8 @@ OmegaBlock <- function() {
 #----                                add                                    ----
 #_______________________________________________________________________________
 
-setMethod("add", signature=c("omega_block", "omega"), definition=function(object, x) {
+#' @rdname add
+setMethod("add", signature=c("omega_block", "double_array_parameter"), definition=function(object, x) {
   if (x %>% isDiag()) {
     object@on_diag_omegas <- object@on_diag_omegas %>% add(x)
   } else {
@@ -38,6 +39,7 @@ setMethod("add", signature=c("omega_block", "omega"), definition=function(object
 #----                              getName                                  ----
 #_______________________________________________________________________________
 
+#' @rdname getName
 setMethod("getName", signature=c("omega_block"), definition=function(x) {
   return(paste0("Omega block ", x@block_index))
 })

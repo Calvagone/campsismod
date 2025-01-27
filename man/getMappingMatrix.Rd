@@ -5,12 +5,14 @@
 \title{Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
 Un-existing parameters are filled in with the empty string.}
 \usage{
-getMappingMatrix(parameters, type)
+getMappingMatrix(parameters, type, size)
 }
 \arguments{
 \item{parameters}{subset of parameters}
 
 \item{type}{type of parameter to map (omega or sigma)}
+
+\item{size}{size of the matrix}
 }
 \value{
 a matrix with the names of the OMEGA/SIGMA parameters

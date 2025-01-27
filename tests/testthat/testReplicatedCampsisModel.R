@@ -26,7 +26,7 @@ test_that("Sampling the OMEGAs and SIGMAs based on the chi-square or inverse wis
   model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
     add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor"))
   
-  repModel <- model %>% replicate(10, settings=ReplicationSettings(wishart=TRUE, nsub=100, nobs=1000))
+  repModel <- model %>% replicate(1000, settings=ReplicationSettings(wishart=TRUE, nsub=100, nobs=1000))
   
   
 })

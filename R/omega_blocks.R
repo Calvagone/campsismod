@@ -38,11 +38,13 @@ addOmega <- function(object, x) {
   return(object)
 }
 
+#' @rdname add
 setMethod("add", signature=c("omega_blocks", "omega_block"), definition=function(object, x) {
   x@block_index <- object %>% length() + 1L
   return(methods::callNextMethod(object, x))
 })
 
+#' @rdname add
 setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(object, x) {
   object <- OmegaBlocks()
   omegas <- x %>% campsismod::select("omega") %>% campsismod::sort()
@@ -104,6 +106,7 @@ setMethod("getOmegaBlock", signature=c("omega_blocks", "omega"), definition=func
 #----                               sort                                    ----
 #_______________________________________________________________________________
 
+#' @rdname sort
 setMethod("sort", signature=c("omega_blocks"), definition=function(x, decreasing=FALSE, ...) {
   temp <- x@list %>% purrr::map_int(.f=~.x %>% getOmegaIndexes() %>% min())
   x@list <- x@list[order(temp)]

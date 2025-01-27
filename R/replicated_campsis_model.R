@@ -102,8 +102,10 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   # Sample now the OMEGAs and SIGMAs
   if (settings@wishart) {
     sampledOmegas <- sampleOmegasSigmas(model=object, type="omega", n=n, nsub=settings@nsub, nobs=settings@nobs)
+    sampledSigmas <- sampleOmegasSigmas(model=object, type="sigma", n=n, nsub=settings@nsub, nobs=settings@nobs)
     table <- table %>%
-      dplyr::left_join(sampledOmegas, by="REPLICATE")
+      dplyr::left_join(sampledOmegas, by="REPLICATE") %>%
+      dplyr::left_join(sampledSigmas, by="REPLICATE")
   }
   
   retValue@replicated_parameters <- table
