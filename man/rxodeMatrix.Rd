@@ -7,7 +7,7 @@
 rxodeMatrix(model, type = "omega")
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model or Campsis parameters}
 
 \item{type}{either omega or sigma}
 }

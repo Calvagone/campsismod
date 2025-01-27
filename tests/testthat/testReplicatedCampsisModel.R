@@ -20,4 +20,14 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   expect_equal(model1 %>% find(Theta(name="KA")) %>% .@value, 1.09958, tolerance=1e-4)
   expect_equal(model1 %>% find(Theta(name="CL")) %>% .@value, 2.831857, tolerance=1e-4)
 })
+
+test_that("Sampling the OMEGAs and SIGMAs based on the chi-square or inverse wishart distributions work as expected", {
   
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor"))
+  
+  
+})
+  
+
+

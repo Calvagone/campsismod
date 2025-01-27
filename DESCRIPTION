@@ -27,6 +27,7 @@ Depends:
 Imports: 
     assertthat,
     dplyr,
+    LaplacesDemon,
     magrittr,
     MASS,
     methods,
@@ -83,6 +84,9 @@ Collate:
     'code_records.R'
     'model_parser.R'
     'campsis_model.R'
+    'omega_block.R'
+    'omega_blocks.R'
+    'replication_settings.R'
     'replicated_campsis_model.R'
     'model_add_suffix.R'
     'rxode_model.R'

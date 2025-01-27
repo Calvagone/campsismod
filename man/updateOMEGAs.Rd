@@ -3,7 +3,7 @@
 \name{updateOMEGAs}
 \alias{updateOMEGAs}
 \title{Update OMEGAs that are same. Same OMEGAs are written as follows:
-OMEGA1 same is FALSE
+OMEGA1 same is FALSE (first one, estimated)
 OMEGA2 same is TRUE
 OMEGA3 same is TRUE, etc.
 OMEGA2 and OMEGA3 will take the same value as OMEGA1.}
@@ -18,7 +18,7 @@ updated Campsis model
 }
 \description{
 Update OMEGAs that are same. Same OMEGAs are written as follows:
-OMEGA1 same is FALSE
+OMEGA1 same is FALSE (first one, estimated)
 OMEGA2 same is TRUE
 OMEGA3 same is TRUE, etc.
 OMEGA2 and OMEGA3 will take the same value as OMEGA1.

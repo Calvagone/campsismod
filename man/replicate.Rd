@@ -2,17 +2,19 @@
 % Please edit documentation in R/generic.R, R/replicated_campsis_model.R
 \name{replicate}
 \alias{replicate}
-\alias{replicate,campsis_model,integer-method}
+\alias{replicate,campsis_model,integer,replication_settings-method}
 \title{Replicate generic object.}
 \usage{
-replicate(object, n, ...)
+replicate(object, n, settings = NULL, ...)
 
-\S4method{replicate}{campsis_model,integer}(object, n)
+\S4method{replicate}{campsis_model,integer,replication_settings}(object, n, settings)
 }
 \arguments{
 \item{object}{generic object}
 
 \item{n}{number of replicates required}
+
+\item{settings}{settings for replication}
 
 \item{...}{extra arguments}
 }

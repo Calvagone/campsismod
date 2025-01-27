@@ -23,12 +23,17 @@ setClass(
 #' @importFrom MASS mvrnorm
 #' @importFrom purrr map
 #' @importFrom methods validObject
-setMethod("replicate", signature = c("campsis_model", "integer"), definition = function(object, n) {
+setMethod("replicate", signature = c("campsis_model", "integer", "replication_settings"), definition = function(object, n, settings) {
   
   # Validate original Campsis model before sampling parameter uncertainty
   methods::validObject(object, complete=TRUE)
   
-  # Initialse a new replicated Campsis model
+  # Sort and standardise model first
+  object@parameters <- object@parameters %>%
+    campsismod::sort() %>%
+    campsismod::standardise()
+  
+  # Initialize a new replicated Campsis model
   retValue <- new("replicated_campsis_model", original_model=object)
 
   # Get variance-covariance matrix
@@ -105,6 +110,91 @@ identifyModelParametersFromVarcov <- function(parameters) {
   return(retValue)
 }
 
+#' Sample the OMEGAs and SIGMAs from inverse chi-square or inverse wishart distributions.
+#' 
+#' @param model Campsis model
+#' @param type type of parameter to sample (omega or sigma)
+#' @param n number of rows to sample
+#' @param nsub number of subjects in the dataset on which the model was estimated
+#' @param nobs number of observations in the dataset on which the model was estimated
+#' @return a data frame with the sampled parameters
+#' @importFrom assertthat assert_that
+#' @importFrom LaplacesDemon rinvchisq rinvwishart
+#' @importFrom dplyr mutate
+#' @importFrom tibble tibble
+#' 
+sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
+  assertthat::assert_that(type %in% c("omega", "sigma"))
+  
+  parameters <- model@parameters %>%
+    campsismod::select(type)
+  
+  if (type=="omega") {
+    df <- nsub
+  } else {
+    df <- nobs
+  }
+  
+  blocks <- OmegaBlocks() %>%
+    add(parameters)
+  
+  retValue <- tibble::tibble(REPLICATE=seq_len(n))
+  
+  for (block in blocks@list) {
+    if (length(block) == 1) {
+      onDiagElements <- block@on_diag_omegas
+      assertthat::assert_that(length(onDiagElements)==1)
+      elem <- onDiagElements@list[[1]]
+      paramName <- elem %>% getName()
+      retValue <- retValue %>%
+        dplyr::mutate(!!paramName:=LaplacesDemon::rinvchisq(n=n, df=df, scale=elem@value)) 
+    } else {
+      params <- Parameters()
+      params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
+      mat <- rxodeMatrix(params, type=type)
+      size <- dim(mat)[1]
+      
+      mappingMat <- getMappingMatrix(parameters=params, type=type)
+      allColnames <- as.vector(mappingMat)
+      indexesToKeep <- which(allColnames != "")
+
+      tmp <- seq_len(n) %>%
+        purrr::map_df(~tibble::as_tibble(t(as.vector(LaplacesDemon::rinvwishart(nu=df - size + 1, S=mat*df))))[, indexesToKeep])
+      colnames(tmp) <- allColnames[indexesToKeep]
+      retValue <- dplyr::bind_cols(retValue, tmp)
+    }
+  }
+  return(retValue)
+}
+
+#' Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
+#' Un-existing parameters are filled in with the empty string.
+#' 
+#' @param parameters subset of parameters
+#' @param type type of parameter to map (omega or sigma)
+#' @return a matrix with the names of the OMEGA/SIGMA parameters
+#' 
+getMappingMatrix <- function(parameters, type) {
+  retValue <- matrix(rep(0, size*size), nrow=size)
+  for (i in 1:size) {
+    for (j in 1:size) {
+      if (type=="omega") {
+        refParameter <- Omega(index=i, index2=j)
+      } else {
+        refParameter <- Sigma(index=i, index2=j)
+      }
+      parameter <- parameters %>% getByIndex(refParameter)
+      if (length(parameter) == 0) {
+        retValue[i, j] <- ""
+      } else {
+        retValue[i, j] <- parameter %>%
+          getName()
+      }
+    }
+  }
+  return(retValue)
+}
+
 #' Sample more parameters.
 #' 
 #' @param n numbers of rows to sample
@@ -178,6 +268,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @param model Campsis model
 #' @param row a data frame row containing the new parameter values
 #' @return updated Campsis model
+#' @importFrom purrr pluck
 #' 
 updateParameters <- function(model, row) {
   paramNames <- names(row)
@@ -202,13 +293,14 @@ updateParameters <- function(model, row) {
 
 #'
 #' Update OMEGAs that are same. Same OMEGAs are written as follows:
-#' OMEGA1 same is FALSE
+#' OMEGA1 same is FALSE (first one, estimated)
 #' OMEGA2 same is TRUE
 #' OMEGA3 same is TRUE, etc.
 #' OMEGA2 and OMEGA3 will take the same value as OMEGA1.
 #' 
 #' @param model Campsis model
 #' @return updated Campsis model
+#' @importFrom purrr accumulate
 #' 
 updateOMEGAs <- function(model) {
   # Still need to update the omegas 'SAME'

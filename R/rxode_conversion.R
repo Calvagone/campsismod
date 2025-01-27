@@ -70,15 +70,23 @@ rxodeParams <- function(model) {
 
 #' Get the OMEGA/SIGMA matrix for rxode2.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model or Campsis parameters
 #' @param type either omega or sigma
 #' @return omega/sigma named matrix
 #' @export
 rxodeMatrix <- function(model, type="omega") {
   
-  # Make sure parameters are standardised
-  params <- model@parameters %>% standardise()
+  if (is(model, "campsis_model")) {
+    params <- model@parameters
+  } else if (is(model, "parameters")) {
+    params <- model
+  } else {
+    stop("model must be either a Campsis model or a parameters object")
+  }
   
+  # Standardise parameters
+  params <- params %>% standardise()
+
   if (params %>% select(type) %>% length()==0) {
     return(matrix(data = numeric(0)))
   }

@@ -215,16 +215,20 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
 #' 
 #' @param object generic object
 #' @param n number of replicates required
+#' @param settings settings for replication
 #' @param ... extra arguments
 #' @return object replicated n times
 #' @export
 #' @rdname replicate
-replicate <- function(object, n, ...) {
+replicate <- function(object, n, settings, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("replicate", function(object, n, ...) {
+setGeneric("replicate", function(object, n, settings=NULL, ...) {
   n <- as.integer(n)
+  if (is.null(settings)) {
+    settings <- ReplicationSettings()
+  }
   standardGeneric("replicate")
 })
 

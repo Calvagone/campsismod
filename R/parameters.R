@@ -740,6 +740,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
   })
   retValue <- Parameters()
   retValue@list <- list
+  retValue@varcov <- object@varcov
   return(retValue)
 })
 
