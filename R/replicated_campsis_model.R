@@ -27,7 +27,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   
   # Validate original Campsis model before sampling parameter uncertainty
   methods::validObject(object, complete=TRUE)
-  
+
   # Sort and standardise model first
   object@parameters <- object@parameters %>%
     campsismod::sort() %>%
@@ -35,6 +35,12 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   
   # Initialize a new replicated Campsis model
   retValue <- new("replicated_campsis_model", original_model=object)
+  
+  # Disable OMEGAs and SIGMAs in variance-covariance if wishart is used
+  if (settings@wishart) {
+    object <- object %>%
+      disable(c("VARCOV_OMEGA", "VARCOV_SIGMA"))
+  }
 
   # Get variance-covariance matrix
   varcov <- object %>% getVarCov()
@@ -92,6 +98,13 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   
   table <- table %>%
     dplyr::relocate(c("REPLICATE", "VALID"))
+  
+  # Sample now the OMEGAs and SIGMAs
+  if (settings@wishart) {
+    sampledOmegas <- sampleOmegasSigmas(model=object, type="omega", n=n, nsub=settings@nsub, nobs=settings@nobs)
+    table <- table %>%
+      dplyr::left_join(sampledOmegas, by="REPLICATE")
+  }
   
   retValue@replicated_parameters <- table
   
@@ -154,7 +167,7 @@ sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
       mat <- rxodeMatrix(params, type=type)
       size <- dim(mat)[1]
       
-      mappingMat <- getMappingMatrix(parameters=params, type=type)
+      mappingMat <- getMappingMatrix(parameters=params, type=type, size=size)
       allColnames <- as.vector(mappingMat)
       indexesToKeep <- which(allColnames != "")
 
@@ -172,9 +185,10 @@ sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
 #' 
 #' @param parameters subset of parameters
 #' @param type type of parameter to map (omega or sigma)
+#' @param size size of the matrix
 #' @return a matrix with the names of the OMEGA/SIGMA parameters
 #' 
-getMappingMatrix <- function(parameters, type) {
+getMappingMatrix <- function(parameters, type, size) {
   retValue <- matrix(rep(0, size*size), nrow=size)
   for (i in 1:size) {
     for (j in 1:size) {
