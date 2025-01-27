@@ -26,6 +26,8 @@ export(object, dest, ...)
 
 \item{...}{optional arguments}
 
+\item{index}{index of the replicated Campsis model to export}
+
 \item{outvars}{additional variables to capture}
 
 \item{extra_params}{extra parameter names to be added. By default, they will be assigned a zero value.}

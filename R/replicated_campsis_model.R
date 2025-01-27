@@ -133,7 +133,7 @@ flagOutOfRangeParameterRows <- function(table, minMaxMean) {
   # Return the indexes where at least on parameter is out of range
   indexesToDiscard <- colnames(table) %>% purrr::map(.f=function(.x) {
     values <- table[[.x]]
-    limits <- minMaxMean %>% dplyr::filter(name==.x)
+    limits <- minMaxMean %>% dplyr::filter(.data$name==.x)
     return(which(values < limits$min | values > limits$max))
   }) %>% purrr::flatten_int() %>% unique() %>% base::sort()
   
@@ -150,6 +150,7 @@ flagOutOfRangeParameterRows <- function(table, minMaxMean) {
 #----                                export                                 ----
 #_______________________________________________________________________________
 
+#' @param index index of the replicated Campsis model to export
 #' @rdname export
 setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), definition=function(object, dest=CampsisModel(), index, ...) {
   # Get the index of the last replicate
@@ -168,12 +169,17 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
     dplyr::filter(.data$REPLICATE==index) %>%
     dplyr::select(-c("REPLICATE", "VALID"))
   
-  retValue <- replaceOriginalParameters(model=object@original_model, row=row)
+  retValue <- updateParameters(model=object@original_model, row=row)
   return(retValue)
 })
 
-replaceOriginalParameters <- function(model, row) {
-
+#' Update model parameters based on the parameters issued from the model replication.
+#' 
+#' @param model Campsis model
+#' @param row a data frame row containing the new parameter values
+#' @return updated Campsis model
+#' 
+updateParameters <- function(model, row) {
   paramNames <- names(row)
   paramValues <- as.numeric(row)
   originalParams <- identifyModelParametersFromVarcov(parameters=model@parameters)
@@ -185,6 +191,26 @@ replaceOriginalParameters <- function(model, row) {
     model@parameters <- model@parameters %>% replace(originalParam)
   }
   
+  # Update OMEGA's according that are same
+  model <- updateOMEGAs(model)
+  
+  # Reset varcov
+  model@parameters@varcov <- matrix(numeric(0), nrow=0, ncol=0)
+  
+  return(model)
+}
+
+#'
+#' Update OMEGAs that are same. Same OMEGAs are written as follows:
+#' OMEGA1 same is FALSE
+#' OMEGA2 same is TRUE
+#' OMEGA3 same is TRUE, etc.
+#' OMEGA2 and OMEGA3 will take the same value as OMEGA1.
+#' 
+#' @param model Campsis model
+#' @return updated Campsis model
+#' 
+updateOMEGAs <- function(model) {
   # Still need to update the omegas 'SAME'
   # .x is the accumulated results or initial value (a 'parameters' object here)
   # .y next value in sequence (an omega here)
@@ -213,9 +239,5 @@ replaceOriginalParameters <- function(model, row) {
     # Replace all previous omega's by new ones
     model@parameters <- model@parameters %>% replace(returned_omega_)
   }
-  
-  # Reset varcov
-  model@parameters@varcov <- matrix(numeric(0), nrow=0, ncol=0)
-  
   return(model)
 }
