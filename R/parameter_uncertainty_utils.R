@@ -27,14 +27,27 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
   
-  # Retrieve min, max and mean fields
-  minMaxMean <- parameters %>% purrr::map_df(.f=function(x) {
-    return(tibble::tibble(min=ifelse(is.na(x@min), -Inf, x@min), max=ifelse(is.na(x@max), Inf, x@max), mean=x@value))
+  # Retrieve min, max
+  minMax <- parameters %>% purrr::map_df(.f=function(x) {
+    return(tibble::tibble(min=ifelse(is.na(x@min), -Inf, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
   }) %>% dplyr::mutate(name=varcovNames)
   
+  # Retrieve mean
+  mean <- parameters %>% purrr::map_dbl(~.x@value)
+  
   # Sample parameters from the variance-covariance matrix
-  tempTable <- sampleMore(n=n, mean=minMaxMean$mean, varcov=varcov, shift=0)
-  table <- flagOutOfRangeParameterRows(table=tempTable, minMaxMean=minMaxMean)
+  table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
+                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax)
+  
+  return(table)
+}
+
+sampleGeneric <- function(fun, args, n, minMax) {
+  # First call to method
+  tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
+    dplyr::mutate(REPLICATE=seq_len(n)) %>%
+    dplyr::mutate(VALID=TRUE)
+  table <- flagOutOfRangeParameterRows(table=tempTable, minMax=minMax)
   
   # Re-sample if more parameters are needed due to constraints
   while(sum(table$VALID) < n) {
@@ -52,8 +65,10 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
     }
     print(sprintf("Generate %i rows", nextN))
     shift <- max(table$REPLICATE)
-    tempTable <- sampleMore(n=nextN, mean=minMaxMean$mean, varcov=varcov, shift=shift)
-    table <- dplyr::bind_rows(table, flagOutOfRangeParameterRows(table=tempTable, minMaxMean=minMaxMean))
+    tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
+      dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
+      dplyr::mutate(VALID=TRUE)
+    table <- dplyr::bind_rows(table, flagOutOfRangeParameterRows(table=tempTable, minMax=minMax))
   }
   
   # Discard extra rows
@@ -156,30 +171,27 @@ getMappingMatrix <- function(parameters, type) {
 #' @param n numbers of rows to sample
 #' @param mean mean values to give to the multivariate normal distribution
 #' @param varcov variance-covariance matrix
-#' @param shift shift to apply to the replicate ID column
 #' @importFrom dplyr mutate
 #' @importFrom MASS mvrnorm
 #' @importFrom tibble as_tibble
-sampleMore <- function(n, mean, varcov, shift) {
+sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
   retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
-    tibble::as_tibble() %>%
-    dplyr::mutate(REPLICATE=seq_len(n) + shift) %>%
-    dplyr::mutate(VALID=TRUE)
+    tibble::as_tibble()
   return(retValue)
 }
 
 #' Flag all parameter rows that have at least one parameter out of the specified range.
 #' 
 #' @param table a data frame returned by sampleMore
-#' @param minMaxMean a data frame with min, max and mean values for each parameter
+#' @param minMax a data frame with min, max values for each parameter
 #' @importFrom dplyr mutate
 #' @importFrom purrr map flatten_int
-flagOutOfRangeParameterRows <- function(table, minMaxMean) {
+flagOutOfRangeParameterRows <- function(table, minMax) {
   # For each column, check min and max
   # Return the indexes where at least on parameter is out of range
   indexesToDiscard <- colnames(table) %>% purrr::map(.f=function(.x) {
     values <- table[[.x]]
-    limits <- minMaxMean %>% dplyr::filter(.data$name==.x)
+    limits <- minMax %>% dplyr::filter(.data$name==.x)
     return(which(values < limits$min | values > limits$max))
   }) %>% purrr::flatten_int() %>% unique() %>% base::sort()
   

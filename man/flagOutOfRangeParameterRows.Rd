@@ -4,12 +4,12 @@
 \alias{flagOutOfRangeParameterRows}
 \title{Flag all parameter rows that have at least one parameter out of the specified range.}
 \usage{
-flagOutOfRangeParameterRows(table, minMaxMean)
+flagOutOfRangeParameterRows(table, minMax)
 }
 \arguments{
 \item{table}{a data frame returned by sampleMore}
 
-\item{minMaxMean}{a data frame with min, max and mean values for each parameter}
+\item{minMax}{a data frame with min, max values for each parameter}
 }
 \description{
 Flag all parameter rows that have at least one parameter out of the specified range.
