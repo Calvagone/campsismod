@@ -42,6 +42,15 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   return(table)
 }
 
+#' Generic function for parameter sampling according to the minimum and maximum values.
+#' This function will sample parameters a first time and check if some parameters are out of range.
+#' Based on the success rate, it will sample more parameters to reach the desired number of rows.
+#' 
+#' @param parameters Campsis parameters present in the variance-covariance matrix
+#' @param varcov variance-covariance matrix
+#' @param n number of rows to sample
+#' @return description
+#' 
 sampleGeneric <- function(fun, args, n, minMax) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
@@ -75,14 +84,21 @@ sampleGeneric <- function(fun, args, n, minMax) {
   lastValidIndex <- which(table$VALID)[n]
   table <- table[1:lastValidIndex,]
   
-  # Numbering the valid rows only
-  validIndexes <- which(table$VALID)
-  invalidIndexes <- which(!table$VALID)
-  table[validIndexes, "REPLICATE"] <- seq_len(n)
-  table[invalidIndexes, "REPLICATE"] <- as.integer(NA)
+  # Computing the success rate
+  successRate <- sum(table$VALID) / nrow(table)
+  cat(sprintf("Success rate when sampling from <FILL-ME>: %.1f%%", successRate*100))
   
+  # Numbering the valid rows only
+  # validIndexes <- which(table$VALID)
+  # invalidIndexes <- which(!table$VALID)
+  # table[validIndexes, "REPLICATE"] <- seq_len(n)
+  # table[invalidIndexes, "REPLICATE"] <- as.integer(NA)
+  # 
   table <- table %>%
-    dplyr::relocate(c("REPLICATE", "VALID"))
+    dplyr::relocate(c("REPLICATE")) %>%
+    dplyr::filter(.data$VALID) %>%
+    dplyr::select(-c("VALID")) %>%
+    dplyr::mutate(REPLICATE=seq_len(n))
   
   return(table)
 }
@@ -116,25 +132,38 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
       onDiagElements <- block@on_diag_omegas
       assertthat::assert_that(length(onDiagElements)==1)
       elem <- onDiagElements@list[[1]]
-      paramName <- elem %>% getName()
-      retValue <- retValue %>%
-        dplyr::mutate(!!paramName:=LaplacesDemon::rinvchisq(n=n, df=df, scale=elem@value)) 
+      minMax <- tibble::tibble(name=elem %>% getName(), min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
+      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=elem %>% getName()), n=n, minMax=minMax)
+      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
       params <- Parameters()
       params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
       mat <- rxodeMatrix(params, type=type)
-      
+
       mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
       indexesToKeep <- which(allColnames != "")
       
-      tmp <- seq_len(n) %>%
-        purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
-      colnames(tmp) <- allColnames[indexesToKeep]
-      retValue <- dplyr::bind_cols(retValue, tmp)
+      minMax <- params@list %>% purrr::map_df(.f=function(x) {
+        return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
+      })
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, indexesToKeep=indexesToKeep), n=n, minMax=minMax)
+      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
   return(retValue)
+}
+
+sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
+  table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
+  return(table)
+}
+
+sampleFromInverseWishartCore <- function(n, df, mat, allColnames, indexesToKeep) {
+  table <- seq_len(n) %>%
+    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
+  colnames(table) <- allColnames[indexesToKeep]
+  return(table)
 }
 
 #' Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
