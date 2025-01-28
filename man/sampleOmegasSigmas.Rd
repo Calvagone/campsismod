@@ -2,9 +2,9 @@
 % Please edit documentation in R/replicated_campsis_model.R
 \name{sampleOmegasSigmas}
 \alias{sampleOmegasSigmas}
-\title{Sample the OMEGAs and SIGMAs from inverse chi-square or inverse wishart distributions.}
+\title{Sample the OMEGAs and SIGMAs from scaled inverse chi-square or wishart distributions.}
 \usage{
-sampleOmegasSigmas(model, type = "omega", n, nsub, nobs)
+sampleOmegasSigmas(model, type = "omega", n, df)
 }
 \arguments{
 \item{model}{Campsis model}
@@ -13,13 +13,11 @@ sampleOmegasSigmas(model, type = "omega", n, nsub, nobs)
 
 \item{n}{number of rows to sample}
 
-\item{nsub}{number of subjects in the dataset on which the model was estimated}
-
-\item{nobs}{number of observations in the dataset on which the model was estimated}
+\item{df}{degree of freedom for the scaled inverse chi-square or wishart distribution}
 }
 \value{
 a data frame with the sampled parameters
 }
 \description{
-Sample the OMEGAs and SIGMAs from inverse chi-square or inverse wishart distributions.
+Sample the OMEGAs and SIGMAs from scaled inverse chi-square or wishart distributions.
 }

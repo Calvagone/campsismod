@@ -9,8 +9,9 @@
 setClass(
   "replicated_campsis_model",
   representation(
-    original_model = "campsis_model",    # Original Campsis model
-    replicated_parameters = "data.frame" # Replicated parameters
+    original_model = "campsis_model",     # Original Campsis model
+    replicated_parameters = "data.frame", # Replicated parameters
+    settings = "replication_settings"     # Replication settings that were used
   )
 )
 
@@ -29,12 +30,12 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   methods::validObject(object, complete=TRUE)
 
   # Sort and standardise model first
-  object@parameters <- object@parameters %>%
+  object <- object %>%
     campsismod::sort() %>%
     campsismod::standardise()
   
   # Initialize a new replicated Campsis model
-  retValue <- new("replicated_campsis_model", original_model=object)
+  retValue <- new("replicated_campsis_model", original_model=object, settings=settings)
   
   # Disable OMEGAs and SIGMAs in variance-covariance if wishart is used
   if (settings@wishart) {
@@ -101,8 +102,8 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   
   # Sample now the OMEGAs and SIGMAs
   if (settings@wishart) {
-    sampledOmegas <- sampleOmegasSigmas(model=object, type="omega", n=n, nsub=settings@nsub, nobs=settings@nobs)
-    sampledSigmas <- sampleOmegasSigmas(model=object, type="sigma", n=n, nsub=settings@nsub, nobs=settings@nobs)
+    sampledOmegas <- sampleOmegasSigmas(model=object, type="omega", n=n, df=settings@nsub)
+    sampledSigmas <- sampleOmegasSigmas(model=object, type="sigma", n=n, df=settings@nobs)
     table <- table %>%
       dplyr::left_join(sampledOmegas, by="REPLICATE") %>%
       dplyr::left_join(sampledSigmas, by="REPLICATE")
@@ -125,31 +126,24 @@ identifyModelParametersFromVarcov <- function(parameters) {
   return(retValue)
 }
 
-#' Sample the OMEGAs and SIGMAs from inverse chi-square or inverse wishart distributions.
+#' Sample the OMEGAs and SIGMAs from scaled inverse chi-square or wishart distributions.
 #' 
 #' @param model Campsis model
 #' @param type type of parameter to sample (omega or sigma)
 #' @param n number of rows to sample
-#' @param nsub number of subjects in the dataset on which the model was estimated
-#' @param nobs number of observations in the dataset on which the model was estimated
+#' @param df degree of freedom for the scaled inverse chi-square or wishart distribution
 #' @return a data frame with the sampled parameters
 #' @importFrom assertthat assert_that
 #' @importFrom LaplacesDemon rinvchisq rinvwishart
 #' @importFrom dplyr mutate
 #' @importFrom tibble tibble
 #' 
-sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
+sampleOmegasSigmas <- function(model, type="omega", n, df) {
   assertthat::assert_that(type %in% c("omega", "sigma"))
   
   parameters <- model@parameters %>%
     campsismod::select(type)
-  
-  if (type=="omega") {
-    df <- nsub
-  } else {
-    df <- nobs
-  }
-  
+
   blocks <- OmegaBlocks() %>%
     add(parameters)
   
@@ -167,14 +161,13 @@ sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
       params <- Parameters()
       params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
       mat <- rxodeMatrix(params, type=type)
-      size <- dim(mat)[1]
-      
-      mappingMat <- getMappingMatrix(parameters=params, type=type, size=size)
+
+      mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
       indexesToKeep <- which(allColnames != "")
 
       tmp <- seq_len(n) %>%
-        purrr::map_df(~tibble::as_tibble(t(as.vector(LaplacesDemon::rinvwishart(nu=df - size + 1, S=mat*df))))[, indexesToKeep])
+        purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
       colnames(tmp) <- allColnames[indexesToKeep]
       retValue <- dplyr::bind_cols(retValue, tmp)
     }
@@ -187,10 +180,10 @@ sampleOmegasSigmas <- function(model, type="omega", n, nsub, nobs) {
 #' 
 #' @param parameters subset of parameters
 #' @param type type of parameter to map (omega or sigma)
-#' @param size size of the matrix
 #' @return a matrix with the names of the OMEGA/SIGMA parameters
 #' 
-getMappingMatrix <- function(parameters, type, size) {
+getMappingMatrix <- function(parameters, type) {
+  size <- parameters %>% keep(~isDiag(.x)) %>% length()
   retValue <- matrix(rep(0, size*size), nrow=size)
   for (i in 1:size) {
     for (j in 1:size) {

@@ -10,7 +10,7 @@ Replication settings class.
 \section{Slots}{
 
 \describe{
-\item{\code{wishart}}{logical, sample OMEGAs and SIGMAs from inverse Chi-Square or Wishart distributions}
+\item{\code{wishart}}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions}
 
 \item{\code{nsub}}{number of subjects}
 

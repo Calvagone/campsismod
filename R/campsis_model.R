@@ -477,6 +477,16 @@ setMethod("sort", signature=c("campsis_model"), definition=function(x, decreasin
 })
 
 #_______________________________________________________________________________
+#----                            standardise                                ----
+#_______________________________________________________________________________
+
+#' @rdname standardise
+setMethod("standardise", signature=c("campsis_model"), definition=function(object, ...) {
+  object@parameters <- object@parameters %>% standardise(...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                 write                                 ----
 #_______________________________________________________________________________
 
