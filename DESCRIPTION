@@ -86,6 +86,7 @@ Collate:
     'campsis_model.R'
     'omega_block.R'
     'omega_blocks.R'
+    'parameter_uncertainty_utils.R'
     'replication_settings.R'
     'replicated_campsis_model.R'
     'model_add_suffix.R'
