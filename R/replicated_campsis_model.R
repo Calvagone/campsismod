@@ -55,7 +55,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   }
   
   # Sample parameters in variance-covariance matrix from a multivariate normal distribution
-  varcovParameters <- identifyModelParametersFromVarcov(parameters=object@parameters)
+  varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
   table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n)
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
@@ -116,7 +116,7 @@ updateParameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
   paramNames <- names(row)
   paramValues <- as.numeric(row)
-  originalParams <- identifyModelParametersFromVarcov(parameters=model@parameters)
+  originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=paramNames)
   
   for (paramIndex in seq_along(paramNames)) {
     # pluck can be used because originalParams is a named list

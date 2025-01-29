@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameter_uncertainty_utils.R
 \name{sampleFromMultivariateNormalDistributionCore}
 \alias{sampleFromMultivariateNormalDistributionCore}
-\title{Sample more parameters.}
+\title{Sample from multivariate normal distribution (core method).}
 \usage{
 sampleFromMultivariateNormalDistributionCore(n, mean, varcov)
 }
@@ -13,6 +13,9 @@ sampleFromMultivariateNormalDistributionCore(n, mean, varcov)
 
 \item{varcov}{variance-covariance matrix}
 }
+\value{
+a data frame with the sampled parameters
+}
 \description{
-Sample more parameters.
+Sample from multivariate normal distribution (core method).
 }

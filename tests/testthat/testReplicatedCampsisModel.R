@@ -3,8 +3,6 @@ library(testthat)
 
 context("Test the replication of the Campsis model")
 
-source(paste0("", "testUtils.R"))
-
 test_that("Method 'replicate' allows to replicate a model based on its variance-covariance matrix", {
   
   set.seed(123)
@@ -57,6 +55,18 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   chiSquaredCl <- nu*tauSquaredCl / x
   expect_equal(mean(chiSquaredCl), nu, tolerance=0.02)
   expect_equal(var(chiSquaredCl), 2*nu, tolerance=0.03)
+  
+  model1 <- repModel %>% export(dest=CampsisModel(), index=1)
+  expect_equal(model1 %>% find(Omega(name="DUR")) %>% .@value, 0.01275051, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="VC")) %>% .@value, 0.03926352, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="CL")) %>% .@value, 0.04142518, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="VC_CL")) %>% .@value, 0.03121631, tolerance=1e-4)
+  
+  model2 <- repModel %>% export(dest=CampsisModel(), index=2)
+  expect_equal(model2 %>% find(Omega(name="DUR")) %>% .@value, 0.01582257, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="VC")) %>% .@value, 0.05844814, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="CL")) %>% .@value, 0.05186493, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="VC_CL")) %>% .@value, 0.04422637, tolerance=1e-4)
 })
   
 

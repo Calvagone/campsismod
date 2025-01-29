@@ -1,17 +1,19 @@
 
-#' Identify the model parameters present in the variance-covariance matrix.
+#' Extract model parameters based on parameter names.
 #' 
-#' @param parameters all Campsis parameters, including the variance-covariance matrix
+#' @param parameters all Campsis parameters
+#' @param names names of the parameters to extract
 #' @return subset of Campsis parameters
 #' 
-identifyModelParametersFromVarcov <- function(parameters) {
-  varcov <- parameters@varcov
-  varcovNames <- colnames(varcov)
-  
-  # Variance-covariance matrix detected, collect the model parameters
-  retValue <- varcovNames %>% purrr::map(.f=function(.x){
-    return(parameters %>% getByName(.x)) 
-  }) %>% stats::setNames(varcovNames)
+extractModelParametersFromNames <- function(parameters, names) {
+
+  retValue <- names %>% purrr::map(.f=function(.x){
+    parameter <- parameters %>% getByName(.x)
+    if (is.null(parameter)) {
+      stop(sprintf("Parameter %s not found", .x))
+    }
+    return(parameter)
+  }) %>% stats::setNames(names)
   
   return(retValue)
 }
@@ -40,6 +42,104 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
                          args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg)
   
+  return(table)
+}
+
+#' Sample parameters from inverse scaled chi-squared or wishart distribution(s).
+#' 
+#' @param parameters subset of Campsis parameters (OMEGAs or SIGMAs)
+#' @param n number of rows to sample
+#' @param df degree of freedom for the scaled inverse chi-squared or wishart distribution
+#' @return a data frame with the sampled parameters
+#' @importFrom assertthat assert_that
+#' @importFrom LaplacesDemon rinvchisq rinvwishart
+#' @importFrom dplyr mutate
+#' @importFrom tibble tibble
+#' 
+sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
+  assertthat::assert_that(parameters %>% length() > 0)
+  
+  # Type of parameter
+  type <- class(parameters@list[[1]]) %>% as.character()
+  
+  # Detect blocks
+  blocks <- OmegaBlocks() %>%
+    add(parameters)
+  
+  retValue <- tibble::tibble(REPLICATE=seq_len(n))
+  
+  # Iterate over blocks
+  for (block in blocks@list) {
+    if (length(block) == 1) {
+      onDiagElements <- block@on_diag_omegas
+      assertthat::assert_that(length(onDiagElements)==1)
+      elem <- onDiagElements@list[[1]]
+      variable <- elem %>% getName()
+      minMax <- tibble::tibble(name=variable, min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
+      msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
+      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg)
+      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
+    } else {
+      params <- Parameters()
+      params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
+      mat <- rxodeMatrix(params, type=type)
+
+      size <- params %>% keep(~isDiag(.x)) %>% length()
+      mappingMat <- getMappingMatrix(parameters=params, type=type)
+      allColnames <- as.vector(mappingMat)
+
+      minMax <- params@list %>% purrr::map_df(.f=function(x) {
+        return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
+      })
+      msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg)
+      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
+    }
+  }
+  return(retValue)
+}
+
+#' Sample from multivariate normal distribution (core method).
+#' 
+#' @param n numbers of rows to sample
+#' @param mean mean values to give to the multivariate normal distribution
+#' @param varcov variance-covariance matrix
+#' @return a data frame with the sampled parameters
+#' @importFrom MASS mvrnorm
+#' @importFrom tibble as_tibble
+sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
+  retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
+    tibble::as_tibble()
+  return(retValue)
+}
+
+#' Sample from scaled inverse chi-squared distribution (core method).
+#' 
+#' @param n numbers of rows to sample
+#' @param df degree of freedom
+#' @param scale scale parameter
+#' @param variable variable name
+#' @return a data frame with the unique sampled parameter
+#' @importFrom LaplacesDemon rinvchisq
+#' @importFrom tibble tibble
+sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
+  table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
+  return(table)
+}
+
+#' Sample from scaled inverse Wishart distribution (core method).
+#' 
+#' @param n numbers of rows to sample
+#' @param df degree of freedom
+#' @param mat scaling matrix
+#' @param allColnames all column names as they are going to appear when as.vector is called
+#' @return a data frame with the sampled parameters
+#' @importFrom LaplacesDemon rinvwishart
+sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
+  indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
+  table <- seq_len(n) %>%
+    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
+  colnames(table) <- allColnames[indexesToKeep]
   return(table)
 }
 
@@ -106,75 +206,8 @@ sampleGeneric <- function(fun, args, n, minMax, msg) {
   return(table)
 }
 
-#' Sample parameters from inverse scaled chi-squared or wishart distribution(s).
-#' 
-#' @param parameters subset of Campsis parameters (OMEGAs or SIGMAs)
-#' @param n number of rows to sample
-#' @param df degree of freedom for the scaled inverse chi-squared or wishart distribution
-#' @return a data frame with the sampled parameters
-#' @importFrom assertthat assert_that
-#' @importFrom LaplacesDemon rinvchisq rinvwishart
-#' @importFrom dplyr mutate
-#' @importFrom tibble tibble
-#' 
-sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
-  assertthat::assert_that(parameters %>% length() > 0)
-  
-  # Type of parameter
-  type <- class(parameters@list[[1]]) %>% as.character()
-  
-  # Detect blocks
-  blocks <- OmegaBlocks() %>%
-    add(parameters)
-  
-  retValue <- tibble::tibble(REPLICATE=seq_len(n))
-  
-  # Iterate over blocks
-  for (block in blocks@list) {
-    if (length(block) == 1) {
-      onDiagElements <- block@on_diag_omegas
-      assertthat::assert_that(length(onDiagElements)==1)
-      elem <- onDiagElements@list[[1]]
-      variable <- elem %>% getName()
-      minMax <- tibble::tibble(name=variable, min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
-      msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg)
-      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
-    } else {
-      params <- Parameters()
-      params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
-      mat <- rxodeMatrix(params, type=type)
-
-      size <- params %>% keep(~isDiag(.x)) %>% length()
-      mappingMat <- getMappingMatrix(parameters=params, type=type)
-      allColnames <- as.vector(mappingMat)
-      indexesToKeep <- which(allColnames != "")
-      
-      minMax <- params@list %>% purrr::map_df(.f=function(x) {
-        return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
-      })
-      msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, indexesToKeep=indexesToKeep), n=n, minMax=minMax, msg=msg)
-      retValue <- dplyr::bind_cols(retValue, tmp[, -1])
-    }
-  }
-  return(retValue)
-}
-
 getSamplingMessageTemplate <- function(what, from) {
   return(sprintf("Success rate when sampling %s from %s: %%.1f%%%%", what, from))
-}
-
-sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
-  table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
-  return(table)
-}
-
-sampleFromInverseWishartCore <- function(n, df, mat, allColnames, indexesToKeep) {
-  table <- seq_len(n) %>%
-    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
-  colnames(table) <- allColnames[indexesToKeep]
-  return(table)
 }
 
 #' Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
@@ -203,20 +236,6 @@ getMappingMatrix <- function(parameters, type) {
       }
     }
   }
-  return(retValue)
-}
-
-#' Sample more parameters.
-#' 
-#' @param n numbers of rows to sample
-#' @param mean mean values to give to the multivariate normal distribution
-#' @param varcov variance-covariance matrix
-#' @importFrom dplyr mutate
-#' @importFrom MASS mvrnorm
-#' @importFrom tibble as_tibble
-sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
-  retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
-    tibble::as_tibble()
   return(retValue)
 }
 
