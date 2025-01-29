@@ -36,8 +36,9 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   mean <- parameters %>% purrr::map_dbl(~.x@value)
   
   # Sample parameters from the variance-covariance matrix
+  msg <- getSamplingMessageTemplate(what="parameters", from="variance-covariance matrix")
   table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
-                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax)
+                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg)
   
   return(table)
 }
@@ -49,9 +50,10 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
 #' @param parameters Campsis parameters present in the variance-covariance matrix
 #' @param varcov variance-covariance matrix
 #' @param n number of rows to sample
+#' @param msg message template
 #' @return description
 #' 
-sampleGeneric <- function(fun, args, n, minMax) {
+sampleGeneric <- function(fun, args, n, minMax, msg) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
@@ -65,14 +67,14 @@ sampleGeneric <- function(fun, args, n, minMax) {
     
     # Missing valid items
     missing <- n - sum(table$VALID)
-    print(sprintf("%i valid replicate missing", missing))
+    # print(sprintf("%i valid replicate missing", missing))
     
     # Optimize next value
     nextN <- round(missing/successRate)
     if (nextN < 1) {
       nextN <- 1
     }
-    print(sprintf("Generate %i rows", nextN))
+    # print(sprintf("Generate %i rows", nextN))
     shift <- max(table$REPLICATE)
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
       dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
@@ -86,7 +88,7 @@ sampleGeneric <- function(fun, args, n, minMax) {
   
   # Computing the success rate
   successRate <- sum(table$VALID) / nrow(table)
-  cat(sprintf("Success rate when sampling from <FILL-ME>: %.1f%%", successRate*100))
+  cat(sprintf(msg, successRate*100), "\n")
   
   # Numbering the valid rows only
   # validIndexes <- which(table$VALID)
@@ -132,14 +134,17 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
       onDiagElements <- block@on_diag_omegas
       assertthat::assert_that(length(onDiagElements)==1)
       elem <- onDiagElements@list[[1]]
-      minMax <- tibble::tibble(name=elem %>% getName(), min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
-      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=elem %>% getName()), n=n, minMax=minMax)
+      variable <- elem %>% getName()
+      minMax <- tibble::tibble(name=variable, min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
+      msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
+      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
       params <- Parameters()
       params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
       mat <- rxodeMatrix(params, type=type)
 
+      size <- params %>% keep(~isDiag(.x)) %>% length()
       mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
       indexesToKeep <- which(allColnames != "")
@@ -147,11 +152,16 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
       minMax <- params@list %>% purrr::map_df(.f=function(x) {
         return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
       })
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, indexesToKeep=indexesToKeep), n=n, minMax=minMax)
+      msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, indexesToKeep=indexesToKeep), n=n, minMax=minMax, msg=msg)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
   return(retValue)
+}
+
+getSamplingMessageTemplate <- function(what, from) {
+  return(sprintf("Success rate when sampling %s from %s: %%.1f%%%%", what, from))
 }
 
 sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {

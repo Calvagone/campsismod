@@ -37,7 +37,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   # Initialize a new replicated Campsis model
   retValue <- new("replicated_campsis_model", original_model=object, settings=settings)
   
-  # Disable OMEGAs and SIGMAs in variance-covariance if wishart is used
+  # Disable OMEGAs and SIGMAs in variance-covariance if Wishart is used
   if (settings@wishart) {
     object <- object %>%
       disable(c("VARCOV_OMEGA", "VARCOV_SIGMA"))
@@ -50,7 +50,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   if (varcov %>% length() == 0) {
     # No parameters sampled
     # The data frame is just filled in with all replicates ID
-    retValue@replicated_parameters <- tibble::tibble(REPLICATE=seq_len(n), VALID=rep(TRUE, n))
+    retValue@replicated_parameters <- tibble::tibble(REPLICATE=seq_len(n))
     return(retValue)
   }
   
@@ -87,7 +87,6 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
 setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), definition=function(object, dest=CampsisModel(), index, ...) {
   # Get the index of the last replicate
   maxIndex <- object@replicated_parameters %>%
-    dplyr::filter(.data$VALID) %>%
     dplyr::pull("REPLICATE") %>%
     max()
   
@@ -99,7 +98,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
   # Find row
   row <- object@replicated_parameters %>%
     dplyr::filter(.data$REPLICATE==index) %>%
-    dplyr::select(-c("REPLICATE", "VALID"))
+    dplyr::select(-c("REPLICATE"))
   
   retValue <- updateParameters(model=object@original_model, row=row)
   return(retValue)
@@ -111,8 +110,10 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @param row a data frame row containing the new parameter values
 #' @return updated Campsis model
 #' @importFrom purrr pluck
+#' @importFrom assertthat assert_that
 #' 
 updateParameters <- function(model, row) {
+  assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
   paramNames <- names(row)
   paramValues <- as.numeric(row)
   originalParams <- identifyModelParametersFromVarcov(parameters=model@parameters)
