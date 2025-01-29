@@ -2,12 +2,12 @@
 % Please edit documentation in R/omega_blocks.R
 \name{getOmegaBlock}
 \alias{getOmegaBlock}
-\alias{getOmegaBlock,omega_blocks,omega-method}
+\alias{getOmegaBlock,omega_blocks,double_array_parameter-method}
 \title{Get the right block of OMEGA's.}
 \usage{
 getOmegaBlock(object, x)
 
-\S4method{getOmegaBlock}{omega_blocks,omega}(object, x)
+\S4method{getOmegaBlock}{omega_blocks,double_array_parameter}(object, x)
 }
 \arguments{
 \item{object}{list of OMEGA blocks}

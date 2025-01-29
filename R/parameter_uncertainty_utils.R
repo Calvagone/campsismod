@@ -52,8 +52,7 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
 #' @param df degree of freedom for the scaled inverse chi-squared or wishart distribution
 #' @return a data frame with the sampled parameters
 #' @importFrom assertthat assert_that
-#' @importFrom LaplacesDemon rinvchisq rinvwishart
-#' @importFrom dplyr mutate
+#' @importFrom dplyr bind_cols
 #' @importFrom tibble tibble
 #' 
 sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
@@ -61,7 +60,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
   
   # Type of parameter
   type <- class(parameters@list[[1]]) %>% as.character()
-  
+
   # Detect blocks
   blocks <- OmegaBlocks() %>%
     add(parameters)

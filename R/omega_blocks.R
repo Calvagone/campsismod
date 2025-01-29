@@ -47,7 +47,9 @@ setMethod("add", signature=c("omega_blocks", "omega_block"), definition=function
 #' @rdname add
 setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(object, x) {
   object <- OmegaBlocks()
-  omegas <- x %>% campsismod::select("omega") %>% campsismod::sort()
+  omegas <- x %>%
+    keep(~is(.x, "double_array_parameter")) %>%
+    campsismod::sort()
   off_diag_omegas <- omegas %>% keep(~!isDiag(.x))
   on_diag_omegas <- omegas %>% keep(~isDiag(.x))
   
@@ -92,7 +94,7 @@ setGeneric("getOmegaBlock", function(object, x) {
 })
 
 #' @rdname getOmegaBlock
-setMethod("getOmegaBlock", signature=c("omega_blocks", "omega"), definition=function(object, x) {
+setMethod("getOmegaBlock", signature=c("omega_blocks", "double_array_parameter"), definition=function(object, x) {
   for (block in object@list) {
     indexes <- block %>% getOmegaIndexes()
     if (x@index %in% indexes || x@index2 %in% indexes) {
