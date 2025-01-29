@@ -9,16 +9,18 @@ Based on the success rate, it will sample more parameters to reach the desired n
 sampleGeneric(fun, args, n, minMax, msg)
 }
 \arguments{
+\item{fun}{function to call to sample parameters}
+
+\item{args}{arguments to pass to the function}
+
 \item{n}{number of rows to sample}
 
+\item{minMax}{a data frame with min, max values for each parameter}
+
 \item{msg}{message template}
-
-\item{parameters}{Campsis parameters present in the variance-covariance matrix}
-
-\item{varcov}{variance-covariance matrix}
 }
 \value{
-description
+tibble with the sampled parameters (1 parameter per column + REPLICATE column)
 }
 \description{
 Generic function for parameter sampling according to the minimum and maximum values.

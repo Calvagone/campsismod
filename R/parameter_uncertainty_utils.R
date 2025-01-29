@@ -47,11 +47,12 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
 #' This function will sample parameters a first time and check if some parameters are out of range.
 #' Based on the success rate, it will sample more parameters to reach the desired number of rows.
 #' 
-#' @param parameters Campsis parameters present in the variance-covariance matrix
-#' @param varcov variance-covariance matrix
+#' @param fun function to call to sample parameters
+#' @param args arguments to pass to the function
 #' @param n number of rows to sample
+#' @param minMax a data frame with min, max values for each parameter
 #' @param msg message template
-#' @return description
+#' @return tibble with the sampled parameters (1 parameter per column + REPLICATE column)
 #' 
 sampleGeneric <- function(fun, args, n, minMax, msg) {
   # First call to method
