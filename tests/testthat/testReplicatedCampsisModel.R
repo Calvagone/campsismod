@@ -77,6 +77,31 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   expect_equal(model2 %>% find(Omega(name="CL")) %>% .@value, 0.05186493, tolerance=1e-4)
   expect_equal(model2 %>% find(Omega(name="VC_CL")) %>% .@value, 0.04422637, tolerance=1e-4)
 })
+
+test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set limits", {
+  
+  set.seed(123)
+  
+  model1 <- model_suite$pk$`1cpt_fo` %>%
+    setMinMax("theta", min=0, max=Inf) %>%
+    addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
+  
+  repModel1 <- model1 %>% replicate(1000)
+  
+  # No THETA_KA should be negative
+  expect_true(all(repModel1@replicated_parameters$THETA_KA >= 0))
+  
+  # Same model but no limit
+  model2 <- model_suite$pk$`1cpt_fo` %>%
+    addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
+  
+  repModel2 <- model2 %>% replicate(1000)
+  
+  # 841 values of THETA_KA are positive
+  # 159 values of THETA_KA are negative
+  expect_equal(sum(repModel2@replicated_parameters$THETA_KA >= 0), 841)
+  expect_equal(sum(repModel2@replicated_parameters$THETA_KA < 0), 159)
+})
   
 
 

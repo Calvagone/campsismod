@@ -3,14 +3,20 @@
 \name{setMinMax}
 \alias{setMinMax}
 \alias{setMinMax,parameters,parameter,numeric,numeric-method}
+\alias{setMinMax,parameters,character,numeric,numeric-method}
 \alias{setMinMax,campsis_model,parameter,numeric,numeric-method}
+\alias{setMinMax,campsis_model,character,numeric,numeric-method}
 \title{Set the minimum and maximum value on a model parameter.}
 \usage{
 setMinMax(object, parameter, min, max, ...)
 
 \S4method{setMinMax}{parameters,parameter,numeric,numeric}(object, parameter, min, max, ...)
 
+\S4method{setMinMax}{parameters,character,numeric,numeric}(object, parameter, min, max, ...)
+
 \S4method{setMinMax}{campsis_model,parameter,numeric,numeric}(object, parameter, min, max, ...)
+
+\S4method{setMinMax}{campsis_model,character,numeric,numeric}(object, parameter, min, max, ...)
 }
 \arguments{
 \item{object}{model or parameters object}

@@ -672,6 +672,20 @@ setMethod("setMinMax", signature=c("parameters", "parameter", "numeric", "numeri
   return(object)
 })
 
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("parameters", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  assertthat::assert_that(parameter %in% c("theta", "omega", "sigma"), msg="Parameter must be one of: 'theta', 'omega' or 'sigma'")
+  object@list <- object@list %>%
+    purrr::map(.f=function(x) {
+      if (is(x, parameter)) {
+        x@min <- min
+        x@max <- max
+      }
+      return(x)
+    })
+  return(object)
+})
+
 #_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
