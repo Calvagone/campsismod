@@ -12,7 +12,8 @@ setClass(
     original_model = "campsis_model",     # Original Campsis model
     replicated_parameters = "data.frame", # Replicated parameters
     settings = "replication_settings"     # Replication settings that were used
-  )
+  ),
+  prototype = prototype(original_model=CampsisModel(), replicated_parameters=tibble::tibble(), settings=ReplicationSettings())
 )
 
 #_______________________________________________________________________________
@@ -83,6 +84,11 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
 #' @param index index of the replicated Campsis model to export
 #' @rdname export
 setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), definition=function(object, dest=CampsisModel(), index, ...) {
+  # If table is empty, return the original model
+  if (nrow(object@replicated_parameters) == 0) {
+    return(object@original_model)  
+  }
+  
   # Get the index of the last replicate
   maxIndex <- object@replicated_parameters %>%
     dplyr::pull("REPLICATE") %>%
