@@ -25,7 +25,8 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   set.seed(123)
   
   model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
-    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor"))
+    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
   
   repModel <- model %>%
     replicate(10000, settings=ReplicationSettings(wishart=TRUE, nsub=50, nobs=1000))
@@ -34,6 +35,7 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   model <- model %>%
     standardise()
   nu <- repModel@settings@nsub
+  nuSigma <- repModel@settings@nobs
   
   # Check the generated values for OMEGA_DUR
   tauSquaredDur <- model %>% find(Omega(name="DUR")) %>% .@value # Correspond to scale argument of rinvchisq
@@ -55,6 +57,13 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   chiSquaredCl <- nu*tauSquaredCl / x
   expect_equal(mean(chiSquaredCl), nu, tolerance=0.02)
   expect_equal(var(chiSquaredCl), 2*nu, tolerance=0.03)
+  
+  # Check the generated values for RUV_FIX
+  tauSquaredRuv <- model %>% find(Sigma(name="RUV_FIX")) %>% .@value
+  x <- repModel@replicated_parameters$SIGMA_RUV_FIX
+  chiSquaredRuv <- nuSigma*tauSquaredRuv / x
+  expect_equal(mean(chiSquaredRuv), nuSigma, tolerance=0.02)
+  expect_equal(var(chiSquaredRuv), 2*nuSigma, tolerance=0.03)
   
   model1 <- repModel %>% export(dest=CampsisModel(), index=1)
   expect_equal(model1 %>% find(Omega(name="DUR")) %>% .@value, 0.01275051, tolerance=1e-4)

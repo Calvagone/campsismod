@@ -20,10 +20,8 @@ setClass(
 #_______________________________________________________________________________
 
 #' @rdname replicate
-#' @importFrom stats setNames
-#' @importFrom MASS mvrnorm
-#' @importFrom purrr map
 #' @importFrom methods validObject
+#' @importFrom dplyr left_join
 setMethod("replicate", signature = c("campsis_model", "integer", "replication_settings"), definition = function(object, n, settings) {
   
   # Validate original Campsis model before sampling parameter uncertainty

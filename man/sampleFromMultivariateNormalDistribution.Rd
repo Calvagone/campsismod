@@ -14,7 +14,7 @@ sampleFromMultivariateNormalDistribution(parameters, varcov, n)
 \item{n}{number of rows to sample}
 }
 \value{
-description
+a data frame with the sampled parameters
 }
 \description{
 Sample from a multivariate normal distribution.

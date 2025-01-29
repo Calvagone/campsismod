@@ -4,6 +4,7 @@
 #' @param parameters all Campsis parameters
 #' @param names names of the parameters to extract
 #' @return subset of Campsis parameters
+#' @importFrom stats setNames
 #' 
 extractModelParametersFromNames <- function(parameters, names) {
 
@@ -23,7 +24,7 @@ extractModelParametersFromNames <- function(parameters, names) {
 #' @param parameters Campsis parameters present in the variance-covariance matrix
 #' @param varcov variance-covariance matrix
 #' @param n number of rows to sample
-#' @return description
+#' @return a data frame with the sampled parameters
 #' 
 sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   # Retrieve variance-covariance matrix names
@@ -69,6 +70,9 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
   
   # Iterate over blocks
   for (block in blocks@list) {
+    if (isBlockFixed(block)) {
+      next
+    }
     if (length(block) == 1) {
       onDiagElements <- block@on_diag_omegas
       assertthat::assert_that(length(onDiagElements)==1)
@@ -96,6 +100,18 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
     }
   }
   return(retValue)
+}
+
+#' Say if the block is fixed (i.e. all parameters are fixed).
+#' 
+#' @param block block of OMEGAs or SIGMAs
+#' @return logical value
+#' @importFrom purrr map_lgl
+isBlockFixed <- function(block) {
+  list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
+  retValue <- list %>%
+    purrr::map_lgl(~.x@fix)
+  return(all(retValue))
 }
 
 #' Sample from multivariate normal distribution (core method).
