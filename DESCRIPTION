@@ -31,7 +31,6 @@ Imports:
     magrittr,
     MASS,
     methods,
-    plyr,
     purrr,
     readr,
     rlang,

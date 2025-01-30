@@ -522,7 +522,6 @@ setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
 #_______________________________________________________________________________
 
 dataframeToParameter <- function(row, type) {
-  param <- NULL
   name <- ifelse(is.null(row$name), NA, row$name) # Optional
   label <- ifelse(is.null(row$label), as.character(NA), row$label) # Optional
   unit <- ifelse(is.null(row$unit), as.character(NA), row$unit) # Optional
@@ -547,13 +546,17 @@ dataframeToParameter <- function(row, type) {
 #' @param type parameter type: 'theta', 'omega' or 'sigma'
 #' @return parameters sub list
 #' @importFrom readr read_delim
+#' @importFrom dplyr group_split
+#' @importFrom purrr map
 #' @export
 read.parameters <- function(file, type) {
   assertthat::assert_that(type %in% c("theta", "omega", "sigma"),
                           msg="Type must be one of these: 'theta', 'omega' or 'sigma'")
   df <- readr::read_delim(file=file, lazy=FALSE, show_col_types=FALSE, progress=FALSE) %>%
     dplyr::mutate(ROWID=dplyr::row_number())
-  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
+  list <- df %>%
+    dplyr::group_split(ROWID) %>%
+    purrr::map(~dataframeToParameter(as.list(.x), type=type))
   attributes(list) <- NULL
   return(new("parameters", list=list))
 }
