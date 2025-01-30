@@ -15,5 +15,7 @@ Auto replication settings class.
 \item{\code{nsub}}{number of subjects}
 
 \item{\code{nobs}}{number of observations}
+
+\item{\code{quiet}}{logical, suppress info messages}
 }}
 

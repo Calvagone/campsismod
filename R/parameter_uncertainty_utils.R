@@ -24,9 +24,10 @@ extractModelParametersFromNames <- function(parameters, names) {
 #' @param parameters Campsis parameters present in the variance-covariance matrix
 #' @param varcov variance-covariance matrix
 #' @param n number of rows to sample
+#' @param quiet suppress messages
 #' @return a data frame with the sampled parameters
 #' 
-sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
+sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, quiet) {
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
   
@@ -41,7 +42,7 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
   # Sample parameters from the variance-covariance matrix
   msg <- getSamplingMessageTemplate(what="parameters", from="variance-covariance matrix")
   table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
-                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg)
+                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, quiet=quiet)
   
   return(table)
 }
@@ -51,12 +52,13 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n) {
 #' @param parameters subset of Campsis parameters (OMEGAs or SIGMAs)
 #' @param n number of rows to sample
 #' @param df degree of freedom for the scaled inverse chi-squared or wishart distribution
+#' @param quiet suppress messages
 #' @return a data frame with the sampled parameters
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble tibble
 #' 
-sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
+sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
   assertthat::assert_that(parameters %>% length() > 0)
   
   # Type of parameter
@@ -80,7 +82,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
       variable <- elem %>% getName()
       minMax <- tibble::tibble(name=variable, min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
       msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg)
+      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, quiet=quiet)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
       params <- Parameters()
@@ -95,7 +97,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df) {
         return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
       })
       msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg)
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, quiet=quiet)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
@@ -167,9 +169,10 @@ sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
 #' @param n number of rows to sample
 #' @param minMax a data frame with min, max values for each parameter
 #' @param msg message template
+#' @param quiet suppress messages
 #' @return tibble with the sampled parameters (1 parameter per column + REPLICATE column)
 #' 
-sampleGeneric <- function(fun, args, n, minMax, msg) {
+sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
@@ -204,14 +207,22 @@ sampleGeneric <- function(fun, args, n, minMax, msg) {
   
   # Computing the success rate
   successRate <- sum(table$VALID) / nrow(table)
-  cat(sprintf(msg, successRate*100), "\n")
   
-  # Numbering the valid rows only
-  # validIndexes <- which(table$VALID)
-  # invalidIndexes <- which(!table$VALID)
-  # table[validIndexes, "REPLICATE"] <- seq_len(n)
-  # table[invalidIndexes, "REPLICATE"] <- as.integer(NA)
-  # 
+  # Show message logic
+  if (is.na(quiet)) {
+    if (successRate < 0.95) {
+      showMessage <- TRUE
+    } else {
+      showMessage <- FALSE
+    }
+  } else {
+    showMessage <- !quiet
+  }
+  if (showMessage) {
+    cat(sprintf(msg, successRate*100), "\n")
+  }
+  
+  # Clean table before returning it
   table <- table %>%
     dplyr::relocate(c("REPLICATE")) %>%
     dplyr::filter(.data$VALID) %>%

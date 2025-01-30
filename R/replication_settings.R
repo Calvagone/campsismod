@@ -22,13 +22,15 @@ setClass(
 #' @slot wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions
 #' @slot nsub number of subjects
 #' @slot nobs number of observations
+#' @slot quiet logical, suppress info messages
 #' @export
 setClass(
   "auto_replication_settings",
   representation(
     wishart="logical",
     nsub="integer",
-    nobs="integer"
+    nobs="integer",
+    quiet="logical"
   ),
   contains="replication_settings"
 )
@@ -49,11 +51,12 @@ setClass(
 #'  or Wishart distribution (block of OMEGAs)
 #' @param nsub number of subjects in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for OMEGAs
 #' @param nobs number of observations in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for SIGMAs
+#' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95%.
 #' @return replication settings
 #' @export
-AutoReplicationSettings <- function(wishart=FALSE, nsub=NA, nobs=NA) {
+AutoReplicationSettings <- function(wishart=FALSE, nsub=NA, nobs=NA, quiet=NA) {
   return(new("auto_replication_settings", wishart=as.logical(wishart),
-             nsub=as.integer(nsub), nobs=as.integer(nobs)))
+             nsub=as.integer(nsub), nobs=as.integer(nobs), quiet=as.logical(quiet)))
 }
 
 #_______________________________________________________________________________

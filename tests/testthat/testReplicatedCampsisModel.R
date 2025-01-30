@@ -42,7 +42,7 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
     add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
     replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
   
-  settings <- AutoReplicationSettings(wishart=TRUE, nsub=50, nobs=1000)
+  settings <- AutoReplicationSettings(wishart=TRUE, nsub=50, nobs=1000, quiet=FALSE)
   repModel <- model %>%
     replicate(10000, settings=settings)
   

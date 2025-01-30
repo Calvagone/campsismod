@@ -55,19 +55,19 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
   
   # Sample parameters in variance-covariance matrix from a multivariate normal distribution
   varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
-  table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n)
+  table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, quiet=settings@quiet)
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
   if (settings@wishart) {
     omegas <- object@parameters %>% select("omega")
     if (omegas %>% length() > 0) {
-      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, df=settings@nsub)
+      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, df=settings@nsub, quiet=settings@quiet)
       table <- table %>%
         dplyr::left_join(sampledOmegas, by="REPLICATE")
     }
     sigmas <- object@parameters %>% select("sigma")
     if (sigmas %>% length() > 0) {
-      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, df=settings@nobs)
+      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, df=settings@nobs, quiet=settings@quiet)
       table <- table %>%
         dplyr::left_join(sampledSigmas, by="REPLICATE")
     }
