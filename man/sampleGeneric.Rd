@@ -19,7 +19,7 @@ sampleGeneric(fun, args, n, minMax, msg, quiet)
 
 \item{msg}{message template}
 
-\item{quiet}{suppress the messages}
+\item{quiet}{suppress messages}
 }
 \value{
 tibble with the sampled parameters (1 parameter per column + REPLICATE column)

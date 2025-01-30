@@ -51,7 +51,7 @@ setClass(
 #'  or Wishart distribution (block of OMEGAs)
 #' @param nsub number of subjects in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for OMEGAs
 #' @param nobs number of observations in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for SIGMAs
-#' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95%.
+#' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
 #' @return replication settings
 #' @export
 AutoReplicationSettings <- function(wishart=FALSE, nsub=NA, nobs=NA, quiet=NA) {

@@ -23,7 +23,7 @@ or Wishart distribution (block of OMEGAs)}
 
 \item{nobs}{number of observations in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for SIGMAs}
 
-\item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95%.}
+\item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }
 \value{
 replication settings
