@@ -42,14 +42,15 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
     add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
     replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
   
+  settings <- AutoReplicationSettings(wishart=TRUE, nsub=50, nobs=1000)
   repModel <- model %>%
-    replicate(10000, settings=ReplicationSettings(wishart=TRUE, nsub=50, nobs=1000))
+    replicate(10000, settings=settings)
   
   # Standardise model first
   model <- model %>%
     standardise()
-  nu <- repModel@settings@nsub
-  nuSigma <- repModel@settings@nobs
+  nu <- settings@nsub
+  nuSigma <- settings@nobs
   
   # Check the generated values for OMEGA_DUR
   tauSquaredDur <- model %>% find(Omega(name="DUR")) %>% .@value # Correspond to scale argument of rinvchisq
@@ -154,5 +155,25 @@ test_that("Replicate a model that has IOV works as expected", {
   expect_equal(round(set2, digits=3), c(0.027, 0.027, 0.027)) # Depends on seed
 })
   
+test_that("Method 'replicate' also allows to manually replicate a model based on a table (1 replicate/row)", {
+  model <- model_suite$testing$nonmem$advan2_trans2
+  data <- data.frame(REPLICATE=seq_len(5), SIGMA_PROP=c(0.1, 0.2, 0.3, 0.4, 0.5))
+  
+  expect_error(model %>% replicate(n=6, settings=ManualReplicationSettings(data)))
+
+  repModel <- model %>% replicate(n=3, settings=ManualReplicationSettings(data))
+  expect_equal(repModel@replicated_parameters$SIGMA_PROP, c(0.1, 0.2, 0.3))
+  
+  sigma1 <- repModel %>%
+    export(dest=CampsisModel(), index=1) %>%
+    find(Sigma("PROP"))
+  expect_equal(sigma1@value, 0.1)
+  
+  sigma2 <- repModel %>%
+    export(dest=CampsisModel(), index=2) %>%
+    find(Sigma("PROP"))
+  expect_equal(sigma2@value, 0.2)
+  # Etc.
+})
 
 

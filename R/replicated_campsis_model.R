@@ -9,11 +9,11 @@
 setClass(
   "replicated_campsis_model",
   representation(
-    original_model = "campsis_model",     # Original Campsis model
-    replicated_parameters = "data.frame", # Replicated parameters
-    settings = "replication_settings"     # Replication settings that were used
+    original_model = "campsis_model",     # Original Campsis model (sorted and standardised)
+    replicated_parameters = "data.frame" # Replicated parameters
   ),
-  prototype = prototype(original_model=CampsisModel(), replicated_parameters=tibble::tibble(), settings=ReplicationSettings())
+  prototype = prototype(original_model=CampsisModel(),
+                        replicated_parameters=tibble::tibble())
 )
 
 #_______________________________________________________________________________
@@ -23,18 +23,18 @@ setClass(
 #' @rdname replicate
 #' @importFrom methods validObject
 #' @importFrom dplyr left_join
-setMethod("replicate", signature = c("campsis_model", "integer", "replication_settings"), definition = function(object, n, settings) {
+setMethod("replicate", signature = c("campsis_model", "integer", "auto_replication_settings"), definition = function(object, n, settings) {
   
   # Validate original Campsis model before sampling parameter uncertainty
   methods::validObject(object, complete=TRUE)
 
   # Sort and standardise model first
   object <- object %>%
-    campsismod::sort() %>%
-    campsismod::standardise()
+    sort() %>%
+    standardise()
   
   # Initialize a new replicated Campsis model
-  retValue <- new("replicated_campsis_model", original_model=object, settings=settings)
+  retValue <- new("replicated_campsis_model", original_model=object)
   
   # Disable OMEGAs and SIGMAs in variance-covariance if Wishart is used
   if (settings@wishart) {
@@ -74,6 +74,29 @@ setMethod("replicate", signature = c("campsis_model", "integer", "replication_se
   }
   
   retValue@replicated_parameters <- table
+  return(retValue)
+})
+
+#' @rdname replicate
+#' @importFrom methods validObject
+setMethod("replicate", signature = c("campsis_model", "integer", "manual_replication_settings"), definition = function(object, n, settings) {
+  
+  # Validate original Campsis model
+  methods::validObject(object, complete=TRUE)
+  
+  # Sort and standardise model first
+  object <- object %>%
+    sort() %>%
+    standardise()
+  
+  # In the future, do additional checks on the data coming from the manual replication settings
+  data <- settings@replicated_parameters
+  if (nrow(data) < n) {
+    stop("The number of rows in the data frame must be greater than or equal to the number of replicates 'n'.")
+  }
+  
+  # Initialize a new replicated Campsis model
+  retValue <- new("replicated_campsis_model", original_model=object, replicated_parameters=data[1:n,])
   return(retValue)
 })
 

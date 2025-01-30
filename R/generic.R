@@ -227,7 +227,7 @@ replicate <- function(object, n, settings, ...) {
 setGeneric("replicate", function(object, n, settings=NULL, ...) {
   n <- as.integer(n)
   if (is.null(settings)) {
-    settings <- ReplicationSettings()
+    settings <- AutoReplicationSettings()
   }
   standardGeneric("replicate")
 })

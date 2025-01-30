@@ -3,17 +3,7 @@
 \docType{class}
 \name{replication_settings-class}
 \alias{replication_settings-class}
-\title{Replication settings class.}
+\title{Replication settings interface.}
 \description{
-Replication settings class.
+Replication settings interface.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{wishart}}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions}
-
-\item{\code{nsub}}{number of subjects}
-
-\item{\code{nobs}}{number of observations}
-}}
-
