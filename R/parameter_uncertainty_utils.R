@@ -19,6 +19,29 @@ extractModelParametersFromNames <- function(parameters, names) {
   return(retValue)
 }
 
+#' Min/max default values for the given parameter.
+#' 
+#' @param parameter Campsis parameter
+#' @return a tibble with the min and max values
+#' @importFrom tibble tibble
+minMaxDefault <- function(parameter) {
+  min <- parameter@min
+  max <- parameter@max
+  minNA <- is.na(min)
+  maxNA <- is.na(max)
+  
+  if (is(parameter, "theta")) {
+    return(tibble::tibble(min=ifelse(minNA, -Inf, min), max=ifelse(maxNA, Inf, max)))
+  } else if (is(parameter, "double_array_parameter")) {
+    if (parameter %>% isDiag()) {
+      return(tibble::tibble(min=ifelse(minNA, 0, min), max=ifelse(maxNA, Inf, max)))
+    } else {
+      return(tibble::tibble(min=ifelse(minNA, -Inf, min), max=ifelse(maxNA, Inf, max)))
+    }
+  }
+  stop("Unknown parameter type")
+}
+
 #' Sample from a multivariate normal distribution.
 #' 
 #' @param parameters Campsis parameters present in the variance-covariance matrix
@@ -32,9 +55,9 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, quie
   varcovNames <- colnames(varcov)
   
   # Retrieve min, max
-  minMax <- parameters %>% purrr::map_df(.f=function(x) {
-    return(tibble::tibble(min=ifelse(is.na(x@min), -Inf, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
-  }) %>% dplyr::mutate(name=varcovNames)
+  minMax <- parameters %>%
+    purrr::map_df(~minMaxDefault(.x)) %>%
+    dplyr::mutate(name=varcovNames)
   
   # Retrieve mean
   mean <- parameters %>% purrr::map_dbl(~.x@value)
@@ -80,7 +103,8 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
       assertthat::assert_that(length(onDiagElements)==1)
       elem <- onDiagElements@list[[1]]
       variable <- elem %>% getName()
-      minMax <- tibble::tibble(name=variable, min=ifelse(is.na(elem@min), 0, elem@min), max=ifelse(is.na(elem@max), Inf, elem@max))
+      minMax <- minMaxDefault(elem) %>%
+        dplyr::mutate(name=variable)
       msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
       tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, quiet=quiet)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
@@ -93,9 +117,10 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
       mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
 
-      minMax <- params@list %>% purrr::map_df(.f=function(x) {
-        return(tibble::tibble(name=x %>% getName(), min=ifelse(is.na(x@min), 0, x@min), max=ifelse(is.na(x@max), Inf, x@max)))
-      })
+      minMax <- params@list %>%
+        purrr::map_df(~minMaxDefault(.x)) %>%
+        dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% getName()))
+      
       msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
       tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, quiet=quiet)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
@@ -180,6 +205,8 @@ sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
   table <- flagOutOfRangeParameterRows(table=tempTable, minMax=minMax)
   
   # Re-sample if more parameters are needed due to constraints
+  iterations <- 0
+  
   while(sum(table$VALID) < n) {
     # Compute success rate
     successRate <- sum(table$VALID) / nrow(table)
@@ -191,8 +218,18 @@ sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
     # Optimize next value
     nextN <- round(missing/successRate)
     if (nextN < 1) {
-      nextN <- 1
+      nextN <- 1 # At least 1 sample required
     }
+    if (is.infinite(nextN) || nextN > 1000) {
+      nextN <- 1000 # At most 1000 samples
+    }
+    
+    # Increment and check
+    iterations <- iterations + 1
+    if (iterations > 100) {
+      stop("Too many iterations, please check your min and max constraints.")
+    }
+    
     # print(sprintf("Generate %i rows", nextN))
     shift <- max(table$REPLICATE)
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%

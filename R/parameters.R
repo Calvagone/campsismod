@@ -683,6 +683,12 @@ setMethod("setMinMax", signature=c("parameters", "character", "numeric", "numeri
       if (is(x, parameter)) {
         x@min <- min
         x@max <- max
+        
+        # Special case for covariance
+        if (is(x, "double_array_parameter") && !(x %>% isDiag()) && min >= 0) {
+          x@min <- -max
+          cat(sprintf("Info: min value of %s (covariance) set to -max value\n", x %>% getName()))
+        }
       }
       return(x)
     })

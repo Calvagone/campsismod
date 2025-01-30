@@ -135,3 +135,13 @@ setMethod("shiftOmegaIndexes", signature=c("omega_block"), definition=function(o
 setMethod("length", signature=c("omega_block"), definition=function(x) {
   return(length(x@on_diag_omegas))
 })
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("omega_block"), definition=function(object) {
+  omegaNames <- object@on_diag_omegas@list %>%
+    purrr::map_chr(.f=~.x %>% getName())
+  print(sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / ")))
+})
