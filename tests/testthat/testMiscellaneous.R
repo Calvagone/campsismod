@@ -44,3 +44,10 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(getPrefix(""), regexp=msg)
   expect_error(getRecordName(""), regexp=msg)
 })
+
+test_that("Method 'toString' of unknown statements works as expected", {
+  statement <- UnknownStatement("HELLO")
+  expect_equal(toString(statement, dest="campsis", show=TRUE), "[UNKNOWN STATEMENT] HELLO")
+  expect_equal(toString(statement, dest="campsis", show=FALSE), "HELLO")
+  expect_error(toString(statement, dest="other"), regexp="Only rxode2 \\(previously RxODE\\), mrgsolve or campsis are supported")
+})

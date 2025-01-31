@@ -26,5 +26,6 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(getByIndex (""), regexp=msg)
   expect_error(sort(""), regexp=msg)
   expect_error(default(""), regexp=msg)
+  expect_error(getName(""), regexp=msg)
 })
 

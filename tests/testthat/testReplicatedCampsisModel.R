@@ -233,6 +233,12 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   
   expect_equal(capture_output(show(block1)), "BLOCK(2) - OMEGA_CL / OMEGA_VC")
   expect_equal(capture_output(show(block2)), "BLOCK(1) - OMEGA_DUR")
+  
+  # Generic functions not called correctly
+  msg <- "No default function is provided"
+  expect_error(getOmegaIndexes(""), regexp=msg)
+  expect_error(hasOffDiagonalOmegas(""), regexp=msg)
+  expect_error(shiftOmegaIndexes(""), regexp=msg)
 })
 
 

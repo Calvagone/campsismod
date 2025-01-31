@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test read/write methods on CAMPSIS model")
+context("Test read/write methods on Campsis model")
 
 source(paste0("", "testUtils.R"))
 

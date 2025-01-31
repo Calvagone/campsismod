@@ -5,7 +5,7 @@ context("Test all methods from the code records class")
 
 source(paste0("", "testUtils.R"))
 
-test_that("Check records can be added correctly into the CAMPSIS model", {
+test_that("Check records can be added correctly into the Campsis model", {
   
   model <- CampsisModel()
   model <- model %>% add(MainRecord())
