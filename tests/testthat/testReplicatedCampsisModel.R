@@ -50,6 +50,17 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   expect_equal(sum(repModel@replicated_parameters$THETA_KA >= 1.3), 1000)
 })
 
+getInverseWishartVar <- function(diag, nu, p) {
+  # See https://fr.wikipedia.org/wiki/Loi_de_Wishart_inverse
+  phi <- diag*(nu-p-1)
+  return((2*phi^2)/(nu-p-1)^2/(nu-p-3))
+}
+
+getInverseChiSquaredVar <- function(tau, nu) {
+  # See https://en.wikipedia.org/wiki/Scaled_inverse_chi-squared_distribution
+  return(2*nu^2*tau^2/(nu-2)^2/(nu-4))
+}
+
 test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square or wishart distributions works as expected", {
   
   set.seed(123)
@@ -68,45 +79,43 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   nu <- settings@nsub
   nuSigma <- settings@nobs
   
+  # See https://en.wikipedia.org/wiki/Scaled_inverse_chi-squared_distribution
+  
   # Check the generated values for OMEGA_DUR
   tauSquaredDur <- model %>% find(Omega(name="DUR")) %>% .@value # Correspond to scale argument of rinvchisq
   x <- repModel@replicated_parameters$OMEGA_DUR
-  chiSquaredDur <- nu*tauSquaredDur / x # Chi-squared distribution with nu=df=50
-  expect_equal(mean(chiSquaredDur), nu, tolerance=0.01) # Mean = nu = 50 
-  expect_equal(var(chiSquaredDur), 2*nu, tolerance=0.01) # Var = 2*nu = 100
+  expect_equal(mean(x), tauSquaredDur, tolerance=0.01)
+  expect_equal(var(x), getInverseChiSquaredVar(tau=tauSquaredDur, nu=nu), tolerance=0.000001)
   
   # Check the generated values for OMEGA_VC
   tauSquaredVc <- model %>% find(Omega(name="VC")) %>% .@value
   x <- repModel@replicated_parameters$OMEGA_VC
-  chiSquaredVc <- nu*tauSquaredVc / x
-  expect_equal(mean(chiSquaredVc), nu, tolerance=0.02)
-  expect_equal(var(chiSquaredVc), 2*nu, tolerance=0.03)
+  expect_equal(mean(x), tauSquaredVc, tolerance=0.001)
+  expect_equal(var(x), getInverseWishartVar(diag=tauSquaredVc, nu=nu, p=2), tolerance=0.00001)
   
   # Check the generated values for OMEGA_CL
   tauSquaredCl <- model %>% find(Omega(name="CL")) %>% .@value
   x <- repModel@replicated_parameters$OMEGA_CL
-  chiSquaredCl <- nu*tauSquaredCl / x
-  expect_equal(mean(chiSquaredCl), nu, tolerance=0.02)
-  expect_equal(var(chiSquaredCl), 2*nu, tolerance=0.03)
-  
+  expect_equal(mean(x), tauSquaredCl, tolerance=0.001)
+  expect_equal(var(x), getInverseWishartVar(diag=tauSquaredCl, nu=nu, p=2), tolerance=0.00001)
+
   # Check the generated values for RUV_FIX
   tauSquaredRuv <- model %>% find(Sigma(name="RUV_FIX")) %>% .@value
   x <- repModel@replicated_parameters$SIGMA_RUV_FIX
-  chiSquaredRuv <- nuSigma*tauSquaredRuv / x
-  expect_equal(mean(chiSquaredRuv), nuSigma, tolerance=0.02)
-  expect_equal(var(chiSquaredRuv), 2*nuSigma, tolerance=0.03)
+  expect_equal(mean(x), tauSquaredRuv, tolerance=0.0001)
+  expect_equal(var(x), getInverseChiSquaredVar(tau=tauSquaredRuv, nu=nuSigma), tolerance=0.0001)
   
   model1 <- repModel %>% export(dest=CampsisModel(), index=1)
-  expect_equal(model1 %>% find(Omega(name="DUR")) %>% .@value, 0.01275051, tolerance=1e-4)
-  expect_equal(model1 %>% find(Omega(name="VC")) %>% .@value, 0.03926352, tolerance=1e-4)
-  expect_equal(model1 %>% find(Omega(name="CL")) %>% .@value, 0.04142518, tolerance=1e-4)
-  expect_equal(model1 %>% find(Omega(name="VC_CL")) %>% .@value, 0.03121631, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="DUR")) %>% .@value, 0.01224049, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="VC")) %>% .@value, 0.03690771, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="CL")) %>% .@value, 0.03893967, tolerance=1e-4)
+  expect_equal(model1 %>% find(Omega(name="VC_CL")) %>% .@value, 0.02934333, tolerance=1e-4)
   
   model2 <- repModel %>% export(dest=CampsisModel(), index=2)
-  expect_equal(model2 %>% find(Omega(name="DUR")) %>% .@value, 0.01582257, tolerance=1e-4)
-  expect_equal(model2 %>% find(Omega(name="VC")) %>% .@value, 0.05844814, tolerance=1e-4)
-  expect_equal(model2 %>% find(Omega(name="CL")) %>% .@value, 0.05186493, tolerance=1e-4)
-  expect_equal(model2 %>% find(Omega(name="VC_CL")) %>% .@value, 0.04422637, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="DUR")) %>% .@value, 0.01518967, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="VC")) %>% .@value, 0.05494126, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="CL")) %>% .@value, 0.04875303, tolerance=1e-4)
+  expect_equal(model2 %>% find(Omega(name="VC_CL")) %>% .@value, 0.04157278, tolerance=1e-4)
 })
 
 test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set limits", {

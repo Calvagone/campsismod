@@ -179,7 +179,7 @@ sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
 #' @importFrom tibble tibble
 #' @keywords internal
 sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
-  table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
+  table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale*(df-2)/df))
   return(table)
 }
 
@@ -194,8 +194,9 @@ sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
 #' @keywords internal
 sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
   indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
+  size <- nrow(mat)
   table <- seq_len(n) %>%
-    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
+    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*(df-size-1)))))[, indexesToKeep])
   colnames(table) <- allColnames[indexesToKeep]
   return(table)
 }
