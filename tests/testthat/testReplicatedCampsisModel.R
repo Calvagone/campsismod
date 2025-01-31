@@ -176,4 +176,47 @@ test_that("Method 'replicate' also allows to manually replicate a model based on
   # Etc.
 })
 
+test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 1 correlation)", {
+  
+  parameters <- Parameters() %>%
+    add(Theta(name="CL", value=5)) %>%
+    add(Theta(name="VC", value=80)) %>%
+    add(Theta(name="DUR", value=1)) %>%
+    add(Theta(name="PROP_RUV", value=0.15)) %>%
+    add(Omega(name="CL", value=30, type="cv%")) %>%
+    add(Omega(name="VC", value=30, type="cv%")) %>%
+    add(Omega(name="DUR", value=30, type="cv%")) %>%
+    add(Omega(index=1, index2=2, value=0.5, type="cor"))
+  
+  # Create first block manually
+  expectedBlock1 <- OmegaBlock() %>%
+    add(parameters %>% find(Omega(name="CL"))) %>%
+    add(parameters %>% find(Omega(name="VC"))) %>%
+    add(parameters %>% find(Omega(index=1, index2=2)))
+  expectedBlock1@start_index <- 0L
+  expectedBlock1@block_index <- 1L
+  
+  expect_equal(expectedBlock1 %>% getOmegaIndexes(), c(1, 2))
+  
+  # Create all blocks automatically
+  blocks <- OmegaBlocks() %>% add(parameters)
+  
+  expect_equal(blocks %>% length(), 2)
+  
+  block1 <- blocks %>% getByIndex(1)
+  block2 <- blocks %>% getByIndex(2)
+  expect_equal(block1, expectedBlock1)
+  
+  expect_true(block1 %>% length()==2)
+  expect_true(block2 %>% length()==1)
+  expect_true(block1 %>% hasOffDiagonalOmegas())
+  expect_true(!block2 %>% hasOffDiagonalOmegas())
+  
+  expect_true(block1@start_index==0)
+  expect_true(block2@start_index==2)
+  
+  expect_equal(show(block1), "BLOCK(2) - OMEGA_CL / OMEGA_VC")
+  expect_equal(show(block2), "BLOCK(1) - OMEGA_DUR")
+})
+
 

@@ -100,7 +100,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
     }
     if (length(block) == 1) {
       onDiagElements <- block@on_diag_omegas
-      assertthat::assert_that(length(onDiagElements)==1)
+      assertthat::assert_that(!hasOffDiagonalOmegas(block))
       elem <- onDiagElements@list[[1]]
       variable <- elem %>% getName()
       minMax <- minMaxDefault(elem) %>%

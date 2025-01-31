@@ -12,30 +12,6 @@ checkLength <- function(object, slot, expected=1) {
   return(error)
 }
 
-expectOneOrMore <- function(object, slot) {
-  lengthSlot <- getSlotLength(object, slot)
-  error <- character()
-  if (lengthSlot==0) {
-    error <- paste0(slot, " is length ", lengthSlot, ". Should be at least 1.")
-  }
-  return(error)
-}
-
-expectZeroOrMore <- function(object, slot) {
-  # An error is automatically raised if the slot does not exist
-  lengthSlot <- getSlotLength(object, slot)
-  return(character())
-}
-
-expectMany <- function(object, slot) {
-  lengthSlot <- getSlotLength(object, slot)
-  error <- character()
-  if (lengthSlot<=1) {
-    error <- paste0(slot, " is length ", lengthSlot, ". Should be at least 2.")
-  }
-  return(error)
-}
-
 expectOne <- function(object, slot) {
   return(checkLength(object, slot, expected=1))
 }
@@ -46,10 +22,6 @@ addError <- function(error, errors) {
   } else {
     return(c(errors, error))
   }
-}
-
-checkReturn <- function(errors) {
-  if (length(errors) == 0) TRUE else errors
 }
 
 expectOneForAll <- function(object, attrs) {

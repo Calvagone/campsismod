@@ -52,7 +52,7 @@ setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(
     campsismod::sort()
   off_diag_omegas <- omegas %>% keep(~!isDiag(.x))
   on_diag_omegas <- omegas %>% keep(~isDiag(.x))
-  
+
   for (omega in off_diag_omegas@list) {
     object <- object %>% addOmega(omega)
   }
