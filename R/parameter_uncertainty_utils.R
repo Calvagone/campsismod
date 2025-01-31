@@ -5,6 +5,7 @@
 #' @param names names of the parameters to extract
 #' @return subset of Campsis parameters
 #' @importFrom stats setNames
+#' @keywords internal
 #' 
 extractModelParametersFromNames <- function(parameters, names) {
 
@@ -24,6 +25,7 @@ extractModelParametersFromNames <- function(parameters, names) {
 #' @param parameter Campsis parameter
 #' @return a tibble with the min and max values
 #' @importFrom tibble tibble
+#' @keywords internal
 minMaxDefault <- function(parameter) {
   min <- parameter@min
   max <- parameter@max
@@ -47,10 +49,11 @@ minMaxDefault <- function(parameter) {
 #' @param parameters Campsis parameters present in the variance-covariance matrix
 #' @param varcov variance-covariance matrix
 #' @param n number of rows to sample
-#' @param quiet suppress messages
+#' @param settings replication settings
 #' @return a data frame with the sampled parameters
+#' @keywords internal
 #' 
-sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, quiet) {
+sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, settings) {
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
   
@@ -65,7 +68,7 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, quie
   # Sample parameters from the variance-covariance matrix
   msg <- getSamplingMessageTemplate(what="parameters", from="variance-covariance matrix")
   table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
-                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, quiet=quiet)
+                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, settings=settings)
   
   return(table)
 }
@@ -74,18 +77,26 @@ sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, quie
 #' 
 #' @param parameters subset of Campsis parameters (OMEGAs or SIGMAs)
 #' @param n number of rows to sample
-#' @param df degree of freedom for the scaled inverse chi-squared or wishart distribution
-#' @param quiet suppress messages
+#' @param settings replication settings
 #' @return a data frame with the sampled parameters
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble tibble
+#' @keywords internal
 #' 
-sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
+sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
   assertthat::assert_that(parameters %>% length() > 0)
   
   # Type of parameter
   type <- class(parameters@list[[1]]) %>% as.character()
+  
+  if (type=="omega") {
+    df <- settings@nsub
+  } else if (type=="sigma") {
+    df <- settings@nobs
+  } else {
+    stop("Should be either omega or sigma")
+  }
 
   # Detect blocks
   blocks <- OmegaBlocks() %>%
@@ -106,7 +117,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
       minMax <- minMaxDefault(elem) %>%
         dplyr::mutate(name=variable)
       msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, quiet=quiet)
+      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
       params <- Parameters()
@@ -122,7 +133,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
         dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% getName()))
       
       msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, quiet=quiet)
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
@@ -134,6 +145,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, df, quiet) {
 #' @param block block of OMEGAs or SIGMAs
 #' @return logical value
 #' @importFrom purrr map_lgl
+#' @keywords internal
 isBlockFixed <- function(block) {
   list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
   retValue <- list %>%
@@ -149,6 +161,7 @@ isBlockFixed <- function(block) {
 #' @return a data frame with the sampled parameters
 #' @importFrom MASS mvrnorm
 #' @importFrom tibble as_tibble
+#' @keywords internal
 sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
   retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
     tibble::as_tibble()
@@ -164,6 +177,7 @@ sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
 #' @return a data frame with the unique sampled parameter
 #' @importFrom LaplacesDemon rinvchisq
 #' @importFrom tibble tibble
+#' @keywords internal
 sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
   table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
   return(table)
@@ -177,6 +191,7 @@ sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
 #' @param allColnames all column names as they are going to appear when as.vector is called
 #' @return a data frame with the sampled parameters
 #' @importFrom LaplacesDemon rinvwishart
+#' @keywords internal
 sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
   indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
   table <- seq_len(n) %>%
@@ -194,10 +209,10 @@ sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
 #' @param n number of rows to sample
 #' @param minMax a data frame with min, max values for each parameter
 #' @param msg message template
-#' @param quiet suppress messages
+#' @param settings replication settings
 #' @return tibble with the sampled parameters (1 parameter per column + REPLICATE column)
-#' 
-sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
+#' @keywords internal
+sampleGeneric <- function(fun, args, n, minMax, msg, settings) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
@@ -226,7 +241,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
     
     # Increment and check
     iterations <- iterations + 1
-    if (iterations > 100) {
+    if (iterations > settings@max_iterations) {
       stop("Too many iterations, please check your min and max constraints.")
     }
     
@@ -246,6 +261,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, quiet) {
   successRate <- sum(table$VALID) / nrow(table)
   
   # Show message logic
+  quiet <- settings@quiet
   if (is.na(quiet)) {
     if (successRate < 0.95) {
       showMessage <- TRUE
@@ -279,6 +295,7 @@ getSamplingMessageTemplate <- function(what, from) {
 #' @param parameters subset of parameters
 #' @param type type of parameter to map (omega or sigma)
 #' @return a matrix with the names of the OMEGA/SIGMA parameters
+#' @keywords internal
 #' 
 getMappingMatrix <- function(parameters, type) {
   size <- parameters %>% keep(~isDiag(.x)) %>% length()
@@ -308,6 +325,7 @@ getMappingMatrix <- function(parameters, type) {
 #' @param minMax a data frame with min, max values for each parameter
 #' @importFrom dplyr mutate
 #' @importFrom purrr map flatten_int
+#' @keywords internal
 flagOutOfRangeParameterRows <- function(table, minMax) {
   # For each column, check min and max
   # Return the indexes where at least on parameter is out of range

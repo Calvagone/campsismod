@@ -4,7 +4,7 @@
 \alias{sampleFromMultivariateNormalDistribution}
 \title{Sample from a multivariate normal distribution.}
 \usage{
-sampleFromMultivariateNormalDistribution(parameters, varcov, n, quiet)
+sampleFromMultivariateNormalDistribution(parameters, varcov, n, settings)
 }
 \arguments{
 \item{parameters}{Campsis parameters present in the variance-covariance matrix}
@@ -13,7 +13,7 @@ sampleFromMultivariateNormalDistribution(parameters, varcov, n, quiet)
 
 \item{n}{number of rows to sample}
 
-\item{quiet}{suppress messages}
+\item{settings}{replication settings}
 }
 \value{
 a data frame with the sampled parameters
@@ -21,3 +21,4 @@ a data frame with the sampled parameters
 \description{
 Sample from a multivariate normal distribution.
 }
+\keyword{internal}

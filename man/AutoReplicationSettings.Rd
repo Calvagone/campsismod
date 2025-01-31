@@ -11,7 +11,8 @@ from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled fro
 scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
 distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
 subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-must be specified.}
+must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
+the OMEGAs and SIGMAs.}
 \usage{
 AutoReplicationSettings(wishart = FALSE, nsub = NA, nobs = NA, quiet = NA)
 }
@@ -38,5 +39,6 @@ from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled fro
 scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
 distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
 subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-must be specified.
+must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
+the OMEGAs and SIGMAs.
 }

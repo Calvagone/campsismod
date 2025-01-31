@@ -23,6 +23,7 @@ setClass(
 #' @slot nsub number of subjects
 #' @slot nobs number of observations
 #' @slot quiet logical, suppress info messages
+#' @slot max_iterations number of iterations maximum to sample the parameters
 #' @export
 setClass(
   "auto_replication_settings",
@@ -30,9 +31,11 @@ setClass(
     wishart="logical",
     nsub="integer",
     nobs="integer",
-    quiet="logical"
+    quiet="logical",
+    max_iterations="integer"
   ),
-  contains="replication_settings"
+  contains="replication_settings",
+  prototype=prototype(wishart=FALSE, nsub=as.integer(NA), nobs=as.integer(NA), quiet=as.logical(NA), max_iterations=100L)
 )
 
 #'
@@ -45,7 +48,8 @@ setClass(
 #' scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
 #' distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
 #' subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-#' must be specified. 
+#' must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
+#' the OMEGAs and SIGMAs.
 #' 
 #' @param wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 #'  or Wishart distribution (block of OMEGAs)

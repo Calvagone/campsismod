@@ -17,3 +17,4 @@ subset of Campsis parameters
 \description{
 Extract model parameters based on parameter names.
 }
+\keyword{internal}

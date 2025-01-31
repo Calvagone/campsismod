@@ -32,6 +32,22 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   omegas <- repModel@replicated_parameters$OMEGA_CL
   var <- model@parameters@varcov["OMEGA_CL", "OMEGA_CL"]
   expect_equal(sd(omegas), sqrt(var), tolerance=1e-3)
+  
+  # Setting an impossible range will lead to an error
+  set.seed(123)
+  
+  model <- model_suite$pk$`1cpt_fo` %>%
+    setMinMax(Theta(name="KA"), min=1.3, max=2) %>%
+    addRSE(Theta(name="KA"), value=10)
+  
+  expect_error(repModel <- model %>% replicate(1000), msg="Too many iterations")
+  
+  # Or may truncate the distribution as well if it is forced (here we increase the number of iterations)
+  settings <- AutoReplicationSettings()
+  settings@max_iterations <- 1000L
+  repModel <- model %>% replicate(1000, settings=settings)
+  # hist(repModel@replicated_parameters$THETA_KA)
+  expect_equal(sum(repModel@replicated_parameters$THETA_KA >= 1.3), 1000)
 })
 
 test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square or wishart distributions works as expected", {

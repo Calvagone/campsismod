@@ -21,3 +21,4 @@ a data frame with the unique sampled parameter
 \description{
 Sample from scaled inverse chi-squared distribution (core method).
 }
+\keyword{internal}

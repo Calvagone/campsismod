@@ -19,3 +19,4 @@ a data frame with the sampled parameters
 \description{
 Sample from multivariate normal distribution (core method).
 }
+\keyword{internal}

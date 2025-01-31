@@ -23,3 +23,4 @@ OMEGA2 same is TRUE
 OMEGA3 same is TRUE, etc.
 OMEGA2 and OMEGA3 will take the same value as OMEGA1.
 }
+\keyword{internal}

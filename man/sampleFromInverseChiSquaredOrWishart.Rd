@@ -4,16 +4,14 @@
 \alias{sampleFromInverseChiSquaredOrWishart}
 \title{Sample parameters from inverse scaled chi-squared or wishart distribution(s).}
 \usage{
-sampleFromInverseChiSquaredOrWishart(parameters, n, df, quiet)
+sampleFromInverseChiSquaredOrWishart(parameters, n, settings)
 }
 \arguments{
 \item{parameters}{subset of Campsis parameters (OMEGAs or SIGMAs)}
 
 \item{n}{number of rows to sample}
 
-\item{df}{degree of freedom for the scaled inverse chi-squared or wishart distribution}
-
-\item{quiet}{suppress messages}
+\item{settings}{replication settings}
 }
 \value{
 a data frame with the sampled parameters
@@ -21,3 +19,4 @@ a data frame with the sampled parameters
 \description{
 Sample parameters from inverse scaled chi-squared or wishart distribution(s).
 }
+\keyword{internal}

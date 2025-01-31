@@ -6,7 +6,7 @@
 This function will sample parameters a first time and check if some parameters are out of range.
 Based on the success rate, it will sample more parameters to reach the desired number of rows.}
 \usage{
-sampleGeneric(fun, args, n, minMax, msg, quiet)
+sampleGeneric(fun, args, n, minMax, msg, settings)
 }
 \arguments{
 \item{fun}{function to call to sample parameters}
@@ -19,7 +19,7 @@ sampleGeneric(fun, args, n, minMax, msg, quiet)
 
 \item{msg}{message template}
 
-\item{quiet}{suppress messages}
+\item{settings}{replication settings}
 }
 \value{
 tibble with the sampled parameters (1 parameter per column + REPLICATE column)
@@ -29,3 +29,4 @@ Generic function for parameter sampling according to the minimum and maximum val
 This function will sample parameters a first time and check if some parameters are out of range.
 Based on the success rate, it will sample more parameters to reach the desired number of rows.
 }
+\keyword{internal}

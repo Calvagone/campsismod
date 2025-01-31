@@ -15,3 +15,4 @@ logical value
 \description{
 Say if the block is fixed (i.e. all parameters are fixed).
 }
+\keyword{internal}

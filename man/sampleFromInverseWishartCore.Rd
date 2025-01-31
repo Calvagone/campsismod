@@ -21,3 +21,4 @@ a data frame with the sampled parameters
 \description{
 Sample from scaled inverse Wishart distribution (core method).
 }
+\keyword{internal}

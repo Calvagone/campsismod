@@ -55,19 +55,19 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
   
   # Sample parameters in variance-covariance matrix from a multivariate normal distribution
   varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
-  table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, quiet=settings@quiet)
+  table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, settings=settings)
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
   if (settings@wishart) {
     omegas <- object@parameters %>% select("omega")
     if (omegas %>% length() > 0) {
-      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, df=settings@nsub, quiet=settings@quiet)
+      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledOmegas, by="REPLICATE")
     }
     sigmas <- object@parameters %>% select("sigma")
     if (sigmas %>% length() > 0) {
-      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, df=settings@nobs, quiet=settings@quiet)
+      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledSigmas, by="REPLICATE")
     }
@@ -138,6 +138,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @return updated Campsis model
 #' @importFrom purrr pluck
 #' @importFrom assertthat assert_that
+#' @keywords internal
 #' 
 updateParameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
@@ -171,6 +172,7 @@ updateParameters <- function(model, row) {
 #' @param model Campsis model
 #' @return updated Campsis model
 #' @importFrom purrr accumulate
+#' @keywords internal
 #' 
 updateOMEGAs <- function(model) {
   # Still need to update the omegas 'SAME'

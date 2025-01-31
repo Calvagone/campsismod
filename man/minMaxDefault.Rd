@@ -15,3 +15,4 @@ a tibble with the min and max values
 \description{
 Min/max default values for the given parameter.
 }
+\keyword{internal}
