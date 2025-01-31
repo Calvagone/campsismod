@@ -231,8 +231,8 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   expect_true(block1@start_index==0)
   expect_true(block2@start_index==2)
   
-  expect_equal(show(block1), "BLOCK(2) - OMEGA_CL / OMEGA_VC")
-  expect_equal(show(block2), "BLOCK(1) - OMEGA_DUR")
+  expect_equal(capture_output(show(block1)), "BLOCK(2) - OMEGA_CL / OMEGA_VC")
+  expect_equal(capture_output(show(block2)), "BLOCK(1) - OMEGA_DUR")
 })
 
 

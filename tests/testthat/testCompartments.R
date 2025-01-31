@@ -37,6 +37,9 @@ test_that("Method 'find' may return a compartment", {
   expect_equal(compartments %>% length(), 2)
   expect_equal(compartment1@name, "CENTRAL")
   expect_equal(compartment2@name, "OUTPUT")
+  
+  expect_equal(capture_output(show(compartment1)), "A_CENTRAL (CMT=1)")
+  expect_equal(capture_output(show(compartment2)), "A_OUTPUT (CMT=2)")
 })
 
 test_that("Method 'getCompartmentIndex' works as expected", {

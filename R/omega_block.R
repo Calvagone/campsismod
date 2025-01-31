@@ -143,5 +143,5 @@ setMethod("length", signature=c("omega_block"), definition=function(x) {
 setMethod("show", signature=c("omega_block"), definition=function(object) {
   omegaNames <- object@on_diag_omegas@list %>%
     purrr::map_chr(.f=~.x %>% getName())
-  print(sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / ")))
+  cat(sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / ")))
 })
