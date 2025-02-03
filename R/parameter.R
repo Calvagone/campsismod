@@ -420,7 +420,7 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 setMethod("getUncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
   name <- object %>% getName()
   if (varcov %>% length() > 0) {
-    standardisedParameter <- object %>% standardise()
+    standardisedParameter <- object %>% standardise(...)
     if (name %in% colnames(varcov)) {
       variance <- varcov[name, name]
       return(tibble::tibble(name=name, se=sqrt(variance), "rse%"=100*sqrt(variance)/abs(standardisedParameter@value)))

@@ -435,7 +435,7 @@ setMethod("getUncertainty", signature=c("parameters"), definition=function(objec
     return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
   } else {
     return(object@list %>%
-             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov)))
+             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov, parameters=object)))
   }
 })
 
@@ -546,7 +546,7 @@ dataframeToParameter <- function(row, type) {
 #' @param type parameter type: 'theta', 'omega' or 'sigma'
 #' @return parameters sub list
 #' @importFrom readr read_delim
-#' @importFrom dplyr group_split
+#' @importFrom dplyr across group_split
 #' @importFrom purrr map
 #' @export
 read.parameters <- function(file, type) {
@@ -555,7 +555,7 @@ read.parameters <- function(file, type) {
   df <- readr::read_delim(file=file, lazy=FALSE, show_col_types=FALSE, progress=FALSE) %>%
     dplyr::mutate(ROWID=dplyr::row_number())
   list <- df %>%
-    dplyr::group_split(ROWID) %>%
+    dplyr::group_split(dplyr::across("ROWID")) %>%
     purrr::map(~dataframeToParameter(as.list(.x), type=type))
   attributes(list) <- NULL
   return(new("parameters", list=list))
