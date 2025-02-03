@@ -91,9 +91,9 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
   type <- class(parameters@list[[1]]) %>% as.character()
   
   if (type=="omega") {
-    df <- settings@nsub
+    df <- settings@odf
   } else if (type=="sigma") {
-    df <- settings@nobs
+    df <- settings@sdf
   } else {
     stop("Should be either omega or sigma")
   }

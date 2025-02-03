@@ -12,9 +12,9 @@ Auto replication settings class.
 \describe{
 \item{\code{wishart}}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions}
 
-\item{\code{nsub}}{number of subjects}
+\item{\code{odf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs}
 
-\item{\code{nobs}}{number of observations}
+\item{\code{sdf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
 
 \item{\code{quiet}}{logical, suppress info messages}
 

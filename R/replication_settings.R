@@ -20,8 +20,8 @@ setClass(
 #' Auto replication settings class.
 #' 
 #' @slot wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions
-#' @slot nsub number of subjects
-#' @slot nobs number of observations
+#' @slot odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
+#' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
 #' @export
@@ -29,13 +29,13 @@ setClass(
   "auto_replication_settings",
   representation(
     wishart="logical",
-    nsub="integer",
-    nobs="integer",
+    odf="integer",
+    sdf="integer",
     quiet="logical",
     max_iterations="integer"
   ),
   contains="replication_settings",
-  prototype=prototype(wishart=FALSE, nsub=as.integer(NA), nobs=as.integer(NA), quiet=as.logical(NA), max_iterations=100L)
+  prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA), max_iterations=100L)
 )
 
 #'
@@ -46,21 +46,20 @@ setClass(
 #' by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
 #' from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
 #' scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-#' distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
-#' subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-#' must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
-#' the OMEGAs and SIGMAs.
+#' distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
+#' concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
+#' be specified.
 #' 
 #' @param wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 #'  or Wishart distribution (block of OMEGAs)
-#' @param nsub number of subjects in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for OMEGAs
-#' @param nobs number of observations in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for SIGMAs
+#' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
+#' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
 #' @return replication settings
 #' @export
-AutoReplicationSettings <- function(wishart=FALSE, nsub=NA, nobs=NA, quiet=NA) {
+AutoReplicationSettings <- function(wishart=FALSE, odf=NA, sdf=NA, quiet=NA) {
   return(new("auto_replication_settings", wishart=as.logical(wishart),
-             nsub=as.integer(nsub), nobs=as.integer(nobs), quiet=as.logical(quiet)))
+             odf=as.integer(odf), sdf=as.integer(sdf), quiet=as.logical(quiet)))
 }
 
 #_______________________________________________________________________________

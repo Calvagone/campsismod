@@ -9,20 +9,19 @@ OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart dist
 by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
 from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
 scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
-subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
-the OMEGAs and SIGMAs.}
+distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
+concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
+be specified.}
 \usage{
-AutoReplicationSettings(wishart = FALSE, nsub = NA, nobs = NA, quiet = NA)
+AutoReplicationSettings(wishart = FALSE, odf = NA, sdf = NA, quiet = NA)
 }
 \arguments{
 \item{wishart}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 or Wishart distribution (block of OMEGAs)}
 
-\item{nsub}{number of subjects in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for OMEGAs}
+\item{odf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs}
 
-\item{nobs}{number of observations in modelling, used as the degree of freedom for the scaled inverse chi-squared/Wishart distribution for SIGMAs}
+\item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
 
 \item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }
@@ -37,8 +36,7 @@ OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart dist
 by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
 from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
 scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-distribution, respectively. When 'wishart' is set to 'TRUE', the 'nsub' (number of 
-subjects in modelling) and 'nobs' (total number of observations in modelling) arguments
-must be specified. These arguments are used as the degrees of freedom for sampling, respectively,
-the OMEGAs and SIGMAs.
+distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
+concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
+be specified.
 }

@@ -87,15 +87,15 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   # Previously, issue when printing the model, see #88
   expect_no_error(show(model))
   
-  settings <- AutoReplicationSettings(wishart=TRUE, nsub=30, nobs=1000, quiet=FALSE)
+  settings <- AutoReplicationSettings(wishart=TRUE, odf=30, sdf=1000, quiet=FALSE)
   repModel <- model %>%
     replicate(30000, settings=settings)
   
   # Standardise model first
   model <- model %>%
     standardise()
-  nu <- settings@nsub
-  nuSigma <- settings@nobs
+  nu <- settings@odf
+  nuSigma <- settings@sdf
   p <- 2
   
   # See https://en.wikipedia.org/wiki/Scaled_inverse_chi-squared_distribution
