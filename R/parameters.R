@@ -171,6 +171,7 @@ appendVarcov <- function(varcov1, varcov2) {
     colnames2 <- dimnames2[[1]]
     
     colnames <- c(colnames1, colnames2)
+    assertthat::assert_that(!any(duplicated(colnames)), msg="Duplicate parameter names in resulting variance-covariance matrix")
     totalDim <- length(colnames)
     
     varcov <- matrix(numeric(length(totalDim)^2), nrow=totalDim, ncol=totalDim)
@@ -199,6 +200,12 @@ setMethod("addRSE", signature=c("parameters", "parameter", "numeric"), definitio
   varcov <- matrix((value/100*abs(parameter_@value))^2, nrow=1, ncol=1)
   name <- parameter_ %>% getNameInModel()
   dimnames(varcov) <- list(name, name)
+  
+  # Remove last value if it exists
+  colnames <- colnames(object@varcov)
+  if (name %in% colnames) {
+    object@varcov <- object@varcov[-which(name==colnames), -which(name==colnames), drop=FALSE]
+  }
   
   # Update variance-covariance matrix
   object@varcov <- appendVarcov(object@varcov, varcov)

@@ -181,6 +181,7 @@ test_that("Method 'add' properly merges variance-covariance matrices", {
 test_that("Method 'addRSE' works as expected", {
   model <- model_suite$testing$nonmem$advan4_trans4 %>%
     addRSE(Theta("CL"), 10) %>%
+    addRSE(Theta("Q"), 8) %>% # Test #92 (addRSE can be called multiple times)
     addRSE(Theta("Q"), 10)
   
   uncertainty <- getUncertainty(model) %>%
