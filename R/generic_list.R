@@ -266,37 +266,6 @@ setMethod("delete", signature=c("pmx_list", "integer"), definition=function(obje
 })
 
 #_______________________________________________________________________________
-#----                               discard                                 ----
-#_______________________________________________________________________________
-
-#' Discard element(s) from list using predicate function.
-#' 
-#' @param .x a list, a vector or a PMX list
-#' @param .p a predicate function
-#' @param ... extra arguments, ignored
-#' @return updated list, vector or PMX list
-#' @export
-#' @rdname discard
-discard <- function(.x, .p, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("discard", function(.x, .p, ...) {
-  standardGeneric("discard")
-})
-
-#' @importFrom purrr discard
-#' @rdname discard
-setMethod("discard", signature=c("ANY", "ANY"), definition=function(.x, .p, ...) {
-  if (is(.x, "pmx_list")) {
-    .x@list <- .x@list %>% purrr::discard(.p=.p, ...)
-  } else {
-    .x <- .x %>% purrr::discard(.p=.p, ...)
-  }
-  return(.x)
-})
-
-#_______________________________________________________________________________
 #----                              find                                     ----
 #_______________________________________________________________________________
 
@@ -355,37 +324,6 @@ setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
 #' @keywords internal
 setMethod("length", signature=c("pmx_list"), definition=function(x) {
   return(length(x@list))
-})
-
-#_______________________________________________________________________________
-#----                               keep                                    ----
-#_______________________________________________________________________________
-
-#' Keep element(s) from list using predicate function.
-#' 
-#' @param .x a list, a vector or a PMX list
-#' @param .p a predicate function
-#' @param ... extra arguments, ignored
-#' @return updated list, vector or PMX list
-#' @export
-#' @rdname keep
-keep <- function(.x, .p, ...) {
-  stop("No default function is provided")
-}
-
-setGeneric("keep", function(.x, .p, ...) {
-  standardGeneric("keep")
-})
-
-#' @importFrom purrr keep
-#' @rdname keep
-setMethod("keep", signature=c("ANY", "ANY"), definition=function(.x, .p, ...) {
-  if (is(.x, "pmx_list")) {
-    .x@list <- .x@list %>% purrr::keep(.p=.p, ...)
-  } else {
-    .x <- .x %>% purrr::keep(.p=.p, ...)
-  }
-  return(.x)
 })
 
 #_______________________________________________________________________________

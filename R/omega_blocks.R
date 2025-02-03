@@ -46,32 +46,37 @@ setMethod("add", signature=c("omega_blocks", "omega_block"), definition=function
 
 #' @rdname add
 setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(object, x) {
-  object <- OmegaBlocks()
-  omegas <- x %>%
-    keep(~is(.x, "double_array_parameter")) %>%
-    campsismod::sort()
-  off_diag_omegas <- omegas %>% keep(~!isDiag(.x))
-  on_diag_omegas <- omegas %>% keep(~isDiag(.x))
+  retValue <- OmegaBlocks()
+
+  # Keeping only the OMEGA's and SIGMA's
+  x@list <- x@list %>%
+    purrr::keep(~is(.x, "double_array_parameter"))
+  x <- x %>% sort() # Sort
+  
+  off_diag_omegas <- x # Init
+  on_diag_omegas <- x # Init
+  off_diag_omegas@list <- off_diag_omegas@list %>% purrr::keep(~!isDiag(.x))
+  on_diag_omegas@list <- on_diag_omegas@list %>% purrr::keep(~isDiag(.x))
 
   for (omega in off_diag_omegas@list) {
-    object <- object %>% addOmega(omega)
+    retValue <- retValue %>% addOmega(omega)
   }
   for (omega in on_diag_omegas@list) {
-    object <- object %>% addOmega(omega)
+    retValue <- retValue %>% addOmega(omega)
   }
   
   # Sort all blocks (see method below)
-  object <- object %>% campsismod::sort()
+  retValue <- retValue %>% sort()
   
   # Set up the start index
   cumulatedIndex <- 0L
-  for (block in object@list) {
+  for (block in retValue@list) {
       block@start_index <- cumulatedIndex
       cumulatedIndex <- cumulatedIndex + block %>% length()
       block <- block %>% shiftOmegaIndexes()
-      object <- object %>% campsismod::replace(block)
+      retValue <- retValue %>% replace(block)
   }
-  return(object)
+  return(retValue)
 })
 
 #_______________________________________________________________________________

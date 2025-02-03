@@ -124,7 +124,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
       params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
       mat <- rxodeMatrix(params, type=type)
 
-      size <- params %>% keep(~isDiag(.x)) %>% length()
+      size <- params@list %>% purrr::keep(~isDiag(.x)) %>% length()
       mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
 
@@ -298,7 +298,7 @@ getSamplingMessageTemplate <- function(what, from) {
 #' @keywords internal
 #' 
 getMappingMatrix <- function(parameters, type) {
-  size <- parameters %>% keep(~isDiag(.x)) %>% length()
+  size <- parameters@list %>% purrr::keep(~isDiag(.x)) %>% length()
   retValue <- matrix(rep(0, size*size), nrow=size)
   for (i in 1:size) {
     for (j in 1:size) {
