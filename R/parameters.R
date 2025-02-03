@@ -193,12 +193,12 @@ setMethod("addRSE", signature=c("parameters", "parameter", "numeric"), definitio
     find(parameter)
   
   if (is.null(parameter_)) {
-    stop("Parameter ", parameter %>% getNameInModel(), " not found in model")
+    stop("Parameter ", parameter %>% getName(), " not found in model")
   }
   
   # Define variance-covariance matrix (single value)
   varcov <- matrix((value/100*abs(parameter_@value))^2, nrow=1, ncol=1)
-  name <- parameter_ %>% getNameInModel()
+  name <- parameter_ %>% getName()
   dimnames(varcov) <- list(name, name)
   
   # Remove last value if it exists

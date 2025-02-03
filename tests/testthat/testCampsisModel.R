@@ -182,12 +182,13 @@ test_that("Method 'addRSE' works as expected", {
   model <- model_suite$testing$nonmem$advan4_trans4 %>%
     addRSE(Theta("CL"), 10) %>%
     addRSE(Theta("Q"), 8) %>% # Test #92 (addRSE can be called multiple times)
-    addRSE(Theta("Q"), 10)
+    addRSE(Theta("Q"), 10) %>%
+    addRSE(Omega("KA"), 50)
   
   uncertainty <- getUncertainty(model) %>%
     dplyr::filter(!is.na(.data$`rse%`))
   
-  expect_equal(tibble::tibble(name=c("THETA_CL", "THETA_Q"), se=c(0.5, 0.4), `rse%`=c(10, 10)), uncertainty)
+  expect_equal(tibble::tibble(name=c("THETA_CL", "THETA_Q", "OMEGA_KA"), se=c(0.5, 0.4, 0.0125), `rse%`=c(10, 10, 50)), uncertainty)
 })
 
 test_that("Method 'move' works as expected", {
