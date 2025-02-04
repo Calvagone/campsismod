@@ -302,4 +302,61 @@ test_that("Method 'show' called on replication settings works as expected", {
   expect_equal(capture_output(show(adjustedSettings)), "Replication settings: wishart=TRUE, odf=30, sdf=1000")
 })
 
+test_that("Campsismod gives identical results to the simpar package", {
+  
+  set.seed(123)
+  
+  # Generate parameters with Campsismod
+  model <- CampsisModel() %>%
+    add(Theta(value=5)) %>%
+    add(Omega(value=0.2, type="sd")) %>%
+    add(Omega(value=0.4, type="sd")) %>%
+    add(Omega(index=2, index2=1, value=0.1^2, type="covar")) %>%
+    add(Sigma(value=0.1, type="sd")) %>%
+    addRSE(Theta(index=1), value=4)
+  
+  res <- model %>%
+    replicate(n=10000, settings=AutoReplicationSettings(wishart=TRUE, odf=30, sdf=1000)) %>%
+    .@replicated_parameters
+  
+  expect_equal(mean(res$THETA_1), 5, tolerance=0.001)
+  expect_equal(sd(res$THETA_1), 0.2, tolerance=0.001)
+  
+  expect_equal(mean(res$OMEGA_1_1), 0.044, tolerance=0.001)
+  expect_equal(sd(res$OMEGA_1_1), 0.012, tolerance=0.001)
+  
+  expect_equal(mean(res$OMEGA_2_1), 0.011, tolerance=0.001)
+  expect_equal(sd(res$OMEGA_2_1), 0.017, tolerance=0.001)
+  
+  expect_equal(mean(res$OMEGA_2_2), 0.177, tolerance=0.001)
+  expect_equal(sd(res$OMEGA_2_2), 0.049, tolerance=0.001)
+  
+  expect_equal(mean(res$SIGMA_1_1), 0.010, tolerance=0.001)
+  expect_equal(sd(res$SIGMA_1_1), 0.00045, tolerance=0.00001)
+  
+  # Generate parameters with simpar
+  # theta <- c(5)
+  # covar <- diag(0.2^2, 1)
+  # omega <- matrix(c(0.2^2,0.1^2,0.1^2,0.4^2), nrow=2)
+  # sigma <- matrix(0.1^2)
+  # 
+  # res <- simpar::simpar(10000, theta, covar, omega, sigma, odf=30, sdf=1000) %>%
+  #   tibble::as_tibble()
+  # 
+  # mean(res$TH.1) # 5.000818
+  # sd(res$TH.1) # 0.1994202
+  # 
+  # mean(res$OM1.1) # 0.04449487
+  # sd(res$OM1.1) # 0.0128251
+  # 
+  # mean(res$OM2.1) # 0.01109515
+  # sd(res$OM2.1) # 0.0176825
+  # 
+  # mean(res$OM2.2) # 0.1771933
+  # sd(res$OM2.2) # 0.0497492
+  # 
+  # mean(res$SG1.1) # 0.01000736
+  # sd(res$SG1.1) # 0.0004495882
+})
+
 

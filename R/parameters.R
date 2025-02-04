@@ -332,7 +332,9 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
       purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% getName()))
     
     # Update variance-covariance matrix
-    object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove]
+    if (length(indexesToRemove) > 0) {
+      object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove, drop=FALSE]
+    }
   }
   
   return(object)

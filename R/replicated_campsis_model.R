@@ -45,17 +45,14 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
   # Get variance-covariance matrix
   varcov <- object %>% getVarCov()
 
-  # No variance-covariance matrix is detected
   if (varcov %>% length() == 0) {
-    # No parameters sampled
-    # The data frame is just filled in with all replicates ID
-    retValue@replicated_parameters <- tibble::tibble(REPLICATE=seq_len(n))
-    return(retValue)
+    # No variance-covariance matrix is detected
+    table <- tibble::tibble(REPLICATE=seq_len(n))
+  } else {
+    # Sample parameters in variance-covariance matrix from a multivariate normal distribution
+    varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
+    table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, settings=settings)
   }
-  
-  # Sample parameters in variance-covariance matrix from a multivariate normal distribution
-  varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
-  table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, settings=settings)
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
   if (settings@wishart) {
