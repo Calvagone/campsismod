@@ -16,3 +16,6 @@ replication settings
 \description{
 Create manual replication settings.
 }
+\details{
+Use these settings to import custom replicated model parameters.
+}

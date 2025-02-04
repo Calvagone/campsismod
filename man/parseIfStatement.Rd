@@ -3,7 +3,7 @@
 \name{parseIfStatement}
 \alias{parseIfStatement}
 \title{Parse IF-statement.
-Assumption: isIfStatement method already called and returned TRUE.}
+Assumption: \code{isIfStatement} method already called and returned TRUE.}
 \usage{
 parseIfStatement(line, comment = as.character(NA))
 }
@@ -17,5 +17,5 @@ an IF statement object
 }
 \description{
 Parse IF-statement.
-Assumption: isIfStatement method already called and returned TRUE.
+Assumption: \code{isIfStatement} method already called and returned TRUE.
 }

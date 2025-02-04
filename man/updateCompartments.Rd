@@ -3,7 +3,8 @@
 \name{updateCompartments}
 \alias{updateCompartments}
 \title{Update compartments list from the persisted records.
-Exported especially for package pmxtran. However, this method should not be called.}
+Exported especially for package \code{campsistrans}.
+However, this method should not be called.}
 \usage{
 updateCompartments(model)
 }
@@ -15,5 +16,6 @@ an updated Campsis model, with an updated compartments list
 }
 \description{
 Update compartments list from the persisted records.
-Exported especially for package pmxtran. However, this method should not be called.
+Exported especially for package \code{campsistrans}.
+However, this method should not be called.
 }

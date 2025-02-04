@@ -2,16 +2,7 @@
 % Please edit documentation in R/replication_settings.R
 \name{AutoReplicationSettings}
 \alias{AutoReplicationSettings}
-\title{Create auto replication settings.
-By default, all model parameters are sampled from a multivariate normal 
-distribution, whose characteristics are specified by the variance-covariance matrix.
-OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
-by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
-from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
-scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
-concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
-be specified.}
+\title{Create auto replication settings.}
 \usage{
 AutoReplicationSettings(wishart = FALSE, odf = NA, sdf = NA, quiet = NA)
 }
@@ -30,13 +21,15 @@ replication settings
 }
 \description{
 Create auto replication settings.
+}
+\details{
 By default, all model parameters are sampled from a multivariate normal 
 distribution, whose characteristics are specified by the variance-covariance matrix.
 OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
-by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
-from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
-scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
-concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
-be specified.
+by setting the \code{wishart} argument to \code{TRUE}. In that case, THETAs are still sampled
+from a multivariate normal distribution, while OMEGAS and SIGMAs are sampled from
+scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of
+OMEGAs/SIGMAs) distribution, respectively. When \code{wishart} is set to \code{TRUE}, the degrees
+of freedom of the distribution must be specified, respectively, \code{odf} for the OMEGAs and
+\code{sdf} for the SIGMAs.
 }

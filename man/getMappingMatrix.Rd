@@ -3,7 +3,7 @@
 \name{getMappingMatrix}
 \alias{getMappingMatrix}
 \title{Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
-Un-existing parameters are filled in with the empty string.}
+Nonexistent parameters are filled in with the empty string.}
 \usage{
 getMappingMatrix(parameters, type)
 }
@@ -17,6 +17,6 @@ a matrix with the names of the OMEGA/SIGMA parameters
 }
 \description{
 Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
-Un-existing parameters are filled in with the empty string.
+Nonexistent parameters are filled in with the empty string.
 }
 \keyword{internal}

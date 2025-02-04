@@ -40,15 +40,17 @@ setClass(
 
 #'
 #' Create auto replication settings.
+#' 
+#' @details
 #' By default, all model parameters are sampled from a multivariate normal 
 #' distribution, whose characteristics are specified by the variance-covariance matrix.
 #' OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
-#' by setting the 'wishart' argument to 'TRUE'. In that case, THETAs are still sampled
-#' from a multivariate normal distribution; while OMEGAS and SIGMAs are sampled from
-#' scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of OMEGA)
-#' distribution, respectively. When 'wishart' is set to 'TRUE', the 'odf' (degrees of freedom 
-#' concerning the OMEGAs) and 'sdf' (degrees of freedom concerning the SIGMAs) arguments must
-#' be specified.
+#' by setting the \code{wishart} argument to \code{TRUE}. In that case, THETAs are still sampled
+#' from a multivariate normal distribution, while OMEGAS and SIGMAs are sampled from
+#' scaled inverse chi-squared (univariate OMEGA/SIGMA distribution) and Wishart (block of
+#' OMEGAs/SIGMAs) distribution, respectively. When \code{wishart} is set to \code{TRUE}, the degrees
+#' of freedom of the distribution must be specified, respectively, \code{odf} for the OMEGAs and
+#' \code{sdf} for the SIGMAs.
 #' 
 #' @param wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 #'  or Wishart distribution (block of OMEGAs)
@@ -81,6 +83,8 @@ setClass(
 
 #'
 #' Create manual replication settings.
+#' 
+#' @details Use these settings to import custom replicated model parameters.
 #'
 #' @param data data frame with 1 row per replicate, must contain a column named 'REPLICATE'
 #'  with unique integers from 1 to nrow(data), other columns are model parameters to use.

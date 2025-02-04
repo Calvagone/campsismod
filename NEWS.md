@@ -1,6 +1,21 @@
+# campsismod 1.2.0
+
+* Add min/max columns to THETA's #24
+* Method 'addSuffix' does not preserve the variance-covariance matrix #81
+* Method 'add' does not merge variance-covariance matrices #82
+* Method 'addRSE' to quickly add relative standard error on parameter #83
+* Implement generic method 'move' #84
+* Generate parameter uncertainty in campsismod rather than in campsis #85
+* Error when printing the model in the console #88
+* Allow manual import of sampled parameters for model replication #89
+* Get rid of plyr package #90
+* Quality: increase code coverage #91
+* Method 'addRSE' can't be used to replace an existing value #92
+* Issue when the model is replicated only once #93
+
 # campsismod 1.1.2
 
-* Code coverage does not appear on codecov.io #77
+* Code coverage does not appear on Codecov #77
 * Accept dest='rxode2' in addition to 'RxODE' #78
 * Update pkgdown documentation #79
 

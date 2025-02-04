@@ -342,7 +342,8 @@ read.pmxmod <- function(file) {
 }
 
 #' Update compartments list from the persisted records.
-#' Exported especially for package pmxtran. However, this method should not be called.
+#' Exported especially for package \code{campsistrans}.
+#' However, this method should not be called.
 #' 
 #' @param model Campsis model
 #' @return an updated Campsis model, with an updated compartments list

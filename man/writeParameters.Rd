@@ -11,7 +11,7 @@ writeParameters(object, file, ...)
 
 \item{file}{filename}
 
-\item{...}{extra arguments, like defaultDf for empty parameters list}
+\item{...}{extra arguments, like \code{defaultDf} for empty parameters list}
 }
 \value{
 TRUE if success

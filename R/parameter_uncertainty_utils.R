@@ -296,7 +296,7 @@ getSamplingMessageTemplate <- function(what, from) {
 }
 
 #' Return a matrix filled in with OMEGA/SIGMA names to be mapped with the values.
-#' Un-existing parameters are filled in with the empty string.
+#' Nonexistent parameters are filled in with the empty string.
 #' 
 #' @param parameters subset of parameters
 #' @param type type of parameter to map (omega or sigma)
@@ -327,7 +327,7 @@ getMappingMatrix <- function(parameters, type) {
 
 #' Flag all parameter rows that have at least one parameter out of the specified range.
 #' 
-#' @param table a data frame returned by sampleMore
+#' @param table a data frame returned by \code{sampleMore}
 #' @param minMax a data frame with min, max values for each parameter
 #' @importFrom dplyr mutate
 #' @importFrom purrr map flatten_int

@@ -7,7 +7,7 @@
 flagOutOfRangeParameterRows(table, minMax)
 }
 \arguments{
-\item{table}{a data frame returned by sampleMore}
+\item{table}{a data frame returned by \code{sampleMore}}
 
 \item{minMax}{a data frame with min, max values for each parameter}
 }

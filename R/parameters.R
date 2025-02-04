@@ -782,7 +782,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' 
 #' @param object subset of parameters
 #' @param file filename
-#' @param ... extra arguments, like defaultDf for empty parameters list
+#' @param ... extra arguments, like \code{defaultDf} for empty parameters list
 #' @return TRUE if success
 #' @importFrom dplyr any_of select where 
 #' @importFrom utils write.csv
