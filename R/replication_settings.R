@@ -96,3 +96,22 @@ ManualReplicationSettings <- function(data) {
   assertthat::assert_that(all(data$REPLICATE %in% seq_len(nrow(data))), msg="REPLICATE column must contain unique integers from 1 to nrow(data)")
   return(new("manual_replication_settings", replicated_parameters=tibble::as_tibble(data)))
 }
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature=c("auto_replication_settings"), definition=function(object) {
+  if (identical(object, AutoReplicationSettings())) {
+    cat("Replication settings: default (auto)")    
+  } else {
+    cat(sprintf("Replication settings: wishart=%s, odf=%s, sdf=%s", as.character(object@wishart),
+                as.character(object@odf), as.character(object@sdf)))
+  }
+  cat("\n")
+})
+
+setMethod("show", signature=c("manual_replication_settings"), definition=function(object) {
+  cat("Replication settings: manual") 
+  cat("\n")
+})

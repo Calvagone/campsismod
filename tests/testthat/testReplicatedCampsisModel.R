@@ -291,4 +291,15 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   expect_error(shiftOmegaIndexes(""), regexp=msg)
 })
 
+test_that("Method 'show' called on replication settings works as expected", {
+  manualSettings <- ManualReplicationSettings(data.frame(REPLICATE=1:5, THETA_KA=1:5))
+  expect_equal(capture_output(show(manualSettings)), "Replication settings: manual")
+  
+  defaultSettings <- AutoReplicationSettings()
+  expect_equal(capture_output(show(defaultSettings)), "Replication settings: default (auto)")
+  
+  adjustedSettings <- AutoReplicationSettings(wishart=TRUE, odf=30, sdf=1000)
+  expect_equal(capture_output(show(adjustedSettings)), "Replication settings: wishart=TRUE, odf=30, sdf=1000")
+})
+
 

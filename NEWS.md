@@ -12,6 +12,7 @@
 * Quality: increase code coverage #91
 * Method 'addRSE' can't be used to replace an existing value #92
 * Issue when the model is replicated only once #93
+* Implement show method on replication setting object #95
 
 # campsismod 1.1.2
 
