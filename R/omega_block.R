@@ -132,6 +132,7 @@ setMethod("shiftOmegaIndexes", signature=c("omega_block"), definition=function(o
 #' 
 #' @param x omega block
 #' @return a number
+#' @rdname length
 setMethod("length", signature=c("omega_block"), definition=function(x) {
   return(length(x@on_diag_omegas))
 })
