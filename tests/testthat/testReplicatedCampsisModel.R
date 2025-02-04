@@ -141,6 +141,22 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   expect_equal(model2 %>% find(Omega(name="VC")) %>% .@value, 0.06764799, tolerance=1e-4)
   expect_equal(model2 %>% find(Omega(name="CL")) %>% .@value, 0.04674834, tolerance=1e-4)
   expect_equal(model2 %>% find(Omega(name="VC_CL")) %>% .@value, 0.04431662, tolerance=1e-4)
+  
+  # Method replicate should also accept only 1 replicate (see issue #93)
+  settings <- AutoReplicationSettings(wishart=TRUE, odf=30, sdf=1000, quiet=FALSE)
+  
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) %>%  # Unfix the RUV_FIX just for the test
+    sort()
+  
+  repModel <- model %>%
+    replicate(1, settings=settings)
+  
+  parameterNames <- model@parameters %>%
+    getNames()
+  
+  expect_equal(c("REPLICATE", parameterNames), colnames(repModel@replicated_parameters))
 })
 
 test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set limits", {

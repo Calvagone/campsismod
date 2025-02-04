@@ -165,6 +165,12 @@ isBlockFixed <- function(block) {
 sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
   retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
     tibble::as_tibble()
+  # If n=1, mvrnorm returns an unnamed vector
+  if (n==1) {
+    retValue <- data.frame(t(retValue)) %>%
+      tibble::as_tibble()
+    colnames(retValue) <- colnames(varcov)
+  }
   return(retValue)
 }
 
