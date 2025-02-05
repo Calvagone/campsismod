@@ -359,7 +359,7 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
     dplyr::filter(!is.na(.data$VALID))
   
   toBeChecked <- table %>%
-    dplyr::filter(is.na(VALID)) %>%
+    dplyr::filter(is.na(.data$VALID)) %>%
     dplyr::mutate(VALID=TRUE) # Default
   
   if (settings@min_max) {
@@ -413,7 +413,7 @@ checkMatrixIsPositiveDefinite <- function(table, parameters) {
     dplyr::select(-dplyr::starts_with("THETA_"))
   
   retValue <- table %>%
-    dplyr::group_split(dplyr::across(REPLICATE)) %>%
+    dplyr::group_split(dplyr::across("REPLICATE")) %>%
     purrr::map_df(.f=function(row) {
       replicate <- row$REPLICATE
       valid <- row$VALID

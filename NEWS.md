@@ -13,6 +13,7 @@
 * Method 'addRSE' can't be used to replace an existing value #92
 * Issue when the model is replicated only once #93
 * Implement show method on replication setting object #95
+* Check OMEGA and SIGMA matrix for positive definiteness #96
 
 # campsismod 1.1.2
 
