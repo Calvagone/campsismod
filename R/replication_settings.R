@@ -24,6 +24,7 @@ setClass(
 #' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
+#' @slot max_chunk_size maximum number of rows to sample at once
 #' @slot min_max logical, check for min/max values when sampling the parameters
 #' @slot positive_definite logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
 #' @export
@@ -35,12 +36,13 @@ setClass(
     sdf="integer",
     quiet="logical",
     max_iterations="integer",
+    max_chunk_size="integer",
     min_max="logical",
     positive_definite="logical"
   ),
   contains="replication_settings",
   prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA),
-                      max_iterations=100L, min_max=TRUE, positive_definite=FALSE)
+                      max_iterations=100L, max_chunk_size=1000L, min_max=TRUE, positive_definite=FALSE)
 )
 
 #'

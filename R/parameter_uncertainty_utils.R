@@ -256,8 +256,8 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
     if (nextN < 1) {
       nextN <- 1 # At least 1 sample required
     }
-    if (is.infinite(nextN) || nextN > 1000) {
-      nextN <- 1000 # At most 1000 samples
+    if (is.infinite(nextN) || nextN > settings@max_chunk_size) {
+      nextN <- settings@max_chunk_size # At most <MAX_CHUNK_SIZE> samples
     }
     
     # Increment and check
