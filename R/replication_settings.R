@@ -24,6 +24,8 @@ setClass(
 #' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
+#' @slot min_max logical, check for min/max values when sampling the parameters
+#' @slot positive_definite logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
 #' @export
 setClass(
   "auto_replication_settings",
@@ -32,16 +34,19 @@ setClass(
     odf="integer",
     sdf="integer",
     quiet="logical",
-    max_iterations="integer"
+    max_iterations="integer",
+    min_max="logical",
+    positive_definite="logical"
   ),
   contains="replication_settings",
-  prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA), max_iterations=100L)
+  prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA),
+                      max_iterations=100L, min_max=TRUE, positive_definite=FALSE)
 )
 
 #'
 #' Create auto replication settings.
 #' 
-#' @details
+#' @description
 #' By default, all model parameters are sampled from a multivariate normal 
 #' distribution, whose characteristics are specified by the variance-covariance matrix.
 #' OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
@@ -56,12 +61,16 @@ setClass(
 #'  or Wishart distribution (block of OMEGAs)
 #' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
 #' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
+#' @param minMax logical, check for min/max values when sampling the parameters, default is TRUE
+#' @param positiveDefinite logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
 #' @return replication settings
 #' @export
-AutoReplicationSettings <- function(wishart=FALSE, odf=NA, sdf=NA, quiet=NA) {
+AutoReplicationSettings <- function(wishart=FALSE, odf=NA, sdf=NA, minMax=TRUE, positiveDefinite=FALSE, quiet=NA) {
   return(new("auto_replication_settings", wishart=as.logical(wishart),
-             odf=as.integer(odf), sdf=as.integer(sdf), quiet=as.logical(quiet)))
+             odf=as.integer(odf), sdf=as.integer(sdf),
+             min_max=as.logical(minMax), positive_definite=as.logical(positiveDefinite),
+             quiet=as.logical(quiet)))
 }
 
 #_______________________________________________________________________________

@@ -12,7 +12,7 @@ extractModelParametersFromNames(parameters, names)
 \item{names}{names of the parameters to extract}
 }
 \value{
-subset of Campsis parameters
+subset of Campsis parameters corresponding to the provided names
 }
 \description{
 Extract model parameters based on parameter names.

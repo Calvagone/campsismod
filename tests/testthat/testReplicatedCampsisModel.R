@@ -359,4 +359,37 @@ test_that("Campsismod gives identical results to the simpar package", {
   # sd(res$SG1.1) # 0.0004495882
 })
 
+test_that("Checking for positive definiteness works as expected", {
+  set.seed(123)
+  
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
+  
+  settingsA <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, positiveDefinite=TRUE)
+  repModelA <- model %>%
+    replicate(20, settings=settingsA)
+  
+  set.seed(123)
+  
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
+    replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
+  
+  settingsB <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, positiveDefinite=FALSE)
+  repModelB <- model %>%
+    replicate(20, settings=settingsB)
+  
+  # Compare manually
+  # repModelA@replicated_parameters
+  # repModelB@replicated_parameters
+  
+  # Omega matrix in replicate 9 of repModelB is not positive definite
+  model9 <- repModelB %>% export(dest=CampsisModel(), index=9)
+  expect_false(isMatrixPositiveDefinite(rxodeMatrix(model9, type="omega")))
+  
+  # Omega matrix in replicate 9 of repModelA is positive definite
+  model9 <- repModelA %>% export(dest=CampsisModel(), index=9)
+  expect_true(isMatrixPositiveDefinite(rxodeMatrix(model9, type="omega")))
+})
 

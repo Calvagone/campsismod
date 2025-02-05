@@ -19,5 +19,9 @@ Auto replication settings class.
 \item{\code{quiet}}{logical, suppress info messages}
 
 \item{\code{max_iterations}}{number of iterations maximum to sample the parameters}
+
+\item{\code{min_max}}{logical, check for min/max values when sampling the parameters}
+
+\item{\code{positive_definite}}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters}
 }}
 

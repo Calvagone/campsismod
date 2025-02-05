@@ -88,7 +88,7 @@ rxodeMatrix <- function(model, type="omega") {
   params <- params %>% standardise()
 
   if (params %>% select(type) %>% length()==0) {
-    return(matrix(data = numeric(0)))
+    return(matrix(data=numeric(0), nrow=0, ncol=0))
   }
   maxIndex <- params %>% select(type) %>% maxIndex()
   matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)

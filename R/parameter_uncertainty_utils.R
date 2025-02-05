@@ -3,19 +3,20 @@
 #' 
 #' @param parameters all Campsis parameters
 #' @param names names of the parameters to extract
-#' @return subset of Campsis parameters
+#' @return subset of Campsis parameters corresponding to the provided names
 #' @importFrom stats setNames
 #' @keywords internal
 #' 
 extractModelParametersFromNames <- function(parameters, names) {
-
-  retValue <- names %>% purrr::map(.f=function(.x){
+  paramsAsList <- names %>% purrr::map(.f=function(.x){
     parameter <- parameters %>% getByName(.x)
     if (is.null(parameter)) {
       stop(sprintf("Parameter %s not found", .x))
     }
     return(parameter)
-  }) %>% stats::setNames(names)
+  })
+  retValue <- Parameters() %>%
+    add(paramsAsList)
   
   return(retValue)
 }
@@ -46,29 +47,41 @@ minMaxDefault <- function(parameter) {
 
 #' Sample from a multivariate normal distribution.
 #' 
-#' @param parameters Campsis parameters present in the variance-covariance matrix
-#' @param varcov variance-covariance matrix
+#' @param parameters model parameters (all), already standardised
 #' @param n number of rows to sample
 #' @param settings replication settings
 #' @return a data frame with the sampled parameters
 #' @keywords internal
 #' 
-sampleFromMultivariateNormalDistribution <- function(parameters, varcov, n, settings) {
+sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
+  varcov <- parameters@varcov
+  varcovParameters <- extractModelParametersFromNames(parameters=parameters, names=colnames(varcov))
+  
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
   
   # Retrieve min, max
-  minMax <- parameters %>%
+  minMax <- varcovParameters@list %>%
     purrr::map_df(~minMaxDefault(.x)) %>%
     dplyr::mutate(name=varcovNames)
   
   # Retrieve mean
-  mean <- parameters %>% purrr::map_dbl(~.x@value)
+  mean <- varcovParameters@list %>%
+    purrr::map_dbl(~.x@value)
+  
+  # Parameters used to assess positive definiteness
+  if (settings@wishart) {
+    parameters <- NULL  
+  } else {
+    # Only keep OMEGA/SIGMA parameters
+    parameters@list <- parameters@list %>%
+      purrr::keep(~is(.x, "double_array_parameter"))
+  }
   
   # Sample parameters from the variance-covariance matrix
   msg <- getSamplingMessageTemplate(what="parameters", from="variance-covariance matrix")
   table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
-                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, settings=settings)
+                         args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, settings=settings, parameters=parameters)
   
   return(table)
 }
@@ -216,14 +229,16 @@ sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
 #' @param minMax a data frame with min, max values for each parameter
 #' @param msg message template
 #' @param settings replication settings
+#' @param parameters double array parameters to check for positive definiteness
 #' @return tibble with the sampled parameters (1 parameter per column + REPLICATE column)
 #' @keywords internal
-sampleGeneric <- function(fun, args, n, minMax, msg, settings) {
+sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
-    dplyr::mutate(VALID=TRUE)
-  table <- flagOutOfRangeParameterRows(table=tempTable, minMax=minMax)
+    dplyr::mutate(VALID=NA)
+  table <- flagOutOfRangeParameterRows(table=tempTable, minMax=minMax,
+                                       settings=settings, parameters=parameters)
   
   # Re-sample if more parameters are needed due to constraints
   iterations <- 0
@@ -255,8 +270,9 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings) {
     shift <- max(table$REPLICATE)
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
       dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
-      dplyr::mutate(VALID=TRUE)
-    table <- dplyr::bind_rows(table, flagOutOfRangeParameterRows(table=tempTable, minMax=minMax))
+      dplyr::mutate(VALID=NA)
+    table <- dplyr::bind_rows(table, flagOutOfRangeParameterRows(table=tempTable, minMax=minMax,
+                                                                 settings=settings, parameters=parameters))
   }
   
   # Discard extra rows
@@ -329,24 +345,106 @@ getMappingMatrix <- function(parameters, type) {
 #' 
 #' @param table a data frame returned by \code{sampleMore}
 #' @param minMax a data frame with min, max values for each parameter
-#' @importFrom dplyr mutate
+#' @param settings replication settings
+#' @param parameters double array parameters to check for positive definiteness
+#' @importFrom dplyr bind_rows filter mutate
 #' @importFrom purrr map flatten_int
 #' @keywords internal
-flagOutOfRangeParameterRows <- function(table, minMax) {
-  # For each column, check min and max
-  # Return the indexes where at least on parameter is out of range
-  indexesToDiscard <- colnames(table) %>% purrr::map(.f=function(.x) {
-    values <- table[[.x]]
-    limits <- minMax %>% dplyr::filter(.data$name==.x)
-    return(which(values < limits$min | values > limits$max))
-  }) %>% purrr::flatten_int() %>% unique() %>% base::sort()
+flagOutOfRangeParameterRows <- function(table, minMax, settings, parameters) {
+  parameterNames <- colnames(table)
+  parameterNames <- parameterNames[!parameterNames %in% c("REPLICATE", "VALID")]
   
-  outOfRange <- rep(FALSE, nrow(table))
-  outOfRange[indexesToDiscard] <- TRUE
+  alreadyChecked <- table %>%
+    dplyr::filter(!is.na(VALID))
   
-  retValue <- table %>% 
-    dplyr::mutate(VALID=!outOfRange)
+  toBeChecked <- table %>%
+    dplyr::filter(is.na(VALID)) %>%
+    dplyr::mutate(VALID=TRUE) # Default
+  
+  if (settings@min_max) {
+    # For each column, check min and max
+    # Return the indexes where at least on parameter is out of range
+    indexesToDiscard <- parameterNames %>% purrr::map(.f=function(.x) {
+      values <- toBeChecked[[.x]]
+      limits <- minMax %>% dplyr::filter(.data$name==.x)
+      assertthat::assert_that(nrow(limits) == 1)
+      return(which(values < limits$min | values > limits$max))
+    }) %>% purrr::flatten_int() %>% unique() %>% base::sort()
+    
+    outOfRange <- rep(FALSE, nrow(toBeChecked))
+    outOfRange[indexesToDiscard] <- TRUE
+    
+    toBeChecked <- toBeChecked %>% 
+      dplyr::mutate(VALID=!outOfRange)
+  }
+
+  if (settings@positive_definite && !is.null(parameters)) {
+    # before <- sum(toBeChecked$VALID)
+    # print(sprintf("Before: %i rows", before))
+          
+    toBeChecked <- toBeChecked %>%
+      dplyr::left_join(checkMatrixIsPositiveDefinite(table=toBeChecked, parameters=parameters), by="REPLICATE")
+    
+    toBeChecked <- toBeChecked %>%
+      dplyr::mutate(VALID=.data$VALID & .data$POSITIVE_DEFINITE) %>%
+      dplyr::select(-c("POSITIVE_DEFINITE"))
+    
+    # after <- sum(toBeChecked$VALID)
+    # print(sprintf("After: %i rows", after))
+  }
+  
+  retValue <- dplyr::bind_rows(alreadyChecked, toBeChecked)
   
   return(retValue)
 }
 
+#' Check OMEGA/SIGMA matrix for positive definiteness.
+#' 
+#' @param table data frame with the sampled parameters to check
+#' @param parameters double array parameters to check for positive definiteness
+#' @importFrom dplyr group_split select starts_with
+#' @importFrom purrr map_df flatten_int
+#' @importFrom tibble tibble
+#' @keywords internal
+checkMatrixIsPositiveDefinite <- function(table, parameters) {
+  # Remove THETA_ columns
+  table <- table %>%
+    dplyr::select(-dplyr::starts_with("THETA_"))
+  
+  retValue <- table %>%
+    dplyr::group_split(REPLICATE) %>%
+    purrr::map_df(.f=function(row) {
+      replicate <- row$REPLICATE
+      valid <- row$VALID
+      if (isFALSE(valid)) {
+        # If the row is not valid, we don't need to check the matrix
+        # isFALSE is called because valid could be NA
+        return(tibble::tibble(REPLICATE=replicate, POSITIVE_DEFINITE=FALSE))
+      }
+      row <- row %>%
+        dplyr::select(-c("REPLICATE", "VALID"))
+      model <- CampsisModel()
+      model@parameters <- parameters
+      model <- updateParameters(model=model, row=row)
+      omegaMatrix <- rxodeMatrix(model=model, type="omega")
+      sigmaMatrix <- rxodeMatrix(model=model, type="sigma")
+      omegaMatrixOK <- ifelse(length(omegaMatrix) == 0, TRUE, isMatrixPositiveDefinite(omegaMatrix))
+      sigmaMatrixOK <- ifelse(length(sigmaMatrix) == 0, TRUE, isMatrixPositiveDefinite(sigmaMatrix))
+      return(tibble::tibble(REPLICATE=replicate, POSITIVE_DEFINITE=omegaMatrixOK && sigmaMatrixOK))
+    })
+  return(retValue)
+}
+
+#' Is matrix positive definite. Same check as \code{mvtnorm} does.
+#' 
+#' @param matrix matrix to check
+#' @param tol tolerance when checking the eigenvalues
+#' @export
+isMatrixPositiveDefinite <- function(matrix, tol=1e-06) {
+  eS <- eigen(matrix, symmetric=TRUE)
+  ev <- eS$values
+  if (!all(ev >= -tol * abs(ev[1L]))) {
+    return(FALSE)
+  }
+  return(TRUE)
+}

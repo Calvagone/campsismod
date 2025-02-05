@@ -4,12 +4,16 @@
 \alias{flagOutOfRangeParameterRows}
 \title{Flag all parameter rows that have at least one parameter out of the specified range.}
 \usage{
-flagOutOfRangeParameterRows(table, minMax)
+flagOutOfRangeParameterRows(table, minMax, settings, parameters)
 }
 \arguments{
 \item{table}{a data frame returned by \code{sampleMore}}
 
 \item{minMax}{a data frame with min, max values for each parameter}
+
+\item{settings}{replication settings}
+
+\item{parameters}{double array parameters to check for positive definiteness}
 }
 \description{
 Flag all parameter rows that have at least one parameter out of the specified range.

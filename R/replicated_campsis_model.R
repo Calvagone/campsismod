@@ -50,8 +50,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
     table <- tibble::tibble(REPLICATE=seq_len(n))
   } else {
     # Sample parameters in variance-covariance matrix from a multivariate normal distribution
-    varcovParameters <- extractModelParametersFromNames(parameters=object@parameters, names=colnames(varcov))
-    table <- sampleFromMultivariateNormalDistribution(parameters=varcovParameters, varcov=varcov, n=n, settings=settings)
+    table <- sampleFromMultivariateNormalDistribution(parameters=object@parameters, n=n, settings=settings)
   }
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
@@ -133,7 +132,6 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @param model Campsis model
 #' @param row a data frame row containing the new parameter values
 #' @return updated Campsis model
-#' @importFrom purrr pluck
 #' @importFrom assertthat assert_that
 #' @keywords internal
 #' 
@@ -144,10 +142,11 @@ updateParameters <- function(model, row) {
   originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=paramNames)
   
   for (paramIndex in seq_along(paramNames)) {
-    # pluck can be used because originalParams is a named list
-    originalParam <- originalParams %>% purrr::pluck(paramNames[paramIndex])
+    originalParam <- originalParams %>%
+      getByName(paramNames[paramIndex])
     originalParam@value <- paramValues[paramIndex]
-    model@parameters <- model@parameters %>% replace(originalParam)
+    model@parameters <- model@parameters %>%
+      replace(originalParam)
   }
   
   # Update OMEGA's according that are same

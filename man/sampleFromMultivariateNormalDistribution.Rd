@@ -4,12 +4,10 @@
 \alias{sampleFromMultivariateNormalDistribution}
 \title{Sample from a multivariate normal distribution.}
 \usage{
-sampleFromMultivariateNormalDistribution(parameters, varcov, n, settings)
+sampleFromMultivariateNormalDistribution(parameters, n, settings)
 }
 \arguments{
-\item{parameters}{Campsis parameters present in the variance-covariance matrix}
-
-\item{varcov}{variance-covariance matrix}
+\item{parameters}{model parameters (all), already standardised}
 
 \item{n}{number of rows to sample}
 

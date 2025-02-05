@@ -6,7 +6,7 @@
 This function will sample parameters a first time and check if some parameters are out of range.
 Based on the success rate, it will sample more parameters to reach the desired number of rows.}
 \usage{
-sampleGeneric(fun, args, n, minMax, msg, settings)
+sampleGeneric(fun, args, n, minMax, msg, settings, parameters = NULL)
 }
 \arguments{
 \item{fun}{function to call to sample parameters}
@@ -20,6 +20,8 @@ sampleGeneric(fun, args, n, minMax, msg, settings)
 \item{msg}{message template}
 
 \item{settings}{replication settings}
+
+\item{parameters}{double array parameters to check positive definiteness}
 }
 \value{
 tibble with the sampled parameters (1 parameter per column + REPLICATE column)

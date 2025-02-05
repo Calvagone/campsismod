@@ -4,7 +4,14 @@
 \alias{AutoReplicationSettings}
 \title{Create auto replication settings.}
 \usage{
-AutoReplicationSettings(wishart = FALSE, odf = NA, sdf = NA, quiet = NA)
+AutoReplicationSettings(
+  wishart = FALSE,
+  odf = NA,
+  sdf = NA,
+  minMax = TRUE,
+  positiveDefinite = FALSE,
+  quiet = NA
+)
 }
 \arguments{
 \item{wishart}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
@@ -14,15 +21,16 @@ or Wishart distribution (block of OMEGAs)}
 
 \item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
 
+\item{minMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
+
+\item{positiveDefinite}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
+
 \item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }
 \value{
 replication settings
 }
 \description{
-Create auto replication settings.
-}
-\details{
 By default, all model parameters are sampled from a multivariate normal 
 distribution, whose characteristics are specified by the variance-covariance matrix.
 OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
