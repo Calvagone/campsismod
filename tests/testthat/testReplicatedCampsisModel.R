@@ -368,7 +368,7 @@ test_that("Checking for positive definiteness works as expected", {
   
   settingsA <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, positiveDefinite=TRUE)
   repModelA <- model %>%
-    replicate(20, settings=settingsA)
+    replicate(1000, settings=settingsA)
   
   set.seed(123)
   

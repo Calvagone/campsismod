@@ -223,6 +223,7 @@ reference:
 - title: "Advanced use"
   contents:
   - updateCompartments
+  - isMatrixPositiveDefinite
   - getOmegaBlock
   - getOmegaIndexes
   - hasOffDiagonalOmegas

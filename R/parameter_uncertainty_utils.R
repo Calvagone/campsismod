@@ -237,7 +237,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
     dplyr::mutate(VALID=NA)
-  table <- flagOutOfRangeParameterRows(table=tempTable, minMax=minMax,
+  table <- flagSampledParameterRows(table=tempTable, minMax=minMax,
                                        settings=settings, parameters=parameters)
   
   # Re-sample if more parameters are needed due to constraints
@@ -271,7 +271,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
       dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
       dplyr::mutate(VALID=NA)
-    table <- dplyr::bind_rows(table, flagOutOfRangeParameterRows(table=tempTable, minMax=minMax,
+    table <- dplyr::bind_rows(table, flagSampledParameterRows(table=tempTable, minMax=minMax,
                                                                  settings=settings, parameters=parameters))
   }
   
@@ -341,7 +341,8 @@ getMappingMatrix <- function(parameters, type) {
   return(retValue)
 }
 
-#' Flag all parameter rows that have at least one parameter out of the specified range.
+#' Flag all parameter rows that have at least one parameter out of the specified range
+#' or that have a non positive definite OMEGA or SIGMA matrix.
 #' 
 #' @param table a data frame returned by \code{sampleMore}
 #' @param minMax a data frame with min, max values for each parameter
@@ -350,12 +351,12 @@ getMappingMatrix <- function(parameters, type) {
 #' @importFrom dplyr bind_rows filter mutate
 #' @importFrom purrr map flatten_int
 #' @keywords internal
-flagOutOfRangeParameterRows <- function(table, minMax, settings, parameters) {
+flagSampledParameterRows <- function(table, minMax, settings, parameters) {
   parameterNames <- colnames(table)
   parameterNames <- parameterNames[!parameterNames %in% c("REPLICATE", "VALID")]
   
   alreadyChecked <- table %>%
-    dplyr::filter(!is.na(VALID))
+    dplyr::filter(!is.na(.data$VALID))
   
   toBeChecked <- table %>%
     dplyr::filter(is.na(VALID)) %>%
@@ -402,7 +403,7 @@ flagOutOfRangeParameterRows <- function(table, minMax, settings, parameters) {
 #' 
 #' @param table data frame with the sampled parameters to check
 #' @param parameters double array parameters to check for positive definiteness
-#' @importFrom dplyr group_split select starts_with
+#' @importFrom dplyr across group_split select starts_with
 #' @importFrom purrr map_df flatten_int
 #' @importFrom tibble tibble
 #' @keywords internal
@@ -412,7 +413,7 @@ checkMatrixIsPositiveDefinite <- function(table, parameters) {
     dplyr::select(-dplyr::starts_with("THETA_"))
   
   retValue <- table %>%
-    dplyr::group_split(REPLICATE) %>%
+    dplyr::group_split(dplyr::across(REPLICATE)) %>%
     purrr::map_df(.f=function(row) {
       replicate <- row$REPLICATE
       valid <- row$VALID

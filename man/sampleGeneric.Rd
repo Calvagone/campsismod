@@ -21,7 +21,7 @@ sampleGeneric(fun, args, n, minMax, msg, settings, parameters = NULL)
 
 \item{settings}{replication settings}
 
-\item{parameters}{double array parameters to check positive definiteness}
+\item{parameters}{double array parameters to check for positive definiteness}
 }
 \value{
 tibble with the sampled parameters (1 parameter per column + REPLICATE column)
