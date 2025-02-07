@@ -4,7 +4,8 @@
 %   R/model_equation.R, R/model_ode.R, R/model_if_statement.R,
 %   R/compartment.R, R/compartment_bioavailability.R, R/compartment_lag_time.R,
 %   R/compartment_infusion_duration.R, R/compartment_infusion_rate.R,
-%   R/compartment_initial_condition.R, R/parameter.R, R/code_record.R
+%   R/compartment_initial_condition.R, R/parameter.R, R/code_record.R,
+%   R/omega_block.R
 \name{getName}
 \alias{getName}
 \alias{getName,unknown_statement-method}
@@ -30,6 +31,7 @@
 \alias{getName,rate_record-method}
 \alias{getName,init_record-method}
 \alias{getName,error_record-method}
+\alias{getName,omega_block-method}
 \title{Get element name.}
 \usage{
 getName(x)
@@ -79,6 +81,8 @@ getName(x)
 \S4method{getName}{init_record}(x)
 
 \S4method{getName}{error_record}(x)
+
+\S4method{getName}{omega_block}(x)
 }
 \arguments{
 \item{x}{element to know the name}

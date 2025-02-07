@@ -38,9 +38,9 @@ test_that("Error displayed if model file has an IF-statement in a properties rec
   expect_error(suppressWarnings(read.campsis(paste0(testFolder, "custom/", modelName))), regexp="IF-statement detected in properties record")
 })
 
-test_that("Parsing a CAMPSIS model with an incomplete final line shouldn't raise any warning", {
+test_that("Parsing a Campsis model with an incomplete final line shouldn't raise any warning", {
   # This model contains the following files:
-  # CAMPSIS model file with incomplete final line
+  # Campsis model file with incomplete final line
   # File theta.csv with incomplete final line
   # Correct file omega.csv
   # Correct file sigma.csv

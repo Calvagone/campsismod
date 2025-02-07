@@ -27,7 +27,7 @@ getPrefix(object, ...)
 \arguments{
 \item{object}{generic object}
 
-\item{...}{e.g. dest='mrgsolve'}
+\item{...}{e.g. \code{dest='mrgsolve'}}
 }
 \value{
 the prefix of this object

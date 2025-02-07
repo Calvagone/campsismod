@@ -2,13 +2,13 @@
 % Please edit documentation in R/campsis_model.R
 \name{CampsisModel}
 \alias{CampsisModel}
-\title{Create a new CAMPSIS model.}
+\title{Create a new Campsis model.}
 \usage{
 CampsisModel()
 }
 \value{
-a CAMPSIS model, empty
+a Campsis model, empty
 }
 \description{
-Create a new CAMPSIS model.
+Create a new Campsis model.
 }

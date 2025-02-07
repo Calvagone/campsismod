@@ -1,0 +1,5 @@
+"name","index","value","min","max","fix"
+"KA",1,1,0,Inf,FALSE
+"VC",2,60,0,Inf,FALSE
+"CL",3,3,0,Inf,FALSE
+"PROP_RUV",4,0.1,0,Inf,FALSE

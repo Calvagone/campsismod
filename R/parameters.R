@@ -99,7 +99,8 @@ setMethod("add", signature=c("parameters", "parameters"), definition=function(ob
 #' @param params1 base set of parameters
 #' @param params2 extra set of parameters to be appended
 #' @return the resulting set of parameters
-#' @importFrom purrr discard map_chr 
+#' @importFrom purrr discard map_chr
+#' @importFrom assertthat are_equal
 #' @keywords internal
 #' 
 appendParameters <- function(params1, params2) {
@@ -141,8 +142,76 @@ appendParameters <- function(params1, params2) {
     sigma@index2 <- sigma@index2 + sigmaMax
     params1 <- params1 %>% add(sigma)
   }
+
+  # Merge variance-covariance matrices
+  varcov1 <- params1@varcov
+  varcov2 <- params2@varcov
+  params1@varcov <- appendVarcov(varcov1, varcov2)
+
   return(params1 %>% sort())
 }
+
+appendVarcov <- function(varcov1, varcov2) {
+  if (length(varcov1) == 0 && length(varcov2) > 0) {
+    return(varcov2)
+  
+  } else if (length(varcov2) == 0 && length(varcov1) > 0) {
+    return(varcov1)
+  
+  } else if (length(varcov1) == 0 && length(varcov2) == 0) {
+    return(matrix(numeric(0), nrow=0, ncol=0))
+  
+  } else {
+    dimnames1 <- dimnames(varcov1)
+    assertthat::are_equal(dimnames1[[1]], dimnames1[[2]])
+    colnames1 <- dimnames1[[1]]
+    
+    dimnames2 <- dimnames(varcov2)
+    assertthat::are_equal(dimnames2[[1]], dimnames2[[2]])
+    colnames2 <- dimnames2[[1]]
+    
+    colnames <- c(colnames1, colnames2)
+    assertthat::assert_that(!any(duplicated(colnames)), msg="Duplicate parameter names in resulting variance-covariance matrix")
+    totalDim <- length(colnames)
+    
+    varcov <- matrix(numeric(length(totalDim)^2), nrow=totalDim, ncol=totalDim)
+    dimnames(varcov) <- list(colnames, colnames)
+    
+    varcov[seq_along(colnames1), seq_along(colnames1)] <- varcov1
+    varcov[length(colnames1) + seq_along(colnames2), length(colnames1) + seq_along(colnames2)] <- varcov2
+    return(varcov)
+  }
+}
+
+#_______________________________________________________________________________
+#----                             addRSE                                    ----
+#_______________________________________________________________________________
+
+#' @rdname addRSE
+setMethod("addRSE", signature=c("parameters", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+  parameter_ <- object %>%
+    find(parameter)
+  
+  if (is.null(parameter_)) {
+    stop("Parameter ", parameter %>% getName(), " not found in model")
+  }
+  
+  # Define variance-covariance matrix (single value)
+  varcov <- matrix((value/100*abs(parameter_@value))^2, nrow=1, ncol=1)
+  name <- parameter_ %>% getName()
+  dimnames(varcov) <- list(name, name)
+  
+  # Remove last value if it exists
+  colnames <- colnames(object@varcov)
+  if (name %in% colnames) {
+    object@varcov <- object@varcov[-which(name==colnames), -which(name==colnames), drop=FALSE]
+  }
+  
+  # Update variance-covariance matrix
+  object@varcov <- appendVarcov(object@varcov, varcov)
+  
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                             delete                                    ----
@@ -263,7 +332,9 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
       purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% getName()))
     
     # Update variance-covariance matrix
-    object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove]
+    if (length(indexesToRemove) > 0) {
+      object@varcov <- object@varcov[-indexesToRemove, -indexesToRemove, drop=FALSE]
+    }
   }
   
   return(object)
@@ -373,7 +444,7 @@ setMethod("getUncertainty", signature=c("parameters"), definition=function(objec
     return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
   } else {
     return(object@list %>%
-             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov)))
+             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov, parameters=object)))
   }
 })
 
@@ -460,19 +531,23 @@ setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
 #_______________________________________________________________________________
 
 dataframeToParameter <- function(row, type) {
-  param <- NULL
   name <- ifelse(is.null(row$name), NA, row$name) # Optional
   label <- ifelse(is.null(row$label), as.character(NA), row$label) # Optional
   unit <- ifelse(is.null(row$unit), as.character(NA), row$unit) # Optional
   comment <- ifelse(is.null(row$comment), as.character(NA), row$comment) # Optional
+  min <- ifelse(is.null(row$min), as.numeric(NA), as.numeric(row$min)) # Optional
+  max <- ifelse(is.null(row$max), as.numeric(NA), as.numeric(row$max)) # Optional
   
   if (type=="theta") {
-    param <- Theta(name=name, index=row$index, value=row$value, fix=row$fix, label=label, unit=unit, comment=comment)
+    param <- Theta(name=name, index=row$index, value=row$value, min=min, max=max,
+                   fix=row$fix, label=label, unit=unit, comment=comment)
   } else if(type=="omega") {
     same <- ifelse(is.null(row$same), NA, row$same) # Optional
-    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, same=same, label=label, comment=comment)
+    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, min=min, max=max,
+                   fix=row$fix, type=row$type, same=same, label=label, comment=comment)
   } else if(type=="sigma") {
-    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, label=label, comment=comment)
+    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, min=min, max=max,
+                   fix=row$fix, type=row$type, label=label, comment=comment)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }
@@ -485,13 +560,17 @@ dataframeToParameter <- function(row, type) {
 #' @param type parameter type: 'theta', 'omega' or 'sigma'
 #' @return parameters sub list
 #' @importFrom readr read_delim
+#' @importFrom dplyr across group_split
+#' @importFrom purrr map
 #' @export
 read.parameters <- function(file, type) {
   assertthat::assert_that(type %in% c("theta", "omega", "sigma"),
                           msg="Type must be one of these: 'theta', 'omega' or 'sigma'")
   df <- readr::read_delim(file=file, lazy=FALSE, show_col_types=FALSE, progress=FALSE) %>%
     dplyr::mutate(ROWID=dplyr::row_number())
-  list <- df %>% plyr::dlply(.variables="ROWID", .fun=dataframeToParameter, type=type)
+  list <- df %>%
+    dplyr::group_split(dplyr::across("ROWID")) %>%
+    purrr::map(~dataframeToParameter(as.list(.x), type=type))
   attributes(list) <- NULL
   return(new("parameters", list=list))
 }
@@ -587,6 +666,50 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("parameters", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  parameter_ <- object %>%
+    find(parameter)
+  
+  if (is.null(parameter_)) {
+    stop("Parameter ", parameter %>% getNameInModel(), " not found in model")
+  }
+  
+  # Replace old values
+  parameter_@min <- min
+  parameter_@max <- max
+  
+  # Replace old parameter
+  object <- object %>%
+    replace(parameter_)
+  
+  return(object)
+})
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("parameters", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  assertthat::assert_that(parameter %in% c("theta", "omega", "sigma"), msg="Parameter must be one of: 'theta', 'omega' or 'sigma'")
+  object@list <- object@list %>%
+    purrr::map(.f=function(x) {
+      if (is(x, parameter)) {
+        x@min <- min
+        x@max <- max
+        
+        # Special case for covariance
+        if (is(x, "double_array_parameter") && !(x %>% isDiag()) && min >= 0) {
+          x@min <- -max
+          cat(sprintf("Info: min value of %s (covariance) set to -max value\n", x %>% getName()))
+        }
+      }
+      return(x)
+    })
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
@@ -606,11 +729,11 @@ showUncertaintyOnParameters <- function(parameters, discard_na_columns=NULL) {
 
 setMethod("show", signature=c("parameters"), definition=function(object) {
   cat("THETA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("theta"), discard_na_columns=c("label", "unit", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("theta"), discard_na_columns=c("min", "max", "label", "unit", "comment")))
   cat("OMEGA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("same", "label", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("min", "max", "same", "label", "comment")))
   cat("SIGMA's:\n")
-  print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("label", "comment")))
+  print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("min", "max", "label", "comment")))
   if (is.null(object %>% getVarCov())) {
     cat("No variance-covariance matrix\n")
   } else {
@@ -654,6 +777,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
   })
   retValue <- Parameters()
   retValue@list <- list
+  retValue@varcov <- object@varcov
   return(retValue)
 })
 
@@ -665,7 +789,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' 
 #' @param object subset of parameters
 #' @param file filename
-#' @param ... extra arguments, like defaultDf for empty parameters list
+#' @param ... extra arguments, like \code{defaultDf} for empty parameters list
 #' @return TRUE if success
 #' @importFrom dplyr any_of select where 
 #' @importFrom utils write.csv
@@ -673,7 +797,7 @@ writeParameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
   # Get rid of specific columns if all NA
-  naColumns <- c("fix", "same", "label", "unit", "comment")
+  naColumns <- c("min", "max", "fix", "same", "label", "unit", "comment")
   df <- df %>% removeNaColumn(naColumns)
   
   if (nrow(df)==0) {

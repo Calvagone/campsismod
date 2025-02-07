@@ -1,7 +1,7 @@
 
 library(testthat)
 
-context("Test read/write methods on CAMPSIS model")
+context("Test read/write methods on Campsis model")
 
 source(paste0("", "testUtils.R"))
 
@@ -84,4 +84,22 @@ test_that("Model parameters can be annotated and persisted (fields label, unit, 
   # Check equality  
   expect_equal(model, model2)
   
+})
+
+test_that("Model parameters with min and max values can be persisted correctly", {
+  model <- model_suite$testing$pk$'1cpt_fo'
+  modelName <- "model_1cpt_fo_min_max"
+  
+  model <- model %>%
+    setMinMax("theta", min=0, max=Inf) %>%
+    setMinMax(Sigma("RUV_FIX"), min=1, max=1)
+  
+  # Write
+  model %>% write(file=writePath(modelName))
+  
+  # Read
+  model2 <- read.campsis(file=writePath(modelName))
+  
+  # Check equality  
+  expect_equal(model, model2)
 })

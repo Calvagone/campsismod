@@ -2,7 +2,7 @@
 % Please edit documentation in R/campsis_model.R
 \name{read.pmxmod}
 \alias{read.pmxmod}
-\title{Read a CAMPSIS model (deprecated).}
+\title{Read a Campsis model (deprecated).}
 \usage{
 read.pmxmod(file)
 }
@@ -10,9 +10,9 @@ read.pmxmod(file)
 \item{file}{path to folder}
 }
 \value{
-a CAMPSIS model
+a Campsis model
 }
 \description{
-Read a CAMPSIS model (deprecated).
+Read a Campsis model (deprecated).
 }
 \keyword{internal}

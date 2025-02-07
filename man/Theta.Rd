@@ -8,6 +8,8 @@ Theta(
   name = NA,
   index = NA,
   value = NA,
+  min = NA,
+  max = NA,
   fix = FALSE,
   label = NA,
   unit = NA,
@@ -20,6 +22,10 @@ Theta(
 \item{index}{parameter index}
 
 \item{value}{parameter value}
+
+\item{min}{minimum value for this parameter when parameter uncertainty is enabled}
+
+\item{max}{maximum value for this parameter when parameter uncertainty is enabled}
 
 \item{fix}{parameter was fixed in estimation, logical value}
 

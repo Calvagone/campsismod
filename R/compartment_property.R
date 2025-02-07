@@ -30,7 +30,7 @@ setClass(
 #' Get prefix.
 #' 
 #' @param object generic object
-#' @param ... e.g. dest='mrgsolve'
+#' @param ... e.g. \code{dest='mrgsolve'}
 #' @return the prefix of this object
 #' @export
 #' @rdname getPrefix

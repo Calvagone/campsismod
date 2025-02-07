@@ -1,4 +1,23 @@
+#_______________________________________________________________________________
+#----                               addRSE                                  ----
+#_______________________________________________________________________________
 
+#' Add relative standard error (RSE) to the specified parameter.
+#' 
+#' @param object model or parameters object
+#' @param parameter parameter object (Theta, Omega or Sigma)
+#' @param value RSE value, in percent
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname addRSE
+addRSE <- function(object, parameter, value, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("addRSE", function(object, parameter, value, ...) {
+  standardGeneric("addRSE")
+})
 #_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
 #_______________________________________________________________________________
@@ -130,6 +149,27 @@ setGeneric("getVarCov", function(object) {
 })
 
 #_______________________________________________________________________________
+#----                              move                                     ----
+#_______________________________________________________________________________
+
+#' Move element 'x' from object to a certain place.
+#' 
+#' @param object generic object (e.g. model, code records, etc.)
+#' @param x element to move
+#' @param to destination (e.g. a position)
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname move
+move <- function(object, x, to, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("move", function(object, x, to, ...) {
+  standardGeneric("move")
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
@@ -168,6 +208,31 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
 })
 
 #_______________________________________________________________________________
+#----                           replicate                                   ----
+#_______________________________________________________________________________
+
+#' Replicate generic object.
+#' 
+#' @param object generic object
+#' @param n number of replicates required
+#' @param settings settings for replication
+#' @param ... extra arguments
+#' @return object replicated n times
+#' @export
+#' @rdname replicate
+replicate <- function(object, n, settings, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("replicate", function(object, n, settings=NULL, ...) {
+  n <- as.integer(n)
+  if (is.null(settings)) {
+    settings <- AutoReplicationSettings()
+  }
+  standardGeneric("replicate")
+})
+
+#_______________________________________________________________________________
 #----                                 select                                ----
 #_______________________________________________________________________________
 
@@ -189,6 +254,30 @@ setGeneric("select", function(object, ...) {
 #' @rdname select
 setMethod("select", signature=c("data.frame"), definition=function(object, ...) {
   return(return(dplyr::select(.data=object, ...)))
+})
+
+#_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' Set the minimum and maximum value on a model parameter.
+#' 
+#' @param object model or parameters object
+#' @param parameter parameter object (Theta, Omega or Sigma)
+#' @param min minimum value for this parameter when parameter uncertainty is enabled
+#' @param max maximum value for this parameter when parameter uncertainty is enabled
+#' @param ... extra arguments, unused
+#' @return updated object
+#' @export
+#' @rdname setMinMax
+setMinMax <- function(object, parameter, min, max, ...) {
+  stop("No default function is provided")
+}
+
+setGeneric("setMinMax", function(object, parameter, min, max, ...) {
+  min <- as.numeric(min)
+  max <- as.numeric(max)
+  standardGeneric("setMinMax")
 })
 
 #_______________________________________________________________________________

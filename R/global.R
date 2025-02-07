@@ -9,3 +9,9 @@
 methodsGlobalFunctions <- function() {
   
 }
+
+#' @importFrom rlang .data :=
+#' @keywords internal
+rlangGlobal <- function() {
+  
+}

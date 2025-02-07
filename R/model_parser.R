@@ -45,7 +45,7 @@ parseStatements <- function(code) {
 }
 
 #' Parse IF-statement.
-#' Assumption: isIfStatement method already called and returned TRUE.
+#' Assumption: \code{isIfStatement} method already called and returned TRUE.
 #' 
 #' @param line IF-statement as single character string value, comment omitted
 #' @param comment any comment, NA by default

@@ -3,7 +3,7 @@
 #----                         campsis_model class                           ----
 #_______________________________________________________________________________
 
-#' CAMPSIS model class.
+#' Campsis model class.
 #' 
 #' @slot model a list of code records
 #' @slot parameters model parameters
@@ -18,9 +18,9 @@ setClass(
   )
 )
 
-#' Create a new CAMPSIS model.
+#' Create a new Campsis model.
 #' 
-#' @return a CAMPSIS model, empty
+#' @return a Campsis model, empty
 #' @export
 CampsisModel <- function() {
   return(new("campsis_model"))
@@ -34,7 +34,7 @@ CampsisModel <- function() {
 setMethod("add", signature=c("campsis_model", "compartment_property"), definition=function(object, x) {
   compartment <- object@compartments %>% find(Compartment(index=x@compartment))
   if (is.null(compartment)) {
-    stop(paste0("Unable to find compartment ", x@compartment, " in CAMPSIS model"))
+    stop(paste0("Unable to find compartment ", x@compartment, " in Campsis model"))
   }
   
   # Add characteristic (delegate to add method in compartments class)
@@ -75,7 +75,7 @@ setMethod("add", signature=c("campsis_model", "campsis_model"), definition=funct
 #' 
 #' @param model1 base model
 #' @param model2 model to append
-#' @return the resulting CAMPSIS model
+#' @return the resulting Campsis model
 #' @keywords internal
 #' 
 appendModel <- function(model1, model2) {
@@ -89,6 +89,17 @@ appendModel <- function(model1, model2) {
   model1@compartments <- model1@compartments %>% add(model2@compartments)
   return(model1)
 }
+
+#_______________________________________________________________________________
+#----                             addRSE                                    ----
+#_______________________________________________________________________________
+
+#' @rdname addRSE
+setMethod("addRSE", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+  object@parameters <- object@parameters %>%
+    addRSE(parameter=parameter, value=value, ...)
+  return(object)
+})
 
 #_______________________________________________________________________________
 #----                         autoDetectNONMEM                              ----
@@ -268,6 +279,16 @@ setMethod("getVarCov", signature=c("campsis_model"), definition=function(object)
 })
 
 #_______________________________________________________________________________
+#----                              move                                     ----
+#_______________________________________________________________________________
+
+#' @rdname move
+setMethod("move", signature=c("campsis_model", "ANY", "pmx_position"), definition=function(object, x, to, ...) {
+  object@model <- object@model %>% move(x=x, to=to, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
@@ -309,10 +330,10 @@ read.campsis <- function(file) {
 }
 
 
-#' Read a CAMPSIS model (deprecated).
+#' Read a Campsis model (deprecated).
 #' 
 #' @param file path to folder
-#' @return a CAMPSIS model
+#' @return a Campsis model
 #' @export
 #' @keywords internal
 read.pmxmod <- function(file) {
@@ -321,14 +342,15 @@ read.pmxmod <- function(file) {
 }
 
 #' Update compartments list from the persisted records.
-#' Exported especially for package pmxtran. However, this method should not be called.
+#' Exported especially for package \code{campsistrans}.
+#' However, this method should not be called.
 #' 
-#' @param model CAMPSIS model
-#' @return an updated CAMPSIS model, with an updated compartments list
+#' @param model Campsis model
+#' @return an updated Campsis model, with an updated compartments list
 #' @export
 updateCompartments <- function(model) {
   if (!is(model, "campsis_model")) {
-    stop("model is not a CAMPSIS model")   
+    stop("model is not a Campsis model")   
   }
   records <- model@model
   
@@ -415,6 +437,24 @@ setMethod("replaceAll", signature=c("campsis_model", "character", "character"), 
 })
 
 #_______________________________________________________________________________
+#----                            setMinMax                                  ----
+#_______________________________________________________________________________
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("campsis_model", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  object@parameters <- object@parameters %>%
+    setMinMax(parameter=parameter, min=min, max=max, ...)
+  return(object)
+})
+
+#' @rdname setMinMax
+setMethod("setMinMax", signature=c("campsis_model", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+  object@parameters <- object@parameters %>%
+    setMinMax(parameter=parameter, min=min, max=max, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
@@ -442,6 +482,16 @@ setMethod("sort", signature=c("campsis_model"), definition=function(x, decreasin
   x@parameters <- x@parameters %>% sort()
   
   return(x)
+})
+
+#_______________________________________________________________________________
+#----                            standardise                                ----
+#_______________________________________________________________________________
+
+#' @rdname standardise
+setMethod("standardise", signature=c("campsis_model"), definition=function(object, ...) {
+  object@parameters <- object@parameters %>% standardise(...)
+  return(object)
 })
 
 #_______________________________________________________________________________

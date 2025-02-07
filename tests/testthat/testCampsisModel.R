@@ -1,11 +1,11 @@
 
 library(testthat)
 
-context("Test CAMPSIS model")
+context("Test utilities on the Campsis model")
 
 source(paste0("", "testUtils.R"))
 
-test_that("add method works well", {
+test_that("Method 'add' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -20,7 +20,7 @@ test_that("add method works well", {
   # expect_equal(model@model %>% length(), 4)
 })
 
-test_that("replace method works well", {
+test_that("Method 'replace' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -49,7 +49,7 @@ test_that("replace method works well", {
   expect_equal((model@compartments@properties %>% getByIndex(1))@rhs, "0.50")
 })
 
-test_that("delete method works well", {
+test_that("Method 'delete' works as expected", {
   
   model <- model_suite$testing$nonmem$advan4_trans4
   
@@ -78,7 +78,7 @@ test_that("delete method works well", {
   expect_false(updatedMain %>% contains(Equation("S2")))
 })
 
-test_that("add method on Campsis model, exceptions on parameters names", {
+test_that("Method 'add' on Campsis model, exceptions on parameters names", {
   model1 <- model_suite$testing$nonmem$advan4_trans4
   model2 <- model_suite$testing$nonmem$advan1_trans1
   expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate parameter name\\(s\\): EPS_PROP")
@@ -101,7 +101,7 @@ test_that("add method on Campsis model, exceptions on parameters names", {
   expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=4, index2=3)) %>% .@type, "cor") 
 })
 
-test_that("add method on Campsis model, exceptions on compartment names", {
+test_that("Method 'add' on Campsis model, exceptions on compartment names", {
   model1 <- model_suite$testing$nonmem$advan4_trans4
   model1@parameters@list <- model1@parameters@list[-(model1@parameters %>% length())] # Remove SIGMA PROP
   
@@ -112,7 +112,7 @@ test_that("add method on Campsis model, exceptions on compartment names", {
   #expect_error(model1 %>% add(model2), regexp="Model can't be appended because of duplicate compartment name\\(s\\): A_CENTRAL, A_OUTPUT")
 })
 
-test_that("add effect compartment model to PK model using add method", {
+test_that("Add effect compartment model to PK model using add method", {
   regFilename <- "pk_pd_appended"
   
   pk <- model_suite$testing$nonmem$advan4_trans4
@@ -142,4 +142,76 @@ test_that("Valid object method works depending on complete argument", {
   expect_true(validObject(model))
   expect_error(validObject(model, complete=TRUE))
 })
+
+test_that("Method 'add' properly merges variance-covariance matrices", {
+  modelA <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    addSuffix("A") %>%
+    disable("VARCOV_OMEGA")
+  
+  modelB <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    addSuffix("B")
+  
+  model <- modelA %>%
+    add(modelB)
+  
+  varcov <- model %>%
+    getVarCov()
+  
+  varcovExpected <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
+    getVarCov()
+  
+  # Check variance-covariance content
+  expect_equal(as.numeric(varcov[1:7, 1:7]), as.numeric(varcovExpected[1:7, 1:7]))
+  expect_equal(as.numeric(varcov[8:17, 8:17]), as.numeric(varcovExpected))
+  dimnames <- dimnames(varcov)
+  expect_equal(dimnames[[1]], dimnames[[2]])
+  
+  expected <- c("THETA_METAB_CL_A", "THETA_DUR_A", "THETA_VC_A", "THETA_VP_A", "THETA_Q_A", "THETA_CL_A", "THETA_PROP_RUV_A",
+                "THETA_METAB_CL_B", "THETA_DUR_B", "THETA_VC_B", "THETA_VP_B", "THETA_Q_B", "THETA_CL_B", "THETA_PROP_RUV_B",
+                "OMEGA_DUR_B", "OMEGA_VC_B", "OMEGA_CL_B")
+  expect_equal(expected, dimnames[[1]])
+  
+  # Add the empty model to the model with variance-covariance matrix
+  expect_equal(as.numeric(modelB %>% add(CampsisModel()) %>% getVarCov()), as.numeric(varcovExpected))
+  
+  # Add the model with variance-covariance matrix to the empty model
+  expect_equal(as.numeric(CampsisModel() %>% add(modelB) %>% getVarCov()), as.numeric(varcovExpected))
+})
+
+test_that("Method 'addRSE' works as expected", {
+  model <- model_suite$testing$nonmem$advan4_trans4 %>%
+    addRSE(Theta("CL"), 10) %>%
+    addRSE(Theta("Q"), 8) %>% # Test #92 (addRSE can be called multiple times)
+    addRSE(Theta("Q"), 10) %>%
+    addRSE(Omega("KA"), 50)
+  
+  uncertainty <- getUncertainty(model) %>%
+    dplyr::filter(!is.na(.data$`rse%`))
+  
+  expect_equal(tibble::tibble(name=c("THETA_CL", "THETA_Q", "OMEGA_KA"), se=c(0.5, 0.4, 0.0125), `rse%`=c(10, 10, 50)), uncertainty)
+})
+
+test_that("Method 'move' works as expected", {
+  # Move CP from error block to ODE block
+  model <- model_suite$testing$nonmem$advan4_trans4 %>%
+    move(Equation("CP"), Position(OdeRecord()))
+  
+  # Check that CP is now in the ODE block
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("CP")))
+  
+  # Check that CP is not in the error block
+  expect_false(model %>% find(ErrorRecord()) %>% contains(Equation("CP")))
+  
+  # Move the error block to the ODE block
+  model <- model_suite$testing$nonmem$advan4_trans4 %>%
+    move(ErrorRecord(), Position(OdeRecord()))
+  
+  # Check error block is empty
+  expect_equal(model %>% find(ErrorRecord()) %>% length(), 0)
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("CP")))
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("OBS_CP")))
+  expect_true(model %>% find(OdeRecord()) %>% contains(Equation("Y")))
+})
+
+
 

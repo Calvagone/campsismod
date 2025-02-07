@@ -12,7 +12,7 @@ appendModel(model1, model2)
 \item{model2}{model to append}
 }
 \value{
-the resulting CAMPSIS model
+the resulting Campsis model
 }
 \description{
 Append model (or simply add).
