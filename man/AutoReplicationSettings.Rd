@@ -8,8 +8,8 @@ AutoReplicationSettings(
   wishart = FALSE,
   odf = NA,
   sdf = NA,
-  minMax = TRUE,
-  positiveDefinite = FALSE,
+  checkMinMax = TRUE,
+  checkPosDef = FALSE,
   quiet = NA
 )
 }
@@ -21,9 +21,9 @@ or Wishart distribution (block of OMEGAs)}
 
 \item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
 
-\item{minMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
+\item{checkMinMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
 
-\item{positiveDefinite}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
+\item{checkPosDef}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
 
 \item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }

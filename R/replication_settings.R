@@ -24,9 +24,9 @@ setClass(
 #' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
-#' @slot max_chunk_size maximum number of rows to sample at once
-#' @slot min_max logical, check for min/max values when sampling the parameters
-#' @slot positive_definite logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
+#' @slot max_chunk_size maximum number of rows to sample at once, default value will be the number of replicates, unless specified.
+#' @slot check_min_max logical, check for min/max values when sampling the parameters
+#' @slot check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
 #' @export
 setClass(
   "auto_replication_settings",
@@ -37,12 +37,12 @@ setClass(
     quiet="logical",
     max_iterations="integer",
     max_chunk_size="integer",
-    min_max="logical",
-    positive_definite="logical"
+    check_min_max="logical",
+    check_pos_def="logical"
   ),
   contains="replication_settings",
   prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA),
-                      max_iterations=100L, max_chunk_size=1000L, min_max=TRUE, positive_definite=FALSE)
+                      max_iterations=100L, max_chunk_size=as.integer(NA), check_min_max=TRUE, check_pos_def=FALSE)
 )
 
 #'
@@ -63,15 +63,15 @@ setClass(
 #'  or Wishart distribution (block of OMEGAs)
 #' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
 #' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
-#' @param minMax logical, check for min/max values when sampling the parameters, default is TRUE
-#' @param positiveDefinite logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
+#' @param checkMinMax logical, check for min/max values when sampling the parameters, default is TRUE
+#' @param checkPosDef logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
 #' @return replication settings
 #' @export
-AutoReplicationSettings <- function(wishart=FALSE, odf=NA, sdf=NA, minMax=TRUE, positiveDefinite=FALSE, quiet=NA) {
+AutoReplicationSettings <- function(wishart=FALSE, odf=NA, sdf=NA, checkMinMax=TRUE, checkPosDef=FALSE, quiet=NA) {
   return(new("auto_replication_settings", wishart=as.logical(wishart),
              odf=as.integer(odf), sdf=as.integer(sdf),
-             min_max=as.logical(minMax), positive_definite=as.logical(positiveDefinite),
+             check_min_max=as.logical(checkMinMax), check_pos_def=as.logical(checkPosDef),
              quiet=as.logical(quiet)))
 }
 

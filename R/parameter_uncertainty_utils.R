@@ -256,8 +256,16 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
     if (nextN < 1) {
       nextN <- 1 # At least 1 sample required
     }
-    if (is.infinite(nextN) || nextN > settings@max_chunk_size) {
-      nextN <- settings@max_chunk_size # At most <MAX_CHUNK_SIZE> samples
+    
+    # Maximum number of rows to sample is the maximum chunk size
+    # If not specified, maxN will be the number of replicates 'n'
+    maxN <- settings@max_chunk_size
+    if (is.na(maxN)) {
+      maxN <- n
+    }
+    
+    if (is.infinite(nextN) || nextN > maxN) {
+      nextN <- maxN # At most 'maxN' samples
     }
     
     # Increment and check
@@ -266,7 +274,10 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
       stop("Too many iterations, please check your min and max constraints.")
     }
     
-    # print(sprintf("Generate %i rows", nextN))
+    if (isFALSE(settings@quiet)) {
+      cat(sprintf("Sampling %i extra rows\n", nextN))
+    }
+    
     shift <- max(table$REPLICATE)
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
       dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
@@ -362,7 +373,7 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
     dplyr::filter(is.na(.data$VALID)) %>%
     dplyr::mutate(VALID=TRUE) # Default
   
-  if (settings@min_max) {
+  if (settings@check_min_max) {
     # For each column, check min and max
     # Return the indexes where at least on parameter is out of range
     indexesToDiscard <- parameterNames %>% purrr::map(.f=function(.x) {
@@ -379,7 +390,7 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
       dplyr::mutate(VALID=!outOfRange)
   }
 
-  if (settings@positive_definite && !is.null(parameters)) {
+  if (settings@check_pos_def && !is.null(parameters)) {
     # before <- sum(toBeChecked$VALID)
     # print(sprintf("Before: %i rows", before))
           

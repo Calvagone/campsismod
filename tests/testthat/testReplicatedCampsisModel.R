@@ -366,9 +366,9 @@ test_that("Checking for positive definiteness works as expected", {
     add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
     replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
   
-  settingsA <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, positiveDefinite=TRUE)
+  settingsA <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, checkPosDef=TRUE)
   repModelA <- model %>%
-    replicate(1000, settings=settingsA)
+    replicate(20, settings=settingsA)
   
   set.seed(123)
   
@@ -376,7 +376,7 @@ test_that("Checking for positive definiteness works as expected", {
     add(Omega(name="VC_CL", index=2, index2=3, value=0.8, type="cor")) %>%
     replace(Sigma(name="RUV_FIX", value=1, type="var", fix=FALSE)) # Unfix the RUV_FIX just for the test
   
-  settingsB <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, positiveDefinite=FALSE)
+  settingsB <- AutoReplicationSettings(wishart=FALSE, quiet=FALSE, checkPosDef=FALSE)
   repModelB <- model %>%
     replicate(20, settings=settingsB)
   

@@ -20,10 +20,10 @@ Auto replication settings class.
 
 \item{\code{max_iterations}}{number of iterations maximum to sample the parameters}
 
-\item{\code{max_chunk_size}}{maximum number of rows to sample at once}
+\item{\code{max_chunk_size}}{maximum number of rows to sample at once, default value will be the number of replicates, unless specified.}
 
-\item{\code{min_max}}{logical, check for min/max values when sampling the parameters}
+\item{\code{check_min_max}}{logical, check for min/max values when sampling the parameters}
 
-\item{\code{positive_definite}}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters}
+\item{\code{check_pos_def}}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters}
 }}
 
