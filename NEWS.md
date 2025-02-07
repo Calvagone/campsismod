@@ -14,6 +14,7 @@
 * Issue when the model is replicated only once #93
 * Implement show method on replication setting object #95
 * Check OMEGA and SIGMA matrix for positive definiteness #96
+* Min/max values not loaded from Campsis model files #97
 
 # campsismod 1.1.2
 
