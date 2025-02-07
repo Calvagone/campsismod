@@ -167,7 +167,7 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
     setMinMax("theta", min=0, max=Inf) %>%
     addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
   
-  repModel1 <- model1 %>% replicate(1000)
+  repModel1 <- model1 %>% replicate(1000, settings=AutoReplicationSettings(quiet=FALSE))
   
   # No THETA_KA should be negative
   expect_true(all(repModel1@replicated_parameters$THETA_KA >= 0))
@@ -176,7 +176,7 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
   model2 <- model_suite$pk$`1cpt_fo` %>%
     addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
   
-  repModel2 <- model2 %>% replicate(1000)
+  repModel2 <- model2 %>% replicate(1000, settings=AutoReplicationSettings(quiet=FALSE))
   
   # 841 values of THETA_KA are positive
   # 159 values of THETA_KA are negative

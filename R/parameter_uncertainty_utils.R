@@ -275,7 +275,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
     }
     
     if (isFALSE(settings@quiet)) {
-      cat(sprintf("Sampling %i extra rows\n", nextN))
+      cat(sprintf("Sampling %i extra row(s)\n", nextN))
     }
     
     shift <- max(table$REPLICATE)
@@ -386,14 +386,19 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
     outOfRange <- rep(FALSE, nrow(toBeChecked))
     outOfRange[indexesToDiscard] <- TRUE
     
+    before <- sum(toBeChecked$VALID)
     toBeChecked <- toBeChecked %>% 
       dplyr::mutate(VALID=!outOfRange)
+    after <- sum(toBeChecked$VALID)
+    difference <- before - after
+    if (difference > 0 && isFALSE(settings@quiet)) {
+      cat(sprintf("Invalidating %i row(s) that did not succeed the 'min-max' check\n", difference))
+    }
   }
 
   if (settings@check_pos_def && !is.null(parameters)) {
-    # before <- sum(toBeChecked$VALID)
-    # print(sprintf("Before: %i rows", before))
-          
+    before <- sum(toBeChecked$VALID)
+
     toBeChecked <- toBeChecked %>%
       dplyr::left_join(checkMatrixIsPositiveDefinite(table=toBeChecked, parameters=parameters), by="REPLICATE")
     
@@ -401,8 +406,11 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
       dplyr::mutate(VALID=.data$VALID & .data$POSITIVE_DEFINITE) %>%
       dplyr::select(-c("POSITIVE_DEFINITE"))
     
-    # after <- sum(toBeChecked$VALID)
-    # print(sprintf("After: %i rows", after))
+    after <- sum(toBeChecked$VALID)
+    difference <- before - after
+    if (difference > 0 && isFALSE(settings@quiet)) {
+      cat(sprintf("Invalidating %i row(s) that did not succeed the 'definite positiveness' check\n", difference))
+    }
   }
   
   retValue <- dplyr::bind_rows(alreadyChecked, toBeChecked)
