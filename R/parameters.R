@@ -535,14 +535,19 @@ dataframeToParameter <- function(row, type) {
   label <- ifelse(is.null(row$label), as.character(NA), row$label) # Optional
   unit <- ifelse(is.null(row$unit), as.character(NA), row$unit) # Optional
   comment <- ifelse(is.null(row$comment), as.character(NA), row$comment) # Optional
+  min <- ifelse(is.null(row$min), as.numeric(NA), as.numeric(row$min)) # Optional
+  max <- ifelse(is.null(row$max), as.numeric(NA), as.numeric(row$max)) # Optional
   
   if (type=="theta") {
-    param <- Theta(name=name, index=row$index, value=row$value, fix=row$fix, label=label, unit=unit, comment=comment)
+    param <- Theta(name=name, index=row$index, value=row$value, min=min, max=max,
+                   fix=row$fix, label=label, unit=unit, comment=comment)
   } else if(type=="omega") {
     same <- ifelse(is.null(row$same), NA, row$same) # Optional
-    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, same=same, label=label, comment=comment)
+    param <- Omega(name=name, index=row$index, index2=row$index2, value=row$value, min=min, max=max,
+                   fix=row$fix, type=row$type, same=same, label=label, comment=comment)
   } else if(type=="sigma") {
-    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, fix=row$fix, type=row$type, label=label, comment=comment)
+    param <- Sigma(name=name, index=row$index, index2=row$index2, value=row$value, min=min, max=max,
+                   fix=row$fix, type=row$type, label=label, comment=comment)
   } else {
     stop(paste0("type must be one of: theta, omega or sigma"))
   }
