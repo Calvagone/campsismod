@@ -8,12 +8,15 @@
 #' @keywords internal
 #' 
 extractModelParametersFromNames <- function(parameters, names) {
+  parameterNames <- parameters %>% getNames()
+  assertthat::assert_that(!any(duplicated(parameterNames)), msg="Duplicated parameter names")
+  
   paramsAsList <- names %>% purrr::map(.f=function(.x){
-    parameter <- parameters %>% getByName(.x)
-    if (is.null(parameter)) {
+    index <- which(.x==parameterNames)
+    if (length(index)==0) {
       stop(sprintf("Parameter %s not found", .x))
     }
-    return(parameter)
+    return(parameters@list[[index]])
   })
   retValue <- Parameters() %>%
     add(paramsAsList)

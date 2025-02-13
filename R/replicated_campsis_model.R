@@ -137,14 +137,14 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' 
 updateParameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
-  paramNames <- names(row)
-  paramValues <- as.numeric(row)
-  originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=paramNames)
+  sampledParameterNames <- names(row)
+  sampledParameterValues <- as.numeric(row)
+  originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=sampledParameterNames)
   
-  for (paramIndex in seq_along(paramNames)) {
+  for (index in seq_along(sampledParameterNames)) {
     originalParam <- originalParams %>%
-      getByName(paramNames[paramIndex])
-    originalParam@value <- paramValues[paramIndex]
+      getByName(sampledParameterNames[index])
+    originalParam@value <- sampledParameterValues[index]
     model@parameters <- model@parameters %>%
       replace(originalParam)
   }
@@ -174,8 +174,13 @@ updateOMEGAs <- function(model) {
   # Still need to update the omegas 'SAME'
   # .x is the accumulated results or initial value (a 'parameters' object here)
   # .y next value in sequence (an omega here)
-  omegas <- model@parameters %>% select("omega")
-  if (omegas %>% length() > 1) {
+  omegas <- model@parameters %>%
+    select("omega")
+  
+  sameVector <- omegas@list %>%
+    purrr::map_lgl(~.x@same)
+    
+  if (omegas %>% length() > 1 && !all(is.na(sameVector))) {
     omegas_ <- Parameters()
     omegas_ <- omegas_ %>% add(omegas@list[[1]])
     
