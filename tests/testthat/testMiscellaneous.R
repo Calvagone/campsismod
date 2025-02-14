@@ -51,3 +51,38 @@ test_that("Method 'toString' of unknown statements works as expected", {
   expect_equal(toString(statement, dest="campsis", show=FALSE), "HELLO")
   expect_error(toString(statement, dest="other"), regexp="Only rxode2 \\(previously RxODE\\), mrgsolve or campsis are supported")
 })
+
+test_that("Export function on a replicated Campsis model should be fast", {
+  model <- CampsisModel()
+  noOfOmegas <- 11
+  set.seed(123)
+  replicates <- 1000
+  
+  # Add a huge OMEGA matrix
+  for (index1 in 1:noOfOmegas) {
+    for (index2 in 1:noOfOmegas) {
+      if (index2 > index1) {
+        next
+      }
+      model <- model %>%
+        add(Omega(index=index1, index2=index2, value=ifelse(index1==index2, runif(1), 0)))
+    }
+  }
+  
+  repModel <- model %>%
+    replicate(replicates, settings=AutoReplicationSettings(wishart=TRUE, odf=100, sdf=1000))
+  
+  noOfColumns <- noOfOmegas * (noOfOmegas - 1) / 2 + noOfOmegas # Lower triangle count + diagonal
+  expect_equal(ncol(repModel@replicated_parameters) - 1, noOfColumns)
+  
+  start <- Sys.time()
+  
+  models <- seq_len(replicates) %>%
+    purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
+
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  
+  # Check duration is less than 30 seconds (about 6 seconds on my machine)
+  expect_true(duration < 30, noOfColumns) 
+})

@@ -139,14 +139,17 @@ updateParameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
   sampledParameterNames <- names(row)
   sampledParameterValues <- as.numeric(row)
-  originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=sampledParameterNames)
-  
+  parameters <- model@parameters
+  parameterNames <- parameters %>% getNames()
+
   for (index in seq_along(sampledParameterNames)) {
-    originalParam <- originalParams %>%
-      getByName(sampledParameterNames[index])
-    originalParam@value <- sampledParameterValues[index]
-    model@parameters <- model@parameters %>%
-      replace(originalParam)
+    sampledParameterName <- sampledParameterNames[index]
+    sampledParameterValue <- sampledParameterValues[index]
+    parameterIndex <- which(sampledParameterName==parameterNames)
+    if (length(index)==0) {
+      stop(sprintf("Parameter %s not found", sampledParameterName))
+    }
+    model@parameters@list[[parameterIndex]]@value <- sampledParameterValue
   }
   
   # Update OMEGA's according that are same

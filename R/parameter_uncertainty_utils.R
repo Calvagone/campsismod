@@ -1,29 +1,4 @@
 
-#' Extract model parameters based on parameter names.
-#' 
-#' @param parameters all Campsis parameters
-#' @param names names of the parameters to extract
-#' @return subset of Campsis parameters corresponding to the provided names
-#' @importFrom stats setNames
-#' @keywords internal
-#' 
-extractModelParametersFromNames <- function(parameters, names) {
-  parameterNames <- parameters %>% getNames()
-  assertthat::assert_that(!any(duplicated(parameterNames)), msg="Duplicated parameter names")
-  
-  paramsAsList <- names %>% purrr::map(.f=function(.x){
-    index <- which(.x==parameterNames)
-    if (length(index)==0) {
-      stop(sprintf("Parameter %s not found", .x))
-    }
-    return(parameters@list[[index]])
-  })
-  retValue <- Parameters() %>%
-    add(paramsAsList)
-  
-  return(retValue)
-}
-
 #' Min/max default values for the given parameter.
 #' 
 #' @param parameter Campsis parameter
@@ -58,7 +33,13 @@ minMaxDefault <- function(parameter) {
 #' 
 sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
   varcov <- parameters@varcov
-  varcovParameters <- extractModelParametersFromNames(parameters=parameters, names=colnames(varcov))
+  parameterNames <- parameters %>% getNames()
+  varcovParameterNames <- colnames(varcov)
+  assertthat::assert_that(all(varcovParameterNames %in% parameterNames),
+                          msg="Some of the variance-covariance matrix parameters are not in the model parameters.")
+  varcovParameters <- parameters
+  correspondingIndexes <- match(x=varcovParameterNames, table=parameterNames)
+  varcovParameters@list <- varcovParameters@list[correspondingIndexes]
   
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
