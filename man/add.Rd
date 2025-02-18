@@ -21,6 +21,7 @@
 \alias{add,campsis_model,code_record-method}
 \alias{add,campsis_model,model_statement-method}
 \alias{add,campsis_model,campsis_model-method}
+\alias{add,campsis_model,list-method}
 \alias{add,omega_block,double_array_parameter-method}
 \alias{add,omega_blocks,omega_block-method}
 \alias{add,omega_blocks,parameters-method}
@@ -61,6 +62,8 @@ add(object, x, ...)
 \S4method{add}{campsis_model,model_statement}(object, x, pos = NULL)
 
 \S4method{add}{campsis_model,campsis_model}(object, x)
+
+\S4method{add}{campsis_model,list}(object, x)
 
 \S4method{add}{omega_block,double_array_parameter}(object, x)
 

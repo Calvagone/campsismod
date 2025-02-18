@@ -71,6 +71,14 @@ setMethod("add", signature=c("campsis_model", "campsis_model"), definition=funct
   return(object)
 })
 
+#' @rdname add
+setMethod("add", signature=c("campsis_model", "list"), definition=function(object, x) {
+  for (elem in x) {
+    object <- object %>% add(elem)
+  }
+  return(object)
+})
+
 #' Append model (or simply add).
 #' 
 #' @param model1 base model

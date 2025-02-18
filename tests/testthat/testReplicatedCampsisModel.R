@@ -186,39 +186,48 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
 
 test_that("Replicate a model that has IOV works as expected", {
   # The following test was moved from Campsis v1.6.0 to Campsismod v1.2.0
-  set.seed(1)
+  set.seed(123)
   model <- model_suite$testing$nonmem$advan2_trans2
-  
-  # Add uncertainty on OMEGA_IOV_CL1
-  varcov <- matrix(1e-4) # SD=0.01
-  row.names(varcov) <- "OMEGA_IOV_CL1"
-  colnames(varcov) <- "OMEGA_IOV_CL1"
-  model@parameters@varcov <- varcov
-  
+
+  iovOmegas <- list() %>%
+    append(Omega(name="IOV_CL1", value=0.025, type="var", same=FALSE)) %>%
+    append(Omega(name="IOV_CL2", value=0.025, type="var", same=TRUE)) %>%
+    append(Omega(name="IOV_CL3", value=0.025, type="var", same=TRUE)) %>%
+    append(Omega(name="IOV_CL4", value=0.025, type="var", same=TRUE)) %>%
+    append(Omega(name="IOV_KA1", value=0.030, type="var", same=FALSE)) %>%
+    append(Omega(name="IOV_KA2", value=0.030, type="var", same=TRUE)) %>%
+    append(Omega(name="IOV_KA3", value=0.030, type="var", same=TRUE)) %>%
+    append(Omega(name="IOV_KA4", value=0.030, type="var", same=TRUE))
+
   pk <- model %>%
-    add(Omega(name="IOV_CL1", value=0.025, type="var", same=FALSE)) %>%
-    add(Omega(name="IOV_CL2", value=0.025, type="var", same=TRUE)) %>%
-    add(Omega(name="IOV_CL3", value=0.025, type="var", same=TRUE))
+    add(iovOmegas) %>%
+    addRSE(Omega(name="IOV_CL1"), value=10) %>%
+    addRSE(Omega(name="IOV_KA1"), value=20)
   
-  repModel <- pk %>% replicate(2)
-  pk1 <- repModel %>% export(dest=CampsisModel(), index=1)
-  pk2 <- repModel %>% export(dest=CampsisModel(), index=2)
+  replicates <- 1000
+  repModel <- pk %>% replicate(replicates)
   
-  set <- c(pk %>% find(Omega("IOV_CL1")) %>% .@value,
-           pk %>% find(Omega("IOV_CL2")) %>% .@value,
-           pk %>% find(Omega("IOV_CL3")) %>% .@value)
+  models <- seq_len(replicates) %>%
+    purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
   
-  set1 <- c(pk1 %>% find(Omega("IOV_CL1")) %>% .@value,
-            pk1 %>% find(Omega("IOV_CL2")) %>% .@value,
-            pk1 %>% find(Omega("IOV_CL3")) %>% .@value)
+  pk1 <- models[[1]]
+  pk2 <- models[[2]]
   
-  set2 <- c(pk2 %>% find(Omega("IOV_CL1")) %>% .@value,
-            pk2 %>% find(Omega("IOV_CL2")) %>% .@value,
-            pk2 %>% find(Omega("IOV_CL3")) %>% .@value)
+  set <- iovOmegas %>% purrr::map_dbl(~pk %>% find(Omega(.x@name)) %>% .@value)
+  set1 <- iovOmegas %>% purrr::map_dbl(~pk1 %>% find(Omega(.x@name)) %>% .@value)
+  set2 <- iovOmegas %>% purrr::map_dbl(~pk2 %>% find(Omega(.x@name)) %>% .@value)
   
-  expect_equal(set, c(0.025, 0.025, 0.025))
-  expect_equal(round(set1, digits=3), c(0.019, 0.019, 0.019)) # Depends on seed
-  expect_equal(round(set2, digits=3), c(0.027, 0.027, 0.027)) # Depends on seed
+  expect_equal(set, c(0.025,0.025,0.025,0.025,0.03,0.03,0.03,0.03))
+  expect_equal(round(set1, digits=4), c(0.0275,0.0275,0.0275,0.0275,0.0266,0.0266,0.0266,0.0266)) # Depends on seed
+  expect_equal(round(set2, digits=4), c(0.0276,0.0276,0.0276,0.0276,0.0286,0.0286,0.0286,0.0286)) # Depends on seed
+  
+  # Check variance distribution on IOV_CL_1
+  iovCl1Omega <- models %>%
+    purrr::map_dbl(~.x %>% find(Omega("IOV_CL1")) %>% .@value)
+  expect_equal(sd(iovCl1Omega), 0.0025, tolerance=0.0005) # 10% RSE
+  iovKa1Omega <- models %>%
+    purrr::map_dbl(~.x %>% find(Omega("IOV_KA1")) %>% .@value)
+  expect_equal(sd(iovKa1Omega), 0.0060, tolerance=0.0005) # 20% RSE
 })
   
 test_that("Method 'replicate' also allows to manually replicate a model based on a table (1 replicate/row)", {
