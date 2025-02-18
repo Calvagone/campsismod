@@ -77,60 +77,41 @@ rxodeParams <- function(model) {
 rxodeMatrix <- function(model, type="omega") {
   
   if (is(model, "campsis_model")) {
-    params <- model@parameters
+    subset <- model@parameters %>%
+      select(type)
   } else if (is(model, "parameters")) {
-    params <- model
+    subset <- model %>%
+      select(type)
   } else {
     stop("model must be either a Campsis model or a parameters object")
   }
-  
-  # Standardise parameters
-  params <- params %>% standardise()
 
-  if (params %>% select(type) %>% length()==0) {
+  if (subset %>% length()==0) {
     return(matrix(data=numeric(0), nrow=0, ncol=0))
   }
-  maxIndex <- params %>% select(type) %>% maxIndex()
+  
+  # Standardise parameters
+  subset <- subset %>%
+    standardise()
+  
+  # Retrieve max index
+  maxIndex <- subset %>%
+    maxIndex()
   matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
   names <- rep("", maxIndex)
   
-  if (type=="omega") {
-    mockParam1 <- Omega(index=1, index2=1)
-    mockParam2 <- Omega(index=1, index2=1)
-  } else {
-    mockParam1 <- Sigma(index=1, index2=1)
-    mockParam2 <- Sigma(index=1, index2=1)
-  }
-  
-  for (i in seq_len(maxIndex)) {
-    mockParam1@index <- i
-    mockParam2@index2 <- i
-    
-    for (j in seq_len(maxIndex)) {
-      mockParam2@index <- j
-      mockParam1@index2 <- j
-      
-      param <- params %>% getByIndex(mockParam1)
-      if (length(param) == 0) {
-        param <- params %>% getByIndex(mockParam2)
-      }
-      if (length(param) == 0) {
-        matrix[i, j] <- 0
-      } else {
-        matrix[i, j] <- param@value
-      }
-    } 
-  }
-  for (i in seq_len(maxIndex)) {
-    mockParam1@index <- i
-    mockParam1@index2 <- i
-    param <- params %>% getByIndex(mockParam1)
-    if (length(param) == 0) {
-      stop(paste0("Missing param ", i, "in ", type, " matrix"))
-    } else {
-      names[i] <- param %>% getNameInModel()
+  # Fill in matrix
+  for (elem in subset@list) {
+    matrix[elem@index, elem@index2] <- elem@value
+    matrix[elem@index2, elem@index] <- elem@value
+    if (elem@index==elem@index2) {
+      names[elem@index] <- elem %>% getNameInModel()
     }
   }
+  
+  assertthat::assert_that(all(names != ""),
+                          msg=sprintf("At least one %s is missing.", toupper(type)))
+
   rownames(matrix) <- names
   colnames(matrix) <- names
   return(matrix)

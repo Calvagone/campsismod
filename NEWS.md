@@ -1,3 +1,7 @@
+# campsismod 1.2.1
+* Export from replicated Campsis model too slow, revise implementation #99
+* OMEGA/SIGMA matrix export too slow, revise implementation #100
+
 # campsismod 1.2.0
 
 * Add min/max columns to THETA's #24

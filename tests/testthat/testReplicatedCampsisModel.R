@@ -213,9 +213,15 @@ test_that("Replicate a model that has IOV works as expected (+ check performance
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
+  expect_true(duration < 15, noOfColumns) # (about 3 seconds on my machine)
   
-  # Check duration is less than 15 seconds (about 3 seconds on my machine)
-  expect_true(duration < 15, noOfColumns) 
+  # Check performances on exporting the OMEGA matrices
+  start <- Sys.time()
+  matrices <- models %>%
+    purrr::map(~rxodeMatrix(.x))
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  expect_true(duration < 5, noOfColumns) # (about 1 seconds on my machine)
   
   pk1 <- models[[1]]
   pk2 <- models[[2]]

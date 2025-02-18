@@ -75,14 +75,27 @@ test_that("Export function on a replicated Campsis model should be fast", {
   noOfColumns <- noOfOmegas * (noOfOmegas - 1) / 2 + noOfOmegas # Lower triangle count + diagonal
   expect_equal(ncol(repModel@replicated_parameters) - 1, noOfColumns)
   
+  # Check performances on exporting the Campsis model
   start <- Sys.time()
-  
   models <- seq_len(replicates) %>%
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
-
   end <- Sys.time()
   duration <- as.numeric(end - start)
+  expect_true(duration < 30, noOfColumns) # 30 seconds (about 6 seconds on my machine)
   
-  # Check duration is less than 30 seconds (about 6 seconds on my machine)
-  expect_true(duration < 30, noOfColumns) 
+  # Check performances on exporting the OMEGA matrices
+  start <- Sys.time()
+  matrices <- models %>%
+    purrr::map(~rxodeMatrix(.x))
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  expect_true(duration < 15, noOfColumns) # (about 3 seconds on my machine)
+  matrix1 <- matrices[[1]]
+  expect_true(isSymmetric(matrix1))
+  expect_equal(colnames(matrix1), paste0("ETA_", 1:noOfOmegas))
+  
+  # Check error message is given is OMEGA is missing
+  model1 <- models[[1]] %>%
+    delete(Omega(index=1, index2=1))
+  expect_error(rxodeMatrix(model1), regexp="At least one OMEGA is missing")
 })
