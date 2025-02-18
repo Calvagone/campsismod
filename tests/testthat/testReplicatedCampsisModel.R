@@ -184,7 +184,7 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
   expect_equal(sum(repModel2@replicated_parameters$THETA_KA < 0), 159)
 })
 
-test_that("Replicate a model that has IOV works as expected", {
+test_that("Replicate a model that has IOV works as expected (+ check performances) ", {
   # The following test was moved from Campsis v1.6.0 to Campsismod v1.2.0
   set.seed(123)
   model <- model_suite$testing$nonmem$advan2_trans2
@@ -207,8 +207,15 @@ test_that("Replicate a model that has IOV works as expected", {
   replicates <- 1000
   repModel <- pk %>% replicate(replicates)
   
+  # Check performances on exporting the model
+  start <- Sys.time()
   models <- seq_len(replicates) %>%
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  
+  # Check duration is less than 15 seconds (about 3 seconds on my machine)
+  expect_true(duration < 15, noOfColumns) 
   
   pk1 <- models[[1]]
   pk2 <- models[[2]]
@@ -221,7 +228,7 @@ test_that("Replicate a model that has IOV works as expected", {
   expect_equal(round(set1, digits=4), c(0.0275,0.0275,0.0275,0.0275,0.0266,0.0266,0.0266,0.0266)) # Depends on seed
   expect_equal(round(set2, digits=4), c(0.0276,0.0276,0.0276,0.0276,0.0286,0.0286,0.0286,0.0286)) # Depends on seed
   
-  # Check variance distribution on IOV_CL_1
+  # Check variance distribution on OMEGA IOV_CL_1
   iovCl1Omega <- models %>%
     purrr::map_dbl(~.x %>% find(Omega("IOV_CL1")) %>% .@value)
   expect_equal(sd(iovCl1Omega), 0.0025, tolerance=0.0005) # 10% RSE
