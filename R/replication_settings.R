@@ -20,8 +20,8 @@ setClass(
 #' Auto replication settings class.
 #' 
 #' @slot wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions
-#' @slot odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
-#' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
+#' @slot odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs, integer vector
+#' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs, integer vector
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
 #' @slot max_chunk_size maximum number of rows to sample at once, default value will be the number of replicates, unless specified.
@@ -61,8 +61,10 @@ setClass(
 #' 
 #' @param wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 #'  or Wishart distribution (block of OMEGAs)
-#' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
-#' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
+#' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs,
+#'  single integer value (the same degrees of freedom for all OMEGA blocks) or integer vector (one value per OMEGA block)
+#' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
+#'  single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)
 #' @param checkMinMax logical, check for min/max values when sampling the parameters, default is TRUE
 #' @param checkPosDef logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
