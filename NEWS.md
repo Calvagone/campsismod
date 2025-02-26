@@ -1,6 +1,7 @@
 # campsismod 1.2.1
 * Export from replicated Campsis model too slow, revise implementation #99
 * OMEGA/SIGMA matrix export too slow, revise implementation #100
+* Sampling from inverse Wishart/Chi-squared: degrees of freedom should be a vector #101
 
 # campsismod 1.2.0
 
