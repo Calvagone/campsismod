@@ -15,6 +15,9 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   
   repModel <- model %>% replicate(1000)
   
+  # Model can be printed out in the console!
+  print(repModel)
+  
   model1 <- repModel %>% export(dest=CampsisModel(), index=1)
   expect_equal(model1 %>% find(Theta(name="KA")) %>% .@value, 1.09958, tolerance=1e-4)
   expect_equal(model1 %>% find(Theta(name="CL")) %>% .@value, 2.831857, tolerance=1e-4)
@@ -48,6 +51,9 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   repModel <- model %>% replicate(1000, settings=settings)
   # hist(repModel@replicated_parameters$THETA_KA)
   expect_equal(sum(repModel@replicated_parameters$THETA_KA >= 1.3), 1000)
+  
+  # Model can be printed out in the console!
+  print(repModel)
 })
 
 getInverseWishartVar <- function(phiii, phijj, phiij, nu, p) {
