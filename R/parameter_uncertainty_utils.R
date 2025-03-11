@@ -150,7 +150,9 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
         dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% getName()))
       
       msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse Wishart distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, settings=settings)
+      wishartCorrection <- settings@wishart_correction
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, wishartCorrection=wishartCorrection),
+                           n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
@@ -212,13 +214,17 @@ sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
 #' @param df degree of freedom
 #' @param mat scaling matrix
 #' @param allColnames all column names as they are going to appear when as.vector is called
+#' @param wishartCorrection apply correction to the degrees of freedom, logical
 #' @return a data frame with the sampled parameters
 #' @importFrom LaplacesDemon rinvwishart
 #' @keywords internal
-sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
+sampleFromInverseWishartCore <- function(n, df, mat, allColnames, wishartCorrection) {
   indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
-  # correction <- -nrow(mat) + 1 # See variable change in rwishartc method
-  correction <- 0
+  
+  # If the correction is applied, the degrees of freedom are reduced by the number of rows + 1
+  # See https://github.com/metrumresearchgroup/simpar/issues/11
+  correction <- ifelse(wishartCorrection, -nrow(mat) + 1, 0)
+  
   table <- seq_len(n) %>%
     purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*(df + correction)))))[, indexesToKeep])
   colnames(table) <- allColnames[indexesToKeep]

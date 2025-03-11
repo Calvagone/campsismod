@@ -25,5 +25,7 @@ Auto replication settings class.
 \item{\code{check_min_max}}{logical, check for min/max values when sampling the parameters}
 
 \item{\code{check_pos_def}}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters}
+
+\item{\code{wishart_correction}}{logical, FALSE is default, see https://github.com/metrumresearchgroup/simpar/issues/11}
 }}
 

@@ -26,7 +26,8 @@ setClass(
 #' @slot max_iterations number of iterations maximum to sample the parameters
 #' @slot max_chunk_size maximum number of rows to sample at once, default value will be the number of replicates, unless specified.
 #' @slot check_min_max logical, check for min/max values when sampling the parameters
-#' @slot check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
+#' @slot check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters
+#' @slot wishart_correction logical, FALSE is default, see https://github.com/metrumresearchgroup/simpar/issues/11
 #' @export
 setClass(
   "auto_replication_settings",
@@ -38,11 +39,13 @@ setClass(
     max_iterations="integer",
     max_chunk_size="integer",
     check_min_max="logical",
-    check_pos_def="logical"
+    check_pos_def="logical",
+    wishart_correction="logical"
   ),
   contains="replication_settings",
   prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA),
-                      max_iterations=100L, max_chunk_size=as.integer(NA), check_min_max=TRUE, check_pos_def=FALSE)
+                      max_iterations=100L, max_chunk_size=as.integer(NA), check_min_max=TRUE, check_pos_def=FALSE,
+                      wishart_correction=FALSE)
 )
 
 #'

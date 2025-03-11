@@ -4,7 +4,7 @@
 \alias{sampleFromInverseWishartCore}
 \title{Sample from scaled inverse Wishart distribution (core method).}
 \usage{
-sampleFromInverseWishartCore(n, df, mat, allColnames)
+sampleFromInverseWishartCore(n, df, mat, allColnames, wishartCorrection)
 }
 \arguments{
 \item{n}{numbers of rows to sample}
@@ -14,6 +14,8 @@ sampleFromInverseWishartCore(n, df, mat, allColnames)
 \item{mat}{scaling matrix}
 
 \item{allColnames}{all column names as they are going to appear when as.vector is called}
+
+\item{wishartCorrection}{apply correction to the degrees of freedom, logical}
 }
 \value{
 a data frame with the sampled parameters
