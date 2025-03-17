@@ -1,26 +1,4 @@
 
-#' Extract model parameters based on parameter names.
-#' 
-#' @param parameters all Campsis parameters
-#' @param names names of the parameters to extract
-#' @return subset of Campsis parameters corresponding to the provided names
-#' @importFrom stats setNames
-#' @keywords internal
-#' 
-extractModelParametersFromNames <- function(parameters, names) {
-  paramsAsList <- names %>% purrr::map(.f=function(.x){
-    parameter <- parameters %>% getByName(.x)
-    if (is.null(parameter)) {
-      stop(sprintf("Parameter %s not found", .x))
-    }
-    return(parameter)
-  })
-  retValue <- Parameters() %>%
-    add(paramsAsList)
-  
-  return(retValue)
-}
-
 #' Min/max default values for the given parameter.
 #' 
 #' @param parameter Campsis parameter
@@ -55,7 +33,13 @@ minMaxDefault <- function(parameter) {
 #' 
 sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
   varcov <- parameters@varcov
-  varcovParameters <- extractModelParametersFromNames(parameters=parameters, names=colnames(varcov))
+  parameterNames <- parameters %>% getNames()
+  varcovParameterNames <- colnames(varcov)
+  assertthat::assert_that(all(varcovParameterNames %in% parameterNames),
+                          msg="Some of the variance-covariance matrix parameters are not in the model parameters.")
+  varcovParameters <- parameters
+  correspondingIndexes <- match(x=varcovParameterNames, table=parameterNames)
+  varcovParameters@list <- varcovParameters@list[correspondingIndexes]
   
   # Retrieve variance-covariance matrix names
   varcovNames <- colnames(varcov)
@@ -104,21 +88,41 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
   type <- class(parameters@list[[1]]) %>% as.character()
   
   if (type=="omega") {
-    df <- settings@odf
+    dfs <- settings@odf
   } else if (type=="sigma") {
-    df <- settings@sdf
+    dfs <- settings@sdf
   } else {
     stop("Should be either omega or sigma")
   }
+  
+  # Assign default names if not provided since the blocks re-index the OMEGA's
+  parameters@list <- parameters@list %>% purrr::map(.f=function(x) {
+    if (is.na(x@name)) {
+      x@name <- paste0(x@index, "_", x@index2)
+    }
+    return(x)
+  })
 
   # Detect blocks
   blocks <- OmegaBlocks() %>%
     add(parameters)
-  
+
   retValue <- tibble::tibble(REPLICATE=seq_len(n))
   
   # Iterate over blocks
-  for (block in blocks@list) {
+  for (blockIndex in seq_along(blocks@list)) {
+    block <- blocks@list[[blockIndex]]
+    blockLabel <- getBlockLabel(block)
+    if (length(dfs)==1) {
+      df <- dfs
+    } else {
+      assertthat::assert_that(length(dfs)==length(blocks@list),
+                              msg="The number of blocks must correspond to the number of degrees of freedom")
+      df <- dfs[blockIndex]
+      if (isFALSE(settings@quiet)) {
+        cat(sprintf("Sampling %s with %i degrees of freedom\n", blockLabel, df))
+      }
+    }
     if (isBlockFixed(block)) {
       next
     }
@@ -129,7 +133,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
       variable <- elem %>% getName()
       minMax <- minMaxDefault(elem) %>%
         dplyr::mutate(name=variable)
-      msg <- getSamplingMessageTemplate(what=variable, from="scaled inverse chi-squared distribution")
+      msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse chi-squared distribution")
       tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
@@ -145,8 +149,10 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
         purrr::map_df(~minMaxDefault(.x)) %>%
         dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% getName()))
       
-      msg <- getSamplingMessageTemplate(what=sprintf("OMEGA BLOCK(%i)", size), from="scaled inverse Wishart distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames), n=n, minMax=minMax, msg=msg, settings=settings)
+      msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse Wishart distribution")
+      wishartCorrection <- settings@wishart_correction
+      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, wishartCorrection=wishartCorrection),
+                           n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
   }
@@ -208,13 +214,19 @@ sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
 #' @param df degree of freedom
 #' @param mat scaling matrix
 #' @param allColnames all column names as they are going to appear when as.vector is called
+#' @param wishartCorrection apply correction to the degrees of freedom, logical
 #' @return a data frame with the sampled parameters
 #' @importFrom LaplacesDemon rinvwishart
 #' @keywords internal
-sampleFromInverseWishartCore <- function(n, df, mat, allColnames) {
+sampleFromInverseWishartCore <- function(n, df, mat, allColnames, wishartCorrection) {
   indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
+  
+  # If the correction is applied, the degrees of freedom are reduced by the number of rows + 1
+  # See https://github.com/metrumresearchgroup/simpar/issues/11
+  correction <- ifelse(wishartCorrection, -nrow(mat) + 1, 0)
+  
   table <- seq_len(n) %>%
-    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*df))))[, indexesToKeep])
+    purrr::map_df(~data.frame(t(as.vector(LaplacesDemon::rinvwishart(nu=df, S=mat*(df + correction)))))[, indexesToKeep])
   colnames(table) <- allColnames[indexesToKeep]
   return(table)
 }

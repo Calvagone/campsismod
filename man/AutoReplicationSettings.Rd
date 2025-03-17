@@ -17,9 +17,11 @@ AutoReplicationSettings(
 \item{wishart}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 or Wishart distribution (block of OMEGAs)}
 
-\item{odf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs}
+\item{odf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs,
+single integer value (the same degrees of freedom for all OMEGA blocks) or integer vector (one value per OMEGA block)}
 
-\item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
+\item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
+single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)}
 
 \item{checkMinMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
 

@@ -1,7 +1,7 @@
 Type: Package
 Package: campsismod
 Title: Generic Implementation of a PK/PD Model
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: 
     person("Nicolas", "Luyckx", , "nicolas.luyckx@calvagone.com", role = c("aut", "cre"))
 Description: A generic, easy-to-use and expandable implementation of a
@@ -27,6 +27,7 @@ Depends:
 Imports: 
     assertthat,
     dplyr,
+    ggplot2,
     LaplacesDemon,
     magrittr,
     MASS,
@@ -35,6 +36,7 @@ Imports:
     readr,
     rlang,
     tibble,
+    tidyr,
     utils
 Suggests: 
     devtools,

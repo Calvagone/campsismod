@@ -1,3 +1,9 @@
+# campsismod 1.2.1
+* Export from replicated Campsis model too slow, revise implementation #99
+* OMEGA/SIGMA matrix export too slow, revise implementation #100
+* Sampling from inverse Wishart/Chi-squared: degrees of freedom should be a vector #101
+* Implement show method on replicated Campsis model #103
+
 # campsismod 1.2.0
 
 * Add min/max columns to THETA's #24

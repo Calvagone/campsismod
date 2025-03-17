@@ -20,13 +20,14 @@ setClass(
 #' Auto replication settings class.
 #' 
 #' @slot wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions
-#' @slot odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
-#' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
+#' @slot odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs, integer vector
+#' @slot sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs, integer vector
 #' @slot quiet logical, suppress info messages
 #' @slot max_iterations number of iterations maximum to sample the parameters
 #' @slot max_chunk_size maximum number of rows to sample at once, default value will be the number of replicates, unless specified.
 #' @slot check_min_max logical, check for min/max values when sampling the parameters
-#' @slot check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters 
+#' @slot check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters
+#' @slot wishart_correction logical, FALSE is default, see https://github.com/metrumresearchgroup/simpar/issues/11
 #' @export
 setClass(
   "auto_replication_settings",
@@ -38,11 +39,13 @@ setClass(
     max_iterations="integer",
     max_chunk_size="integer",
     check_min_max="logical",
-    check_pos_def="logical"
+    check_pos_def="logical",
+    wishart_correction="logical"
   ),
   contains="replication_settings",
   prototype=prototype(wishart=FALSE, odf=as.integer(NA), sdf=as.integer(NA), quiet=as.logical(NA),
-                      max_iterations=100L, max_chunk_size=as.integer(NA), check_min_max=TRUE, check_pos_def=FALSE)
+                      max_iterations=100L, max_chunk_size=as.integer(NA), check_min_max=TRUE, check_pos_def=FALSE,
+                      wishart_correction=FALSE)
 )
 
 #'
@@ -61,8 +64,10 @@ setClass(
 #' 
 #' @param wishart logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared (univariate OMEGA distribution)
 #'  or Wishart distribution (block of OMEGAs)
-#' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs
-#' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs
+#' @param odf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs,
+#'  single integer value (the same degrees of freedom for all OMEGA blocks) or integer vector (one value per OMEGA block)
+#' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
+#'  single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)
 #' @param checkMinMax logical, check for min/max values when sampling the parameters, default is TRUE
 #' @param checkPosDef logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.

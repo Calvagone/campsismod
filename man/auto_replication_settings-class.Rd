@@ -12,9 +12,9 @@ Auto replication settings class.
 \describe{
 \item{\code{wishart}}{logical, sample OMEGAs and SIGMAs from scaled inverse chi-squared or Wishart distributions}
 
-\item{\code{odf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs}
+\item{\code{odf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the OMEGAs, integer vector}
 
-\item{\code{sdf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs}
+\item{\code{sdf}}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs, integer vector}
 
 \item{\code{quiet}}{logical, suppress info messages}
 
@@ -25,5 +25,7 @@ Auto replication settings class.
 \item{\code{check_min_max}}{logical, check for min/max values when sampling the parameters}
 
 \item{\code{check_pos_def}}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters}
+
+\item{\code{wishart_correction}}{logical, FALSE is default, see https://github.com/metrumresearchgroup/simpar/issues/11}
 }}
 

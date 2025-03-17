@@ -137,16 +137,19 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' 
 updateParameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
-  paramNames <- names(row)
-  paramValues <- as.numeric(row)
-  originalParams <- extractModelParametersFromNames(parameters=model@parameters, names=paramNames)
-  
-  for (paramIndex in seq_along(paramNames)) {
-    originalParam <- originalParams %>%
-      getByName(paramNames[paramIndex])
-    originalParam@value <- paramValues[paramIndex]
-    model@parameters <- model@parameters %>%
-      replace(originalParam)
+  sampledParameterNames <- names(row)
+  sampledParameterValues <- as.numeric(row)
+  parameters <- model@parameters
+  parameterNames <- parameters %>% getNames()
+
+  for (index in seq_along(sampledParameterNames)) {
+    sampledParameterName <- sampledParameterNames[index]
+    sampledParameterValue <- sampledParameterValues[index]
+    parameterIndex <- which(sampledParameterName==parameterNames)
+    if (length(index)==0) {
+      stop(sprintf("Parameter %s not found", sampledParameterName))
+    }
+    model@parameters@list[[parameterIndex]]@value <- sampledParameterValue
   }
   
   # Update OMEGA's according that are same
@@ -167,37 +170,93 @@ updateParameters <- function(model, row) {
 #' 
 #' @param model Campsis model
 #' @return updated Campsis model
-#' @importFrom purrr accumulate
+#' @importFrom purrr map_lgl
 #' @keywords internal
 #' 
 updateOMEGAs <- function(model) {
-  # Still need to update the omegas 'SAME'
-  # .x is the accumulated results or initial value (a 'parameters' object here)
-  # .y next value in sequence (an omega here)
-  omegas <- model@parameters %>% select("omega")
-  if (omegas %>% length() > 1) {
-    omegas_ <- Parameters()
-    omegas_ <- omegas_ %>% add(omegas@list[[1]])
-    
-    returned_omega_ <- purrr::accumulate(.x=omegas@list[2:length(omegas@list)], .f=function(.x, .y) {
-      lastOmega <- .x@list[[.x@list %>% length()]]
-      currentOmega <- .y
-      if (isTRUE(currentOmega@same)) {
-        if (is.na(lastOmega@same)) {
-          stop("Inconsistent same column. Slot 'same' of Previous OMEGA can't be NA.")
-        }
-        # Take value just above
-        currentOmega@value <- lastOmega@value
-      }
-      
-      # Accumulate here
-      .x <- .x %>% add(currentOmega)
-      
-      return(.x)
-    }, .init=omegas_)
-    
-    # Replace all previous omega's by new ones
-    model@parameters <- model@parameters %>% replace(returned_omega_)
+  isOmega <- model@parameters@list %>%
+    purrr::map_lgl(~is(.x, "omega"))
+  
+  omegaIndexes <- which(isOmega)
+  omegas <- model@parameters@list[omegaIndexes]
+  
+  sameVector <- omegas %>%
+    purrr::map_lgl(~.x@same)
+  
+  # 'SAME' vector only contains NA's, do nothing
+  allNAOmegas <- all(is.na(sameVector))
+  if (allNAOmegas) {
+    return(model)
   }
+  
+  # Apply run length encoding on 'SAME' vector
+  rleRes <- rle(sameVector)
+  lengths <- rleRes$lengths
+  values <- rleRes$values
+  falseIndexes <- which(values==FALSE)
+  trueIndexes <- which(values==TRUE)
+  
+  for (falseIndex in falseIndexes) {
+    # Check FALSE is followed by TRUE
+    if ((falseIndex + 1) %in% trueIndexes) {
+      falseOmegaIndex <- sum(lengths[1:falseIndex])
+      trueOmegaIndexes <- falseOmegaIndex + seq_len(lengths[falseIndex + 1])
+      
+      # Estimated value
+      falseOmegaValue <- omegas[[falseOmegaIndex]]@value
+      
+      # Replace where 'same' is TRUE
+      for (trueOmegaIndex in trueOmegaIndexes) {
+        omegas[[trueOmegaIndex]]@value <- falseOmegaValue
+      }
+    }
+  }
+  
+  # Replace OMEGA's in the model
+  model@parameters@list[omegaIndexes] <- omegas
+    
   return(model)
 }
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+#' @importFrom ggplot2 aes ggplot geom_vline geom_density theme_bw facet_wrap
+#' @importFrom dplyr mutate
+#' @importFrom tidyr pivot_longer
+#' @importFrom purrr map_dbl
+#' @importFrom assertthat assert_that
+#' @importFrom tibble tibble
+setMethod("show", signature=c("replicated_campsis_model"), definition=function(object) {
+  
+  model <- object@original_model
+  parameters <- model@parameters
+  parameterNames <- parameters %>% getNames()
+  
+  samplingData <- object@replicated_parameters %>%
+    tidyr::pivot_longer(cols=-c("REPLICATE"), names_to="Parameter", values_to="Value")
+  
+  sampledParameterNames <- unique(samplingData$Parameter)
+  
+  assertthat::assert_that(all(sampledParameterNames %in% parameterNames),
+                          msg="Some of the sampled parameters cannot be found in the model parameters.")
+  
+  sampledParameters <- parameters
+  correspondingIndexes <- match(x=sampledParameterNames, table=parameterNames)
+  sampledParameters@list <- sampledParameters@list[correspondingIndexes]
+
+  parameterInfo <- tibble::tibble(Parameter=sampledParameters %>% getNames(),
+                                  Value=sampledParameters@list %>% purrr::map_dbl(~.x@value)) %>%
+    dplyr::mutate(Parameter=factor(.data$Parameter, levels=sampledParameterNames)) # Natural order
+  
+  samplingData <- samplingData %>%
+    dplyr::mutate(Parameter=factor(.data$Parameter, levels=sampledParameterNames)) # Natural order
+  
+  plot <- ggplot2::ggplot(data=samplingData, mapping=ggplot2::aes(x=.data$Value, group=.data$Parameter)) +
+    ggplot2::geom_vline(data=parameterInfo, mapping=ggplot2::aes(xintercept=.data$Value, group=.data$Parameter), linetype="dashed", colour="black") +
+    ggplot2::geom_density() +
+    ggplot2::theme_bw() +
+    ggplot2::facet_wrap(~Parameter, scales="free")
+  print(plot)
+})

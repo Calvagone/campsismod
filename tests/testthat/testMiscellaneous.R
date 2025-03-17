@@ -51,3 +51,51 @@ test_that("Method 'toString' of unknown statements works as expected", {
   expect_equal(toString(statement, dest="campsis", show=FALSE), "HELLO")
   expect_error(toString(statement, dest="other"), regexp="Only rxode2 \\(previously RxODE\\), mrgsolve or campsis are supported")
 })
+
+test_that("Export function on a replicated Campsis model should be fast", {
+  model <- CampsisModel()
+  noOfOmegas <- 11
+  set.seed(123)
+  replicates <- 1000
+  
+  # Add a huge OMEGA matrix
+  for (index1 in 1:noOfOmegas) {
+    for (index2 in 1:noOfOmegas) {
+      if (index2 > index1) {
+        next
+      }
+      model <- model %>%
+        add(Omega(index=index1, index2=index2, value=ifelse(index1==index2, runif(1), 0)))
+    }
+  }
+  
+  repModel <- model %>%
+    replicate(replicates, settings=AutoReplicationSettings(wishart=TRUE, odf=100, sdf=1000))
+  
+  noOfColumns <- noOfOmegas * (noOfOmegas - 1) / 2 + noOfOmegas # Lower triangle count + diagonal
+  expect_equal(ncol(repModel@replicated_parameters) - 1, noOfColumns)
+  
+  # Check performances on exporting the Campsis model
+  start <- Sys.time()
+  models <- seq_len(replicates) %>%
+    purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  expect_true(duration < 30, noOfColumns) # 30 seconds (about 6 seconds on my machine)
+  
+  # Check performances on exporting the OMEGA matrices
+  start <- Sys.time()
+  matrices <- models %>%
+    purrr::map(~rxodeMatrix(.x))
+  end <- Sys.time()
+  duration <- as.numeric(end - start)
+  expect_true(duration < 15, noOfColumns) # (about 3 seconds on my machine)
+  matrix1 <- matrices[[1]]
+  expect_true(isSymmetric(matrix1))
+  expect_equal(colnames(matrix1), paste0("ETA_", 1:noOfOmegas))
+  
+  # Check error message is given is OMEGA is missing
+  model1 <- models[[1]] %>%
+    delete(Omega(index=1, index2=1))
+  expect_error(rxodeMatrix(model1), regexp="At least one OMEGA is missing")
+})
