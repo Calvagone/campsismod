@@ -2,6 +2,9 @@
 library(testthat)
 
 context("Test the replication of the Campsis model")
+source(paste0("", "testUtils.R"))
+
+# options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
 test_that("Method 'replicate' allows to replicate a model based on its variance-covariance matrix", {
   
@@ -219,7 +222,9 @@ test_that("Replicate a model that has IOV works as expected (+ check performance
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
-  expect_true(duration < 15, noOfColumns) # (about 3 seconds on my machine)
+  if (!skipPerformanceTests()) {
+    expect_true(duration < 15) # (about 3 seconds on my machine)
+  }
   
   # Check performances on exporting the OMEGA matrices
   start <- Sys.time()
@@ -227,7 +232,9 @@ test_that("Replicate a model that has IOV works as expected (+ check performance
     purrr::map(~rxodeMatrix(.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
-  expect_true(duration < 5, noOfColumns) # (about 1 seconds on my machine)
+  if (!skipPerformanceTests()) {
+    expect_true(duration < 5) # (about 1 seconds on my machine)
+  }
   
   pk1 <- models[[1]]
   pk2 <- models[[2]]
