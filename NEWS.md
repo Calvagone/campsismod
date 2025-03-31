@@ -1,3 +1,6 @@
+# campsismod 1.2.2
+* Skip performance tests on CRAN #105
+
 # campsismod 1.2.1
 * Export from replicated Campsis model too slow, revise implementation #99
 * OMEGA/SIGMA matrix export too slow, revise implementation #100

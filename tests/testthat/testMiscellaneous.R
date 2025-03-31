@@ -1,6 +1,9 @@
 library(testthat)
 
 context("Test various methods of the campsismod package that are not tested elsewhere")
+source(paste0("", "testUtils.R"))
+
+# options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
 test_that("Methods 'getName', 'getPrefix', 'show' and 'toString' work as expected on initial conditions", {
   model <- model_suite$testing$pk$`1cpt_fo`
@@ -81,7 +84,10 @@ test_that("Export function on a replicated Campsis model should be fast", {
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
-  expect_true(duration < 30, noOfColumns) # 30 seconds (about 6 seconds on my machine)
+  if (!skipPerformanceTests()) {
+    expect_true(duration < 30) # 30 seconds (about 6 seconds on my machine)
+  }
+  
   
   # Check performances on exporting the OMEGA matrices
   start <- Sys.time()
@@ -89,7 +95,11 @@ test_that("Export function on a replicated Campsis model should be fast", {
     purrr::map(~rxodeMatrix(.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
-  expect_true(duration < 15, noOfColumns) # (about 3 seconds on my machine)
+  
+  if (!skipPerformanceTests()) {
+    expect_true(duration < 15) # (about 3 seconds on my machine)
+  }
+  
   matrix1 <- matrices[[1]]
   expect_true(isSymmetric(matrix1))
   expect_equal(colnames(matrix1), paste0("ETA_", 1:noOfOmegas))
