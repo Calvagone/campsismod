@@ -38,6 +38,16 @@ setMethod("getName", signature = c("unknown_statement"), definition = function(x
 })
 
 #_______________________________________________________________________________
+#----                             replaceAll                                ----
+#_______________________________________________________________________________
+
+#' @rdname replaceAll
+setMethod("replaceAll", signature=c("unknown_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@line <- object@line %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+  return(object)
+})
+
+#_______________________________________________________________________________
 #----                             toString                                  ----
 #_______________________________________________________________________________
 
