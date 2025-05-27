@@ -1,3 +1,6 @@
+# campsismod 1.2.3
+* Method 'replaceAll' not working with unknown statements #108
+
 # campsismod 1.2.2
 * Skip performance tests on CRAN #105
 

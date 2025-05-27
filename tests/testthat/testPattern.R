@@ -23,16 +23,22 @@ test_that("Variable pattern object works as expected", {
 })
 
 test_that("Replace occurrences in model works as expected", {
-  model <- model_suite$testing$nonmem$advan1_trans1
-  model <- model %>% add(LineBreak())
-  model <- model %>% add(Comment("Check replacement also works in IF-statement"))
-  model <- model %>% add(IfStatement("K==1", Equation("XX", "K*10")))
+
+  model <- model_suite$testing$nonmem$advan1_trans1 %>%
+    add(LineBreak()) %>%
+    add(Comment("Check replacement also works in IF-statement")) %>%
+    add(IfStatement("K==1", Equation("XX", "K*10"))) %>%
+    add(UnknownStatement("THIS IS AN UNKNOWN STATEMENT THAT CONTAINS THE VARIABLE K"))
   model <- model %>% replaceAll("K", "K2")
   
   expect_equal(model %>% find(Equation("K2")), Equation("K2", "THETA_K*exp(ETA_K)"))
   expect_equal(model %>% find(Ode("A_CENTRAL")), Ode("A_CENTRAL", "-K2*A_CENTRAL"))
   expect_equal(model %>% find(Ode("A_OUTPUT")), Ode("A_OUTPUT", "K2*A_CENTRAL"))
   expect_equal(model %>% find(IfStatement("K2==1", Equation("XX"))), IfStatement("K2==1", Equation("XX", "K2*10")))
+
+  main <- model %>% find(MainRecord())
+  lastStatement <- main@statements@list[[length(main@statements@list)]]
+  expect_equal(lastStatement, UnknownStatement("THIS IS AN UNKNOWN STATEMENT THAT CONTAINS THE VARIABLE K2"))
 })
 
 test_that("Function replaceAll also replaces occurrences in compartment properties", {
