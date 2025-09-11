@@ -40,7 +40,10 @@ jsonToCampsisModel <- function(object, json) {
   model <- object
   
   # Parse model code
-  model@model <- read.model(text=unlist(json$model))
+  text <- unlist(json$model)
+  if (!is.null(text)) {
+    model@model <- read.model(text=text)
+  }
   
   # Parse parameters
   jsonParameters <- json$parameters
@@ -98,7 +101,7 @@ jsonToCampsisModel <- function(object, json) {
 openJSON <- function(json, schema=NULL) {
   assertthat::assert_that(length(json)==1, msg="Argument json must be a path or the JSON string")
   
-  if (grepl(pattern="\\s*\\[", x=json)) {
+  if (grepl(pattern="\\s*[\\[\\{]", x=json)) {
     rawJson <- json
   } else {
     rawJson <- suppressWarnings(paste0(readLines(json), collapse="\n"))
