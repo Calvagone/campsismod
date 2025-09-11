@@ -287,6 +287,22 @@ setMethod("getVarCov", signature=c("campsis_model"), definition=function(object)
 })
 
 #_______________________________________________________________________________
+#----                           loadFromJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "json_element"), definition=function(object, json) {
+  object <- jsonToCampsisModel(object=object, json=json)
+  return(object)
+})
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "character"), definition=function(object, json) {
+  schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
+  return(loadFromJSON(object=object, json=openJSON(json=json, schema=schema)))
+})
+
+#_______________________________________________________________________________
 #----                              move                                     ----
 #_______________________________________________________________________________
 
