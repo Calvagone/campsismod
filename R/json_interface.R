@@ -59,25 +59,11 @@ jsonToCampsisModel <- function(object, json) {
     purrr::keep(~.x$type=="sigma" && !is.null(.x$name2))
 
   thetas <- jsonThetas %>%
-    purrr::imap(.f=function(x, index) {
-      x$type <- NULL
-      theta <- Theta(index=index)
-      loadFromJSON(object=theta, JSONElement(x))
-    })
+    purrr::imap(~jsonToParameter(.x, .y))
   omegas <- jsonOmegasOnDiag %>%
-    purrr::imap(.f=function(x, index) {
-      x$type <- x$var_type
-      x$var_type <- NULL
-      omega <- Omega(index=index, index2=index)
-      loadFromJSON(object=omega, JSONElement(x))
-    })
+    purrr::imap(~jsonToParameter(.x, .y))
   sigmas <- jsonSigmasOnDiag %>%
-    purrr::imap(.f=function(x, index) {
-      x$type <- x$var_type
-      x$var_type <- NULL
-      sigma <- Sigma(index=index, index2=index)
-      loadFromJSON(object=sigma, JSONElement(x))
-    })
+    purrr::imap(~jsonToParameter(.x, .y))
   
   model@parameters@list <- c(thetas, omegas, sigmas)
   
@@ -86,6 +72,48 @@ jsonToCampsisModel <- function(object, json) {
     updateCompartments()
   
   return(model)
+}
+
+#' JSON to Campsis parameter.
+#' 
+#' @param x JSON data
+#' @param index parameter index to add
+#' @return Campsis parameter
+#' @export
+#' 
+jsonToParameter <- function(x, index=NULL) {
+  if (x$type=="theta") {
+    if (is.null(index)) {
+      theta <- Theta()
+    } else {
+      theta <- Theta(index=index)
+    }
+    x$type <- NULL
+    return(loadFromJSON(object=theta, JSONElement(x)))
+    
+  } else if (x$type=="omega") {
+    if (is.null(index)) {
+      omega <- Omega()
+    } else {
+      omega <- Omega(index=index, index2=index)
+    }
+    x$type <- x$var_type
+    x$var_type <- NULL
+    return(loadFromJSON(object=omega, JSONElement(x)))
+    
+  } else if (x$type=="sigma")  {
+    if (is.null(index)) {
+      sigma <- Sigma()
+    } else {
+      sigma <- Sigma(index=index, index2=index)
+    }
+    x$type <- x$var_type
+    x$var_type <- NULL
+    return(loadFromJSON(object=sigma, JSONElement(x)))
+    
+  } else {
+    stop("Unknown parameter type")
+  }
 }
 
 #' Open JSON file.
