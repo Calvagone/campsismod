@@ -29,6 +29,8 @@ Imports:
     dplyr,
     ggplot2,
     LaplacesDemon,
+    jsonlite,
+    jsonvalidate,
     magrittr,
     MASS,
     methods,
@@ -41,8 +43,6 @@ Imports:
 Suggests: 
     devtools,
     knitr,
-    jsonlite,
-    jsonvalidate,
     pkgdown,
     rmarkdown,
     roxygen2,
