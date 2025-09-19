@@ -275,6 +275,39 @@ setMethod("as.data.frame", signature("sigma", "character", "logical"), function(
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("theta"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, optional=c("min", "max", "label", "comment", "unit"))
+  assertthat::assert_that(!is.null(json$name), msg="All THETAs must be named")
+  return(JSONElement(json))
+})
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"), ignore="same")
+  json$var_type <- json$type
+  json$type <- "omega"
+  if (json$index==json$index2) {
+    assertthat::assert_that(!is.null(json$name), msg="All OMEGAs must be named")
+  }
+  return(JSONElement(json))
+})
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"))
+  json$var_type <- json$type
+  json$type <- "sigma"
+  if (json$index==json$index2) {
+    assertthat::assert_that(!is.null(json$name), msg="All SIGMAs must be named")
+  }
+  return(JSONElement(json))
+})
+
+#_______________________________________________________________________________
 #----                               isDiag                                  ----
 #_______________________________________________________________________________
 
@@ -435,19 +468,19 @@ setMethod("getUncertainty", signature=c("parameter"), definition=function(object
 
 #' @rdname loadFromJSON
 setMethod("loadFromJSON", signature=c("theta", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToSlot(object, json)
+  object <- mapJSONPropertiesToS4Slots(object, json)
   return(object)
 })
 
 #' @rdname loadFromJSON
 setMethod("loadFromJSON", signature=c("omega", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToSlot(object, json, discard_type=FALSE)
+  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
   return(object)
 })
 
 #' @rdname loadFromJSON
 setMethod("loadFromJSON", signature=c("sigma", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToSlot(object, json, discard_type=FALSE)
+  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
   return(object)
 })
 

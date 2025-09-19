@@ -131,6 +131,25 @@ setGeneric("getUncertainty", function(object, ...) {
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+#' Export the given object to a JSON object, ready to be written to files.
+#' 
+#' @param object any object
+#' @param ... extra arguments, unused
+#' @return the loaded S4 object
+#' @export
+#' @rdname exportToJSON
+exportToJSON <- function(object, ...) {
+  stop(sprintf("No default function is provided for 'object': %s", class(object)))
+}
+
+setGeneric("exportToJSON", function(object, ...) {
+  standardGeneric("exportToJSON")
+})
+
+#_______________________________________________________________________________
 #----                             getVarCov                                 ----
 #_______________________________________________________________________________
 

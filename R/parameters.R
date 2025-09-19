@@ -341,6 +341,46 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+omegaSigmaJsonIndexFix <- function(json, parameters, type) {
+  index <- json$index
+  index2 <- json$index2
+  if (index != index2) {
+    p1 <- parameters %>% campsismod::getByIndex(new(type, index=index, index2=index))
+    p2 <- parameters %>% campsismod::getByIndex(new(type, index=index2, index2=index2))
+    json$name <- p1@name
+    json$name2 <- p2@name
+  }
+  json$index <- NULL
+  json$index2 <- NULL
+  return(json)
+}
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("parameters"), definition=function(object, ...) {
+  object <- object %>%
+    campsismod::sort()
+
+  json <- object@list %>%
+    purrr::map(function(x) {
+        pJson <- exportToJSON(x)@data
+        if (pJson$type=="theta") {
+          pJson$index <- NULL
+        } else if (pJson$type=="omega" || pJson$type=="sigma") {
+          pJson <- omegaSigmaJsonIndexFix(json=pJson, parameters=object, type=pJson$type)
+        } else {
+          print(pJson$type)
+          stop("Should never occur")
+        }
+        return(pJson)
+      })
+  
+  return(JSONElement(json))
+})
+
+#_______________________________________________________________________________
 #----                             fixOmega                                  ----
 #_______________________________________________________________________________
 

@@ -1,5 +1,12 @@
-
-mapJSONPropertiesToSlot <- function(object, json, discard_type=TRUE) {
+#' Map JSON properties to S4 slots.
+#' 
+#' @param object S4 object
+#' @param json JSON element, json_element class
+#' @param discard_type discard JSON property 'type'
+#' @return a S4 object
+#' @export
+#' 
+mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
   json <- json@data
   properties <- names(json)
   if (discard_type) {
@@ -12,7 +19,7 @@ mapJSONPropertiesToSlot <- function(object, json, discard_type=TRUE) {
     
     if (isList && !is.null(value$type)) {
       # Recursion
-      value <- mapJSONPropertiesToSlot(object=new(value$type), json=JSONElement(value), discard_type=TRUE)
+      value <- mapJSONPropertiesToS4Slots(object=new(value$type), json=JSONElement(value), discard_type=TRUE)
     } else {
       if (isList) {
         value <- unlist(value)
@@ -24,6 +31,64 @@ mapJSONPropertiesToSlot <- function(object, json, discard_type=TRUE) {
     slot(object, property) <- value
   }
   return(object)
+}
+
+#' Map S4 slots to JSON properties.
+#' 
+#' @param object S4 object
+#' @param add_type add type as a property, TRUE by default
+#' @param properties properties that are optional in JSON, character vector
+#' @param ignore slots to be ignored
+#' @return a JSON object ready to be serialised
+#' @export
+#' 
+mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ignore=NULL) {
+  if (!isS4(object)) {
+    stop("Input must be an S4 object.")
+  }
+  
+  # Initialize list for JSON properties
+  json <- list()
+  
+  # Optionally add the type field
+  if (add_type) {
+    json$type <- class(object)[[1]]
+  }
+  
+  # Iterate over slots
+  slotNames <- slotNames(object)
+  for (property in slotNames[!slotNames %in% ignore]) {
+    value <- slot(object, property)
+    
+    if (isS4(value)) {
+      # Recursive call for nested S4
+      json[[property]] <- mapS4SlotsToJSONProperties(value, add_type=TRUE)
+      
+    } else if (is.list(value)) {
+      # Handle lists: check if elements are S4
+      json[[property]] <- lapply(value, function(v) {
+        if (isS4(v)) {
+          mapS4SlotsToJSONProperties(v, add_type=TRUE)
+        } else {
+          v
+        }
+      })
+      
+    } else if (length(value) == 0) {
+      # Map empty slot to NULL
+      if (!property %in% optional) {
+        json[[property]] <- NULL
+      }
+
+    } else {
+      # Atomic vectors, scalars, etc.
+      if (!(property %in% optional && is.na(value))) {
+        json[[property]] <- value
+      }
+    }
+  }
+  
+  return(json)
 }
 
 #' JSON to Campsis dataset.
