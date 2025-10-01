@@ -37,7 +37,7 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
 #' 
 #' @param object S4 object
 #' @param add_type add type as a property, TRUE by default
-#' @param properties properties that are optional in JSON, character vector
+#' @param optional properties that are optional in JSON, character vector
 #' @param ignore slots to be ignored
 #' @return a JSON object ready to be serialised
 #' @export

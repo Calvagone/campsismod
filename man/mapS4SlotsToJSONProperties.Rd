@@ -16,9 +16,9 @@ mapS4SlotsToJSONProperties(
 
 \item{add_type}{add type as a property, TRUE by default}
 
-\item{ignore}{slots to be ignored}
+\item{optional}{properties that are optional in JSON, character vector}
 
-\item{properties}{properties that are optional in JSON, character vector}
+\item{ignore}{slots to be ignored}
 }
 \value{
 a JSON object ready to be serialised
