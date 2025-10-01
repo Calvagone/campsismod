@@ -136,9 +136,9 @@ jsonToCampsisModel <- function(object, json) {
     purrr::map(~.x@name)
   
   omegasOffDiag <- jsonOmegasOffDiag %>%
-    purrr::map(~processOffDiagonalParameter(json=.x, diag_names=omegaNames))
+    purrr::map(~jsonToOffDiagParameter(json=.x, diag_names=omegaNames))
   sigmasOffDiag <- jsonSigmasOffDiag %>%
-    purrr::map(~processOffDiagonalParameter(json=.x, diag_names=sigmaNames))
+    purrr::map(~jsonToOffDiagParameter(json=.x, diag_names=sigmaNames))
   
   model@parameters@list <- c(thetas, omegas, omegasOffDiag, sigmas, sigmasOffDiag)
   
@@ -153,14 +153,31 @@ jsonToCampsisModel <- function(object, json) {
   return(model)
 }
 
-processOffDiagonalParameter <- function(json, diag_names) {
+#' Convert JSON correlation parameter (OMEGA or SIGMA) into a Campsis parameter.
+#' 
+#' @param json JSON data
+#' @param diag_names parameter names on the diagonal, character vector
+#' @return the corresponding Campsis parameter
+#' 
+jsonToOffDiagParameter <- function(json, diag_names) {
   name <- json$name
   name2 <- json$name2
   index <- which(diag_names==name)
   index2 <- which(diag_names==name2)
-  json$name <- paste0(name, "_", name2)
-  json$name2 <- NULL
   return(jsonToParameter(x=json, index=index, index2=index2))
+}
+
+#' Process JSON double array parameter.
+#' 
+#' @param x JSON data, OMEGA or SIGMA parameter
+#' @return updated JSON data with updated 'name' field and removed 'name2' field
+#' 
+processJSONDoubleArrayParameter <- function(x) {
+  if (!is.null(x$name2)) {
+    x$name <- paste0(x$name, "_", x$name2)
+    x$name2 <- NULL
+  }
+  return(x)
 }
 
 #' JSON to Campsis parameter.
@@ -182,6 +199,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     return(loadFromJSON(object=theta, JSONElement(x)))
     
   } else if (x$type=="omega") {
+    x <- processJSONDoubleArrayParameter(x)
     if (is.null(index)) {
       omega <- Omega()
     } else {
@@ -192,6 +210,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     return(loadFromJSON(object=omega, JSONElement(x)))
     
   } else if (x$type=="sigma")  {
+    x <- processJSONDoubleArrayParameter(x)
     if (is.null(index)) {
       sigma <- Sigma()
     } else {
