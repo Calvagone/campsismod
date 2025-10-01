@@ -124,29 +124,54 @@ jsonToCampsisModel <- function(object, json) {
     purrr::keep(~.x$type=="sigma" && !is.null(.x$name2))
 
   thetas <- jsonThetas %>%
-    purrr::imap(~jsonToParameter(.x, .y))
+    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
   omegas <- jsonOmegasOnDiag %>%
-    purrr::imap(~jsonToParameter(.x, .y))
+    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
   sigmas <- jsonSigmasOnDiag %>%
-    purrr::imap(~jsonToParameter(.x, .y))
+    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
   
-  model@parameters@list <- c(thetas, omegas, sigmas)
+  omegaNames <- omegas %>%
+    purrr::map(~.x@name)
+  sigmaNames <- sigmas %>%
+    purrr::map(~.x@name)
+  
+  omegasOffDiag <- jsonOmegasOffDiag %>%
+    purrr::map(~processOffDiagonalParameter(json=.x, diag_names=omegaNames))
+  sigmasOffDiag <- jsonSigmasOffDiag %>%
+    purrr::map(~processOffDiagonalParameter(json=.x, diag_names=sigmaNames))
+  
+  model@parameters@list <- c(thetas, omegas, omegasOffDiag, sigmas, sigmasOffDiag)
   
   # Update compartments
   model <- model %>%
     updateCompartments()
   
+  # Sort model parameters
+  model <- model %>%
+    campsismod::sort()
+  
   return(model)
+}
+
+processOffDiagonalParameter <- function(json, diag_names) {
+  name <- json$name
+  name2 <- json$name2
+  index <- which(diag_names==name)
+  index2 <- which(diag_names==name2)
+  json$name <- paste0(name, "_", name2)
+  json$name2 <- NULL
+  return(jsonToParameter(x=json, index=index, index2=index2))
 }
 
 #' JSON to Campsis parameter.
 #' 
 #' @param x JSON data
 #' @param index parameter index to add
+#' @param index2 second parameter index to add for OMEGAs and SIGMAs
 #' @return Campsis parameter
 #' @export
 #' 
-jsonToParameter <- function(x, index=NULL) {
+jsonToParameter <- function(x, index=NULL, index2=NULL) {
   if (x$type=="theta") {
     if (is.null(index)) {
       theta <- Theta()
@@ -160,7 +185,7 @@ jsonToParameter <- function(x, index=NULL) {
     if (is.null(index)) {
       omega <- Omega()
     } else {
-      omega <- Omega(index=index, index2=index)
+      omega <- Omega(index=index, index2=index2)
     }
     x$type <- x$var_type
     x$var_type <- NULL
@@ -170,7 +195,7 @@ jsonToParameter <- function(x, index=NULL) {
     if (is.null(index)) {
       sigma <- Sigma()
     } else {
-      sigma <- Sigma(index=index, index2=index)
+      sigma <- Sigma(index=index, index2=index2)
     }
     x$type <- x$var_type
     x$var_type <- NULL
@@ -180,6 +205,7 @@ jsonToParameter <- function(x, index=NULL) {
     stop("Unknown parameter type")
   }
 }
+
 
 #' Open JSON file.
 #' 

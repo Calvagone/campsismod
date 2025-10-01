@@ -4,12 +4,14 @@
 \alias{jsonToParameter}
 \title{JSON to Campsis parameter.}
 \usage{
-jsonToParameter(x, index = NULL)
+jsonToParameter(x, index = NULL, index2 = NULL)
 }
 \arguments{
 \item{x}{JSON data}
 
 \item{index}{parameter index to add}
+
+\item{index2}{second parameter index to add for OMEGAs and SIGMAs}
 }
 \value{
 Campsis parameter
