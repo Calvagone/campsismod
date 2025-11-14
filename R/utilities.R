@@ -244,3 +244,34 @@ removeNaColumn <- function(x, column) {
 isRxODE <- function(dest) {
   return(dest %in% c("RxODE", "rxode2"))
 }
+
+#'
+#' Get the Campsismod options (R options).
+#'
+#' @return global options for Campsismod
+#' @export
+#' @keywords internal
+getCampsismodOptions <- function() {
+  return(getOption("campsismod.options"))
+}
+
+#'
+#' Get Campsismod option logic.
+#'
+#' @param name option to search
+#' @param default default value if option not found
+#' @return option value
+#' @export
+getCampsismodOption <- function(name, default) {
+  option <- getCampsismodOptions()
+  if (is.null(option)) {
+    return(default)
+  } else {
+    value <- option[[name]]
+    if (is.null(value)) {
+      return(default)
+    } else {
+      return(value)
+    }
+  }
+}

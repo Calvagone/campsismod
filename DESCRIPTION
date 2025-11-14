@@ -1,7 +1,7 @@
 Type: Package
 Package: campsismod
 Title: Generic Implementation of a PK/PD Model
-Version: 1.2.3
+Version: 1.3.0
 Authors@R: 
     person("Nicolas", "Luyckx", , "nicolas.luyckx@calvagone.com", role = c("aut", "cre"))
 Description: A generic, easy-to-use and expandable implementation of a
@@ -29,6 +29,8 @@ Imports:
     dplyr,
     ggplot2,
     LaplacesDemon,
+    jsonlite,
+    jsonvalidate,
     magrittr,
     MASS,
     methods,
@@ -58,6 +60,7 @@ Collate:
     'utilities.R'
     'special_operators.R'
     'check.R'
+    'json_element.R'
     'generic.R'
     'generic_element_list.R'
     'generic_element_position.R'
@@ -96,3 +99,4 @@ Collate:
     'rxode_conversion.R'
     'mrgsolve_model.R'
     'mrgsolve_conversion.R'
+    'json_interface.R'

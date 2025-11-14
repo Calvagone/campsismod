@@ -6,6 +6,7 @@
 \alias{write,parameters,character-method}
 \alias{write,code_records,character-method}
 \alias{write,campsis_model,character-method}
+\alias{write,json_element,character-method}
 \title{Write generic object to files.}
 \usage{
 write(object, file, ...)
@@ -15,6 +16,8 @@ write(object, file, ...)
 \S4method{write}{code_records,character}(object, file, ...)
 
 \S4method{write}{campsis_model,character}(object, file, ...)
+
+\S4method{write}{json_element,character}(object, file, ...)
 }
 \arguments{
 \item{object}{generic object}

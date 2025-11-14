@@ -260,6 +260,19 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
+  lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
+  json <- list()
+  json$model <- lines
+  json$parameters <- exportToJSON(object@parameters)@data
+  return(JSONElement(json))
+})
+
+#_______________________________________________________________________________
 #----                          getCompartmentIndex                          ----
 #_______________________________________________________________________________
 
@@ -284,6 +297,22 @@ setMethod("getUncertainty", signature=c("campsis_model"), definition=function(ob
 #' @rdname getVarCov
 setMethod("getVarCov", signature=c("campsis_model"), definition=function(object) {
   return(object@parameters %>% getVarCov())
+})
+
+#_______________________________________________________________________________
+#----                           loadFromJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "json_element"), definition=function(object, json) {
+  object <- jsonToCampsisModel(object=object, json=json)
+  return(object)
+})
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "character"), definition=function(object, json) {
+  schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
+  return(loadFromJSON(object=object, json=openJSON(json=json, schema=schema)))
 })
 
 #_______________________________________________________________________________
@@ -508,6 +537,10 @@ setMethod("standardise", signature=c("campsis_model"), definition=function(objec
 
 #' @rdname write
 setMethod("write", signature=c("campsis_model", "character"), definition=function(object, file, ...) {
+  if (endsWith(file, ".json")) {
+    return(exportToJSON(object) %>% campsismod::write(file=file))
+  }
+  
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters
@@ -523,5 +556,11 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
     records %>% write(file=file.path(file, "model.campsis"), model=object)
     parameters %>% write(file=file)
   }
+  return(TRUE)
+})
+
+#' @rdname write
+setMethod("write", signature=c("json_element", "character"), definition=function(object, file, ...) {
+  jsonlite::write_json(object@data, path=file, pretty=TRUE, auto_unbox=TRUE)
   return(TRUE)
 })

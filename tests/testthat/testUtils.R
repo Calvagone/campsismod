@@ -67,27 +67,9 @@ envVarIsTrue <- function(x) {
   return(isTRUE(as.logical(Sys.getenv(x, "false"))))
 }
 
-skipTests <- function(name, default) {
-  option <- getCampsismodOption()
-  if (is.null(option)) {
-    return(default)
-  } else {
-    value <- option[[name]]
-    if (is.null(value)) {
-      return(default)
-    } else {
-      return(value)
-    }
-  }
-}
-
 skipPerformanceTests <- function() {
   # On CRAN, default value is TRUE
   # FALSE otherwise
-  return(skipTests(name="SKIP_PERFORMANCE_TESTS", default=onCran()))
-}
-
-getCampsismodOption <- function() {
-  return(getOption("campsismod.options"))
+  return(getCampsismodOption(name="SKIP_PERFORMANCE_TESTS", default=onCran()))
 }
 
