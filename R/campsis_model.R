@@ -265,6 +265,13 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 
 #' @rdname exportToJSON
 setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
+  # Delete error record if empty
+  errorRecord <- object %>%
+    find(ErrorRecord())
+  if (!is.null(errorRecord) && length(errorRecord)==0) {
+    object <- object %>%
+      delete(ErrorRecord())
+  }
   lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
   json <- list()
   json$model <- lines
