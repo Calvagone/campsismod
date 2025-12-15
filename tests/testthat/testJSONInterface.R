@@ -28,3 +28,14 @@ test_that("Import '1-cpt fo' Campsis model in JSON format", {
     campsismod::sort()
   expect_equal(expectedModel, model)
 })
+
+
+test_that("Export/Re-import '2cpt_zo_allo_metab_effect_on_cl' Campsis model to/from JSON", {
+  model <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl`
+  
+  tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))
+  model %>%
+    exportToJSON() %>%
+    write(file=tmp) 
+  
+})

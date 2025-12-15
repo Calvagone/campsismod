@@ -276,6 +276,9 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
   json <- list()
   json$code <- lines
   json$parameters <- exportToJSON(object@parameters)@data
+  if (length(object@parameters@varcov) > 0) {
+    json$varcov <- varcovToJSON(parameters=object@parameters)
+  }
   return(JSONElement(json))
 })
 
@@ -567,7 +570,8 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
 })
 
 #' @rdname write
-setMethod("write", signature=c("json_element", "character"), definition=function(object, file, ...) {
-  jsonlite::write_json(object@data, path=file, pretty=TRUE, auto_unbox=TRUE)
+#' @param digits significant digits in JSON file, default is 8
+setMethod("write", signature=c("json_element", "character"), definition=function(object, file, digits=8, ...) {
+  jsonlite::write_json(object@data, path=file, pretty=TRUE, auto_unbox=TRUE, digits=digits)
   return(TRUE)
 })

@@ -358,6 +358,82 @@ omegaSigmaJsonIndexFix <- function(json, parameters, type) {
   return(json)
 }
 
+toJSONParamReference <- function(param, parameters) {
+  json <- list()
+  if (is(param, "theta")) {
+    json$type <- "theta_ref"
+    json$name <- param@name
+  } else if (is(param, "double_array_parameter")) {
+    if (is(param, "omega")) {
+      json$type <- "omega_ref"
+      emptyParam1 <- Omega()
+      emptyParam2 <- Omega()
+    } else if (is(param, "sigma")) {
+      json$type <- "sigma_ref"
+      emptyParam1 <- Sigma()
+      emptyParam2 <- Sigma()
+    } else {
+      stop("Either omega or sigma")
+    }
+    if (param %>% isDiag()) {
+      json$name <- param@name
+    } else {
+      emptyParam1@index <- param@index
+      emptyParam1@index2 <- param@index
+      refParam1 <- parameters %>% getByIndex(emptyParam1)
+      json$name <- refParam1@name
+      emptyParam2@index <- param@index2
+      emptyParam2@index2 <- param@index2
+      refParam2 <- parameters %>% getByIndex(emptyParam2)
+      json$name2 <- refParam1@name
+    }
+  } else {
+    stop("Unknown parameter type")
+  }
+  return(json)
+}
+
+varcovToJSON <- function(parameters) {
+  varcov <- parameters@varcov
+  assertthat::assert_that(nrow(varcov)==ncol(varcov))
+  
+  colNames <- dimnames(varcov)[[1]]
+  rowNames <- dimnames(varcov)[[2]]
+  assertthat::assert_that(all(colNames==rowNames))
+  assertthat::assert_that(length(colNames)==nrow(varcov))
+  
+  parametersList <- parameters@list
+  parameterNames <- parametersList %>%
+    purrr::map_chr(~.x %>% getName())
+  
+  json <- list()
+  
+  for (i in seq_len(nrow(varcov))) {
+    for (j in seq_len(nrow(varcov))) {
+      if (j > i) {
+        next
+      }
+      rowName <- rowNames[i]
+      colName <- colNames[j]
+      rowParamIndex <- which(parameterNames==rowName)
+      colParamIndex <- which(parameterNames==colName)
+      assertthat::assert_that(length(rowParamIndex)==1,
+                              msg=sprintf("No parameter found for variance matrix entry '%s'", rowName))
+      assertthat::assert_that(length(colParamIndex)==1,
+                              msg=sprintf("No parameter found for variance matrix entry '%s'", colName))
+      rowParam <- parametersList[[rowParamIndex]]
+      columnParam <- parametersList[[colParamIndex]]
+      varcovEntry <- list()
+      varcovEntry$type <- "varcov_entry"
+      varcovEntry$ref1 <- toJSONParamReference(param=rowParam, parameters=parameters)
+      varcovEntry$ref2 <- toJSONParamReference(param=columnParam, parameters=parameters)
+      varcovEntry$cov <- varcov[i, j]
+      json[[length(json) + 1]] <- varcovEntry
+    }
+  }
+  return(json)
+}
+
 #' @rdname exportToJSON
 setMethod("exportToJSON", signature=c("parameters"), definition=function(object, ...) {
   object <- object %>%
