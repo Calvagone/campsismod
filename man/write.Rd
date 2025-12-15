@@ -17,7 +17,7 @@ write(object, file, ...)
 
 \S4method{write}{campsis_model,character}(object, file, ...)
 
-\S4method{write}{json_element,character}(object, file, ...)
+\S4method{write}{json_element,character}(object, file, digits = 12, ...)
 }
 \arguments{
 \item{object}{generic object}
@@ -25,6 +25,8 @@ write(object, file, ...)
 \item{file}{path of the output file or directory}
 
 \item{...}{extra arguments}
+
+\item{digits}{significant digits in JSON file, default is 12}
 }
 \value{
 logical value, TRUE for success, FALSE for failure

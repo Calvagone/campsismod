@@ -97,6 +97,7 @@ mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ign
 #' @param json json element
 #' @return Campsis dataset
 #' @importFrom jsonlite parse_json
+#' @importFrom purrr keep imap map flatten_chr
 #' @keywords internal
 #' 
 jsonToCampsisModel <- function(object, json) {
@@ -150,7 +151,42 @@ jsonToCampsisModel <- function(object, json) {
   model <- model %>%
     campsismod::sort()
   
+  # Parse variance-covariance matrix
+  varcov <- json$varcov
+  if (length(varcov) > 0) {
+    # Find all possible parameter names and initialize the matrix
+    rowNames <- varcov %>%
+      purrr::map(~c(findVarcovParameterName(ref=.x$ref1, model=model) %>% getName(),
+                    findVarcovParameterName(ref=.x$ref2, model=model) %>% getName())) %>%
+      purrr::flatten_chr() %>%
+      unique()
+    
+    matrix <- matrix(0L, nrow=length(rowNames), ncol=length(rowNames))
+    dimnames(matrix) <- list(rowNames, rowNames)
+    
+    # Fill in with values
+    for (entry in varcov) {
+      ref1Name <- findVarcovParameterName(ref=entry$ref1, model=model) %>% getName()
+      ref2Name <- findVarcovParameterName(ref=entry$ref2, model=model) %>% getName()
+      matrix[ref1Name, ref2Name] <- entry$cov
+      matrix[ref2Name, ref1Name] <- entry$cov
+    }
+    
+    model@parameters@varcov <- matrix
+  }
   return(model)
+}
+
+findVarcovParameterName <- function(ref, model) {
+  if (ref$type=="theta_ref") {
+    retValue <- model %>% find(Theta(name=ref$name))
+  } else if (ref$type=="omega_ref") {
+    retValue <- model %>% find(Omega(name=ref$name))
+  } else if (ref$type=="sigma_ref") {
+    retValue <- model %>% find(Sigma(name=ref$name))
+  } else {
+    stop("Not possible.")
+  }
 }
 
 #' Convert JSON correlation parameter (OMEGA or SIGMA) into a Campsis parameter.

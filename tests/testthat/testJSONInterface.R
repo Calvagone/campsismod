@@ -36,6 +36,10 @@ test_that("Export/Re-import '2cpt_zo_allo_metab_effect_on_cl' Campsis model to/f
   tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))
   model %>%
     exportToJSON() %>%
-    write(file=tmp) 
+    write(file=tmp)
   
+  model2 <- loadFromJSON(CampsisModel(), paste0(readLines(tmp), collapse="\n"))
+  expect_equal(model, model2)
 })
+
+

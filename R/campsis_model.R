@@ -570,8 +570,8 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
 })
 
 #' @rdname write
-#' @param digits significant digits in JSON file, default is 8
-setMethod("write", signature=c("json_element", "character"), definition=function(object, file, digits=8, ...) {
+#' @param digits significant digits in JSON file, default is 12
+setMethod("write", signature=c("json_element", "character"), definition=function(object, file, digits=12, ...) {
   jsonlite::write_json(object@data, path=file, pretty=TRUE, auto_unbox=TRUE, digits=digits)
   return(TRUE)
 })
