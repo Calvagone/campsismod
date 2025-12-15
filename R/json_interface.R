@@ -105,7 +105,7 @@ jsonToCampsisModel <- function(object, json) {
   model <- object
   
   # Parse model code
-  text <- unlist(json$model)
+  text <- unlist(json$code)
   if (!is.null(text)) {
     model@model <- read.model(text=text)
   }

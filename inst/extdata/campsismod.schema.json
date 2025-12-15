@@ -8,7 +8,7 @@
     "model": {
       "type": "object",
       "properties": {
-        "model": {
+        "code": {
           "type": "array",
           "items": {
             "type": "string"
@@ -29,8 +29,19 @@
               }
             ]
           }
+        },
+        "varcov": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/varcov_entry",
+            "description": "Variance-covariance entry list"
+          }
         }
-      }
+      },
+      "required": [
+        "code",
+        "parameters"
+      ]
     },
     "parameter": {
       "title": "Base Parameter",
@@ -144,6 +155,129 @@
           },
           "required": []
         }
+      ]
+    },
+    "parameter_ref": {
+      "title": "Base Parameter Reference",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the referenced parameter"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "theta_ref": {
+      "title": "Theta Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "theta_ref"
+            }
+          }
+        }
+      ]
+    },
+    "double_array_parameter_ref": {
+      "title": "Double Array Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter_ref"
+        },
+        {
+          "properties": {
+            "name2": {
+              "type": "string",
+              "description": "Reference to the second parameter in case this parameter describes a correlation or a covariance."
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "omega_ref": {
+      "title": "Omega Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "omega_ref"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "sigma_ref": {
+      "title": "Sigma Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "sigma_ref"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "varcov_entry": {
+      "title": "Variance-Covariance Matrix Entry",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "varcov_entry"
+        },
+        "ref1": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/theta_ref"
+            },
+            {
+              "$ref": "#/$defs/omega_ref"
+            },
+            {
+              "$ref": "#/$defs/sigma_ref"
+            }
+          ],
+          "description": "First referenced parameter"
+        },
+        "ref2": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/theta_ref"
+            },
+            {
+              "$ref": "#/$defs/omega_ref"
+            },
+            {
+              "$ref": "#/$defs/sigma_ref"
+            }
+          ],
+          "description": "Second referenced parameter"
+        },
+        "cov": {
+          "type": "number",
+          "description": "Covariance value between the two referenced parameter."
+        }
+      },
+      "required": [
+        "ref1",
+        "ref2",
+        "cov"
       ]
     }
   }

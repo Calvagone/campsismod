@@ -274,7 +274,7 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
   }
   lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
   json <- list()
-  json$model <- lines
+  json$code <- lines
   json$parameters <- exportToJSON(object@parameters)@data
   return(JSONElement(json))
 })
