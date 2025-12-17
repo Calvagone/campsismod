@@ -156,8 +156,8 @@ jsonToCampsisModel <- function(object, json) {
   if (length(varcov) > 0) {
     # Find all possible parameter names and initialize the matrix
     rowNames <- varcov %>%
-      purrr::map(~c(findVarcovParameterName(ref=.x$ref1, model=model) %>% getName(),
-                    findVarcovParameterName(ref=.x$ref2, model=model) %>% getName())) %>%
+      purrr::map(~c(findVarcovParameter(ref=.x$ref1, model=model) %>% getName(),
+                    findVarcovParameter(ref=.x$ref2, model=model) %>% getName())) %>%
       purrr::flatten_chr() %>%
       unique()
     
@@ -166,8 +166,8 @@ jsonToCampsisModel <- function(object, json) {
     
     # Fill in with values
     for (entry in varcov) {
-      ref1Name <- findVarcovParameterName(ref=entry$ref1, model=model) %>% getName()
-      ref2Name <- findVarcovParameterName(ref=entry$ref2, model=model) %>% getName()
+      ref1Name <- findVarcovParameter(ref=entry$ref1, model=model) %>% getName()
+      ref2Name <- findVarcovParameter(ref=entry$ref2, model=model) %>% getName()
       matrix[ref1Name, ref2Name] <- entry$cov
       matrix[ref2Name, ref1Name] <- entry$cov
     }
@@ -177,16 +177,46 @@ jsonToCampsisModel <- function(object, json) {
   return(model)
 }
 
-findVarcovParameterName <- function(ref, model) {
+findVarcovDoubleArrayParameter <- function(ref, model, type) {
+  if (type=="omega") {
+    paramRef = Omega()
+  } else if (type=="sigma") {
+    paramRef = Sigma()
+  } else {
+    stop("type must be 'omega' or 'sigma'")
+  }
+  if (is.null(ref$name2)) {
+    paramRef@name <- ref$name
+    retValue <- model %>% find(paramRef)
+  } else {
+    # First attempt
+    paramRef@name <- paste0(ref$name, "_", ref$name2)
+    retValue <- model %>% find(paramRef)
+    # Second attempt
+    if (is.null(retValue)) {
+      paramRef@name <- paste0(ref$name2, "_", ref$name)
+      retValue <- model %>% find(paramRef)
+    }
+  }
+  return(retValue)
+}
+
+findVarcovParameter <- function(ref, model) {
   if (ref$type=="theta_ref") {
     retValue <- model %>% find(Theta(name=ref$name))
   } else if (ref$type=="omega_ref") {
-    retValue <- model %>% find(Omega(name=ref$name))
+    retValue <- findVarcovDoubleArrayParameter(ref=ref, model=model, type="omega")
   } else if (ref$type=="sigma_ref") {
-    retValue <- model %>% find(Sigma(name=ref$name))
-  } else {
-    stop("Not possible.")
+    retValue <- findVarcovDoubleArrayParameter(ref=ref, model=model, type="sigma")
   }
+  if (is.null(retValue)) {
+    if (is.null(ref$name2)) {
+      stop(sprintf("Parameter reference not found (type: %s, name: %s)", ref$type, ref$name))
+    } else {
+      stop(sprintf("Parameter reference not found (type: %s, name: %s, name2: %s)", ref$type, ref$name, ref$name2))
+    }
+  }
+  return(retValue)
 }
 
 #' Convert JSON correlation parameter (OMEGA or SIGMA) into a Campsis parameter.

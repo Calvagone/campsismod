@@ -385,7 +385,7 @@ toJSONParamReference <- function(param, parameters) {
       emptyParam2@index <- param@index2
       emptyParam2@index2 <- param@index2
       refParam2 <- parameters %>% getByIndex(emptyParam2)
-      json$name2 <- refParam1@name
+      json$name2 <- refParam2@name
     }
   } else {
     stop("Unknown parameter type")
@@ -413,6 +413,10 @@ varcovToJSON <- function(parameters) {
       if (j > i) {
         next
       }
+      covValue <- varcov[i, j]
+      if (covValue==0) {
+        next
+      } 
       rowName <- rowNames[i]
       colName <- colNames[j]
       rowParamIndex <- which(parameterNames==rowName)
@@ -427,7 +431,7 @@ varcovToJSON <- function(parameters) {
       varcovEntry$type <- "varcov_entry"
       varcovEntry$ref1 <- toJSONParamReference(param=rowParam, parameters=parameters)
       varcovEntry$ref2 <- toJSONParamReference(param=columnParam, parameters=parameters)
-      varcovEntry$cov <- varcov[i, j]
+      varcovEntry$cov <- covValue
       json[[length(json) + 1]] <- varcovEntry
     }
   }
