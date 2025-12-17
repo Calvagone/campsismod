@@ -339,36 +339,40 @@ setMethod("move", signature=c("campsis_model", "ANY", "pmx_position"), definitio
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
-#' Read a CAMPSIS model.
+#' Read a Campsis model.
 #' 
-#' @param file path to folder
-#' @return a CAMPSIS model
+#' @param file path to folder (old format) or path to JSON file (new format)
+#' @return Campsis model
 #' @export
 read.campsis <- function(file) {
-  folder <- NULL
   if (dir.exists(file)) {
     folder <- file
-  } else if (file.exists(file)) {
     
-  } else {
-    stop("file is not a ZIP file nor a valid folder")
-  }
-  
-  # model.campsis and model.pmx are both accepted
-  modelPath <- file.path(folder, "model.campsis")
-  if (!file.exists(modelPath)) {
-    modelPath <- file.path(folder, "model.pmx")
-    warning("Please rename your model file to 'model.campsis'")
+    # model.campsis and model.pmx are both accepted
+    modelPath <- file.path(folder, "model.campsis")
     if (!file.exists(modelPath)) {
-      stop(paste0("Model file couln't be found."))
+      modelPath <- file.path(folder, "model.pmx")
+      warning("Please rename your model file to 'model.campsis'")
+      if (!file.exists(modelPath)) {
+        stop(paste0("Model file couln't be found."))
+      }
     }
+    
+    # Construct CAMPSIS model
+    records <- read.model(file=modelPath)
+    parameters <- read.allparameters(folder=folder)
+    model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
+    model <- model %>%
+      updateCompartments()
+    
+  } else if (file.exists(file)) {
+    if (!endsWith(file, ".json")) {
+      stop("Only JSON model files can be opened.")
+    }
+    model <- loadFromJSON(CampsisModel(), paste0(readLines(file), collapse="\n"))
+  } else {
+    stop("file is not a JSON model or a valid Campsis model folder")
   }
-  
-  # Construct CAMPSIS model
-  records <- read.model(file=modelPath)
-  parameters <- read.allparameters(folder=folder)
-  model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
-  model <- model %>% updateCompartments()
   
   # Validate the whole model
   methods::validObject(model, complete=TRUE)

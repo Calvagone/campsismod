@@ -57,12 +57,12 @@ test_that("Export/Re-import basic test model assembled on the fly to/from JSON",
   tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))
   json <- model %>%
     exportToJSON()
-  json %>%
+  model %>%
     write(file=tmp)
   jsonVarcov <- json@data$varcov
   expect_equal(length(jsonVarcov), 6) # We expect exactly 6 values (since zeroes are omitted)
   
-  model2 <- loadFromJSON(CampsisModel(), paste0(readLines(tmp), collapse="\n"))
+  model2 <- read.campsis(tmp)
   expect_equal(model, model2)
   
   # Test error catching
@@ -70,8 +70,7 @@ test_that("Export/Re-import basic test model assembled on the fly to/from JSON",
   json@data$varcov[[1]]$ref1$name <- "UNKNOWN"
   json %>%
     write(file=tmp)
-  expect_error(loadFromJSON(CampsisModel(), paste0(readLines(tmp), collapse="\n")),
-               regexp="Parameter reference not found")
+  expect_error(read.campsis(tmp), regexp="Parameter reference not found")
 })
 
 

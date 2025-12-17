@@ -2,16 +2,16 @@
 % Please edit documentation in R/campsis_model.R
 \name{read.campsis}
 \alias{read.campsis}
-\title{Read a CAMPSIS model.}
+\title{Read a Campsis model.}
 \usage{
 read.campsis(file)
 }
 \arguments{
-\item{file}{path to folder}
+\item{file}{path to folder (old format) or path to JSON file (new format)}
 }
 \value{
-a CAMPSIS model
+Campsis model
 }
 \description{
-Read a CAMPSIS model.
+Read a Campsis model.
 }
