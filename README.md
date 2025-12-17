@@ -33,7 +33,7 @@ library(campsismod)
 model <- model_suite$pk$`2cpt_fo`
 ```
 
-### Write CAMPSIS model
+### Write Campsis model
 
 ``` r
 model %>% write(file="path_to_model_folder")
@@ -44,7 +44,7 @@ list.files("path_to_model_folder")
 #> [1] "model.campsis" "omega.csv"     "sigma.csv"     "theta.csv"
 ```
 
-### Read and show CAMPSIS model
+### Read and show Campsis model
 
 ``` r
 model <- read.campsis(file="path_to_model_folder")
