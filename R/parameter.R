@@ -275,6 +275,39 @@ setMethod("as.data.frame", signature("sigma", "character", "logical"), function(
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("theta"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, optional=c("min", "max", "label", "comment", "unit"))
+  assertthat::assert_that(!is.null(json$name), msg="All THETAs must be named")
+  return(JSONElement(json))
+})
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"), ignore="same")
+  json$var_type <- json$type
+  json$type <- "omega"
+  if (json$index==json$index2) {
+    assertthat::assert_that(!is.null(json$name), msg="All OMEGAs must be named")
+  }
+  return(JSONElement(json))
+})
+
+#' @rdname exportToJSON
+setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...) {
+  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"))
+  json$var_type <- json$type
+  json$type <- "sigma"
+  if (json$index==json$index2) {
+    assertthat::assert_that(!is.null(json$name), msg="All SIGMAs must be named")
+  }
+  return(JSONElement(json))
+})
+
+#_______________________________________________________________________________
 #----                               isDiag                                  ----
 #_______________________________________________________________________________
 
@@ -363,7 +396,7 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 #----                         getNameInModel                                ----
 #_______________________________________________________________________________
 
-#' Get the name of the given parameter in the CAMPSIS model.
+#' Get the name of the given parameter in the Campsis model.
 #' 
 #' @param x element to know the name
 #' @return the name of this parameter
@@ -427,6 +460,28 @@ setMethod("getUncertainty", signature=c("parameter"), definition=function(object
     }
   }
   return(tibble::tibble(name=name, se=as.numeric(NA), "rse%"=as.numeric(NA)))
+})
+
+#_______________________________________________________________________________
+#----                           loadFromJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("theta", "json_element"), definition=function(object, json) {
+  object <- mapJSONPropertiesToS4Slots(object, json)
+  return(object)
+})
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("omega", "json_element"), definition=function(object, json) {
+  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
+  return(object)
+})
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("sigma", "json_element"), definition=function(object, json) {
+  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
+  return(object)
 })
 
 #_______________________________________________________________________________

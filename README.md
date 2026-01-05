@@ -16,7 +16,13 @@ downloads](https://cranlogs.r-pkg.org/badges/campsismod)](https://cran.r-project
 
 ## Installation
 
-Install the latest stable release using `devtools`:
+You can install the released version of `campsismod` from CRAN with:
+
+``` r
+install.packages("campsismod")
+```
+
+Alternatively, the package can also be installed with `devtools`:
 
 ``` r
 devtools::install_github("Calvagone/campsismod")
@@ -33,21 +39,47 @@ library(campsismod)
 model <- model_suite$pk$`2cpt_fo`
 ```
 
-### Write CAMPSIS model
+### Write Campsis model
+
+The model can be exported to files using `write`.
 
 ``` r
 model %>% write(file="path_to_model_folder")
 ```
+
+In this case, the model code will be contained in the `model.campsis`
+file. Parameters (THETA, OMEGA and SIGMA) will be stored in their
+respective CSV file.
 
 ``` r
 list.files("path_to_model_folder")
 #> [1] "model.campsis" "omega.csv"     "sigma.csv"     "theta.csv"
 ```
 
-### Read and show CAMPSIS model
+Alternatively, the model can also be exported in JSON format into a
+single file:
+
+``` r
+model %>% write(file="my_model.json")
+```
+
+### Read and show Campsis model
+
+The model can be loaded from the previously created folder:
 
 ``` r
 model <- read.campsis(file="path_to_model_folder")
+```
+
+Or, from the previously created JSON file:
+
+``` r
+model <- read.campsis(file="my_model.json")
+```
+
+The model can then be output in the console using `show`:
+
+``` r
 show(model)
 #> [MAIN]
 #> TVBIO=THETA_BIO

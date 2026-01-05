@@ -9,7 +9,7 @@ mrgsolveCapture(outvars, model)
 \arguments{
 \item{outvars}{outvars in method simulate}
 
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
 CAPTURE block or character(0) if no variable in outvars

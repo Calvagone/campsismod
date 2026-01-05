@@ -1,8 +1,8 @@
 
-#' Parse statements code and return CAMPSIS statements.
+#' Parse statements code and return Campsis statements.
 #' 
 #' @param code character vector containing all statements (text form)
-#' @return a list of CAMPSIS statements
+#' @return a list of Campsis statements
 #' 
 parseStatements <- function(code) {
   statements <- ModelStatements()

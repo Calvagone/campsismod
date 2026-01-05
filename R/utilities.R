@@ -141,7 +141,7 @@ trim <- function(x) {
   return(gsub("^\\s+|\\s+$", "", x))
 }
 
-#' Check if string contains CAMPSIS-style comments.
+#' Check if string contains Campsis-style comments.
 #' 
 #' @param x character vector
 #' @return logical value
@@ -150,7 +150,7 @@ hasComment <- function(x) {
   return(grepl("#", x=x, fixed=TRUE))
 }
 
-#' Check if string is a CAMPSIS comment (i.e. not an equation).
+#' Check if string is a Campsis comment (i.e. not an equation).
 #' 
 #' @param x character vector
 #' @return logical value
@@ -243,4 +243,35 @@ removeNaColumn <- function(x, column) {
 #' @keywords internal
 isRxODE <- function(dest) {
   return(dest %in% c("RxODE", "rxode2"))
+}
+
+#'
+#' Get the Campsismod options (R options).
+#'
+#' @return global options for Campsismod
+#' @export
+#' @keywords internal
+getCampsismodOptions <- function() {
+  return(getOption("campsismod.options"))
+}
+
+#'
+#' Get Campsismod option logic.
+#'
+#' @param name option to search
+#' @param default default value if option not found
+#' @return option value
+#' @export
+getCampsismodOption <- function(name, default) {
+  option <- getCampsismodOptions()
+  if (is.null(option)) {
+    return(default)
+  } else {
+    value <- option[[name]]
+    if (is.null(value)) {
+      return(default)
+    } else {
+      return(value)
+    }
+  }
 }

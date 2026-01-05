@@ -7,7 +7,7 @@
 mrgsolveTable(model)
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
 TABLE block if at least one line in error record, character(0) otherwise

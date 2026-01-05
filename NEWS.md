@@ -1,3 +1,6 @@
+# campsismod 1.3.0
+* JSON-based interface to import Campsis models #113
+
 # campsismod 1.2.3
 * Method 'replaceAll' not working with unknown statements #108
 

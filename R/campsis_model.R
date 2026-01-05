@@ -260,6 +260,30 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 })
 
 #_______________________________________________________________________________
+#----                           exportToJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname exportToJSON
+#' @importFrom utils capture.output
+setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
+  # Delete error record if empty
+  errorRecord <- object %>%
+    find(ErrorRecord())
+  if (!is.null(errorRecord) && length(errorRecord)==0) {
+    object <- object %>%
+      delete(ErrorRecord())
+  }
+  lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
+  json <- list()
+  json$code <- lines
+  json$parameters <- exportToJSON(object@parameters)@data
+  if (length(object@parameters@varcov) > 0) {
+    json$varcov <- varcovToJSON(parameters=object@parameters)
+  }
+  return(JSONElement(json))
+})
+
+#_______________________________________________________________________________
 #----                          getCompartmentIndex                          ----
 #_______________________________________________________________________________
 
@@ -287,6 +311,22 @@ setMethod("getVarCov", signature=c("campsis_model"), definition=function(object)
 })
 
 #_______________________________________________________________________________
+#----                           loadFromJSON                                ----
+#_______________________________________________________________________________
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "json_element"), definition=function(object, json) {
+  object <- jsonToCampsisModel(object=object, json=json)
+  return(object)
+})
+
+#' @rdname loadFromJSON
+setMethod("loadFromJSON", signature=c("campsis_model", "character"), definition=function(object, json) {
+  schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
+  return(loadFromJSON(object=object, json=openJSON(json=json, schema=schema)))
+})
+
+#_______________________________________________________________________________
 #----                              move                                     ----
 #_______________________________________________________________________________
 
@@ -300,36 +340,40 @@ setMethod("move", signature=c("campsis_model", "ANY", "pmx_position"), definitio
 #----                                 read                                  ----
 #_______________________________________________________________________________
 
-#' Read a CAMPSIS model.
+#' Read a Campsis model.
 #' 
-#' @param file path to folder
-#' @return a CAMPSIS model
+#' @param file path to folder (old format) or path to JSON file (new format)
+#' @return Campsis model
 #' @export
 read.campsis <- function(file) {
-  folder <- NULL
   if (dir.exists(file)) {
     folder <- file
-  } else if (file.exists(file)) {
     
-  } else {
-    stop("file is not a ZIP file nor a valid folder")
-  }
-  
-  # model.campsis and model.pmx are both accepted
-  modelPath <- file.path(folder, "model.campsis")
-  if (!file.exists(modelPath)) {
-    modelPath <- file.path(folder, "model.pmx")
-    warning("Please rename your model file to 'model.campsis'")
+    # model.campsis and model.pmx are both accepted
+    modelPath <- file.path(folder, "model.campsis")
     if (!file.exists(modelPath)) {
-      stop(paste0("Model file couln't be found."))
+      modelPath <- file.path(folder, "model.pmx")
+      warning("Please rename your model file to 'model.campsis'")
+      if (!file.exists(modelPath)) {
+        stop(paste0("Model file couln't be found."))
+      }
     }
+    
+    # Construct Campsis model
+    records <- read.model(file=modelPath)
+    parameters <- read.allparameters(folder=folder)
+    model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
+    model <- model %>%
+      updateCompartments()
+    
+  } else if (file.exists(file)) {
+    if (!endsWith(file, ".json")) {
+      stop("Only JSON model files can be opened.")
+    }
+    model <- loadFromJSON(CampsisModel(), paste0(readLines(file), collapse="\n"))
+  } else {
+    stop("file is not a JSON model or a valid Campsis model folder")
   }
-  
-  # Construct CAMPSIS model
-  records <- read.model(file=modelPath)
-  parameters <- read.allparameters(folder=folder)
-  model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
-  model <- model %>% updateCompartments()
   
   # Validate the whole model
   methods::validObject(model, complete=TRUE)
@@ -508,6 +552,10 @@ setMethod("standardise", signature=c("campsis_model"), definition=function(objec
 
 #' @rdname write
 setMethod("write", signature=c("campsis_model", "character"), definition=function(object, file, ...) {
+  if (endsWith(file, ".json")) {
+    return(exportToJSON(object) %>% campsismod::write(file=file))
+  }
+  
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters
@@ -523,5 +571,12 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
     records %>% write(file=file.path(file, "model.campsis"), model=object)
     parameters %>% write(file=file)
   }
+  return(TRUE)
+})
+
+#' @rdname write
+#' @param digits significant digits in JSON file, default is 12
+setMethod("write", signature=c("json_element", "character"), definition=function(object, file, digits=12, ...) {
+  jsonlite::write_json(object@data, path=file, pretty=TRUE, auto_unbox=TRUE, digits=digits)
   return(TRUE)
 })

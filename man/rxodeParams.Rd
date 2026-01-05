@@ -7,7 +7,7 @@
 rxodeParams(model)
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
 named vector with THETA values

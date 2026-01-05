@@ -7,7 +7,7 @@
 mrgsolveParam(model, extra_params = character(0))
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 
 \item{extra_params}{extra parameter names to be added. By default, they will be assigned a zero value.}
 }

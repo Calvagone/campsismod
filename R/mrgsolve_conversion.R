@@ -1,7 +1,7 @@
 
 #' Get the parameters block for mrgsolve.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @param extra_params extra parameter names to be added. By default, they will be assigned a zero value.
 #' @return character vector, 1 parameter per line. First one is header [PARAM].
 #' @export
@@ -20,7 +20,7 @@ mrgsolveParam <- function(model, extra_params=character(0)) {
 
 #' Get the compartment block for mrgsolve.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return character vector, each value is a line
 #' @export
 mrgsolveCompartment <- function(model) {
@@ -34,7 +34,7 @@ mrgsolveCompartment <- function(model) {
 
 #' Get the OMEGA/SIGMA matrix for mrgsolve.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @param type either omega or sigma
 #' @return named matrix or character(0) if matrix is empty
 #' @export
@@ -59,7 +59,7 @@ mrgsolveMatrix <- function(model, type="omega") {
 
 #' Get the MAIN block for mrgsolve.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return MAIN block
 #' @export
 mrgsolveMain <- function(model) {
@@ -79,7 +79,7 @@ mrgsolveMain <- function(model) {
   return(retValue)
 }
 
-#' Convert CAMPSIS comment style to C/C++ code.
+#' Convert Campsis comment style to C/C++ code.
 #' Only the first # is translated to //.
 #' 
 #' @param x any record line
@@ -116,14 +116,14 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 
 #' Get the ODE block for mrgsolve.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return ODE block
 #' @export
 mrgsolveOde <- function(model) {
   records <- model@model
   odeRecord <- records %>% getByName("ODE")
   
-  # Automatically replace simulation time 't' (default in CAMPSIS) by SOLVERTIME
+  # Automatically replace simulation time 't' (default in Campsis) by SOLVERTIME
   if (!is.null(odeRecord)) {
     odeRecord <- odeRecord %>% campsismod::replaceAll(pattern=VariablePattern("t"), replacement="SOLVERTIME")
   }
@@ -133,7 +133,7 @@ mrgsolveOde <- function(model) {
 
 #' Get the TABLE block for mrgsolve.
 #'
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return TABLE block if at least one line in error record, character(0) otherwise
 #' @export
 mrgsolveTable <- function(model) {
@@ -149,7 +149,7 @@ mrgsolveTable <- function(model) {
 #' Get the CAPTURE block for mrgsolve.
 #'
 #' @param outvars outvars in method simulate
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
 mrgsolveCapture <- function(outvars, model) {
@@ -167,7 +167,7 @@ mrgsolveCapture <- function(outvars, model) {
 #' will be discarded.
 #'
 #' @param outvars character vector
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @importFrom purrr keep map_chr
 #' @return all variables to capture
 #' @keywords internal

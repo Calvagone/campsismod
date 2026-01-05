@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calvagone.github.io/campsis.doc/schema/1.0/campsismod.schema.json",
+  "$comment": "Campsismod JSON Schema v1.0 © 2025 [Nicolas Luyckx / Calvagone]. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).",
+  "title": "Campsismod JSON Schema",
+  "$ref": "#/$defs/model",
+  "$defs": {
+    "model": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/theta"
+              },
+              {
+                "$ref": "#/$defs/omega"
+              },
+              {
+                "$ref": "#/$defs/sigma"
+              }
+            ]
+          }
+        },
+        "varcov": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/varcov_entry",
+            "description": "Variance-covariance entry list"
+          }
+        }
+      },
+      "required": [
+        "code",
+        "parameters"
+      ]
+    },
+    "parameter": {
+      "title": "Base Parameter",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the parameter"
+        },
+        "value": {
+          "type": "number",
+          "description": "Numeric value of the parameter"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value of the parameter"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value of the parameter"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short description of the parameter"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Any additional comment"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    },
+    "theta": {
+      "title": "Theta Parameter",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "theta"
+            },
+            "unit": {
+              "type": "string",
+              "description": "Unit of the parameter"
+            }
+          }
+        }
+      ]
+    },
+    "double_array_parameter": {
+      "title": "Double Array Parameter",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter"
+        },
+        {
+          "properties": {
+            "var_type": {
+              "enum": [
+                "cv%",
+                "cv",
+                "var",
+                "sd",
+                "covar",
+                "cor"
+              ]
+            },
+            "name2": {
+              "type": "string",
+              "description": "Reference to the second parameter in case this parameter describes a correlation or a covariance."
+            }
+          },
+          "required": [
+            "var_type"
+          ]
+        }
+      ]
+    },
+    "omega": {
+      "title": "Omega Parameter",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "omega"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "sigma": {
+      "title": "Sigma Parameter",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "sigma"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "parameter_ref": {
+      "title": "Base Parameter Reference",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the referenced parameter"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "theta_ref": {
+      "title": "Theta Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "theta_ref"
+            }
+          }
+        }
+      ]
+    },
+    "double_array_parameter_ref": {
+      "title": "Double Array Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/parameter_ref"
+        },
+        {
+          "properties": {
+            "name2": {
+              "type": "string",
+              "description": "Reference to the second parameter in case this parameter describes a correlation or a covariance."
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "omega_ref": {
+      "title": "Omega Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "omega_ref"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "sigma_ref": {
+      "title": "Sigma Parameter Reference",
+      "allOf": [
+        {
+          "$ref": "#/$defs/double_array_parameter_ref"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "sigma_ref"
+            }
+          },
+          "required": []
+        }
+      ]
+    },
+    "varcov_entry": {
+      "title": "Variance-Covariance Matrix Entry",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "varcov_entry"
+        },
+        "ref1": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/theta_ref"
+            },
+            {
+              "$ref": "#/$defs/omega_ref"
+            },
+            {
+              "$ref": "#/$defs/sigma_ref"
+            }
+          ],
+          "description": "First referenced parameter"
+        },
+        "ref2": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/theta_ref"
+            },
+            {
+              "$ref": "#/$defs/omega_ref"
+            },
+            {
+              "$ref": "#/$defs/sigma_ref"
+            }
+          ],
+          "description": "Second referenced parameter"
+        },
+        "cov": {
+          "type": "number",
+          "description": "Covariance value between the two referenced parameters."
+        }
+      },
+      "required": [
+        "ref1",
+        "ref2",
+        "cov"
+      ]
+    }
+  }
+}

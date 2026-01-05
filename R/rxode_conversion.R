@@ -2,7 +2,7 @@
 
 #' Get code for rxode2
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return corresponding model code for rxode2
 #' @export
 rxodeCode <- function(model) {
@@ -33,7 +33,7 @@ rxodeCode <- function(model) {
 
 #' Get the parameters vector for rxode2.
 #' 
-#' @param model CAMPSIS model
+#' @param model Campsis model
 #' @return named vector with THETA values
 #' @export
 rxodeParams <- function(model) {

@@ -1,0 +1,79 @@
+{
+  "code": [
+    "[MAIN]",
+    "TVBIO=THETA_BIO",
+    "TVKA=THETA_KA",
+    "TVVC=THETA_VC",
+    "TVCL=THETA_CL",
+    "",
+    "BIO=TVBIO",
+    "KA=TVKA * exp(ETA_KA)",
+    "VC=TVVC * exp(ETA_VC)",
+    "CL=TVCL * exp(ETA_CL)",
+    "",
+    "[ODE]",
+    "d/dt(A_ABS)=-KA*A_ABS",
+    "d/dt(A_CENTRAL)=KA*A_ABS - CL/VC*A_CENTRAL",
+    "",
+    "[F]",
+    "A_ABS=BIO",
+    "",
+    "[ERROR]",
+    "CONC=A_CENTRAL/VC",
+    "if (CONC <= 0.001) CONC=0.001",
+    "CONC_ERR=CONC*(1 + EPS_PROP_RUV)"
+  ],
+  "parameters": [
+    {
+      "type": "theta",
+      "name": "BIO",
+      "value": 1.0,
+      "label": "Bioavailability"
+    },
+    {
+      "type": "theta",
+      "name": "KA",
+      "value": 1.0,
+      "label": "Absorption rate",
+      "unit": "1/h"
+    },
+    {
+      "type": "theta",
+      "name": "VC",
+      "value": 10.0,
+      "label": "Volume of central compartment",
+      "unit": "L"
+    },
+    {
+      "type": "theta",
+      "name": "CL",
+      "value": 3.0,
+      "label": "Clearance",
+      "unit": "L/h"
+    },
+    {
+      "type": "omega",
+      "name": "KA",
+      "value": 25.0,
+      "var_type": "cv%"
+    },
+    {
+      "type": "omega",
+      "name": "VC",
+      "value": 25.0,
+      "var_type": "cv%"
+    },
+    {
+      "type": "omega",
+      "name": "CL",
+      "value": 25.0,
+      "var_type": "cv%"
+    },
+    {
+      "type": "sigma",
+      "name": "PROP_RUV",
+      "value": 0.1,
+      "var_type": "sd"
+    }
+  ]
+}

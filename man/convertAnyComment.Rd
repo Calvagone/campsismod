@@ -2,7 +2,7 @@
 % Please edit documentation in R/mrgsolve_conversion.R
 \name{convertAnyComment}
 \alias{convertAnyComment}
-\title{Convert CAMPSIS comment style to C/C++ code.
+\title{Convert Campsis comment style to C/C++ code.
 Only the first # is translated to //.}
 \usage{
 convertAnyComment(x)
@@ -14,7 +14,7 @@ convertAnyComment(x)
 same line with comments translated to C/C++
 }
 \description{
-Convert CAMPSIS comment style to C/C++ code.
+Convert Campsis comment style to C/C++ code.
 Only the first # is translated to //.
 }
 \keyword{internal}

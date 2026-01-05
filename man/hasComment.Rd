@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{hasComment}
 \alias{hasComment}
-\title{Check if string contains CAMPSIS-style comments.}
+\title{Check if string contains Campsis-style comments.}
 \usage{
 hasComment(x)
 }
@@ -13,5 +13,5 @@ hasComment(x)
 logical value
 }
 \description{
-Check if string contains CAMPSIS-style comments.
+Check if string contains Campsis-style comments.
 }
