@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{isComment}
 \alias{isComment}
-\title{Check if string is a CAMPSIS comment (i.e. not an equation).}
+\title{Check if string is a Campsis comment (i.e. not an equation).}
 \usage{
 isComment(x)
 }
@@ -13,5 +13,5 @@ isComment(x)
 logical value
 }
 \description{
-Check if string is a CAMPSIS comment (i.e. not an equation).
+Check if string is a Campsis comment (i.e. not an equation).
 }

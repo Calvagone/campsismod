@@ -358,7 +358,7 @@ read.campsis <- function(file) {
       }
     }
     
-    # Construct CAMPSIS model
+    # Construct Campsis model
     records <- read.model(file=modelPath)
     parameters <- read.allparameters(folder=folder)
     model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())

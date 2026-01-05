@@ -7,7 +7,7 @@
 mrgsolveMatrix(model, type = "omega")
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 
 \item{type}{either omega or sigma}
 }

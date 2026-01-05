@@ -3,7 +3,7 @@
 \docType{data}
 \name{model_suite}
 \alias{model_suite}
-\title{CAMPSIS model suite.}
+\title{Campsis model suite.}
 \format{
 A list with all the models:
 \describe{

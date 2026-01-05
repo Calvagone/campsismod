@@ -271,7 +271,7 @@
         },
         "cov": {
           "type": "number",
-          "description": "Covariance value between the two referenced parameter."
+          "description": "Covariance value between the two referenced parameters."
         }
       },
       "required": [

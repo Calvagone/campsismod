@@ -1,5 +1,5 @@
 
-#' CAMPSIS model suite.
+#' Campsis model suite.
 #'
 #' A library of models of all kinds, ready to be simulated in Campsis. These model
 #' templates are sorted into the following categories: pharmacokinetic (PK), pharmacodynamic (PD), 

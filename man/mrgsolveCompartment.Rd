@@ -7,7 +7,7 @@
 mrgsolveCompartment(model)
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
 character vector, each value is a line

@@ -429,7 +429,7 @@ read.model <- function(file=NULL, text=NULL) {
           addContentToRecord(records@list[[prevRecordIndex]], content)
       } else  {
         # If no last record is present, check if content is detected:
-        # i.e. anything but blank line(s) or CAMPSIS comment(s) before the first
+        # i.e. anything but blank line(s) or Campsis comment(s) before the first
         # record delimiter
         # If content is detected, throw an error
         if (lastLineIndexInPrevRecord==1 && index > 1) {

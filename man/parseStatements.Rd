@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_parser.R
 \name{parseStatements}
 \alias{parseStatements}
-\title{Parse statements code and return CAMPSIS statements.}
+\title{Parse statements code and return Campsis statements.}
 \usage{
 parseStatements(code)
 }
@@ -10,8 +10,8 @@ parseStatements(code)
 \item{code}{character vector containing all statements (text form)}
 }
 \value{
-a list of CAMPSIS statements
+a list of Campsis statements
 }
 \description{
-Parse statements code and return CAMPSIS statements.
+Parse statements code and return Campsis statements.
 }

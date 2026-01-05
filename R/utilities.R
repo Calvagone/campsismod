@@ -141,7 +141,7 @@ trim <- function(x) {
   return(gsub("^\\s+|\\s+$", "", x))
 }
 
-#' Check if string contains CAMPSIS-style comments.
+#' Check if string contains Campsis-style comments.
 #' 
 #' @param x character vector
 #' @return logical value
@@ -150,7 +150,7 @@ hasComment <- function(x) {
   return(grepl("#", x=x, fixed=TRUE))
 }
 
-#' Check if string is a CAMPSIS comment (i.e. not an equation).
+#' Check if string is a Campsis comment (i.e. not an equation).
 #' 
 #' @param x character vector
 #' @return logical value

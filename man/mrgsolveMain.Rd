@@ -7,7 +7,7 @@
 mrgsolveMain(model)
 }
 \arguments{
-\item{model}{CAMPSIS model}
+\item{model}{Campsis model}
 }
 \value{
 MAIN block
