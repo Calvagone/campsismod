@@ -264,6 +264,7 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 #_______________________________________________________________________________
 
 #' @rdname exportToJSON
+#' @importFrom utils capture.output
 setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
   # Delete error record if empty
   errorRecord <- object %>%
