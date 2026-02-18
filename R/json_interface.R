@@ -1,3 +1,22 @@
+#' Has exact method allows to check the existence of a S4 method in Campsis
+#' based on its signature.
+#' 
+#' @param generic generic function name
+#' @param signature function signature
+#' @param where where to search functions
+#' @return logical value
+#' @importFrom methods getGeneric findMethods isGeneric
+#' @export
+#' 
+hasExactMethod <- function(generic, signature, where=topenv(parent.frame())) {
+  if (!methods::isGeneric(generic, where = where))
+    return(FALSE)
+  gen <- methods::getGeneric(generic, where=where)
+  ml <- methods::findMethods(gen)
+  target <- paste(signature, collapse = "#")
+  return(target %in% names(ml))
+}
+
 #' Map JSON properties to S4 slots.
 #' 
 #' @param object S4 object
@@ -19,7 +38,12 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
     
     if (isList && !is.null(value$type)) {
       # Recursion
-      value <- mapJSONPropertiesToS4Slots(object=new(value$type), json=JSONElement(value), discard_type=TRUE)
+      if (hasExactMethod(generic="loadFromJSON", signature=c(value$type, "json_element"))) {
+        value <- loadFromJSON(object=new(value$type), json=JSONElement(value))
+      } else {
+        value <- mapJSONPropertiesToS4Slots(object=new(value$type),
+                                            json=JSONElement(value), discard_type=TRUE)
+      }
     } else {
       if (isList) {
         value <- unlist(value)
