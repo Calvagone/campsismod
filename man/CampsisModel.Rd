@@ -4,7 +4,10 @@
 \alias{CampsisModel}
 \title{Create a new Campsis model.}
 \usage{
-CampsisModel()
+CampsisModel(json = NULL)
+}
+\arguments{
+\item{json}{path to JSON Campsis model file or JSON content in string form}
 }
 \value{
 a Campsis model, empty
