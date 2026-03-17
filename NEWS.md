@@ -1,3 +1,9 @@
+# campsismod 1.3.1
+* Use straight single quotes, not directed ones, for the whole DESCRIPTION file #115
+* Add R-universe badge to README #116
+* Review method mapJSONPropertiesToS4Slots #117
+* Add 'json' argument to CampsisModel constructor #118
+
 # campsismod 1.3.0
 * JSON-based interface to import Campsis models #113
 

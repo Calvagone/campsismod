@@ -7,17 +7,17 @@ testFolder <-  file.path(getwd(), test_path())
 test_that("Import '1-cpt fo' Campsis model in JSON format", {
   
   # Import the 1-cpt PK model from JSON
-  model <- loadFromJSON(CampsisModel(), file.path(testFolder, "json_examples", "1cpt_fo_model.json"))
+  model <- CampsisModel(json=file.path(testFolder, "json_examples", "1cpt_fo_model.json"))
   expect_equal(model_suite$pk$`1cpt_fo`, model)
   
   # Export to JSON and re-import
   json <- model %>%
     exportToJSON()
-  model <- loadFromJSON(CampsisModel(), json)
+  model <- CampsisModel(json=json@data)
   expect_equal(model_suite$pk$`1cpt_fo`, model)
   
   # Import an empty Campsis model from JSON
-  model <- loadFromJSON(CampsisModel(), "{\"code\":[], \"parameters\":[]}")
+  model <- CampsisModel(json="{\"code\":[], \"parameters\":[]}")
   expect_equal(CampsisModel(), model)
   
   # Import the 1-cpt PK model with a correlation between CL and VC from JSON
@@ -38,7 +38,7 @@ test_that("Export/Re-import '2cpt_zo_allo_metab_effect_on_cl' Campsis model to/f
     exportToJSON() %>%
     write(file=tmp)
   
-  model2 <- loadFromJSON(CampsisModel(), paste0(readLines(tmp), collapse="\n"))
+  model2 <- CampsisModel(json=paste0(readLines(tmp), collapse="\n"))
   expect_equal(model, model2)
 })
 

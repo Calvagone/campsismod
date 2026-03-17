@@ -20,10 +20,17 @@ setClass(
 
 #' Create a new Campsis model.
 #' 
+#' @param json path to JSON Campsis model file or JSON content in string form
 #' @return a Campsis model, empty
 #' @export
-CampsisModel <- function() {
-  return(new("campsis_model"))
+CampsisModel <- function(json=NULL) {
+  if (is.null(json)) {
+    model <- new("campsis_model")
+  } else {
+    schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
+    model <-  loadFromJSON(CampsisModel(), openJSON(json=json, schema=schema))
+  }
+  return(model)
 }
 
 #_______________________________________________________________________________
