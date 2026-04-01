@@ -1,5 +1,5 @@
 [MAIN]
-# NOTE: dose is in mg
+# NOTE: DOSE is in mg, TIME is in days
 MW=150000 # Molecular weight (g/mole)
 TVBIO=THETA_BIO
 TVKA=THETA_KA

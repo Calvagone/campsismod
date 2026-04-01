@@ -1,8 +1,8 @@
 "name","index","value","fix","label","unit"
 "BIO",1,0.6,FALSE,"Bioavailability",NA
-"KA",2,0.2,FALSE,"Absorption rate","1/h"
+"KA",2,0.2,FALSE,"Absorption rate","1/d"
 "VC",3,3,FALSE,"Volume of central compartment","L"
-"CL",4,0.5,FALSE,"Linear clearance","L/h"
+"CL",4,0.5,FALSE,"Linear clearance","L/d"
 "R0",5,20,FALSE,"Baseline target concentration","nM"
-"KON",6,50,FALSE,"Association rate","1/nM/day"
+"KON",6,50,FALSE,"Association rate","1/nM/d"
 "KINT",7,1,FALSE,"Internalization/Degradation rate of drug-target complex","1/d"

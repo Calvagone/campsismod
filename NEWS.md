@@ -1,3 +1,6 @@
+# campsismod 1.3.2
+* Update model suite #120
+
 # campsismod 1.3.1
 * Use straight single quotes, not directed ones, for the whole DESCRIPTION file #115
 * Add R-universe badge to README #116
