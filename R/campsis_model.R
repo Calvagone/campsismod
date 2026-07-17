@@ -466,31 +466,31 @@ setMethod("replace", signature=c("campsis_model", "model_statement"), definition
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  # Call 'replaceAll' on each code record
+#' @rdname replace_all
+setMethod("replace_all", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  # Call 'replace_all' on each code record
   object@model@list <- object@model@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   
-  # Call 'replaceAll' on each compartment property
+  # Call 'replace_all' on each compartment property
   object@compartments@properties@list <- object@compartments@properties@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   
   return(object)
 })
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
-  # Call 'replaceAll' on each code record
+#' @rdname replace_all
+setMethod("replace_all", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
+  # Call 'replace_all' on each code record
   object@model@list <- object@model@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=VariablePattern(pattern), replacement=replacement, ...))
   
-  # Call 'replaceAll' on each compartment property
+  # Call 'replace_all' on each compartment property
   object@compartments@properties@list <- object@compartments@properties@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=VariablePattern(pattern), replacement=replacement, ...))
   
   return(object)
 })

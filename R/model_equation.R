@@ -44,13 +44,13 @@ setMethod("getName", signature = c("equation"), definition = function(x) {
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@lhs <- object@lhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
-  object@rhs <- object@rhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+#' @rdname replace_all
+setMethod("replace_all", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@lhs <- object@lhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
+  object@rhs <- object@rhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
   return(object)
 })
 

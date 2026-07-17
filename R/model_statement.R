@@ -67,10 +67,10 @@ setMethod("show", signature=c("model_statement"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+#' @rdname replace_all
+setMethod("replace_all", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
   return(object)
 })

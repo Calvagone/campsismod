@@ -345,12 +345,12 @@ setMethod("replace", signature=c("statements_record", "model_statement"), defini
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+#' @rdname replace_all
+setMethod("replace_all", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   return(object)
 })
 

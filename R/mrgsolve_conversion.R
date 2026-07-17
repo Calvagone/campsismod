@@ -125,7 +125,7 @@ mrgsolveOde <- function(model) {
   
   # Automatically replace simulation time 't' (default in Campsis) by SOLVERTIME
   if (!is.null(odeRecord)) {
-    odeRecord <- odeRecord %>% campsismod::replaceAll(pattern=VariablePattern("t"), replacement="SOLVERTIME")
+    odeRecord <- odeRecord %>% campsismod::replace_all(pattern=VariablePattern("t"), replacement="SOLVERTIME")
   }
   retValue <- mrgsolveBlock(odeRecord, init="[ODE]")
   return(retValue)

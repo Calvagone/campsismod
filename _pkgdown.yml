@@ -212,7 +212,7 @@ reference:
 
 - title: "Replace occurrences"
   contents:
-  - replaceAll
+  - replace_all
   - Pattern
   - VariablePattern
 

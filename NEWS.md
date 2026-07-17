@@ -11,7 +11,7 @@
 * JSON-based interface to import Campsis models #113
 
 # campsismod 1.2.3
-* Method 'replaceAll' not working with unknown statements #108
+* Method 'replace_all' not working with unknown statements #108
 
 # campsismod 1.2.2
 * Skip performance tests on CRAN #105
@@ -48,7 +48,7 @@
 
 # campsismod 1.1.1
 
-* Function 'replaceAll' not replacing occurrences in compartment properties #74
+* Function 'replace_all' not replacing occurrences in compartment properties #74
 
 # campsismod 1.1.0
 

@@ -61,3 +61,24 @@ setGeneric("loadFromJSON", function(object, json) {
   load_from_json(object = object, json = json)
 })
 
+#' Replace all occurrences in object.
+#' 
+#' `replaceAll()` is deprecated in favor of `replace_all()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams replace_all
+#' @return the loaded S4 object
+#' @export
+#' @rdname replaceAll
+replaceAll <- function(object, pattern, replacement, ...) {
+  lifecycle::deprecate_warn("1.4.0", "replaceAll()", "replace_all()")
+  replace_all(object = object, pattern = pattern, replacement = replacement, ...)
+}
+
+setGeneric("replaceAll", function(object, pattern, replacement, ...) {
+  lifecycle::deprecate_warn("1.4.0", "replaceAll()", "replace_all()")
+  replace_all(object = object, pattern = pattern, replacement = replacement, ...)
+})
+

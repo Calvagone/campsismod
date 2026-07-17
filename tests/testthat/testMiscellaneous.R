@@ -36,7 +36,7 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(getVarCov(""), regexp=msg)
   expect_error(move(""), regexp=msg)
   expect_error(read(""), regexp=msg)
-  expect_error(replaceAll(""), regexp=msg)
+  expect_error(replace_all(""), regexp=msg)
   expect_error(replicate("", ""), regexp=msg)
   expect_error(select (""), regexp=msg)
   expect_error(setMinMax("", "", "", ""), regexp=msg) # Strange, I need to pass the 4 args

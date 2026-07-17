@@ -226,7 +226,7 @@ setGeneric("read", function(file, ...) {
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
 #' Replace all occurrences in object.
@@ -237,12 +237,12 @@ setGeneric("read", function(file, ...) {
 #' @param ... extra arguments
 #' @return the same object with all occurrences replaced
 #' @export
-replaceAll <- function(object, pattern, replacement, ...) {
+replace_all <- function(object, pattern, replacement, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("replaceAll", function(object, pattern, replacement, ...) {
-  standardGeneric("replaceAll")
+setGeneric("replace_all", function(object, pattern, replacement, ...) {
+  standardGeneric("replace_all")
 })
 
 #_______________________________________________________________________________

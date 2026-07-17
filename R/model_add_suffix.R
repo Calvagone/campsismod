@@ -62,7 +62,7 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
       newName <- parameter %>% getNameInModel()
       retValue <- retValue %>% add(parameter)
       if (!is.null(model)) {
-        model <- model %>% replaceAll(pattern=oldName, replacement=newName)
+        model <- model %>% replace_all(pattern=oldName, replacement=newName)
       }
     }
   }
@@ -105,13 +105,13 @@ setMethod("addSuffix", signature=c("code_records", "character", "character"), de
   for (equationName in equationNames) {
     replacementStr <- paste0(equationName, separator, suffix)
     retValue <- retValue %>% 
-      replaceAll(pattern=VariablePattern(equationName), replacement=replacementStr)
+      replace_all(pattern=VariablePattern(equationName), replacement=replacementStr)
     
     # Update properties as well (rhs)
     if (!is.null(model)) {
       for (index in seq_len(model@compartments@properties %>% length())) {
         model@compartments@properties@list[[index]]@rhs <- model@compartments@properties@list[[index]]@rhs %>%
-          replaceAll(pattern=VariablePattern(equationName), replacement=replacementStr)
+          replace_all(pattern=VariablePattern(equationName), replacement=replacementStr)
       }
     }
   }
@@ -152,7 +152,7 @@ setMethod("addSuffix", signature=c("compartments", "character", "character"), de
       replace(compartment) # Replacement done by index for compartments
     if (!is.null(model)) {
       model <- model %>% 
-        replaceAll(pattern=oldName, replacement=replacementName)
+        replace_all(pattern=oldName, replacement=replacementName)
     }
   }
   
