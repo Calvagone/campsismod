@@ -58,7 +58,7 @@ reference:
   - as.data.frame
   - getNameInModel
   - getNONMEMName
-  - getUncertainty
+  - get_uncertainty
   - getVarCov
   - isDiag
   - maxIndex

@@ -19,7 +19,7 @@ setGeneric("add_rse", function(object, parameter, value, ...) {
   standardGeneric("add_rse")
 })
 #_______________________________________________________________________________
-#----                         auto_detect_nonmem                              ----
+#----                        auto_detect_nonmem                             ----
 #_______________________________________________________________________________
 
 #' Auto-detect special variables from NONMEM as compartment properties.
@@ -93,7 +93,7 @@ setGeneric("export", function(object, dest, ...) {
 })
 
 #_______________________________________________________________________________
-#----                          get_compartment_index                          ----
+#----                         get_compartment_index                         ----
 #_______________________________________________________________________________
 
 #' Get the compartment index for the specified compartment name.
@@ -112,7 +112,7 @@ setGeneric("get_compartment_index", function(object, name) {
 })
 
 #_______________________________________________________________________________
-#----                           getUncertainty                              ----
+#----                           get_uncertainty                             ----
 #_______________________________________________________________________________
 
 #' Get uncertainty on the parameters.
@@ -121,17 +121,17 @@ setGeneric("get_compartment_index", function(object, name) {
 #' @param ... extra arguments
 #' @return data frame with standard error (se) and relative standard error (rse%) columns 
 #' @export
-#' @rdname getUncertainty
-getUncertainty <- function(object, ...) {
+#' @rdname get_uncertainty
+get_uncertainty <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("getUncertainty", function(object, ...) {
-  standardGeneric("getUncertainty")
+setGeneric("get_uncertainty", function(object, ...) {
+  standardGeneric("get_uncertainty")
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
 #' Export the given object to a JSON object, ready to be written to files.
@@ -140,13 +140,13 @@ setGeneric("getUncertainty", function(object, ...) {
 #' @param ... extra arguments, unused
 #' @return the loaded S4 object
 #' @export
-#' @rdname exportToJSON
-exportToJSON <- function(object, ...) {
+#' @rdname export_to_json
+export_to_json <- function(object, ...) {
   stop(sprintf("No default function is provided for 'object': %s", class(object)))
 }
 
-setGeneric("exportToJSON", function(object, ...) {
-  standardGeneric("exportToJSON")
+setGeneric("export_to_json", function(object, ...) {
+  standardGeneric("export_to_json")
 })
 
 #_______________________________________________________________________________

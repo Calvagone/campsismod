@@ -185,7 +185,7 @@ test_that("Method 'add_rse' works as expected", {
     add_rse(Theta("Q"), 10) %>%
     add_rse(Omega("KA"), 50)
   
-  uncertainty <- getUncertainty(model) %>%
+  uncertainty <- get_uncertainty(model) %>%
     dplyr::filter(!is.na(.data$`rse%`))
   
   expect_equal(tibble::tibble(name=c("THETA_CL", "THETA_Q", "OMEGA_KA"), se=c(0.5, 0.4, 0.0125), `rse%`=c(10, 10, 50)), uncertainty)

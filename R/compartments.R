@@ -88,7 +88,7 @@ setMethod("find", signature=c("compartments", "compartment_property"), definitio
 })
 
 #_______________________________________________________________________________
-#----                          get_compartment_index                          ----
+#----                         get_compartment_index                         ----
 #_______________________________________________________________________________
 
 #' @rdname get_compartment_index

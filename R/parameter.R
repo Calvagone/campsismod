@@ -275,18 +275,18 @@ setMethod("as.data.frame", signature("sigma", "character", "logical"), function(
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("theta"), definition=function(object, ...) {
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("theta"), definition=function(object, ...) {
   json <- mapS4SlotsToJSONProperties(object, optional=c("min", "max", "label", "comment", "unit"))
   assertthat::assert_that(!is.null(json$name), msg="All THETAs must be named")
   return(JSONElement(json))
 })
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...) {
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("omega"), definition=function(object, ...) {
   json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"), ignore="same")
   json$var_type <- json$type
   json$type <- "omega"
@@ -296,8 +296,8 @@ setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...)
   return(JSONElement(json))
 })
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...) {
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("sigma"), definition=function(object, ...) {
   json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"))
   json$var_type <- json$type
   json$type <- "sigma"
@@ -444,13 +444,13 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                           getUncertainty                              ----
+#----                           get_uncertainty                             ----
 #_______________________________________________________________________________
 
 #' @param varcov variance covariance matrix
 #' @importFrom tibble tibble
-#' @rdname getUncertainty
-setMethod("getUncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
+#' @rdname get_uncertainty
+setMethod("get_uncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
   name <- object %>% getName()
   if (varcov %>% length() > 0) {
     standardisedParameter <- object %>% standardise(...)

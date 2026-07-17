@@ -117,7 +117,7 @@ setMethod("add_rse", signature=c("campsis_model", "parameter", "numeric"), defin
 })
 
 #_______________________________________________________________________________
-#----                         auto_detect_nonmem                              ----
+#----                        auto_detect_nonmem                             ----
 #_______________________________________________________________________________
 
 #' @rdname auto_detect_nonmem
@@ -267,12 +267,12 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname exportToJSON
+#' @rdname export_to_json
 #' @importFrom utils capture.output
-setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
+setMethod("export_to_json", signature=c("campsis_model"), definition=function(object, ...) {
   # Delete error record if empty
   errorRecord <- object %>%
     find(ErrorRecord())
@@ -283,7 +283,7 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
   lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
   json <- list()
   json$code <- lines
-  json$parameters <- exportToJSON(object@parameters)@data
+  json$parameters <- export_to_json(object@parameters)@data
   if (length(object@parameters@varcov) > 0) {
     json$varcov <- varcovToJSON(parameters=object@parameters)
   }
@@ -291,7 +291,7 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
 })
 
 #_______________________________________________________________________________
-#----                          get_compartment_index                          ----
+#----                         get_compartment_index                         ----
 #_______________________________________________________________________________
 
 #' @rdname get_compartment_index
@@ -300,12 +300,12 @@ setMethod("get_compartment_index", signature=c("campsis_model", "character"), de
 })
 
 #_______________________________________________________________________________
-#----                          getUncertainty                               ----
+#----                          get_uncertainty                               ----
 #_______________________________________________________________________________
 
-#' @rdname getUncertainty
-setMethod("getUncertainty", signature=c("campsis_model"), definition=function(object, ...) {
-  return(object@parameters %>% getUncertainty(...))
+#' @rdname get_uncertainty
+setMethod("get_uncertainty", signature=c("campsis_model"), definition=function(object, ...) {
+  return(object@parameters %>% get_uncertainty(...))
 })
 
 #_______________________________________________________________________________
@@ -560,7 +560,7 @@ setMethod("standardise", signature=c("campsis_model"), definition=function(objec
 #' @rdname write
 setMethod("write", signature=c("campsis_model", "character"), definition=function(object, file, ...) {
   if (endsWith(file, ".json")) {
-    return(exportToJSON(object) %>% campsismod::write(file=file))
+    return(export_to_json(object) %>% campsismod::write(file=file))
   }
   
   zip <- processExtraArg(args=list(...), name="zip", default=FALSE)

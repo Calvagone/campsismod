@@ -341,7 +341,7 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
 omegaSigmaJsonIndexFix <- function(json, parameters, type) {
@@ -438,14 +438,14 @@ varcovToJSON <- function(parameters) {
   return(json)
 }
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("parameters"), definition=function(object, ...) {
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("parameters"), definition=function(object, ...) {
   object <- object %>%
     campsismod::sort()
 
   json <- object@list %>%
     purrr::map(function(x) {
-        pJson <- exportToJSON(x)@data
+        pJson <- export_to_json(x)@data
         if (pJson$type=="theta") {
           pJson$index <- NULL
         } else if (pJson$type=="omega" || pJson$type=="sigma") {
@@ -553,18 +553,18 @@ setMethod("getByIndex", signature=c("parameters", "parameter"), definition=funct
 })
 
 #_______________________________________________________________________________
-#----                          getUncertainty                               ----
+#----                          get_uncertainty                               ----
 #_______________________________________________________________________________
 
 #' @importFrom tibble tibble
-#' @rdname getUncertainty
-setMethod("getUncertainty", signature=c("parameters"), definition=function(object, ...) {
+#' @rdname get_uncertainty
+setMethod("get_uncertainty", signature=c("parameters"), definition=function(object, ...) {
   varcov <- object %>% getVarCov()
   if (is.null(varcov)) {
     return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
   } else {
     return(object@list %>%
-             purrr::map_df(.f=~getUncertainty(object=.x, varcov=varcov, parameters=object)))
+             purrr::map_df(.f=~get_uncertainty(object=.x, varcov=varcov, parameters=object)))
   }
 })
 
@@ -838,7 +838,7 @@ showUncertaintyOnParameters <- function(parameters, discard_na_columns=NULL) {
     removeNaColumn(discard_na_columns)
   
   if (parameters %>% length() > 0) {
-    uncertainty <- parameters %>% getUncertainty()
+    uncertainty <- parameters %>% get_uncertainty()
     # Show uncertainty if at least one parameter has uncertainty
     if (any(!is.na(uncertainty$se))) {
       retValue <- dplyr::bind_cols(retValue, uncertainty %>% dplyr::select(-"name")) 

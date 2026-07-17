@@ -12,7 +12,7 @@ test_that("Import '1-cpt fo' Campsis model in JSON format", {
   
   # Export to JSON and re-import
   json <- model %>%
-    exportToJSON()
+    export_to_json()
   model <- CampsisModel(json=json@data)
   expect_equal(model_suite$pk$`1cpt_fo`, model)
   
@@ -35,7 +35,7 @@ test_that("Export/Re-import '2cpt_zo_allo_metab_effect_on_cl' Campsis model to/f
   
   tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))
   model %>%
-    exportToJSON() %>%
+    export_to_json() %>%
     write(file=tmp)
   
   model2 <- CampsisModel(json=paste0(readLines(tmp), collapse="\n"))
@@ -56,7 +56,7 @@ test_that("Export/Re-import basic test model assembled on the fly to/from JSON",
   
   tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))
   json <- model %>%
-    exportToJSON()
+    export_to_json()
   model %>%
     write(file=tmp)
   jsonVarcov <- json@data$varcov
