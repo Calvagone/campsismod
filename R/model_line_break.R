@@ -35,11 +35,11 @@ setMethod("getName", signature = c("line_break"), definition = function(x) {
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("line_break"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("line_break"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
   if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- ""

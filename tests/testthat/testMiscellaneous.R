@@ -5,24 +5,24 @@ source(paste0("", "testUtils.R"))
 
 # options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
-test_that("Methods 'getName', 'getPrefix', 'show' and 'toString' work as expected on initial conditions", {
+test_that("Methods 'getName', 'getPrefix', 'show' and 'to_string' work as expected on initial conditions", {
   model <- model_suite$testing$pk$`1cpt_fo`
   init <- InitialCondition(1, "1000")
   expect_equal(getName(init), "INIT (CMT=1)")
   expect_equal(getPrefix(init), "")
   expect_equal(capture_output(show(init)), "INIT (CMT=1): 1000")
-  expect_equal(toString(init, dest="rxode2", model=model), "A_ABS(0)=1000")
-  expect_equal(toString(init, dest="mrgsolve", model=model), "A_ABS_0=1000")
-  expect_error(toString(init, dest="other", model=model))
+  expect_equal(to_string(init, dest="rxode2", model=model), "A_ABS(0)=1000")
+  expect_equal(to_string(init, dest="mrgsolve", model=model), "A_ABS_0=1000")
+  expect_error(to_string(init, dest="other", model=model))
 })
 
-test_that("Methods 'show' and 'toString' work as expected on compartment properties", {
+test_that("Methods 'show' and 'to_string' work as expected on compartment properties", {
   model <- model_suite$testing$pk$`1cpt_fo`
   property <- Bioavailability(1, rhs="F1")
   expect_equal(capture_output(show(property)), "BIOAVAILABILITY (CMT=1): F1")
-  expect_equal(toString(property, dest="rxode2", model=model), "f(A_ABS)=F1")
-  expect_equal(toString(property, dest="mrgsolve", model=model), "F_A_ABS=F1")
-  expect_error(toString(property, dest="other", model=model))
+  expect_equal(to_string(property, dest="rxode2", model=model), "f(A_ABS)=F1")
+  expect_equal(to_string(property, dest="mrgsolve", model=model), "F_A_ABS=F1")
+  expect_error(to_string(property, dest="other", model=model))
 })
 
 test_that("Generic methods should throw an error when the call is incorrect", {
@@ -39,20 +39,20 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(replace_all(""), regexp=msg)
   expect_error(replicate("", ""), regexp=msg)
   expect_error(select (""), regexp=msg)
-  expect_error(setMinMax("", "", "", ""), regexp=msg) # Strange, I need to pass the 4 args
+  expect_error(set_min_max("", "", "", ""), regexp=msg) # Strange, I need to pass the 4 args
   expect_error(standardise(""), regexp=msg)
-  expect_error(toString (""), regexp=msg)
+  expect_error(to_string (""), regexp=msg)
   expect_error(write(""), regexp=msg)
   
   expect_error(getPrefix(""), regexp=msg)
   expect_error(getRecordName(""), regexp=msg)
 })
 
-test_that("Method 'toString' of unknown statements works as expected", {
+test_that("Method 'to_string' of unknown statements works as expected", {
   statement <- UnknownStatement("HELLO")
-  expect_equal(toString(statement, dest="campsis", show=TRUE), "[UNKNOWN STATEMENT] HELLO")
-  expect_equal(toString(statement, dest="campsis", show=FALSE), "HELLO")
-  expect_error(toString(statement, dest="other"), regexp="Only rxode2 \\(previously RxODE\\), mrgsolve or campsis are supported")
+  expect_equal(to_string(statement, dest="campsis", show=TRUE), "[UNKNOWN STATEMENT] HELLO")
+  expect_equal(to_string(statement, dest="campsis", show=FALSE), "HELLO")
+  expect_error(to_string(statement, dest="other"), regexp="Only rxode2 \\(previously RxODE\\), mrgsolve or campsis are supported")
 })
 
 test_that("Export function on a replicated Campsis model should be fast", {

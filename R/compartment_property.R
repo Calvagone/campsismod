@@ -79,11 +79,11 @@ setMethod("show", signature=c("compartment_property"), definition=function(objec
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("compartment_property"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("compartment_property"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
   
@@ -91,11 +91,11 @@ setMethod("toString", signature=c("compartment_property"), definition=function(o
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
   if (isRxODE(dest)) {
-    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% toString(), ")=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% to_string(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% toString(), "=", object@rhs))
+    return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% to_string(), "=", object@rhs))
   } else if (dest=="campsis") {
-    return(paste0(compartment %>% toString(), "=", object@rhs))
+    return(paste0(compartment %>% to_string(), "=", object@rhs))
   } else {
     UnsupportedDestException()
   }

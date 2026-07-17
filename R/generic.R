@@ -295,7 +295,7 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
-#----                            setMinMax                                  ----
+#----                           set_min_max                                 ----
 #_______________________________________________________________________________
 
 #' Set the minimum and maximum value on a model parameter.
@@ -307,15 +307,15 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname setMinMax
-setMinMax <- function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+set_min_max <- function(object, parameter, min, max, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("setMinMax", function(object, parameter, min, max, ...) {
+setGeneric("set_min_max", function(object, parameter, min, max, ...) {
   min <- as.numeric(min)
   max <- as.numeric(max)
-  standardGeneric("setMinMax")
+  standardGeneric("set_min_max")
 })
 
 #_______________________________________________________________________________
@@ -338,22 +338,22 @@ setGeneric("standardise", function(object, ...) {
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' ToString generic method.
+#' to_string generic method.
 #' 
 #' @param object generic object
-#' @param ... extra arguments needed for toString conversion
+#' @param ... extra arguments needed for to_string conversion
 #' @return character value/vector
 #' @export
-#' @rdname toString
-toString <- function(object, ...) {
+#' @rdname to_string
+to_string <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("toString", function(object, ...) {
-  standardGeneric("toString")
+setGeneric("to_string", function(object, ...) {
+  standardGeneric("to_string")
 })
 
 #_______________________________________________________________________________

@@ -34,7 +34,7 @@ campsisNonRegTest <- function(model, regFilename) {
 }
 
 mrgsolveNonRegTest <- function(mrgmod, regFilename) {
-  mrgmodCode <- mrgmod %>% toString()
+  mrgmodCode <- mrgmod %>% to_string()
   if (overwriteNonRegressionFiles) {
     toFile(mrgmodCode, mrgsolveNonRegPath(regFilename))
   }

@@ -76,13 +76,13 @@ test_that("Method 'replace' can be used to adapt the name of a compartment", {
   expect_equal(central@rhs, "KA*A_ABS + Q*A_PERIPHERAL/V3 + (-CL/V2 - Q/V2)*A_CENTRAL")
   
   # Check bioavailability equation will be adapted too
-  expect_equal(model %>% find(Bioavailability(1)) %>% toString(model=model, dest="campsis"), "A_ABS=0.75")
+  expect_equal(model %>% find(Bioavailability(1)) %>% to_string(model=model, dest="campsis"), "A_ABS=0.75")
 })
 
-test_that("Method 'toString' works as expected on compartment", {
+test_that("Method 'to_string' works as expected on compartment", {
   cmt <- Compartment(index=1)
-  expect_equal(cmt %>% toString(), "A_1")
+  expect_equal(cmt %>% to_string(), "A_1")
   
   cmt <- Compartment(index=1, name="CENTRAL")
-  expect_equal(cmt %>% toString(), "A_CENTRAL")
+  expect_equal(cmt %>% to_string(), "A_CENTRAL")
 })

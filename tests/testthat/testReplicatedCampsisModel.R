@@ -11,8 +11,8 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   set.seed(123)
   
   model <- model_suite$pk$`1cpt_fo` %>%
-    setMinMax(Theta(name="KA"), min=0.9, max=1.1) %>%
-    setMinMax(Theta(name="CL"), min=2.8, max=3.2) %>%
+    set_min_max(Theta(name="KA"), min=0.9, max=1.1) %>%
+    set_min_max(Theta(name="CL"), min=2.8, max=3.2) %>%
     add_rse(Theta(name="KA"), value=10) %>%
     add_rse(Theta(name="CL"), value=10)
   
@@ -43,7 +43,7 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   set.seed(123)
   
   model <- model_suite$pk$`1cpt_fo` %>%
-    setMinMax(Theta(name="KA"), min=1.3, max=2) %>%
+    set_min_max(Theta(name="KA"), min=1.3, max=2) %>%
     add_rse(Theta(name="KA"), value=10)
   
   expect_error(repModel <- model %>% replicate(1000), msg="Too many iterations")
@@ -168,12 +168,12 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
   expect_equal(c("REPLICATE", parameterNames), colnames(repModel@replicated_parameters))
 })
 
-test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set limits", {
+test_that("Method 'set_min_max' can be used on THETAs, OMEGAs and SIGMAs to set limits", {
   
   set.seed(123)
   
   model1 <- model_suite$pk$`1cpt_fo` %>%
-    setMinMax("theta", min=0, max=Inf) %>%
+    set_min_max("theta", min=0, max=Inf) %>%
     add_rse(Theta(name="KA"), value=100) # Very large RSE on KA
   
   repModel1 <- model1 %>% replicate(1000, settings=AutoReplicationSettings(quiet=FALSE))

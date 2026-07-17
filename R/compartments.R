@@ -49,8 +49,8 @@ setMethod("add", signature=c("compartments", "compartments"), definition=functio
 #' 
 appendCompartments <- function(compartments1, compartments2) {
   
-  cmtNames1 <- compartments1@list %>% purrr::map_chr(~.x %>% toString())
-  cmtNames2 <- compartments2@list %>% purrr::map_chr(~.x %>% toString())
+  cmtNames1 <- compartments1@list %>% purrr::map_chr(~.x %>% to_string())
+  cmtNames2 <- compartments2@list %>% purrr::map_chr(~.x %>% to_string())
   cmtMax <- compartments1 %>% length()
   
   checkCollisionOnCmts <- cmtNames1 %in% cmtNames2

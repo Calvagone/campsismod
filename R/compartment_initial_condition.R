@@ -63,11 +63,11 @@ setMethod("show", signature=c("compartment_initial_condition"), definition=funct
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("compartment_initial_condition"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("compartment_initial_condition"), definition=function(object, ...) {
   model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
   dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
   
@@ -75,9 +75,9 @@ setMethod("toString", signature=c("compartment_initial_condition"), definition=f
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
   if (isRxODE(dest)) {
-    return(paste0(compartment %>% toString(), "(0)=", object@rhs))
+    return(paste0(compartment %>% to_string(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(compartment %>% toString(), "_0=", object@rhs))
+    return(paste0(compartment %>% to_string(), "_0=", object@rhs))
   } else {
     stop("Only rxode2 (previously RxODE) and mrgsolve are currently supported")
   }

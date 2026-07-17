@@ -149,7 +149,7 @@ addPropertiesRecords <- function(records, model) {
     }
     for (subProperty in subProperties@list) {
       compartment <- model@compartments %>% find(Compartment(index=subProperty@compartment))
-      equation <- Equation(compartment %>% toString(), subProperty@rhs, comment=subProperty@comment)
+      equation <- Equation(compartment %>% to_string(), subProperty@rhs, comment=subProperty@comment)
       record <- record %>% add(equation)
     }
     records <- records %>% add(record)
@@ -263,7 +263,7 @@ addProperties <- function(compartments, records, name, init) {
   # Filter on equations (line breaks and comments are accepted in properties record)
   for (equation in record@statements@list %>% purrr::keep(~is(.x, "equation"))) {
     cmtName <- equation@lhs
-    compartment <- compartments@list %>% purrr::detect(~.x %>% toString() == cmtName)
+    compartment <- compartments@list %>% purrr::detect(~.x %>% to_string() == cmtName)
     if (is.null(compartment)) {
       stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% getName()))
     }
@@ -534,7 +534,7 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     
     # Add all statements
     for (statement in record@statements@list) {
-      code <- code %>% append(statement %>% toString())
+      code <- code %>% append(statement %>% to_string())
     }
     code <- code %>% append("") # write.table will add a new line
   }

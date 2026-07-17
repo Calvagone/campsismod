@@ -145,7 +145,7 @@ setMethod("addSuffix", signature=c("compartments", "character", "character"), de
   # Update compartments
   for (index in seq_len(retValue %>% length())) {
     compartment <- retValue@list[[index]]
-    oldName <- compartment %>% toString()
+    oldName <- compartment %>% to_string()
     replacementName <- paste0(oldName, separator, suffix)
     compartment@name <- gsub(pattern="^A_", replacement="", x=replacementName)
     retValue <- retValue %>%

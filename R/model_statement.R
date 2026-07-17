@@ -63,7 +63,7 @@ UnsupportedDestException <- function() {
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("model_statement"), definition=function(object) {
-  cat(object %>% toString(show=TRUE))
+  cat(object %>% to_string(show=TRUE))
 })
 
 #_______________________________________________________________________________

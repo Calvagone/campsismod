@@ -786,11 +786,11 @@ setMethod("select", signature=c("parameters"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
-#----                            setMinMax                                  ----
+#----                           set_min_max                                 ----
 #_______________________________________________________________________________
 
-#' @rdname setMinMax
-setMethod("setMinMax", signature=c("parameters", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+setMethod("set_min_max", signature=c("parameters", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
   parameter_ <- object %>%
     find(parameter)
   
@@ -809,8 +809,8 @@ setMethod("setMinMax", signature=c("parameters", "parameter", "numeric", "numeri
   return(object)
 })
 
-#' @rdname setMinMax
-setMethod("setMinMax", signature=c("parameters", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+setMethod("set_min_max", signature=c("parameters", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
   assertthat::assert_that(parameter %in% c("theta", "omega", "sigma"), msg="Parameter must be one of: 'theta', 'omega' or 'sigma'")
   object@list <- object@list %>%
     purrr::map(.f=function(x) {

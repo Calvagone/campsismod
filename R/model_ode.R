@@ -43,11 +43,11 @@ setMethod("getName", signature = c("ode"), definition = function(x) {
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("ode"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("ode"), definition=function(object, ...) {
   dest <- processExtraArg(args=list(...), name="dest", default="campsis")
   model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
   

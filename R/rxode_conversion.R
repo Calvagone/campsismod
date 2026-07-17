@@ -13,7 +13,7 @@ rxodeCode <- function(model) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
       compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-      equation <- property %>% toString(model=model, dest="rxode2")
+      equation <- property %>% to_string(model=model, dest="rxode2")
       propertiesCode <- propertiesCode %>% append(equation)
     }
   }
@@ -22,7 +22,7 @@ rxodeCode <- function(model) {
   code <- NULL
   for (record in records@list) {
     for (statement in record@statements@list) {
-      code <- code %>% append(statement %>% toString(dest="rxode2"))
+      code <- code %>% append(statement %>% to_string(dest="rxode2"))
     }
     if (is(record, "ode_record")) {
       code <- code %>% append(propertiesCode)

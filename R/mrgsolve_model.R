@@ -37,11 +37,11 @@ setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=fu
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("mrgsolve_model"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("mrgsolve_model"), definition=function(object, ...) {
   cpp <- NULL
   if (!is.null(object@param)) {
     cpp <- cpp %>% append(object@param)

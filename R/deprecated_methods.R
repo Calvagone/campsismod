@@ -82,3 +82,23 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
   replace_all(object = object, pattern = pattern, replacement = replacement, ...)
 })
 
+#' to_string generic method.
+#' 
+#' `toString()` is deprecated in favor of `to_string()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams to_string
+#' @return character value/vector
+#' @export
+#' @rdname toString
+toString <- function(object, ...) {
+  lifecycle::deprecate_warn("1.4.0", "toString()", "to_string()")
+  to_string(object = object, ...)
+}
+
+setGeneric("toString", function(object, ...) {
+  lifecycle::deprecate_warn("1.4.0", "toString()", "to_string()")
+  to_string(object = object, ...)
+})

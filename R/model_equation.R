@@ -55,11 +55,11 @@ setMethod("replace_all", signature=c("equation", "pattern", "character"), defini
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("equation"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("equation"), definition=function(object, ...) {
   args <- list(...)
   dest <- processExtraArg(args=args, name="dest", default="campsis")
   init <- processExtraArg(args=args, name="init", default=TRUE)

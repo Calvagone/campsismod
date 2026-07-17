@@ -91,8 +91,8 @@ test_that("Model parameters with min and max values can be persisted correctly",
   modelName <- "model_1cpt_fo_min_max"
   
   model <- model %>%
-    setMinMax("theta", min=0, max=Inf) %>%
-    setMinMax(Sigma("RUV_FIX"), min=1, max=1)
+    set_min_max("theta", min=0, max=Inf) %>%
+    set_min_max(Sigma("RUV_FIX"), min=1, max=1)
   
   # Write
   model %>% write(file=writePath(modelName))
