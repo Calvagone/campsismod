@@ -38,8 +38,8 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
     
     if (isList && !is.null(value$type)) {
       # Recursion
-      if (hasExactMethod(generic="loadFromJSON", signature=c(value$type, "json_element"))) {
-        value <- loadFromJSON(object=new(value$type), json=JSONElement(value))
+      if (hasExactMethod(generic="load_from_json", signature=c(value$type, "json_element"))) {
+        value <- load_from_json(object=new(value$type), json=JSONElement(value))
       } else {
         value <- mapJSONPropertiesToS4Slots(object=new(value$type),
                                             json=JSONElement(value), discard_type=TRUE)
@@ -286,7 +286,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
       theta <- Theta(index=index)
     }
     x$type <- NULL
-    return(loadFromJSON(object=theta, JSONElement(x)))
+    return(load_from_json(object=theta, JSONElement(x)))
     
   } else if (x$type=="omega") {
     x <- processJSONDoubleArrayParameter(x)
@@ -297,7 +297,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     }
     x$type <- x$var_type
     x$var_type <- NULL
-    return(loadFromJSON(object=omega, JSONElement(x)))
+    return(load_from_json(object=omega, JSONElement(x)))
     
   } else if (x$type=="sigma")  {
     x <- processJSONDoubleArrayParameter(x)
@@ -308,7 +308,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     }
     x$type <- x$var_type
     x$var_type <- NULL
-    return(loadFromJSON(object=sigma, JSONElement(x)))
+    return(load_from_json(object=sigma, JSONElement(x)))
     
   } else {
     stop("Unknown parameter type")

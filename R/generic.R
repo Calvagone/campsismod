@@ -168,7 +168,7 @@ setGeneric("getVarCov", function(object) {
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                           load_from_json                                ----
 #_______________________________________________________________________________
 
 #' Fill-in S4 object from the JSON content.
@@ -177,13 +177,13 @@ setGeneric("getVarCov", function(object) {
 #' @param json JSON (usually a list)
 #' @return the loaded S4 object
 #' @export
-#' @rdname loadFromJSON
-loadFromJSON <- function(object, json) {
+#' @rdname load_from_json
+load_from_json <- function(object, json) {
   stop(sprintf("No default function is provided for 'object': %s, 'json': %s", class(object), class(json)))
 }
 
-setGeneric("loadFromJSON", function(object, json) {
-  standardGeneric("loadFromJSON")
+setGeneric("load_from_json", function(object, json) {
+  standardGeneric("load_from_json")
 })
 
 #_______________________________________________________________________________

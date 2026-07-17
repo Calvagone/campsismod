@@ -21,7 +21,7 @@ test_that("Import '1-cpt fo' Campsis model in JSON format", {
   expect_equal(CampsisModel(), model)
   
   # Import the 1-cpt PK model with a correlation between CL and VC from JSON
-  model <- loadFromJSON(CampsisModel(),
+  model <- load_from_json(CampsisModel(),
                         file.path(testFolder, "json_examples", "1cpt_fo_model_cl_vc_cor.json"))
   expectedModel <- model_suite$pk$`1cpt_fo` %>%
     add(Omega(name="CL_VC", index=3, index2=2, value=0.75, type="cor")) %>%

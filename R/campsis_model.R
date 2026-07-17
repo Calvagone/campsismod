@@ -28,7 +28,7 @@ CampsisModel <- function(json=NULL) {
     model <- new("campsis_model")
   } else {
     schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-    model <-  loadFromJSON(CampsisModel(), openJSON(json=json, schema=schema))
+    model <-  load_from_json(CampsisModel(), openJSON(json=json, schema=schema))
   }
   return(model)
 }
@@ -318,19 +318,19 @@ setMethod("getVarCov", signature=c("campsis_model"), definition=function(object)
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                           load_from_json                                ----
 #_______________________________________________________________________________
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("campsis_model", "json_element"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("campsis_model", "json_element"), definition=function(object, json) {
   object <- jsonToCampsisModel(object=object, json=json)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("campsis_model", "character"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("campsis_model", "character"), definition=function(object, json) {
   schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-  return(loadFromJSON(object=object, json=openJSON(json=json, schema=schema)))
+  return(load_from_json(object=object, json=openJSON(json=json, schema=schema)))
 })
 
 #_______________________________________________________________________________
@@ -377,7 +377,7 @@ read.campsis <- function(file) {
     if (!endsWith(file, ".json")) {
       stop("Only JSON model files can be opened.")
     }
-    model <- loadFromJSON(CampsisModel(), paste0(readLines(file), collapse="\n"))
+    model <- load_from_json(CampsisModel(), paste0(readLines(file), collapse="\n"))
   } else {
     stop("file is not a JSON model or a valid Campsis model folder")
   }

@@ -463,23 +463,23 @@ setMethod("get_uncertainty", signature=c("parameter"), definition=function(objec
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                           load_from_json                                ----
 #_______________________________________________________________________________
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("theta", "json_element"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("theta", "json_element"), definition=function(object, json) {
   object <- mapJSONPropertiesToS4Slots(object, json)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("omega", "json_element"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("omega", "json_element"), definition=function(object, json) {
   object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("sigma", "json_element"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("sigma", "json_element"), definition=function(object, json) {
   object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
   return(object)
 })

@@ -39,3 +39,25 @@ setGeneric("getUncertainty", function(object, name) {
   lifecycle::deprecate_warn("1.4.0", "getUncertainty()", "get_uncertainty()")
   get_uncertainty(object = object, ...)
 })
+
+#' Fill-in S4 object from the JSON content.
+#' 
+#' `loadFromJSON()` is deprecated in favor of `load_from_json()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams load_from_json
+#' @return the loaded S4 object
+#' @export
+#' @rdname loadFromJSON
+loadFromJSON <- function(object, json) {
+  lifecycle::deprecate_warn("1.4.0", "loadFromJSON()", "load_from_json()")
+  load_from_json(object = object, json = json)
+}
+
+setGeneric("loadFromJSON", function(object, json) {
+  lifecycle::deprecate_warn("1.4.0", "loadFromJSON()", "load_from_json()")
+  load_from_json(object = object, json = json)
+})
+
