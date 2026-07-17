@@ -61,9 +61,9 @@ setMethod("replace_all", signature=c("equation", "pattern", "character"), defini
 #' @rdname to_string
 setMethod("to_string", signature=c("equation"), definition=function(object, ...) {
   args <- list(...)
-  dest <- processExtraArg(args=args, name="dest", default="campsis")
-  init <- processExtraArg(args=args, name="init", default=TRUE)
-  capture <- processExtraArg(args=args, name="capture", default=FALSE)
+  dest <- process_extra_arg(args=args, name="dest", default="campsis")
+  init <- process_extra_arg(args=args, name="init", default=TRUE)
+  capture <- process_extra_arg(args=args, name="capture", default=FALSE)
   
   if (dest=="campsis" || isRxODE(dest) || dest=="NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)

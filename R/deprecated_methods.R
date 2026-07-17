@@ -194,3 +194,23 @@ setGeneric("getByIndex", function(object, x) {
   lifecycle::deprecate_warn("1.4.0", "getByIndex()", "get_by_index()")
   get_by_index(object = object, x = x)
 })
+
+#_______________________________________________________________________________
+#----                           utilities.R                                 ----
+#_______________________________________________________________________________
+
+#' Process extra arguments.
+#' 
+#' `processExtraArg()` is deprecated in favor of `process_extra_arg()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams process_extra_arg
+#' @return requested argument value
+#' @export
+#' @rdname processExtraArg
+processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
+  lifecycle::deprecate_warn("1.4.0", "processExtraArg()", "process_extra_arg()")
+  process_extra_arg(args = args, name = name, default = default, mandatory = mandatory)
+}

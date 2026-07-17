@@ -42,7 +42,7 @@ setMethod("getName", signature = c("comment"), definition = function(x) {
 
 #' @rdname to_string
 setMethod("to_string", signature=c("comment"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
   if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- ""
   } else {

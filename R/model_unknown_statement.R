@@ -54,8 +54,8 @@ setMethod("replace_all", signature=c("unknown_statement", "pattern", "character"
 #' @rdname to_string
 setMethod("to_string", signature=c("unknown_statement"), definition=function(object, ...) {
   args <- list(...)
-  dest <- processExtraArg(args=args, name="dest", default="campsis")
-  show <- processExtraArg(args=args, name="show", default=FALSE)
+  dest <- process_extra_arg(args=args, name="dest", default="campsis")
+  show <- process_extra_arg(args=args, name="show", default=FALSE)
 
   if (dest=="campsis") {
     if (show) {

@@ -5,7 +5,7 @@
 #' @return no return value
 #' @importFrom assertthat assert_that
 #' @export
-assertSingleCharacterString <- function(x) {
+assert_single_character_string <- function(x) {
   assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a single character string")
 }
 
@@ -18,7 +18,7 @@ assertSingleCharacterString <- function(x) {
 #' @return requested argument value
 #' @importFrom utils hasName
 #' @export
-processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
+process_extra_arg <- function(args, name, default=NULL, mandatory=FALSE) {
   if (utils::hasName(args, name)) {
     retValue <- args[[name]]
   } else {
@@ -63,7 +63,7 @@ variablePatternNoStartStr <- function() {
 #' @return logical value
 #' @export
 isEquation <- function(x) {
-  assertSingleCharacterString(x)
+  assert_single_character_string(x)
   parts <- strsplit(x, split="=")[[1]]
   if (length(parts) == 1) {
     return(FALSE)
@@ -95,7 +95,7 @@ isIfStatement <- function(x) {
 #' @return text between brackets (trimmed)
 #' @export
 extractTextBetweenBrackets <- function(x) {
-  assertSingleCharacterString(x)
+  assert_single_character_string(x)
   retValue <- gsub("[\\(\\)]", "", regmatches(x, gregexpr("\\(.*?\\)", x))[[1]])
   if (length(retValue) == 0) {
     stop(paste0("No parentheses found in ", x))
@@ -110,7 +110,7 @@ extractTextBetweenBrackets <- function(x) {
 #' @return right-hand side expression
 #' @export
 extractRhs <- function(x, split="=") {
-  assertSingleCharacterString(x)
+  assert_single_character_string(x)
   tmp <- strsplit(x=x, split=split)[[1]]
   # Remove lhs and collapse (in case of several =)
   rhs <- paste0(tmp[-1], collapse="=")
@@ -124,7 +124,7 @@ extractRhs <- function(x, split="=") {
 #' @return left-hand-side expression, not trimmed
 #' @export
 extractLhs <- function(x, split="=") {
-  assertSingleCharacterString(x)
+  assert_single_character_string(x)
   tmp <- strsplit(x=x, split=split)[[1]]
   lhs <- tmp[1]
   return(lhs)

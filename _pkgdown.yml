@@ -233,5 +233,5 @@ reference:
 
 - title: "Other exported methods"
   contents:
-  - assertSingleCharacterString
-  - processExtraArg
+  - assert_single_character_string
+  - process_extra_arg

@@ -48,8 +48,8 @@ setMethod("getName", signature = c("ode"), definition = function(x) {
 
 #' @rdname to_string
 setMethod("to_string", signature=c("ode"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
+  model <- process_extra_arg(args=list(...), name="model", default=CampsisModel())
   
   if (dest=="campsis" || isRxODE(dest)) {
     retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)

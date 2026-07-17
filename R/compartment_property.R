@@ -84,8 +84,8 @@ setMethod("show", signature=c("compartment_property"), definition=function(objec
 
 #' @rdname to_string
 setMethod("to_string", signature=c("compartment_property"), definition=function(object, ...) {
-  model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
-  dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
+  model <- process_extra_arg(args=list(...), name="model", mandatory=TRUE)
+  dest <- process_extra_arg(args=list(...), name="dest", mandatory=TRUE)
   
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))

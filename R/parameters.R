@@ -921,7 +921,7 @@ writeParameters <- function(object, file, ...) {
   df <- df %>% removeNaColumn(naColumns)
   
   if (nrow(df)==0) {
-    df <- processExtraArg(args=list(...), name="defaultDf", mandatory=TRUE)
+    df <- process_extra_arg(args=list(...), name="defaultDf", mandatory=TRUE)
   }
   utils::write.csv(df, file=file, row.names=FALSE)
   return(TRUE)

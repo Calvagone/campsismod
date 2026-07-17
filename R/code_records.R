@@ -517,7 +517,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
 #' @importFrom utils write.table
 setMethod("write", signature=c("code_records", "character"), definition=function(object, file, ...) {
   # The model is needed to get the compartment properties
-  model <- processExtraArg(args=list(...), name="model")
+  model <- process_extra_arg(args=list(...), name="model")
   if (is.null(model)) {
     warning("model not provided, compartment properties will be lost")
     object <- object %>% sort()

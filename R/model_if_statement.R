@@ -59,7 +59,7 @@ setMethod("replace_all", signature=c("if_statement", "pattern", "character"), de
 
 #' @rdname to_string
 setMethod("to_string", signature=c("if_statement"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
   if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve") {
     retValue <- paste0("if (", object@condition, ") ", object@equation %>% to_string(dest=dest, init=FALSE))
   } else if (dest=="NONMEM") {

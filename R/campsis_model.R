@@ -563,7 +563,7 @@ setMethod("write", signature=c("campsis_model", "character"), definition=functio
     return(export_to_json(object) %>% campsismod::write(file=file))
   }
   
-  zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
+  zip <- process_extra_arg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters
 
