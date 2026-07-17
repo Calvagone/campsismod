@@ -10,7 +10,7 @@ test_that("Export method works (2-cpt model, comments)", {
   model <- model_suite$testing$nonmem$advan4_trans4
   
   # Add some comments/line breaks programmatically
-  main <- model@model %>% getByName("MAIN")
+  main <- model@model %>% get_by_name("MAIN")
   main <- main %>% replace(Equation("KA", "THETA_KA*exp(ETA_KA)", comment="EQUATION COMMENT"))
   main <- main %>% add(LineBreak())
   main <- main %>% add(Comment("THIS IS A COMMENT"))

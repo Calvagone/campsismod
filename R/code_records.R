@@ -48,7 +48,7 @@ setMethod("add", signature=c("code_records", "code_records"), definition=functio
 #' 
 appendCodeRecords <- function(records1, records2) {
   for (record in (records2)@list) {
-    baseRecord <- records1 %>% getByName(record %>% getName())
+    baseRecord <- records1 %>% get_by_name(record %>% getName())
     if (baseRecord %>% length() == 0) {
       records1 <- records1 %>% add(record)
     } else {
@@ -89,7 +89,7 @@ setMethod("add", signature=c("code_records", "model_statement"), definition=func
     } else {
       recordName <- "MAIN"
     }
-    record <- object %>% getByName(recordName)
+    record <- object %>% get_by_name(recordName)
     if (isS4(record)) {
       # Existing record
       record <- record %>% add(x)
@@ -233,7 +233,7 @@ addODECompartment <- function(compartments, ode) {
 #' 
 getCompartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
-  odeRecord <- records %>% getByName("ODE")
+  odeRecord <- records %>% get_by_name("ODE")
   compartments <- Compartments()
   if (odeRecord %>% length() == 0) {
     return(compartments)
@@ -256,7 +256,7 @@ getCompartments <- function(records) {
 #' @keywords internal
 #' 
 addProperties <- function(compartments, records, name, init) {
-  record <- records %>% getByName(name)
+  record <- records %>% get_by_name(name)
   if (record %>% length() == 0) {
     return(compartments)
   }

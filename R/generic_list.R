@@ -132,7 +132,7 @@ setMethod("replace", signature=c("pmx_list", "list"), definition=function(object
 })
 
 #_______________________________________________________________________________
-#----                             index_of                                   ----
+#----                             index_of                                  ----
 #_______________________________________________________________________________
 
 #' Get the index of an element in list.
@@ -164,7 +164,7 @@ setMethod("index_of", signature=c("pmx_list", "pmx_element"), definition=functio
 })
 
 #_______________________________________________________________________________
-#----                           getByName                                   ----
+#----                          get_by_name                                  ----
 #_______________________________________________________________________________
 
 #' Get an element from a list by name.
@@ -174,17 +174,17 @@ setMethod("index_of", signature=c("pmx_list", "pmx_element"), definition=functio
 #' @param name element name to search for
 #' @return the element that was found or NULL if no element was found with the same name
 #' @export
-#' @rdname getByName
-getByName <- function(object, name) {
+#' @rdname get_by_name
+get_by_name <- function(object, name) {
   stop("No default function is provided")
 }
 
-setGeneric("getByName", function(object, name) {
-  standardGeneric("getByName")
+setGeneric("get_by_name", function(object, name) {
+  standardGeneric("get_by_name")
 })
 
-#' @rdname getByName
-setMethod("getByName", signature=c("pmx_list", "character"), definition=function(object, name) {
+#' @rdname get_by_name
+setMethod("get_by_name", signature=c("pmx_list", "character"), definition=function(object, name) {
   if (is.na(name)) {
     return(NULL)
   }
@@ -286,7 +286,7 @@ setGeneric("find", function(object, x) {
 
 #' @rdname find
 setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  return(object %>% getByName(x %>% getName()))
+  return(object %>% get_by_name(x %>% getName()))
 })
 
 #_______________________________________________________________________________

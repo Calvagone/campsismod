@@ -100,7 +100,7 @@ reference:
   - find
   - index_of
   - getByIndex
-  - getByName
+  - get_by_name
   - getNames
   - move
   - replace

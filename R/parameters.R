@@ -227,7 +227,7 @@ setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definiti
 matchSingleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && !is.na(x@name)) {
-    existingParam <- object %>% getByName(x %>% getName())
+    existingParam <- object %>% get_by_name(x %>% getName())
     if (existingParam %>% length() == 1) {
       x@index <- existingParam@index   # Copy index!
     }
@@ -245,7 +245,7 @@ matchSingleArrayParameter <- function(object, x) {
 matchDoubleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
-    existingParam <- object %>% getByName(x %>% getName())
+    existingParam <- object %>% get_by_name(x %>% getName())
     if (existingParam %>% length() == 1) {
       x@index <- existingParam@index   # Copy index!
       x@index2 <- existingParam@index2 # Copy index2!
@@ -322,7 +322,7 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
     # Retrieve varcov parameters to remove
     varcovParams <- colnames(object@varcov) %>%
       purrr::map(.f=function(.x) {
-        return(object %>% getByName(.x))
+        return(object %>% get_by_name(.x))
       }) %>%
       purrr::keep(.p=~(is(.x, "omega") && varcovOmega) ||
                     (is(.x, "sigma") && varcovSigma))

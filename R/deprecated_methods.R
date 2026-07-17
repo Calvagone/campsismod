@@ -131,3 +131,24 @@ setGeneric("indexOf", function(object, x) {
   lifecycle::deprecate_warn("1.4.0", "indexOf()", "index_of()")
   index_of(object = object, x = x)
 })
+
+#' #' Get an element from a list by name.
+#' 
+#' `getByName()` is deprecated in favor of `get_by_name()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams get_by_name
+#' @return the element that was found or NULL if no element was found with the same name
+#' @export
+#' @rdname getByName
+getByName <- function(object, name) {
+  lifecycle::deprecate_warn("1.4.0", "getByName()", "get_by_name()")
+  get_by_name(object = object, name = name)
+}
+
+setGeneric("getByName", function(object, name) {
+  lifecycle::deprecate_warn("1.4.0", "getByName()", "get_by_name()")
+  get_by_name(object = object, name = name)
+})

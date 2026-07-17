@@ -122,7 +122,7 @@ setMethod("add_rse", signature=c("campsis_model", "parameter", "numeric"), defin
 
 #' @rdname auto_detect_nonmem
 setMethod("auto_detect_nonmem", signature=c("campsis_model"), definition=function(object, ...) {
-  main <- object@model %>% getByName("MAIN")
+  main <- object@model %>% get_by_name("MAIN")
   numberOfCmts <- object@compartments %>% length()
   
   for (cmtIndex in seq_len(numberOfCmts)) {
