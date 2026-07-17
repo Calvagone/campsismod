@@ -106,22 +106,22 @@ appendModel <- function(model1, model2) {
 }
 
 #_______________________________________________________________________________
-#----                             addRSE                                    ----
+#----                             add_rse                                    ----
 #_______________________________________________________________________________
 
-#' @rdname addRSE
-setMethod("addRSE", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+#' @rdname add_rse
+setMethod("add_rse", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
   object@parameters <- object@parameters %>%
-    addRSE(parameter=parameter, value=value, ...)
+    add_rse(parameter=parameter, value=value, ...)
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                         autoDetectNONMEM                              ----
+#----                         auto_detect_nonmem                              ----
 #_______________________________________________________________________________
 
-#' @rdname autoDetectNONMEM
-setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(object, ...) {
+#' @rdname auto_detect_nonmem
+setMethod("auto_detect_nonmem", signature=c("campsis_model"), definition=function(object, ...) {
   main <- object@model %>% getByName("MAIN")
   numberOfCmts <- object@compartments %>% length()
   
@@ -291,12 +291,12 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
 })
 
 #_______________________________________________________________________________
-#----                          getCompartmentIndex                          ----
+#----                          get_compartment_index                          ----
 #_______________________________________________________________________________
 
-#' @rdname getCompartmentIndex
-setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), definition=function(object, name) {
-  return(object@compartments %>% getCompartmentIndex(name=name))
+#' @rdname get_compartment_index
+setMethod("get_compartment_index", signature=c("campsis_model", "character"), definition=function(object, name) {
+  return(object@compartments %>% get_compartment_index(name=name))
 })
 
 #_______________________________________________________________________________

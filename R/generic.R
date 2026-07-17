@@ -1,5 +1,5 @@
 #_______________________________________________________________________________
-#----                               addRSE                                  ----
+#----                               add_rse                                  ----
 #_______________________________________________________________________________
 
 #' Add relative standard error (RSE) to the specified parameter.
@@ -10,16 +10,16 @@
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname addRSE
-addRSE <- function(object, parameter, value, ...) {
+#' @rdname add_rse
+add_rse <- function(object, parameter, value, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("addRSE", function(object, parameter, value, ...) {
-  standardGeneric("addRSE")
+setGeneric("add_rse", function(object, parameter, value, ...) {
+  standardGeneric("add_rse")
 })
 #_______________________________________________________________________________
-#----                         autoDetectNONMEM                              ----
+#----                         auto_detect_nonmem                              ----
 #_______________________________________________________________________________
 
 #' Auto-detect special variables from NONMEM as compartment properties.
@@ -30,13 +30,13 @@ setGeneric("addRSE", function(object, parameter, value, ...) {
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname autoDetectNONMEM
-autoDetectNONMEM <- function(object, ...) {
+#' @rdname auto_detect_nonmem
+auto_detect_nonmem <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("autoDetectNONMEM", function(object, ...) {
-  standardGeneric("autoDetectNONMEM")
+setGeneric("auto_detect_nonmem", function(object, ...) {
+  standardGeneric("auto_detect_nonmem")
 })
 
 #_______________________________________________________________________________
@@ -93,7 +93,7 @@ setGeneric("export", function(object, dest, ...) {
 })
 
 #_______________________________________________________________________________
-#----                          getCompartmentIndex                          ----
+#----                          get_compartment_index                          ----
 #_______________________________________________________________________________
 
 #' Get the compartment index for the specified compartment name.
@@ -102,13 +102,13 @@ setGeneric("export", function(object, dest, ...) {
 #' @param name compartment name
 #' @return the corresponding compartment index
 #' @export
-#' @rdname getCompartmentIndex
-getCompartmentIndex <- function(object, name) {
+#' @rdname get_compartment_index
+get_compartment_index <- function(object, name) {
   stop("No default function is provided")
 }
 
-setGeneric("getCompartmentIndex", function(object, name) {
-  standardGeneric("getCompartmentIndex")
+setGeneric("get_compartment_index", function(object, name) {
+  standardGeneric("get_compartment_index")
 })
 
 #_______________________________________________________________________________

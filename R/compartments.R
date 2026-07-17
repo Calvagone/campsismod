@@ -88,11 +88,11 @@ setMethod("find", signature=c("compartments", "compartment_property"), definitio
 })
 
 #_______________________________________________________________________________
-#----                          getCompartmentIndex                          ----
+#----                          get_compartment_index                          ----
 #_______________________________________________________________________________
 
-#' @rdname getCompartmentIndex
-setMethod("getCompartmentIndex", signature=c("compartments", "character"), definition=function(object, name) {
+#' @rdname get_compartment_index
+setMethod("get_compartment_index", signature=c("compartments", "character"), definition=function(object, name) {
   compartment <- object@list %>% purrr::detect(~.x@name == name)
   if (compartment %>% length() == 0) {
     stop(paste0("Compartment ", name, " not found."))

@@ -13,8 +13,8 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   model <- model_suite$pk$`1cpt_fo` %>%
     setMinMax(Theta(name="KA"), min=0.9, max=1.1) %>%
     setMinMax(Theta(name="CL"), min=2.8, max=3.2) %>%
-    addRSE(Theta(name="KA"), value=10) %>%
-    addRSE(Theta(name="CL"), value=10)
+    add_rse(Theta(name="KA"), value=10) %>%
+    add_rse(Theta(name="CL"), value=10)
   
   repModel <- model %>% replicate(1000)
   
@@ -44,7 +44,7 @@ test_that("Method 'replicate' allows to replicate a model based on its variance-
   
   model <- model_suite$pk$`1cpt_fo` %>%
     setMinMax(Theta(name="KA"), min=1.3, max=2) %>%
-    addRSE(Theta(name="KA"), value=10)
+    add_rse(Theta(name="KA"), value=10)
   
   expect_error(repModel <- model %>% replicate(1000), msg="Too many iterations")
   
@@ -174,7 +174,7 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
   
   model1 <- model_suite$pk$`1cpt_fo` %>%
     setMinMax("theta", min=0, max=Inf) %>%
-    addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
+    add_rse(Theta(name="KA"), value=100) # Very large RSE on KA
   
   repModel1 <- model1 %>% replicate(1000, settings=AutoReplicationSettings(quiet=FALSE))
   
@@ -183,7 +183,7 @@ test_that("Method 'setMinMax' can be used on THETAs, OMEGAs and SIGMAs to set li
   
   # Same model but no limit
   model2 <- model_suite$pk$`1cpt_fo` %>%
-    addRSE(Theta(name="KA"), value=100) # Very large RSE on KA
+    add_rse(Theta(name="KA"), value=100) # Very large RSE on KA
   
   repModel2 <- model2 %>% replicate(1000, settings=AutoReplicationSettings(quiet=FALSE))
   
@@ -210,8 +210,8 @@ test_that("Replicate a model that has IOV works as expected (+ check performance
 
   pk <- model %>%
     add(iovOmegas) %>%
-    addRSE(Omega(name="IOV_CL1"), value=10) %>%
-    addRSE(Omega(name="IOV_KA1"), value=20)
+    add_rse(Omega(name="IOV_CL1"), value=10) %>%
+    add_rse(Omega(name="IOV_KA1"), value=20)
   
   replicates <- 1000
   repModel <- pk %>% replicate(replicates)
@@ -348,7 +348,7 @@ test_that("Campsismod gives identical results to the simpar package", {
     add(Omega(value=0.4, type="sd")) %>%
     add(Omega(index=2, index2=1, value=0.1^2, type="covar")) %>%
     add(Sigma(value=0.1, type="sd")) %>%
-    addRSE(Theta(index=1), value=4)
+    add_rse(Theta(index=1), value=4)
   
   res <- model %>%
     replicate(n=10000, settings=AutoReplicationSettings(wishart=TRUE, odf=30, sdf=1000)) %>%

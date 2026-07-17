@@ -178,12 +178,12 @@ test_that("Method 'add' properly merges variance-covariance matrices", {
   expect_equal(as.numeric(CampsisModel() %>% add(modelB) %>% getVarCov()), as.numeric(varcovExpected))
 })
 
-test_that("Method 'addRSE' works as expected", {
+test_that("Method 'add_rse' works as expected", {
   model <- model_suite$testing$nonmem$advan4_trans4 %>%
-    addRSE(Theta("CL"), 10) %>%
-    addRSE(Theta("Q"), 8) %>% # Test #92 (addRSE can be called multiple times)
-    addRSE(Theta("Q"), 10) %>%
-    addRSE(Omega("KA"), 50)
+    add_rse(Theta("CL"), 10) %>%
+    add_rse(Theta("Q"), 8) %>% # Test #92 (add_rse can be called multiple times)
+    add_rse(Theta("Q"), 10) %>%
+    add_rse(Omega("KA"), 50)
   
   uncertainty <- getUncertainty(model) %>%
     dplyr::filter(!is.na(.data$`rse%`))

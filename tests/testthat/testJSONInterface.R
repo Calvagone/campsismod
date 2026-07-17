@@ -46,12 +46,12 @@ test_that("Export/Re-import basic test model assembled on the fly to/from JSON",
   model <- model_suite$pk$`1cpt_fo` %>%
     add(Omega(name="CL_VC", index=3, index2=2, value=0.5, type="cor")) %>% # Add correlation between CL and VC
     standardise() %>%
-    addRSE(Theta(name="VC"), value=10) %>% # 10% RSE on VC
-    addRSE(Theta(name="CL"), value=10) %>% # 10% RSE on CL
-    addRSE(Omega(name="VC"), value=50) %>% # 50% RSE on OMEGA_VC
-    addRSE(Omega(name="CL"), value=50) %>% # 50% RSE on OMEGA_CL
-    addRSE(Omega(name="CL_VC"), value=100) %>% # 100% RSE on correlation
-    addRSE(Sigma(name="PROP_RUV"), value=5) %>% # 5% RSE on proportional error
+    add_rse(Theta(name="VC"), value=10) %>% # 10% RSE on VC
+    add_rse(Theta(name="CL"), value=10) %>% # 10% RSE on CL
+    add_rse(Omega(name="VC"), value=50) %>% # 50% RSE on OMEGA_VC
+    add_rse(Omega(name="CL"), value=50) %>% # 50% RSE on OMEGA_CL
+    add_rse(Omega(name="CL_VC"), value=100) %>% # 100% RSE on correlation
+    add_rse(Sigma(name="PROP_RUV"), value=5) %>% # 5% RSE on proportional error
     campsismod::sort() # Correlation will be put at the right place in the list
   
   tmp <- tempfile(fileext=".json") # gsub("\\\\", "/", normalizePath(tmp))

@@ -184,11 +184,11 @@ appendVarcov <- function(varcov1, varcov2) {
 }
 
 #_______________________________________________________________________________
-#----                             addRSE                                    ----
+#----                             add_rse                                    ----
 #_______________________________________________________________________________
 
-#' @rdname addRSE
-setMethod("addRSE", signature=c("parameters", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+#' @rdname add_rse
+setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
   parameter_ <- object %>%
     find(parameter)
   

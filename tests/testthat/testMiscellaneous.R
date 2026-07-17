@@ -27,11 +27,11 @@ test_that("Methods 'show' and 'toString' work as expected on compartment propert
 
 test_that("Generic methods should throw an error when the call is incorrect", {
   msg <- "No default function is provided"
-  expect_error(addRSE(""), regexp=msg)
-  expect_error(autoDetectNONMEM(""), regexp=msg)
+  expect_error(add_rse(""), regexp=msg)
+  expect_error(auto_detect_nonmem(""), regexp=msg)
   expect_error(disable(""), regexp=msg)
   expect_error(export(""), regexp=msg)
-  expect_error(getCompartmentIndex(""), regexp=msg)
+  expect_error(get_compartment_index(""), regexp=msg)
   expect_error(getUncertainty(""), regexp=msg)
   expect_error(getVarCov(""), regexp=msg)
   expect_error(move(""), regexp=msg)

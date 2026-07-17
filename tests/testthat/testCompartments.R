@@ -42,14 +42,14 @@ test_that("Method 'find' may return a compartment", {
   expect_equal(capture_output(show(compartment2)), "A_OUTPUT (CMT=2)")
 })
 
-test_that("Method 'getCompartmentIndex' works as expected", {
+test_that("Method 'get_compartment_index' works as expected", {
   model <- model_suite$testing$nonmem$advan4_trans4
-  index_depot <- model %>% getCompartmentIndex("DEPOT")
-  index_central <- model %>% getCompartmentIndex("CENTRAL")
+  index_depot <- model %>% get_compartment_index("DEPOT")
+  index_central <- model %>% get_compartment_index("CENTRAL")
   
   expect_equal(index_depot, 1)
   expect_equal(index_central, 2)
-  expect_error(model %>% getCompartmentIndex("XX"), regexp="Compartment XX not found")
+  expect_error(model %>% get_compartment_index("XX"), regexp="Compartment XX not found")
 })
 
 test_that("Method 'replace' can be used to adapt the name of a compartment", {

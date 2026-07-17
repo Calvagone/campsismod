@@ -56,7 +56,7 @@ setMethod("toString", signature=c("ode"), definition=function(object, ...) {
   } else if (dest=="mrgsolve") {
     retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")
   } else if (dest=="NONMEM") {
-    retValue <- paste0("DADT(", model %>% getCompartmentIndex(gsub("A_", "", object@lhs)), ")", "=", object@rhs)
+    retValue <- paste0("DADT(", model %>% get_compartment_index(gsub("A_", "", object@lhs)), ")", "=", object@rhs)
   } else {
     UnsupportedDestException()
   }
