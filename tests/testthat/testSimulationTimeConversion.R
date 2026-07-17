@@ -21,8 +21,8 @@ test_that("Time-dependent ODE's are correctly translated", {
   
   ode <- model %>% find(OdeRecord())
   main <- model %>% find(MainRecord())
-  expect_equal(ode@statements %>% getNames(), c("EQUATION (WF)", "ODE (A_ABS)", "ODE (A_CENTRAL)", "EQUATION (CP)"))
-  expect_equal(main@statements %>% getNames(), c("EQUATION (TAU)", "EQUATION (SH)", "EQUATION (CL)", "EQUATION (VC)"))
+  expect_equal(ode@statements %>% get_names(), c("EQUATION (WF)", "ODE (A_ABS)", "ODE (A_CENTRAL)", "EQUATION (CP)"))
+  expect_equal(main@statements %>% get_names(), c("EQUATION (TAU)", "EQUATION (SH)", "EQUATION (CL)", "EQUATION (VC)"))
   
   mrgmod <- model %>% export(dest="mrgsolve")
   expected <- c("[ODE]",

@@ -152,3 +152,24 @@ setGeneric("getByName", function(object, name) {
   lifecycle::deprecate_warn("1.4.0", "getByName()", "get_by_name()")
   get_by_name(object = object, name = name)
 })
+
+#' Get element names from list.
+#' 
+#' `getNames()` is deprecated in favor of `get_names()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams get_names
+#' @return character vector with all the element names of this list
+#' @export
+#' @rdname getNames
+getNames <- function(object) {
+  lifecycle::deprecate_warn("1.4.0", "getNames()", "get_names()")
+  get_names(object = object)
+}
+
+setGeneric("getNames", function(object) {
+  lifecycle::deprecate_warn("1.4.0", "getNames()", "get_names()")
+  get_names(object = object)
+})

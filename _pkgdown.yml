@@ -101,7 +101,7 @@ reference:
   - index_of
   - getByIndex
   - get_by_name
-  - getNames
+  - get_names
   - move
   - replace
   - sort

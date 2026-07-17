@@ -140,7 +140,7 @@ updateParameters <- function(model, row) {
   sampledParameterNames <- names(row)
   sampledParameterValues <- as.numeric(row)
   parameters <- model@parameters
-  parameterNames <- parameters %>% getNames()
+  parameterNames <- parameters %>% get_names()
 
   for (index in seq_along(sampledParameterNames)) {
     sampledParameterName <- sampledParameterNames[index]
@@ -232,7 +232,7 @@ setMethod("show", signature=c("replicated_campsis_model"), definition=function(o
   
   model <- object@original_model
   parameters <- model@parameters
-  parameterNames <- parameters %>% getNames()
+  parameterNames <- parameters %>% get_names()
   
   samplingData <- object@replicated_parameters %>%
     tidyr::pivot_longer(cols=-c("REPLICATE"), names_to="Parameter", values_to="Value")
@@ -246,7 +246,7 @@ setMethod("show", signature=c("replicated_campsis_model"), definition=function(o
   correspondingIndexes <- match(x=sampledParameterNames, table=parameterNames)
   sampledParameters@list <- sampledParameters@list[correspondingIndexes]
 
-  parameterInfo <- tibble::tibble(Parameter=sampledParameters %>% getNames(),
+  parameterInfo <- tibble::tibble(Parameter=sampledParameters %>% get_names(),
                                   Value=sampledParameters@list %>% purrr::map_dbl(~.x@value)) %>%
     dplyr::mutate(Parameter=factor(.data$Parameter, levels=sampledParameterNames)) # Natural order
   

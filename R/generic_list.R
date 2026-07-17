@@ -290,7 +290,7 @@ setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(ob
 })
 
 #_______________________________________________________________________________
-#----                            getNames                                   ----
+#----                            get_names                                  ----
 #_______________________________________________________________________________
 
 #' Get element names from list.
@@ -298,17 +298,17 @@ setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(ob
 #' @param object list object
 #' @return character vector with all the element names of this list
 #' @export
-#' @rdname getNames
-getNames <- function(object) {
+#' @rdname get_names
+get_names <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getNames", function(object) {
-  standardGeneric("getNames")
+setGeneric("get_names", function(object) {
+  standardGeneric("get_names")
 })
 
-#' @rdname getNames
-setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
+#' @rdname get_names
+setMethod("get_names", signature=c("pmx_list"), definition=function(object) {
   return(object@list %>% purrr::map_chr(~.x %>% getName()))
 })
 

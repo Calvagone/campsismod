@@ -163,7 +163,7 @@ test_that("Sampling the OMEGAs and SIGMAs based on the scaled inverse chi-square
     replicate(1, settings=settings)
   
   parameterNames <- model@parameters %>%
-    getNames()
+    get_names()
   
   expect_equal(c("REPLICATE", parameterNames), colnames(repModel@replicated_parameters))
 })

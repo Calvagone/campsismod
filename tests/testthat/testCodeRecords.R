@@ -63,7 +63,7 @@ test_that("Create very basic model on the fly", {
   model <- model %>% add(Equation("THALF", "12"))
   model <- model %>% add(Equation("K", "log(2)/THALF"))
   
-  expect_equal(model@model %>% getNames(), c("MAIN", "ODE"))
+  expect_equal(model@model %>% get_names(), c("MAIN", "ODE"))
   
   # Check THALF and K can be found in MAIN code record
   expect_equal(model %>% find(MainRecord()) %>% find(Equation("THALF")), Equation("THALF", "12"))

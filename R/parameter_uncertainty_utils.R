@@ -33,7 +33,7 @@ minMaxDefault <- function(parameter) {
 #' 
 sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
   varcov <- parameters@varcov
-  parameterNames <- parameters %>% getNames()
+  parameterNames <- parameters %>% get_names()
   varcovParameterNames <- colnames(varcov)
   assertthat::assert_that(all(varcovParameterNames %in% parameterNames),
                           msg="Some of the variance-covariance matrix parameters are not in the model parameters.")
