@@ -173,3 +173,24 @@ setGeneric("getNames", function(object) {
   lifecycle::deprecate_warn("1.4.0", "getNames()", "get_names()")
   get_names(object = object)
 })
+
+#' Get element by index.
+#' 
+#' `getByIndex()` is deprecated in favor of `get_by_index()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams get_by_index
+#' @return index of this element
+#' @export
+#' @rdname getByIndex
+getByIndex <- function(object, x) {
+  lifecycle::deprecate_warn("1.4.0", "getByIndex()", "get_by_index()")
+  get_by_index(object = object, x = x)
+}
+
+setGeneric("getByIndex", function(object, x) {
+  lifecycle::deprecate_warn("1.4.0", "getByIndex()", "get_by_index()")
+  get_by_index(object = object, x = x)
+})

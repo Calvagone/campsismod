@@ -38,12 +38,12 @@ model %>% find(Omega("KA"))
 model %>% find(Sigma("RUV_FIX"))
 ```
 
-These parameters can also alternatively be retrieved by their index(es). Use the specific method `getByIndex` created for that purpose:
+These parameters can also alternatively be retrieved by their index(es). Use the specific method `get_by_index` created for that purpose:
 
 ```{r}
-model@parameters %>% getByIndex(Theta(index=5))
-model@parameters %>% getByIndex(Omega(index=1, index2=1))
-model@parameters %>% getByIndex(Sigma(index=1, index2=1))
+model@parameters %>% get_by_index(Theta(index=5))
+model@parameters %>% get_by_index(Omega(index=1, index2=1))
+model@parameters %>% get_by_index(Sigma(index=1, index2=1))
 ```
 
 ### Access parameter values

@@ -304,8 +304,8 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   
   expect_equal(blocks %>% length(), 2)
   
-  block1 <- blocks %>% getByIndex(1)
-  block2 <- blocks %>% getByIndex(2)
+  block1 <- blocks %>% get_by_index(1)
+  block2 <- blocks %>% get_by_index(2)
   expect_equal(block1, expectedBlock1)
   
   expect_true(block1 %>% length()==2)

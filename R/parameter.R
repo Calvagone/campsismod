@@ -530,8 +530,8 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       }
       # Retrieve both omega's on the diagonal related to index and index2
       # Make sure to standardise them to variances first
-      omega1 <- parameters %>% getByIndex(Omega(index=object@index, index2=object@index)) %>% standardise()
-      omega2 <- parameters %>% getByIndex(Omega(index=object@index2, index2=object@index2)) %>% standardise()
+      omega1 <- parameters %>% get_by_index(Omega(index=object@index, index2=object@index)) %>% standardise()
+      omega2 <- parameters %>% get_by_index(Omega(index=object@index2, index2=object@index2)) %>% standardise()
       retValue@value <- object@value*sqrt(omega1@value)*sqrt(omega2@value)
     } else {
       stop(paste0("Type of parameter ", object %>% getName(), " must be 'covar' or 'cor'"))

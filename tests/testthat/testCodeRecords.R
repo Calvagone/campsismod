@@ -151,10 +151,10 @@ test_that("Add IF-statements at specific locations in the model", {
   model <- model %>% add(if3, Position(if2, after=T))
 
   main <- model %>% find(MainRecord())
-  expect_equal(main@statements %>% getByIndex(3), if1)
-  expect_equal(main@statements %>% getByIndex(4), if2)
-  expect_equal(main@statements %>% getByIndex(5), if3)
-  expect_equal(main@statements %>% getByIndex(6), Equation("S1", "V"))
+  expect_equal(main@statements %>% get_by_index(3), if1)
+  expect_equal(main@statements %>% get_by_index(4), if2)
+  expect_equal(main@statements %>% get_by_index(5), if3)
+  expect_equal(main@statements %>% get_by_index(6), Equation("S1", "V"))
 })
 
 test_that("Add model statements into the given code record", {
@@ -175,10 +175,10 @@ test_that("Add model statements into the given code record", {
   
   # Retrieve respective ODE blocks and check where is CP
   ode1 <- model1 %>% find(OdeRecord())
-  expect_equal(ode1@statements %>% getByIndex(1), cp)
+  expect_equal(ode1@statements %>% get_by_index(1), cp)
   
   ode2 <- model2 %>% find(OdeRecord())
-  expect_equal(ode2@statements %>% getByIndex(3), cp)
+  expect_equal(ode2@statements %>% get_by_index(3), cp)
   
   # x in Position() must be either a PMX element or an integer
   expect_error(Position(data.frame(), after=FALSE), regexp="x can only be a PMX element or an integer position")

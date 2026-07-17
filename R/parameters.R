@@ -24,7 +24,7 @@ validateParametersByType <- function(object, type, emptyParameter) {
     } else {
       search@index <- i
     }
-    param <- params %>% getByIndex(search)
+    param <- params %>% get_by_index(search)
     if (length(param) == 0) {
       return(paste0("No ", type %>% toupper(), " with index ", i))
     }
@@ -348,8 +348,8 @@ omegaSigmaJsonIndexFix <- function(json, parameters, type) {
   index <- json$index
   index2 <- json$index2
   if (index != index2) {
-    p1 <- parameters %>% campsismod::getByIndex(new(type, index=index, index2=index))
-    p2 <- parameters %>% campsismod::getByIndex(new(type, index=index2, index2=index2))
+    p1 <- parameters %>% campsismod::get_by_index(new(type, index=index, index2=index))
+    p2 <- parameters %>% campsismod::get_by_index(new(type, index=index2, index2=index2))
     json$name <- p1@name
     json$name2 <- p2@name
   }
@@ -380,11 +380,11 @@ toJSONParamReference <- function(param, parameters) {
     } else {
       emptyParam1@index <- param@index
       emptyParam1@index2 <- param@index
-      refParam1 <- parameters %>% getByIndex(emptyParam1)
+      refParam1 <- parameters %>% get_by_index(emptyParam1)
       json$name <- refParam1@name
       emptyParam2@index <- param@index2
       emptyParam2@index2 <- param@index2
-      refParam2 <- parameters %>% getByIndex(emptyParam2)
+      refParam2 <- parameters %>% get_by_index(emptyParam2)
       json$name2 <- refParam2@name
     }
   } else {
@@ -535,11 +535,11 @@ setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
-#----                             getByIndex                              ----
+#----                             get_by_index                              ----
 #_______________________________________________________________________________
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("parameters", "parameter"), definition=function(object, x) {
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("parameters", "parameter"), definition=function(object, x) {
   subList <- object %>% select(as.character(class(x)))
   if (is(x, "theta")) {
     retValue <- subList@list %>% purrr::keep(~(.x@index==x@index))

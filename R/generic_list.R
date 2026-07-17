@@ -327,7 +327,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                           getByIndex                                  ----
+#----                          get_by_index                                 ----
 #_______________________________________________________________________________
 
 #' Get element by index.
@@ -336,17 +336,17 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 #' @param x element index
 #' @return element from the list whose index matches with provided index
 #' @export
-#' @rdname getByIndex
-getByIndex <- function(object, x) {
+#' @rdname get_by_index
+get_by_index <- function(object, x) {
   stop("No default function is provided")
 }
 
-setGeneric("getByIndex", function(object, x) {
-  standardGeneric("getByIndex")
+setGeneric("get_by_index", function(object, x) {
+  standardGeneric("get_by_index")
 })
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(object, x) {
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("pmx_list", "integer"), definition=function(object, x) {
   len <- object %>% length()
   assertthat::assert_that(len > 0, msg="x must be greater than 0")
   if (x > len) {
@@ -355,9 +355,9 @@ setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(
   return(object@list[[x]])
 })
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("pmx_list", "numeric"), definition=function(object, x) {
-  return(getByIndex(object, x=as.integer(x)))
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("pmx_list", "numeric"), definition=function(object, x) {
+  return(get_by_index(object, x=as.integer(x)))
 })
 
 

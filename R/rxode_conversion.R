@@ -55,7 +55,7 @@ rxodeParams <- function(model) {
   names <- rep("", maxIndex)
   
   for (i in seq_len(maxIndex)) {
-    param <- params %>% getByIndex(Theta(index=i))
+    param <- params %>% get_by_index(Theta(index=i))
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {

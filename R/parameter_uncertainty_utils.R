@@ -352,7 +352,7 @@ getMappingMatrix <- function(parameters, type) {
       } else {
         refParameter <- Sigma(index=i, index2=j)
       }
-      parameter <- parameters %>% getByIndex(refParameter)
+      parameter <- parameters %>% get_by_index(refParameter)
       if (length(parameter) == 0) {
         retValue[i, j] <- ""
       } else {

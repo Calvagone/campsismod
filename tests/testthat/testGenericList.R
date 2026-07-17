@@ -4,13 +4,13 @@ context("Test the generic list")
 
 source(paste0("", "testUtils.R"))
 
-test_that("GetByIndex method works well", {
+test_that("get_by_index method works well", {
   model <- model_suite$testing$nonmem$advan4_trans4
   
-  depot <- model@compartments %>% getByIndex(1)
+  depot <- model@compartments %>% get_by_index(1)
   expect_equal(depot@name, "DEPOT")
   
-  expect_error(model@compartments %>% getByIndex(5), regexp="Can't find element at index 5")
+  expect_error(model@compartments %>% get_by_index(5), regexp="Can't find element at index 5")
 })
 
 test_that("Generic methods should throw an error when the call is incorrect", {
@@ -23,7 +23,7 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(contains(""), regexp=msg)
   expect_error(find(""), regexp=msg)
   expect_error(get_names(""), regexp=msg)
-  expect_error(getByIndex (""), regexp=msg)
+  expect_error(get_by_index (""), regexp=msg)
   expect_error(sort(""), regexp=msg)
   expect_error(default(""), regexp=msg)
   expect_error(getName(""), regexp=msg)

@@ -46,7 +46,7 @@ test_that("Method 'replace' works as expected", {
   # Add and replace a compartment property
   model <- model %>% add(Bioavailability(1, "0.75"))
   model <- model %>% replace(Bioavailability(1, "0.50"))
-  expect_equal((model@compartments@properties %>% getByIndex(1))@rhs, "0.50")
+  expect_equal((model@compartments@properties %>% get_by_index(1))@rhs, "0.50")
 })
 
 test_that("Method 'delete' works as expected", {
@@ -97,8 +97,8 @@ test_that("Method 'add' on Campsis model, exceptions on parameters names", {
   resultingModel <- model1 %>% add(model2)
   
   # Check correlations are still there at the correct omega indexes
-  expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=2, index2=1)) %>% .@type, "cor")
-  expect_equal(resultingModel@parameters %>% getByIndex(Omega(index=4, index2=3)) %>% .@type, "cor") 
+  expect_equal(resultingModel@parameters %>% get_by_index(Omega(index=2, index2=1)) %>% .@type, "cor")
+  expect_equal(resultingModel@parameters %>% get_by_index(Omega(index=4, index2=3)) %>% .@type, "cor") 
 })
 
 test_that("Method 'add' on Campsis model, exceptions on compartment names", {

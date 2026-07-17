@@ -99,7 +99,7 @@ reference:
   - delete
   - find
   - index_of
-  - getByIndex
+  - get_by_index
   - get_by_name
   - get_names
   - move

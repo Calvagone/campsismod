@@ -16,11 +16,11 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                             getByIndex                                ----
+#----                             get_by_index                                ----
 #_______________________________________________________________________________
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("compartment_properties", "compartment_property"), definition=function(object, x) {
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("compartment_properties", "compartment_property"), definition=function(object, x) {
   retValue <- object@list %>% purrr::keep(~(.x@compartment==x@compartment & as.character(class(.x))==as.character(class(x))))
   
   if (length(retValue) > 0) {

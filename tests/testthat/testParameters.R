@@ -38,7 +38,7 @@ test_that("Add/contains methods", {
   expect_true(thetas %>% contains(Theta(name="V")))
 })
 
-test_that("GetByIndex, find & select method work well", {
+test_that("get_by_index, find & select method work well", {
   p <- Parameters()
   p <- p %>% add(Theta())
   p <- p %>% add(Theta())
@@ -48,9 +48,9 @@ test_that("GetByIndex, find & select method work well", {
   p <- p %>% add(Sigma())
 
   # Search by index
-  expect_equal(p %>% getByIndex(Theta(index=3)), Theta(index=3))
-  expect_equal(p %>% getByIndex(Omega(index=1, index2=1)), Omega(index=1, index2=1))
-  expect_equal(p %>% getByIndex(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
+  expect_equal(p %>% get_by_index(Theta(index=3)), Theta(index=3))
+  expect_equal(p %>% get_by_index(Omega(index=1, index2=1)), Omega(index=1, index2=1))
+  expect_equal(p %>% get_by_index(Sigma(index=1, index2=1)), Sigma(index=1, index2=1))
   
   # Or equivalently using find
   expect_equal(p %>% find(Theta(index=3)), Theta(index=3))
@@ -131,13 +131,13 @@ test_that("Disable method (IOV)", {
   model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
   model <- model %>% disable("IOV")
   
-  omega4 <- model@parameters %>% getByIndex(Omega(index=4, index2=4))
+  omega4 <- model@parameters %>% get_by_index(Omega(index=4, index2=4))
   expect_true(omega4@value != 0)
   
-  omega5 <- model@parameters %>% getByIndex(Omega(index=5, index2=5))
+  omega5 <- model@parameters %>% get_by_index(Omega(index=5, index2=5))
   expect_true(omega5@value == 0)
   
-  omega6 <- model@parameters %>% getByIndex(Omega(index=6, index2=6))
+  omega6 <- model@parameters %>% get_by_index(Omega(index=6, index2=6))
   expect_true(omega6@value == 0)
 })
 
@@ -250,9 +250,9 @@ test_that("Add parameters with NA indexes", {
   parameters <- parameters %>% add(Theta(value=0))
   parameters <- parameters %>% add(Theta(value=0))
   
-  expect_equal(parameters %>% getByIndex(Theta(index=1)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Theta(index=2)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Theta(index=3)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Theta(index=1)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Theta(index=2)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Theta(index=3)) %>% length(), 1)
   expect_true(validObject(parameters))
   
   # Omegas
@@ -261,9 +261,9 @@ test_that("Add parameters with NA indexes", {
   parameters <- parameters %>% add(Omega(value=0))
   parameters <- parameters %>% add(Omega(value=0))
   
-  expect_equal(parameters %>% getByIndex(Omega(index=1, index2=1)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Omega(index=2, index2=2)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Omega(index=3, index2=3)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Omega(index=1, index2=1)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Omega(index=2, index2=2)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Omega(index=3, index2=3)) %>% length(), 1)
   expect_true(validObject(parameters))
   
   # Sigmas
@@ -272,9 +272,9 @@ test_that("Add parameters with NA indexes", {
   parameters <- parameters %>% add(Sigma(value=0))
   parameters <- parameters %>% add(Sigma(value=0))
   
-  expect_equal(parameters %>% getByIndex(Sigma(index=1, index2=1)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Sigma(index=2, index2=2)) %>% length(), 1)
-  expect_equal(parameters %>% getByIndex(Sigma(index=3, index2=3)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Sigma(index=1, index2=1)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Sigma(index=2, index2=2)) %>% length(), 1)
+  expect_equal(parameters %>% get_by_index(Sigma(index=3, index2=3)) %>% length(), 1)
   expect_true(validObject(parameters))
 })
 
