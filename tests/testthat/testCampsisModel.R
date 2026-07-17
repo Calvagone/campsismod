@@ -155,10 +155,10 @@ test_that("Method 'add' properly merges variance-covariance matrices", {
     add(modelB)
   
   varcov <- model %>%
-    getVarCov()
+    get_var_cov()
   
   varcovExpected <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
-    getVarCov()
+    get_var_cov()
   
   # Check variance-covariance content
   expect_equal(as.numeric(varcov[1:7, 1:7]), as.numeric(varcovExpected[1:7, 1:7]))
@@ -172,10 +172,10 @@ test_that("Method 'add' properly merges variance-covariance matrices", {
   expect_equal(expected, dimnames[[1]])
   
   # Add the empty model to the model with variance-covariance matrix
-  expect_equal(as.numeric(modelB %>% add(CampsisModel()) %>% getVarCov()), as.numeric(varcovExpected))
+  expect_equal(as.numeric(modelB %>% add(CampsisModel()) %>% get_var_cov()), as.numeric(varcovExpected))
   
   # Add the model with variance-covariance matrix to the empty model
-  expect_equal(as.numeric(CampsisModel() %>% add(modelB) %>% getVarCov()), as.numeric(varcovExpected))
+  expect_equal(as.numeric(CampsisModel() %>% add(modelB) %>% get_var_cov()), as.numeric(varcovExpected))
 })
 
 test_that("Method 'add_rse' works as expected", {

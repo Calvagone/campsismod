@@ -150,7 +150,7 @@ setGeneric("export_to_json", function(object, ...) {
 })
 
 #_______________________________________________________________________________
-#----                             getVarCov                                 ----
+#----                            get_var_cov                                ----
 #_______________________________________________________________________________
 
 #' Get variance-covariance matrix.
@@ -158,17 +158,17 @@ setGeneric("export_to_json", function(object, ...) {
 #' @param object generic object
 #' @return a variance-covariance matrix (data frame) or NULL if no matrix present
 #' @export
-#' @rdname getVarCov
-getVarCov <- function(object) {
+#' @rdname get_var_cov
+get_var_cov <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getVarCov", function(object) {
-  standardGeneric("getVarCov")
+setGeneric("get_var_cov", function(object) {
+  standardGeneric("get_var_cov")
 })
 
 #_______________________________________________________________________________
-#----                           load_from_json                                ----
+#----                          load_from_json                               ----
 #_______________________________________________________________________________
 
 #' Fill-in S4 object from the JSON content.

@@ -59,7 +59,7 @@ reference:
   - getNameInModel
   - getNONMEMName
   - get_uncertainty
-  - getVarCov
+  - get_var_cov
   - isDiag
   - maxIndex
   - minIndex
@@ -98,7 +98,7 @@ reference:
   - add
   - delete
   - find
-  - indexOf
+  - index_of
   - getByIndex
   - getByName
   - getNames

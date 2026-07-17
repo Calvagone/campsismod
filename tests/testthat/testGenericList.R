@@ -18,7 +18,7 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(getPrefix(""), regexp=msg)
   expect_error(getRecordName(""), regexp=msg)
   expect_error(replace(""), regexp=msg)
-  expect_error(indexOf(""), regexp=msg)
+  expect_error(index_of(""), regexp=msg)
   expect_error(getByName(""), regexp=msg)
   expect_error(contains(""), regexp=msg)
   expect_error(find(""), regexp=msg)

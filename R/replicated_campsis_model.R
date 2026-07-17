@@ -43,7 +43,7 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
   }
 
   # Get variance-covariance matrix
-  varcov <- object %>% getVarCov()
+  varcov <- object %>% get_var_cov()
 
   if (varcov %>% length() == 0) {
     # No variance-covariance matrix is detected

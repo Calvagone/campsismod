@@ -33,7 +33,7 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(export(""), regexp=msg)
   expect_error(get_compartment_index(""), regexp=msg)
   expect_error(get_uncertainty(""), regexp=msg)
-  expect_error(getVarCov(""), regexp=msg)
+  expect_error(get_var_cov(""), regexp=msg)
   expect_error(move(""), regexp=msg)
   expect_error(read(""), regexp=msg)
   expect_error(replace_all(""), regexp=msg)

@@ -559,7 +559,7 @@ setMethod("getByIndex", signature=c("parameters", "parameter"), definition=funct
 #' @importFrom tibble tibble
 #' @rdname get_uncertainty
 setMethod("get_uncertainty", signature=c("parameters"), definition=function(object, ...) {
-  varcov <- object %>% getVarCov()
+  varcov <- object %>% get_var_cov()
   if (is.null(varcov)) {
     return(tibble::tibble(name=character(0), se=numeric(0), "rse%"=numeric(0)))
   } else {
@@ -569,11 +569,11 @@ setMethod("get_uncertainty", signature=c("parameters"), definition=function(obje
 })
 
 #_______________________________________________________________________________
-#----                             getVarCov                                 ----
+#----                            get_var_cov                                ----
 #_______________________________________________________________________________
 
-#' @rdname getVarCov
-setMethod("getVarCov", signature=c("parameters"), definition=function(object) {
+#' @rdname get_var_cov
+setMethod("get_var_cov", signature=c("parameters"), definition=function(object) {
   varcov <- object@varcov
   if (varcov %>% length() == 0) {
     return(NULL)
@@ -854,10 +854,10 @@ setMethod("show", signature=c("parameters"), definition=function(object) {
   print(showUncertaintyOnParameters(object %>% select("omega"), discard_na_columns=c("min", "max", "same", "label", "comment")))
   cat("SIGMA's:\n")
   print(showUncertaintyOnParameters(object %>% select("sigma"), discard_na_columns=c("min", "max", "label", "comment")))
-  if (is.null(object %>% getVarCov())) {
+  if (is.null(object %>% get_var_cov())) {
     cat("No variance-covariance matrix\n")
   } else {
-    cat("Variance-covariance matrix available (see ?getVarCov)\n")
+    cat("Variance-covariance matrix available (see ?get_var_cov)\n")
   }
 })
 

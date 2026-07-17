@@ -62,7 +62,7 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
       if (pos@by_index) {
         index <- pos@index
       } else if (pos@by_element) {
-        index <- object %>% indexOf(pos@element)
+        index <- object %>% index_of(pos@element)
       } else {
         stop("Element position can only by index or by position")
       }
@@ -110,7 +110,7 @@ setGeneric("replace", function(object, x) {
 #' @rdname replace
 setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   if (object %>% contains(x)) {
-    index <- object %>% indexOf(x)
+    index <- object %>% index_of(x)
     object@list[[index]] <- x
   } else {
     stop(paste("Element", x %>% getName(), "does not exist."))
@@ -132,7 +132,7 @@ setMethod("replace", signature=c("pmx_list", "list"), definition=function(object
 })
 
 #_______________________________________________________________________________
-#----                             indexOf                                   ----
+#----                             index_of                                   ----
 #_______________________________________________________________________________
 
 #' Get the index of an element in list.
@@ -141,17 +141,17 @@ setMethod("replace", signature=c("pmx_list", "list"), definition=function(object
 #' @param x element to know the index
 #' @return index of this element
 #' @export
-#' @rdname indexOf
-indexOf <- function(object, x) {
+#' @rdname index_of
+index_of <- function(object, x) {
   stop("No default function is provided")
 }
 
-setGeneric("indexOf", function(object, x) {
-  standardGeneric("indexOf")
+setGeneric("index_of", function(object, x) {
+  standardGeneric("index_of")
 })
 
-#' @rdname indexOf
-setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
+#' @rdname index_of
+setMethod("index_of", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   logicalVector <- object@list %>% purrr::map_lgl(.f=function(.x) {
     retValue <- .x %>% getName() == x %>% getName()
     return(ifelse(is.na(retValue), FALSE, retValue))
@@ -243,7 +243,7 @@ setGeneric("delete", function(object, x) {
 
 #' @rdname delete
 setMethod("delete", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  index <- object %>% indexOf(x)
+  index <- object %>% index_of(x)
   if (index %>% length() > 0) {
     object@list <- object@list[-index]
     return(object)

@@ -463,7 +463,7 @@ setMethod("get_uncertainty", signature=c("parameter"), definition=function(objec
 })
 
 #_______________________________________________________________________________
-#----                           load_from_json                                ----
+#----                          load_from_json                               ----
 #_______________________________________________________________________________
 
 #' @rdname load_from_json

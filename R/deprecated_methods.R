@@ -1,3 +1,7 @@
+#_______________________________________________________________________________
+#----                           generic.R                                   ----
+#_______________________________________________________________________________
+
 #' Get the compartment index for the specified compartment name.
 #' 
 #' `getCompartmentIndex()` is deprecated in favor of `get_compartment_index()`.
@@ -101,4 +105,29 @@ toString <- function(object, ...) {
 setGeneric("toString", function(object, ...) {
   lifecycle::deprecate_warn("1.4.0", "toString()", "to_string()")
   to_string(object = object, ...)
+})
+
+#_______________________________________________________________________________
+#----                        generic_list.R                                 ----
+#_______________________________________________________________________________
+
+#' Get the index of an element in list.
+#' 
+#' `indexOf()` is deprecated in favor of `index_of()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams index_of
+#' @return index of this element
+#' @export
+#' @rdname indexOf
+indexOf <- function(object, x) {
+  lifecycle::deprecate_warn("1.4.0", "indexOf()", "index_of()")
+  index_of(object = object, x = x)
+}
+
+setGeneric("indexOf", function(object, x) {
+  lifecycle::deprecate_warn("1.4.0", "indexOf()", "index_of()")
+  index_of(object = object, x = x)
 })
