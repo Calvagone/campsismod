@@ -9,32 +9,32 @@ parseStatements <- function(code) {
   
   for (index in seq_along(code)) {
     line <- code[index]
-    hasComment <- hasComment(line) 
+    has_comment <- has_comment(line) 
     comment <- as.character(NA)
-    if (hasComment) {
+    if (has_comment) {
       comment <- extractRhs(line, split="#") %>% trim()
       line_ <- extractLhs(line, split="#")
     } else {
       line_ <- line
     }
     
-    if (isEmptyLine(line)) {
+    if (is_empty_line(line)) {
       statements <- statements %>% add(LineBreak())
       
-    } else if (isComment(line)) {
+    } else if (is_comment(line)) {
       statements <- statements %>% add(Comment(comment))
       
-    } else if (isODE(line_)) {
+    } else if (is_ode(line_)) {
       lhs <- extractTextBetweenBrackets(line_)
       rhs <- extractRhs(line_) %>% trim()
       statements <- statements %>% add(Ode(lhs, rhs, comment=comment))
     
-    } else if (isEquation(line_)) {
+    } else if (is_equation(line_)) {
       lhs <- extractLhs(line_) %>% trim()
       rhs <- extractRhs(line_) %>% trim()
       statements <- statements %>% add(Equation(lhs, rhs, comment=comment))
       
-    } else if (isIfStatement(line_)) {
+    } else if (is_if_statement(line_)) {
       statements <- statements %>% add(parseIfStatement(line_, comment=comment))
       
     } else  {
@@ -45,7 +45,7 @@ parseStatements <- function(code) {
 }
 
 #' Parse IF-statement.
-#' Assumption: \code{isIfStatement} method already called and returned TRUE.
+#' Assumption: \code{is_if_statement} method already called and returned TRUE.
 #' 
 #' @param line IF-statement as single character string value, comment omitted
 #' @param comment any comment, NA by default
@@ -56,7 +56,7 @@ parseIfStatement <- function(line, comment=as.character(NA)) {
   line <- line %>% trim()
   
   # Lhs/rhs extraction
-  tmp1 <- regexpr(pattern=paste0("^", ifStatementPatternStr()), line, ignore.case=TRUE)
+  tmp1 <- regexpr(pattern=paste0("^", if_statement_pattern_str()), line, ignore.case=TRUE)
   equalSymbolIndex <- attr(tmp1, "match.length")
   lhs <- substring(line, first=1, last=equalSymbolIndex - 1) %>% trim()
   rhs <- substring(line, first=equalSymbolIndex + 1, last=nchar(line)) %>% trim()
@@ -66,7 +66,7 @@ parseIfStatement <- function(line, comment=as.character(NA)) {
   firstParenthesisIndex <- attr(tmp2, "match.length")
   
   # Identify variable start
-  variableStartIndex <- regexpr(paste0(variablePatternStr(), "$"), lhs) %>% as.integer()
+  variableStartIndex <- regexpr(paste0(variable_pattern_str(), "$"), lhs) %>% as.integer()
   
   # Identify condition
   conditionWithParentheses <- substring(lhs, first=firstParenthesisIndex, last=variableStartIndex-1) %>% trim()

@@ -349,7 +349,7 @@ setMethod("move", signature=c("code_records", "code_record", "pmx_position"), de
 removeTrailingLineBreaks <- function(x) {
   lenX <- x %>% length()
   if (lenX > 0) {
-    res <- rle(isEmptyLine(x))
+    res <- rle(is_empty_line(x))
     lastValue <- res$values[res$values %>% length()]
     if (lastValue) {
       len <- res$lengths[res$values %>% length()]
@@ -401,13 +401,13 @@ read.model <- function(file=NULL, text=NULL) {
   lastLineIndexInPrevRecord <- 1
   for (index in seq_along(allLines)) {
     line <- allLines[index]
-    if (isStrictRecordDelimiter(line)) {
+    if (is_strict_record_delimiter(line)) {
       # Extract record delimiter
-      recordDelimiter <- getRecordDelimiter(line)
+      recordDelimiter <- get_record_delimiter(line)
       
       # Extract a possible comment
       comment <- as.character(NA)
-      if (hasComment(line)) {
+      if (has_comment(line)) {
         comment <- extractRhs(line, split="#") %>% trim()
       }
       
@@ -440,7 +440,7 @@ read.model <- function(file=NULL, text=NULL) {
         }
       }
       lastLineIndexInPrevRecord <- index
-    } else if (isRecordDelimiter(line)) {
+    } else if (is_record_delimiter(line)) {
       stop(paste0("Record delimiter '", line, "' is not valid"))
     }
   }

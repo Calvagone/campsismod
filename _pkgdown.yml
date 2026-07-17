@@ -197,15 +197,15 @@ reference:
   - extractLhs
   - extractRhs
   - extractTextBetweenBrackets
-  - getRecordDelimiter
-  - hasComment
-  - isComment
-  - isEmptyLine
-  - isEquation
-  - isIfStatement
-  - isODE
-  - isRecordDelimiter
-  - isStrictRecordDelimiter
+  - get_record_delimiter
+  - has_comment
+  - is_comment
+  - is_empty_line
+  - is_equation
+  - is_if_statement
+  - is_ode
+  - is_record_delimiter
+  - is_strict_record_delimiter
   - parseIfStatement
   - parseStatements
   - trim

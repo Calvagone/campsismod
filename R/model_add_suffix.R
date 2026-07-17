@@ -23,7 +23,7 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
   if (!is.character(suffix) && length(suffix) != 1) {
     stop("suffix must be a single character value")
   }
-  if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=suffix))) {
+  if (!(grepl(pattern=paste0("^", variable_pattern_no_start_str(), "$"), x=suffix))) {
     stop(paste0("suffix '", suffix, "' is not a valid suffix"))
   }
   if (is.null(separator)) {
@@ -32,7 +32,7 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
     if (!is.character(separator) && length(separator) != 1) {
       stop("separator must be a single character value")
     }
-    if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=separator))) {
+    if (!(grepl(pattern=paste0("^", variable_pattern_no_start_str(), "$"), x=separator))) {
       stop(paste0("separator '", separator, "' is not a valid separator"))
     }
   }
@@ -92,7 +92,7 @@ setMethod("addSuffix", signature=c("code_records", "character", "character"), de
   
   # Collect all equation names
   equationNames <- object@list %>%
-    purrr::map(~getRecordEquationNames(.x)) %>%
+    purrr::map(~get_record_equation_names(.x)) %>%
     purrr::flatten_chr()
   
   # Get rid of duplicates

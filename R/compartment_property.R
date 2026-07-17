@@ -90,7 +90,7 @@ setMethod("to_string", signature=c("compartment_property"), definition=function(
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
-  if (isRxODE(dest)) {
+  if (is_rxode(dest)) {
     return(paste0(object %>% getPrefix(dest=dest), "(", compartment %>% to_string(), ")=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(object %>% getPrefix(dest=dest), "_", compartment %>% to_string(), "=", object@rhs))

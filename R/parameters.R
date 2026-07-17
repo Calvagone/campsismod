@@ -835,7 +835,7 @@ setMethod("set_min_max", signature=c("parameters", "character", "numeric", "nume
 
 showUncertaintyOnParameters <- function(parameters, discard_na_columns=NULL) {
   retValue <- purrr::map_df(parameters@list, .f=as.data.frame, row.names=character(), optional=FALSE) %>%
-    removeNaColumn(discard_na_columns)
+    remove_na_column(discard_na_columns)
   
   if (parameters %>% length() > 0) {
     uncertainty <- parameters %>% get_uncertainty()
@@ -918,7 +918,7 @@ writeParameters <- function(object, file, ...) {
   
   # Get rid of specific columns if all NA
   naColumns <- c("min", "max", "fix", "same", "label", "unit", "comment")
-  df <- df %>% removeNaColumn(naColumns)
+  df <- df %>% remove_na_column(naColumns)
   
   if (nrow(df)==0) {
     df <- process_extra_arg(args=list(...), name="defaultDf", mandatory=TRUE)

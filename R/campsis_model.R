@@ -228,7 +228,7 @@ setClass(
 
 #' @rdname export
 setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, ...) {
-  if (isRxODE(dest)) {
+  if (is_rxode(dest)) {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
     return(object %>% export(new("mrgsolve_type"), ...))

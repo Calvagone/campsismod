@@ -35,7 +35,7 @@ process_extra_arg <- function(args, name, default=NULL, mandatory=FALSE) {
 #' @param x character vector
 #' @return logical vector
 #' @export
-isODE <- function(x) {
+is_ode <- function(x) {
   return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
 }
 
@@ -44,7 +44,7 @@ isODE <- function(x) {
 #' @return pattern (regular expression)
 #' @keywords internal
 #' 
-variablePatternStr <- function() {
+variable_pattern_str <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
@@ -53,7 +53,7 @@ variablePatternStr <- function() {
 #' @return pattern (regular expression)
 #' @keywords internal
 #' 
-variablePatternNoStartStr <- function() {
+variable_pattern_no_start_str <- function() {
   return("[a-zA-Z0-9_]*")
 }
 
@@ -62,22 +62,22 @@ variablePatternNoStartStr <- function() {
 #' @param x character value
 #' @return logical value
 #' @export
-isEquation <- function(x) {
+is_equation <- function(x) {
   assert_single_character_string(x)
   parts <- strsplit(x, split="=")[[1]]
   if (length(parts) == 1) {
     return(FALSE)
   }
   variable <- parts[1] %>% trim()
-  return(grepl(pattern=paste0("^", variablePatternStr(), "$"), x=variable))
+  return(grepl(pattern=paste0("^", variable_pattern_str(), "$"), x=variable))
 }
 
 #' Return the IF-statement pattern (string form).
 #' 
 #' @return pattern (regular expression)
 #' @keywords internal
-ifStatementPatternStr <- function() {
-  return(paste0("if\\s*\\(.*\\)\\s*", variablePatternStr(), "\\s*="))
+if_statement_pattern_str <- function() {
+  return(paste0("if\\s*\\(.*\\)\\s*", variable_pattern_str(), "\\s*="))
 }
 
 #' Say if line in record is an IF-statement.
@@ -85,8 +85,8 @@ ifStatementPatternStr <- function() {
 #' @param x character value
 #' @return logical value
 #' @export
-isIfStatement <- function(x) {
-  return(grepl(pattern=paste0("^", ifStatementPatternStr()), x=trim(x), ignore.case=TRUE))
+is_if_statement <- function(x) {
+  return(grepl(pattern=paste0("^", if_statement_pattern_str()), x=trim(x), ignore.case=TRUE))
 }
 
 #' Extract text between brackets.
@@ -146,7 +146,7 @@ trim <- function(x) {
 #' @param x character vector
 #' @return logical value
 #' @export
-hasComment <- function(x) {
+has_comment <- function(x) {
   return(grepl("#", x=x, fixed=TRUE))
 }
 
@@ -155,7 +155,7 @@ hasComment <- function(x) {
 #' @param x character vector
 #' @return logical value
 #' @export
-isComment <- function(x) {
+is_comment <- function(x) {
   return(grepl("^\\s*#", x=x))
 }
 
@@ -164,7 +164,7 @@ isComment <- function(x) {
 #' @param x character vector
 #' @return logical value
 #' @export
-isEmptyLine <- function(x) {
+is_empty_line <- function(x) {
   return(grepl("^\\s*$", x=x))
 }
 
@@ -174,7 +174,7 @@ isEmptyLine <- function(x) {
 #' @param line any line, single character value
 #' @return a logical value
 #' @export
-isStrictRecordDelimiter <- function(line) {
+is_strict_record_delimiter <- function(line) {
   return(grepl("^\\s*\\[.*\\]((\\s*)|(\\s*#.*))$", line))
 }
 
@@ -183,7 +183,7 @@ isStrictRecordDelimiter <- function(line) {
 #' @param line any line, single character value
 #' @return a logical value
 #' @export
-isRecordDelimiter <- function(line) {
+is_record_delimiter <- function(line) {
   return(grepl("^\\s*\\[.*\\].*$", line))
 }
 
@@ -192,7 +192,7 @@ isRecordDelimiter <- function(line) {
 #' @param line any line, single character value
 #' @return the record delimiter between brackets
 #' @export
-getRecordDelimiter <- function(line) {
+get_record_delimiter <- function(line) {
   return(gsub("\\[(.*)\\](.*)","\\1", line) %>% trim())
 }
 
@@ -202,7 +202,7 @@ getRecordDelimiter <- function(line) {
 #' @return a character vector with the equation names
 #' @export
 #' @keywords internal
-getRecordEquationNames <- function(record) {
+get_record_equation_names <- function(record) {
   retValue <- NULL
   for (statement in record@statements@list) {
     if (is(statement, "equation") && !(is(statement, "ode"))) {
@@ -218,7 +218,7 @@ getRecordEquationNames <- function(record) {
 #' @return TRUE if all values are NA, FALSE otherwise
 #' @export
 #' @keywords internal
-allNa <- function(x) {
+all_na <- function(x) {
   return(all(is.na(x)))
 }
 
@@ -230,8 +230,8 @@ allNa <- function(x) {
 #' @importFrom dplyr any_of where
 #' @export
 #' @keywords internal
-removeNaColumn <- function(x, column) {
-  return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(allNa))))
+remove_na_column <- function(x, column) {
+  return(x %>% dplyr::select(!(dplyr::any_of(column) & dplyr::where(all_na))))
 }
 
 #' Check if the destination engine is RxODE or rxode2.
@@ -241,7 +241,7 @@ removeNaColumn <- function(x, column) {
 #' @return TRUE if RxODE or rxode2, FALSE otherwise
 #' @export
 #' @keywords internal
-isRxODE <- function(dest) {
+is_rxode <- function(dest) {
   return(dest %in% c("RxODE", "rxode2"))
 }
 

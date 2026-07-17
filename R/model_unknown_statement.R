@@ -63,7 +63,7 @@ setMethod("to_string", signature=c("unknown_statement"), definition=function(obj
     } else {
       retValue <- object@line
     }
-  } else if (isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
+  } else if (is_rxode(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- object@line
   } else {
     UnsupportedDestException()

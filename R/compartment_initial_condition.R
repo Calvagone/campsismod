@@ -74,7 +74,7 @@ setMethod("to_string", signature=c("compartment_initial_condition"), definition=
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
-  if (isRxODE(dest)) {
+  if (is_rxode(dest)) {
     return(paste0(compartment %>% to_string(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
     return(paste0(compartment %>% to_string(), "_0=", object@rhs))
