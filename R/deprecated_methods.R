@@ -317,7 +317,7 @@ setGeneric("addSuffix", function(object, suffix, separator, ...) {
 })
 
 #_______________________________________________________________________________
-#----                           parameters.R                                ----
+#----                          parameter(s).R                               ----
 #_______________________________________________________________________________
 
 #' Fix omega matrix for SAME OMEGA parameters that have NA values due to imperfections in Pharmpy import.
@@ -339,6 +339,28 @@ fixOmega <- function(object) {
 setGeneric("fixOmega", function(object) {
   lifecycle::deprecate_warn("1.4.0", "fixOmega()", "fix_omega()")
   fix_omega(object = object)
+})
+
+#' Get the name of the given parameter in the Campsis model.
+#' 
+#' 
+#' `getNameInModel()` is deprecated in favor of `get_name_in_model()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams get_name_in_model
+#' @return the name of this parameter
+#' @export
+#' @rdname getNameInModel
+getNameInModel <- function(x) {
+  lifecycle::deprecate_warn("1.4.0", "getNameInModel()", "get_name_in_model()")
+  get_name_in_model(x = x)
+}
+
+setGeneric("getNameInModel", function(x) {
+  lifecycle::deprecate_warn("1.4.0", "getNameInModel()", "get_name_in_model()")
+  get_name_in_model(x = x)
 })
 
 #' Is diagonal.
