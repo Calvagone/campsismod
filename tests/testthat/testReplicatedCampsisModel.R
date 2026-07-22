@@ -421,10 +421,10 @@ test_that("Checking for positive definiteness works as expected", {
   
   # Omega matrix in replicate 9 of repModelB is not positive definite
   model9 <- repModelB %>% export(dest=CampsisModel(), index=9)
-  expect_false(isMatrixPositiveDefinite(rxode_matrix(model9, type="omega")))
+  expect_false(is_matrix_positive_definite(rxode_matrix(model9, type="omega")))
   
   # Omega matrix in replicate 9 of repModelA is positive definite
   model9 <- repModelA %>% export(dest=CampsisModel(), index=9)
-  expect_true(isMatrixPositiveDefinite(rxode_matrix(model9, type="omega")))
+  expect_true(is_matrix_positive_definite(rxode_matrix(model9, type="omega")))
 })
 

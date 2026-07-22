@@ -15,8 +15,8 @@ test_that("get_by_index method works well", {
 
 test_that("Generic methods should throw an error when the call is incorrect", {
   msg <- "No default function is provided"
-  expect_error(getPrefix(""), regexp=msg)
-  expect_error(getRecordName(""), regexp=msg)
+  expect_error(get_prefix(""), regexp=msg)
+  expect_error(get_record_name(""), regexp=msg)
   expect_error(replace(""), regexp=msg)
   expect_error(index_of(""), regexp=msg)
   expect_error(get_by_name(""), regexp=msg)

@@ -28,7 +28,7 @@ CampsisModel <- function(json=NULL) {
     model <- new("campsis_model")
   } else {
     schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-    model <-  load_from_json(CampsisModel(), openJSON(json=json, schema=schema))
+    model <-  load_from_json(CampsisModel(), open_json(json=json, schema=schema))
   }
   return(model)
 }
@@ -66,7 +66,7 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
 #' @rdname add
 setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x, pos=NULL) {
   if (is(x, "ode")) {
-    object@compartments <- object@compartments %>% addODECompartment(ode=x)
+    object@compartments <- object@compartments %>% add_ode_compartment(ode=x)
   }
   object@model <- object@model %>% add(x, pos=pos)
   return(object)
@@ -280,7 +280,7 @@ setMethod("export_to_json", signature=c("campsis_model"), definition=function(ob
     object <- object %>%
       delete(ErrorRecord())
   }
-  lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
+  lines <- capture.output(show(object@model %>% add_properties_records(model=object)))
   json <- list()
   json$code <- lines
   json$parameters <- export_to_json(object@parameters)@data
@@ -323,14 +323,14 @@ setMethod("get_var_cov", signature=c("campsis_model"), definition=function(objec
 
 #' @rdname load_from_json
 setMethod("load_from_json", signature=c("campsis_model", "json_element"), definition=function(object, json) {
-  object <- jsonToCampsisModel(object=object, json=json)
+  object <- json_to_campsis_model(object=object, json=json)
   return(object)
 })
 
 #' @rdname load_from_json
 setMethod("load_from_json", signature=c("campsis_model", "character"), definition=function(object, json) {
   schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-  return(load_from_json(object=object, json=openJSON(json=json, schema=schema)))
+  return(load_from_json(object=object, json=open_json(json=json, schema=schema)))
 })
 
 #_______________________________________________________________________________
@@ -414,14 +414,14 @@ updateCompartments <- function(model) {
   records <- model@model
   
   # Get list of compartments
-  compartments <- records %>% getCompartments()
+  compartments <- records %>% get_compartments()
   
   # Extract characteristics
-  compartments <- compartments %>% addProperties(records, "F", init=Bioavailability(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "LAG", init=LagTime(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "F", init=Bioavailability(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "LAG", init=LagTime(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "DURATION", init=InfusionDuration(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "RATE", init=InfusionRate(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "INIT", init=InitialCondition(0, rhs=""))
   
   # Remove properties records because information is found in properties
   records@list <- records@list %>% purrr::keep(~!is(.x, "properties_record"))
@@ -518,7 +518,7 @@ setMethod("set_min_max", signature=c("campsis_model", "character", "numeric", "n
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("campsis_model"), definition=function(object) {
-  show(object@model %>% addPropertiesRecords(model=object))
+  show(object@model %>% add_properties_records(model=object))
   cat("\n")
   show(object@parameters)
   cat("\n")

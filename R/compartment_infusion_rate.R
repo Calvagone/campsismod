@@ -37,11 +37,11 @@ setMethod("get_name", signature = c("compartment_infusion_rate"), definition = f
 })
 
 #_______________________________________________________________________________
-#----                             getPrefix                                ----
+#----                             get_prefix                                ----
 #_______________________________________________________________________________
 
-#' @rdname getPrefix
-setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = function(object, ...) {
+#' @rdname get_prefix
+setMethod("get_prefix", signature = c("compartment_infusion_rate"), definition = function(object, ...) {
   dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("R")
@@ -51,10 +51,10 @@ setMethod("getPrefix", signature = c("compartment_infusion_rate"), definition = 
 })
 
 #_______________________________________________________________________________
-#----                           getRecordName                               ----
+#----                           get_record_name                               ----
 #_______________________________________________________________________________
 
-#' @rdname getRecordName
-setMethod("getRecordName", signature = c("compartment_infusion_rate"), definition = function(object) {
+#' @rdname get_record_name
+setMethod("get_record_name", signature = c("compartment_infusion_rate"), definition = function(object) {
   return("RATE")
 })

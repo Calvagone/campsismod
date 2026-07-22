@@ -89,10 +89,10 @@ test_that("Method 'add' on Campsis model, exceptions on parameters names", {
   
   # Unnamed correlations should not be an issue when merging models
   model1 <- model_suite$testing$nonmem$advan1_trans1 %>%
-    addSuffix(suffix="1") %>%
+    add_suffix(suffix="1") %>%
     add(Omega(index=2, index2=1, value=0.5, type="cor"))
   model2 <- model_suite$testing$nonmem$advan1_trans1 %>%
-    addSuffix(suffix="2") %>%
+    add_suffix(suffix="2") %>%
     add(Omega(index=2, index2=1, value=0.5, type="cor"))
   resultingModel <- model1 %>% add(model2)
   
@@ -145,11 +145,11 @@ test_that("Valid object method works depending on complete argument", {
 
 test_that("Method 'add' properly merges variance-covariance matrices", {
   modelA <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
-    addSuffix("A") %>%
+    add_suffix("A") %>%
     disable("VARCOV_OMEGA")
   
   modelB <- model_suite$testing$other$`2cpt_zo_allo_metab_effect_on_cl` %>%
-    addSuffix("B")
+    add_suffix("B")
   
   model <- modelA %>%
     add(modelB)

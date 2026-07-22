@@ -36,7 +36,7 @@ CodeRecords <- function() {
 
 #' @rdname add
 setMethod("add", signature=c("code_records", "code_records"), definition=function(object, x) {
-  return(object %>% appendCodeRecords(x))
+  return(object %>% append_code_records(x))
 })
 
 #' Append code records
@@ -46,7 +46,7 @@ setMethod("add", signature=c("code_records", "code_records"), definition=functio
 #' @return the resulting set of code records
 #' @keywords internal
 #' 
-appendCodeRecords <- function(records1, records2) {
+append_code_records <- function(records1, records2) {
   for (record in (records2)@list) {
     baseRecord <- records1 %>% get_by_name(record %>% get_name())
     if (baseRecord %>% length() == 0) {
@@ -59,7 +59,7 @@ appendCodeRecords <- function(records1, records2) {
   return(records1 %>% sort())
 }
 
-findRecordByPosition <- function(object, pos) {
+find_record_by_position <- function(object, pos) {
   if (is.null(pos)) {
     stop("pos is null")
   }
@@ -122,7 +122,7 @@ setMethod("add", signature=c("code_records", "model_statement"), definition=func
       
     } else {
       # Usual case (position by index or model statement element)
-      record <- object %>% findRecordByPosition(pos)
+      record <- object %>% find_record_by_position(pos)
       record <- record %>% add(x, pos=pos)
       object <- object %>% replace(record)
     }
@@ -132,13 +132,13 @@ setMethod("add", signature=c("code_records", "model_statement"), definition=func
 })
 
 #_______________________________________________________________________________
-#----                         addPropertiesRecords                           ----
+#----                        add_properties_records                         ----
 #_______________________________________________________________________________
 
-addPropertiesRecords <- function(records, model) {
+add_properties_records <- function(records, model) {
   properties <- model@compartments@properties
   
-  for (name in getRecordNames()) {
+  for (name in get_record_names()) {
     record <- new(tolower(paste0(name, "_record")))
     if (!is(record, "properties_record")) {
       next
@@ -188,7 +188,7 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 })
 
 #_______________________________________________________________________________
-#----                          getCompartments                              ----
+#----                         get_compartments                              ----
 #_______________________________________________________________________________
 
 #' Add ODE compartment to compartments object.
@@ -199,7 +199,7 @@ setMethod("find", signature=c("code_records", "model_statement"), definition=fun
 #' @importFrom purrr discard map_chr
 #' @keywords internal
 #' 
-addODECompartment <- function(compartments, ode) {
+add_ode_compartment <- function(compartments, ode) {
   if (!is(ode, "ode")) {
     stop("ode is not an ODE")
   }
@@ -231,7 +231,7 @@ addODECompartment <- function(compartments, ode) {
 #' @return a list of compartments
 #' @keywords internal
 #' 
-getCompartments <- function(records) {
+get_compartments <- function(records) {
   assertthat::assert_that(is(records, "code_records"), msg="records class is not 'code_records'")
   odeRecord <- records %>% get_by_name("ODE")
   compartments <- Compartments()
@@ -240,7 +240,7 @@ getCompartments <- function(records) {
   }
   for (statement in odeRecord@statements@list) {
     if (is(statement, "ode")) {
-      compartments <- compartments %>% addODECompartment(ode=statement)
+      compartments <- compartments %>% add_ode_compartment(ode=statement)
     }
   }
   return(compartments)
@@ -255,7 +255,7 @@ getCompartments <- function(records) {
 #' @return updated compartments object
 #' @keywords internal
 #' 
-addProperties <- function(compartments, records, name, init) {
+add_properties <- function(compartments, records, name, init) {
   record <- records %>% get_by_name(name)
   if (record %>% length() == 0) {
     return(compartments)
@@ -277,10 +277,10 @@ addProperties <- function(compartments, records, name, init) {
 }
 
 #_______________________________________________________________________________
-#----                             getRecordNames                            ----
+#----                             get_record_names                            ----
 #_______________________________________________________________________________
 
-getRecordNames <- function() {
+get_record_names <- function() {
   return(c("MAIN", "ODE", "F", "LAG", "DURATION", "RATE", "INIT", "ERROR"))
 }
 
@@ -346,7 +346,7 @@ setMethod("move", signature=c("code_records", "code_record", "pmx_position"), de
 #' @return a character vector
 #' @keywords internal
 #' 
-removeTrailingLineBreaks <- function(x) {
+remove_trailing_line_breaks <- function(x) {
   lenX <- x %>% length()
   if (lenX > 0) {
     res <- rle(is_empty_line(x))
@@ -359,9 +359,9 @@ removeTrailingLineBreaks <- function(x) {
   return(x)
 }
 
-addContentToRecord <- function(record, content) {
+add_content_to_record <- function(record, content) {
   # In all cases, we remove trailing line breaks
-  content <- content %>% removeTrailingLineBreaks()
+  content <- content %>% remove_trailing_line_breaks()
   
   if (is(record, "properties_record")) {
     record@statements <- parse_statements(content)
@@ -426,7 +426,7 @@ read.model <- function(file=NULL, text=NULL) {
         content <- allLines[(lastLineIndexInPrevRecord + 1):(index-1)]
         prevRecordIndex <- records %>% length() - 1
         records@list[[prevRecordIndex]] <-
-          addContentToRecord(records@list[[prevRecordIndex]], content)
+          add_content_to_record(records@list[[prevRecordIndex]], content)
       } else  {
         # If no last record is present, check if content is detected:
         # i.e. anything but blank line(s) or Campsis comment(s) before the first
@@ -451,7 +451,7 @@ read.model <- function(file=NULL, text=NULL) {
     stop("No record delimiter found in model")
   }
   records@list[[lastRecordIndex]] <-
-    addContentToRecord(records@list[[lastRecordIndex]], content)
+    add_content_to_record(records@list[[lastRecordIndex]], content)
   
   return(records)
 }
@@ -501,7 +501,7 @@ setMethod("sort", signature=c("code_records"), definition=function(x, decreasing
   names <- x@list %>% purrr::map_chr(~.x %>% get_name())
 
   # Reorder
-  names <- factor(names, levels=getRecordNames(), labels=getRecordNames())
+  names <- factor(names, levels=get_record_names(), labels=get_record_names())
   order <- order(names)
   
   # Apply result to original list
@@ -523,14 +523,14 @@ setMethod("write", signature=c("code_records", "character"), definition=function
     object <- object %>% sort()
   } else {
     # Add transient records and sort
-    object <- object %>% addPropertiesRecords(model)
+    object <- object %>% add_properties_records(model)
   }
 
   # Write code record
   code <- NULL
   for (record in object@list) {
     # Add record delimiter
-    code <- code %>% append(writeRecordDelimiter(record))
+    code <- code %>% append(write_record_delimiter(record))
     
     # Add all statements
     for (statement in record@statements@list) {

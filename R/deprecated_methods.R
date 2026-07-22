@@ -235,3 +235,83 @@ processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
   lifecycle::deprecate_warn("1.4.0", "processExtraArg()", "process_extra_arg()")
   process_extra_arg(args = args, name = name, default = default, mandatory = mandatory)
 }
+
+#_______________________________________________________________________________
+#----                        json_interface.R                               ----
+#_______________________________________________________________________________
+
+#' Map JSON properties to S4 slots.
+#' 
+#' `mapJSONPropertiesToS4Slots()` is deprecated in favor of `map_json_properties_to_s4_slots()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams process_extra_arg
+#' @return a JSON object ready to be serialised
+#' @export
+#' @rdname mapJSONPropertiesToS4Slots
+mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
+  lifecycle::deprecate_warn("1.4.0", "mapJSONPropertiesToS4Slots()", "map_json_properties_to_s4_slots()")
+  map_json_properties_to_s4_slots(object = object, json = json, discard_type = discard_type)
+}
+
+#' Map S4 slots to JSON properties.
+#' 
+#' `mapS4SlotsToJSONProperties()` is deprecated in favor of `map_s4_slots_to_json_properties()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams process_extra_arg
+#' @return Campsis dataset
+#' @export
+#' @rdname mapS4SlotsToJSONProperties
+mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ignore=NULL) {
+  lifecycle::deprecate_warn("1.4.0", "mapS4SlotsToJSONProperties()", "map_s4_slots_to_json_properties()")
+  map_s4_slots_to_json_properties(object = object, add_type = add_type, optional = optional, ignore = ignore)
+}
+
+#' JSON to Campsis parameter.
+#' 
+#' `jsonToParameter()` is deprecated in favor of `json_to_parameter()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams json_to_parameter
+#' @return Campsis parameter
+#' @export
+#' 
+jsonToParameter <- function(x, index=NULL, index2=NULL) {
+  lifecycle::deprecate_warn("1.4.0", "jsonToParameter()", "json_to_parameter()")
+  json_to_parameter(x = x, index = index, index2 = index2)
+}
+
+#_______________________________________________________________________________
+#----                       model_add_suffix.R                              ----
+#_______________________________________________________________________________
+
+#' Generic function to add a suffix to various objects like parameters, code records,
+#' compartment names or a model (all previous objects at the same time).
+#' This makes it an extremely powerful function to combine 2 models or more (using function 'add'),
+#' that have similar equation, parameter or compartment names.
+#' 
+#' `addSuffix()` is deprecated in favor of `add_suffix()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams add_suffix
+#' @return updated object of the same class as the provided object, unless 'model' was specified, in that case the model is returned
+#' @export
+#' @rdname addSuffix
+addSuffix <- function(object, suffix, separator, ...) {
+  lifecycle::deprecate_warn("1.4.0", "addSuffix()", "add_suffix()")
+  add_suffix(object = object, suffix = suffix, separator = separator, ...)
+}
+
+setGeneric("addSuffix", function(object, suffix, separator, ...) {
+  lifecycle::deprecate_warn("1.4.0", "addSuffix()", "add_suffix()")
+  add_suffix(object = object, suffix = suffix, separator = separator, ...)
+})

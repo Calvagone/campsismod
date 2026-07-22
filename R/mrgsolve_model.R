@@ -26,12 +26,12 @@ setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=fu
       "mrgsolve_model",
       param = mrgsolve_param(object, extra_params=extra_params),
       cmt = mrgsolve_compartment(object),
-      main = mrgsolveMain(object),
-      ode = mrgsolveOde(object),
-      omega = mrgsolveMatrix(object, type="omega"),
-      sigma = mrgsolveMatrix(object, type="sigma"),
-      table = mrgsolveTable(object),
-      capture = mrgsolveCapture(outvars, model=object)
+      main = mrgsolve_main(object),
+      ode = mrgsolve_ode(object),
+      omega = mrgsolve_matrix(object, type="omega"),
+      sigma = mrgsolve_matrix(object, type="sigma"),
+      table = mrgsolve_table(object),
+      capture = mrgsolve_capture(outvars, model=object)
     )
   )
 })

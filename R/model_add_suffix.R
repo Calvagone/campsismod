@@ -1,6 +1,6 @@
 
 #_______________________________________________________________________________
-#----                             addSuffix                                 ----
+#----                             add_suffix                                ----
 #_______________________________________________________________________________
 
 #' Generic function to add a suffix to various objects like parameters, code records,
@@ -14,12 +14,12 @@
 #' @param ... extra arguments like 'model' if the changes need to be reflected in the model 
 #' @return updated object of the same class as the provided object, unless 'model' was specified, in that case the model is returned
 #' @export
-#' @rdname addSuffix
-addSuffix <- function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+add_suffix <- function(object, suffix, separator, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
+setGeneric("add_suffix", function(object, suffix, separator=NULL, ...) {
   if (!is.character(suffix) && length(suffix) != 1) {
     stop("suffix must be a single character value")
   }
@@ -36,12 +36,12 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
       stop(paste0("separator '", separator, "' is not a valid separator"))
     }
   }
-  standardGeneric("addSuffix")
+  standardGeneric("add_suffix")
 })
 
-#' @rdname addSuffix
+#' @rdname add_suffix
 #' @importFrom assertthat are_equal
-setMethod("addSuffix", signature=c("parameters", "character", "character"), definition=function(object, suffix, separator, ...) {
+setMethod("add_suffix", signature=c("parameters", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
@@ -85,8 +85,8 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("code_records", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("code_records", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
@@ -125,17 +125,17 @@ setMethod("addSuffix", signature=c("code_records", "character", "character"), de
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("code_record", "character", "character"), definition=function(object, suffix, separator, ...) {
-  retValue <- addSuffix(object=CodeRecords() %>% add(object), suffix=suffix, separator=separator, ...)
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("code_record", "character", "character"), definition=function(object, suffix, separator, ...) {
+  retValue <- add_suffix(object=CodeRecords() %>% add(object), suffix=suffix, separator=separator, ...)
   if (is(retValue, "code_records")) {
     retValue <- retValue@list[[1]]
   }
   return(retValue)
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("compartments", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("compartments", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
@@ -165,21 +165,21 @@ setMethod("addSuffix", signature=c("compartments", "character", "character"), de
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("campsis_model", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("campsis_model", "character", "character"), definition=function(object, suffix, separator, ...) {
   model <- object
   
   # Add suffix to parameters
   parameters <- model@parameters
-  model <- parameters %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- parameters %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Add suffix to equations
   records <- model@model
-  model <- records %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- records %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Add suffix to ODE compartments
   compartments <- model@compartments
-  model <- compartments %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- compartments %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Save properties
   properties <- model@compartments@properties

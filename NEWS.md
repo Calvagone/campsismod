@@ -7,7 +7,7 @@
 # campsismod 1.3.1
 * Use straight single quotes, not directed ones, for the whole DESCRIPTION file #115
 * Add R-universe badge to README #116
-* Review method mapJSONPropertiesToS4Slots #117
+* Review method map_json_properties_to_s4_slots #117
 * Add 'json' argument to CampsisModel constructor #118
 
 # campsismod 1.3.0
@@ -28,7 +28,7 @@
 # campsismod 1.2.0
 
 * Add min/max columns to THETA's #24
-* Method 'addSuffix' does not preserve the variance-covariance matrix #81
+* Method 'add_suffix' does not preserve the variance-covariance matrix #81
 * Method 'add' does not merge variance-covariance matrices #82
 * Method 'add_rse' to quickly add relative standard error on parameter #83
 * Implement generic method 'move' #84
@@ -60,7 +60,7 @@
 
 # campsismod 1.0.0
 
-* New method 'addSuffix' to combine several models #61
+* New method 'add_suffix' to combine several models #61
 * Code review: extra parameters to mrgsolve model #62
 
 # campsismod 0.9.1

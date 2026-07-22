@@ -5,11 +5,11 @@ source(paste0("", "testUtils.R"))
 
 # options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
-test_that("Methods 'get_name', 'getPrefix', 'show' and 'to_string' work as expected on initial conditions", {
+test_that("Methods 'get_name', 'get_prefix', 'show' and 'to_string' work as expected on initial conditions", {
   model <- model_suite$testing$pk$`1cpt_fo`
   init <- InitialCondition(1, "1000")
   expect_equal(get_name(init), "INIT (CMT=1)")
-  expect_equal(getPrefix(init), "")
+  expect_equal(get_prefix(init), "")
   expect_equal(capture_output(show(init)), "INIT (CMT=1): 1000")
   expect_equal(to_string(init, dest="rxode2", model=model), "A_ABS(0)=1000")
   expect_equal(to_string(init, dest="mrgsolve", model=model), "A_ABS_0=1000")
@@ -44,8 +44,8 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(to_string (""), regexp=msg)
   expect_error(write(""), regexp=msg)
   
-  expect_error(getPrefix(""), regexp=msg)
-  expect_error(getRecordName(""), regexp=msg)
+  expect_error(get_prefix(""), regexp=msg)
+  expect_error(get_record_name(""), regexp=msg)
 })
 
 test_that("Method 'to_string' of unknown statements works as expected", {

@@ -41,7 +41,7 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
   assertthat::assert_that(length(args) > 0, msg=msg)
   type <- args[[1]]
   assertthat::assert_that(type %in% types, msg=msg)
-  object@list <- object@list %>% purrr::keep(~.x %>% getRecordName()==type)
+  object@list <- object@list %>% purrr::keep(~.x %>% get_record_name()==type)
   return(object)
 })
 
@@ -51,10 +51,10 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
 
 #' @rdname sort
 setMethod("sort", signature=c("compartment_properties"), definition=function(x, decreasing=FALSE, ...) {
-  names <- x@list %>% purrr::map_chr(~.x %>% getRecordName())
+  names <- x@list %>% purrr::map_chr(~.x %>% get_record_name())
   
   # Reorder
-  names <- factor(names, levels=getRecordNames(), labels=getRecordNames())
+  names <- factor(names, levels=get_record_names(), labels=get_record_names())
   order <- order(names)
   
   # Apply result to original list

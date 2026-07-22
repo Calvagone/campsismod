@@ -359,7 +359,7 @@ setMethod("replace_all", signature=c("code_record", "pattern", "character"), def
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
-  cat(writeRecordDelimiter(object), "\n", sep="")
+  cat(write_record_delimiter(object), "\n", sep="")
   show(object@statements)
 })
 
@@ -369,7 +369,7 @@ setMethod("show", signature=c("code_record"), definition=function(object) {
 #' @param object code record
 #' @return a record delimiter line
 #' @keywords internal
-writeRecordDelimiter <- function(object) {
+write_record_delimiter <- function(object) {
   recordDelimiter <- paste0("[", object %>% get_name(), "]")
   recordDelimiter <- recordDelimiter %>% append_comment(object=object, dest="campsis")
   return(recordDelimiter)

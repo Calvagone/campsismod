@@ -1,6 +1,6 @@
 library(testthat)
 
-context("Test generic method addSuffix")
+context("Test generic method add_suffix")
 
 source(paste0("", "testUtils.R"))
 
@@ -16,7 +16,7 @@ test_that("Add suffix to parameters is working as expected", {
   parameters@varcov <- matrix(dimnames=list("THETA_CL", "THETA_CL"), data=0.1)
   
   updatedParameters <- parameters %>%
-    addSuffix("A")
+    add_suffix("A")
   
   expectedParameters <- Parameters() %>%
     add(Theta(name="CL_A", index=1, fix=FALSE, value=4)) %>%
@@ -30,10 +30,10 @@ test_that("Add suffix to parameters is working as expected", {
   expect_equal(updatedParameters, expectedParameters)
   
   # Separator can't be a dot for instance
-  expect_error(parameters %>% addSuffix("A", separator="."), regexp="is not a valid separator")
+  expect_error(parameters %>% add_suffix("A", separator="."), regexp="is not a valid separator")
   
   # Suffix can't contain a dot neither
-  expect_error(parameters %>% addSuffix(".A"), regexp="is not a valid suffix")
+  expect_error(parameters %>% add_suffix(".A"), regexp="is not a valid suffix")
 })
 
 test_that("Add suffix to a code record is working as expected", {
@@ -45,7 +45,7 @@ test_that("Add suffix to a code record is working as expected", {
     add(IfStatement("KA2 > 10", Equation("TMP", "1")))
   
   updatedMain <- main %>%
-    addSuffix("A")
+    add_suffix("A")
   
   expectedMain <- MainRecord() %>%
     add(Equation("KA_A", "THETA_KA * exp(ETA_KA)")) %>%
@@ -64,7 +64,7 @@ test_that("Add suffix to compartments is working as expected", {
     add(Compartment(index=3, name="OUTPUT"))
   
   updatedCompartments <- compartments %>%
-    addSuffix("A")
+    add_suffix("A")
   
   expectedCompartments <- Compartments() %>%
     add(Compartment(index=1, name="ABS_A")) %>%
@@ -77,11 +77,11 @@ test_that("Add suffix to compartments is working as expected", {
 test_that("Add suffix to a Campsis model is working as expected", {
   
   modelA <- model_suite$testing$pk$`1cpt_zo_abs_lag` %>%
-    addSuffix("1", separator="") %>%
+    add_suffix("1", separator="") %>%
     add(LineBreak())
   
   modelB <- model_suite$testing$pk$`1cpt_zo_abs_lag` %>%
-    addSuffix("2", separator="")
+    add_suffix("2", separator="")
   
   modelAB <- modelA %>%
     add(modelB)

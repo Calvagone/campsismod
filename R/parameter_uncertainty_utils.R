@@ -5,7 +5,7 @@
 #' @return a tibble with the min and max values
 #' @importFrom tibble tibble
 #' @keywords internal
-minMaxDefault <- function(parameter) {
+min_max_default <- function(parameter) {
   min <- parameter@min
   max <- parameter@max
   minNA <- is.na(min)
@@ -31,7 +31,7 @@ minMaxDefault <- function(parameter) {
 #' @return a data frame with the sampled parameters
 #' @keywords internal
 #' 
-sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
+sample_from_multivariate_normal_distribution <- function(parameters, n, settings) {
   varcov <- parameters@varcov
   parameterNames <- parameters %>% get_names()
   varcovParameterNames <- colnames(varcov)
@@ -46,7 +46,7 @@ sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
   
   # Retrieve min, max
   minMax <- varcovParameters@list %>%
-    purrr::map_df(~minMaxDefault(.x)) %>%
+    purrr::map_df(~min_max_default(.x)) %>%
     dplyr::mutate(name=varcovNames)
   
   # Retrieve mean
@@ -63,8 +63,8 @@ sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
   }
   
   # Sample parameters from the variance-covariance matrix
-  msg <- getSamplingMessageTemplate(what="parameters", from="variance-covariance matrix")
-  table <- sampleGeneric(fun=sampleFromMultivariateNormalDistributionCore,
+  msg <- get_sampling_message_template(what="parameters", from="variance-covariance matrix")
+  table <- sample_generic(fun=sample_from_multivariate_normal_distribution_core,
                          args=list(mean=mean, varcov=varcov), n=n, minMax=minMax, msg=msg, settings=settings, parameters=parameters)
   
   return(table)
@@ -81,7 +81,7 @@ sampleFromMultivariateNormalDistribution <- function(parameters, n, settings) {
 #' @importFrom tibble tibble
 #' @keywords internal
 #' 
-sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
+sample_from_inverse_chi_squared_or_wishart <- function(parameters, n, settings) {
   assertthat::assert_that(parameters %>% length() > 0)
   
   # Type of parameter
@@ -123,7 +123,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
         cat(sprintf("Sampling %s with %i degrees of freedom\n", blockLabel, df))
       }
     }
-    if (isBlockFixed(block)) {
+    if (is_block_fixed(block)) {
       next
     }
     if (length(block) == 1) {
@@ -131,10 +131,10 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
       assertthat::assert_that(!has_off_diagonal_omegas(block))
       elem <- onDiagElements@list[[1]]
       variable <- elem %>% get_name()
-      minMax <- minMaxDefault(elem) %>%
+      minMax <- min_max_default(elem) %>%
         dplyr::mutate(name=variable)
-      msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse chi-squared distribution")
-      tmp <- sampleGeneric(fun=sampleFromInverseChiSquaredCore, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, settings=settings)
+      msg <- get_sampling_message_template(what=blockLabel, from="scaled inverse chi-squared distribution")
+      tmp <- sample_generic(fun=sample_from_inverse_chi_squared_core, args=list(df=df, scale=elem@value, variable=variable), n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     } else {
       params <- Parameters()
@@ -142,16 +142,16 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
       mat <- rxode_matrix(params, type=type)
 
       size <- params@list %>% purrr::keep(~is_diag(.x)) %>% length()
-      mappingMat <- getMappingMatrix(parameters=params, type=type)
+      mappingMat <- get_mapping_matrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
 
       minMax <- params@list %>%
-        purrr::map_df(~minMaxDefault(.x)) %>%
+        purrr::map_df(~min_max_default(.x)) %>%
         dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% get_name()))
       
-      msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse Wishart distribution")
+      msg <- get_sampling_message_template(what=blockLabel, from="scaled inverse Wishart distribution")
       wishartCorrection <- settings@wishart_correction
-      tmp <- sampleGeneric(fun=sampleFromInverseWishartCore, args=list(df=df, mat=mat, allColnames=allColnames, wishartCorrection=wishartCorrection),
+      tmp <- sample_generic(fun=sample_from_inverse_wishart_core, args=list(df=df, mat=mat, allColnames=allColnames, wishartCorrection=wishartCorrection),
                            n=n, minMax=minMax, msg=msg, settings=settings)
       retValue <- dplyr::bind_cols(retValue, tmp[, -1])
     }
@@ -165,7 +165,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
 #' @return logical value
 #' @importFrom purrr map_lgl
 #' @keywords internal
-isBlockFixed <- function(block) {
+is_block_fixed <- function(block) {
   list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
   retValue <- list %>%
     purrr::map_lgl(~.x@fix)
@@ -181,7 +181,7 @@ isBlockFixed <- function(block) {
 #' @importFrom MASS mvrnorm
 #' @importFrom tibble as_tibble
 #' @keywords internal
-sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
+sample_from_multivariate_normal_distribution_core <- function(n, mean, varcov) {
   retValue <- MASS::mvrnorm(n=n, mu=mean, Sigma=varcov) %>%
     tibble::as_tibble()
   # If n=1, mvrnorm returns an unnamed vector
@@ -203,7 +203,7 @@ sampleFromMultivariateNormalDistributionCore <- function(n, mean, varcov) {
 #' @importFrom LaplacesDemon rinvchisq
 #' @importFrom tibble tibble
 #' @keywords internal
-sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
+sample_from_inverse_chi_squared_core <- function(n, df, scale, variable) {
   table <- tibble::tibble(!!variable:=LaplacesDemon::rinvchisq(n=n, df=df, scale=scale))
   return(table)
 }
@@ -218,8 +218,8 @@ sampleFromInverseChiSquaredCore <- function(n, df, scale, variable) {
 #' @return a data frame with the sampled parameters
 #' @importFrom LaplacesDemon rinvwishart
 #' @keywords internal
-sampleFromInverseWishartCore <- function(n, df, mat, allColnames, wishartCorrection) {
-  indexesToKeep <- which(allColnames != "") # See getMappingMatrix method
+sample_from_inverse_wishart_core <- function(n, df, mat, allColnames, wishartCorrection) {
+  indexesToKeep <- which(allColnames != "") # See get_mapping_matrix method
   
   # If the correction is applied, the degrees of freedom are reduced by the number of rows + 1
   # See https://github.com/metrumresearchgroup/simpar/issues/11
@@ -244,12 +244,12 @@ sampleFromInverseWishartCore <- function(n, df, mat, allColnames, wishartCorrect
 #' @param parameters double array parameters to check for positive definiteness
 #' @return tibble with the sampled parameters (1 parameter per column + REPLICATE column)
 #' @keywords internal
-sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) {
+sample_generic <- function(fun, args, n, minMax, msg, settings, parameters=NULL) {
   # First call to method
   tempTable <- do.call(what=fun, args=args %>% append(list(n=n))) %>%
     dplyr::mutate(REPLICATE=seq_len(n)) %>%
     dplyr::mutate(VALID=NA)
-  table <- flagSampledParameterRows(table=tempTable, minMax=minMax,
+  table <- flag_sampled_parameter_rows(table=tempTable, minMax=minMax,
                                        settings=settings, parameters=parameters)
   
   # Re-sample if more parameters are needed due to constraints
@@ -294,7 +294,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
     tempTable <- do.call(what=fun, args=args %>% append(list(n=nextN)))  %>%
       dplyr::mutate(REPLICATE=seq_len(nextN) + shift) %>%
       dplyr::mutate(VALID=NA)
-    table <- dplyr::bind_rows(table, flagSampledParameterRows(table=tempTable, minMax=minMax,
+    table <- dplyr::bind_rows(table, flag_sampled_parameter_rows(table=tempTable, minMax=minMax,
                                                                  settings=settings, parameters=parameters))
   }
   
@@ -330,7 +330,7 @@ sampleGeneric <- function(fun, args, n, minMax, msg, settings, parameters=NULL) 
   return(table)
 }
 
-getSamplingMessageTemplate <- function(what, from) {
+get_sampling_message_template <- function(what, from) {
   return(sprintf("Success rate when sampling %s from %s: %%.1f%%%%", what, from))
 }
 
@@ -342,7 +342,7 @@ getSamplingMessageTemplate <- function(what, from) {
 #' @return a matrix with the names of the OMEGA/SIGMA parameters
 #' @keywords internal
 #' 
-getMappingMatrix <- function(parameters, type) {
+get_mapping_matrix <- function(parameters, type) {
   size <- parameters@list %>% purrr::keep(~is_diag(.x)) %>% length()
   retValue <- matrix(rep(0, size*size), nrow=size)
   for (i in 1:size) {
@@ -374,7 +374,7 @@ getMappingMatrix <- function(parameters, type) {
 #' @importFrom dplyr bind_rows filter mutate
 #' @importFrom purrr map flatten_int
 #' @keywords internal
-flagSampledParameterRows <- function(table, minMax, settings, parameters) {
+flag_sampled_parameter_rows <- function(table, minMax, settings, parameters) {
   parameterNames <- colnames(table)
   parameterNames <- parameterNames[!parameterNames %in% c("REPLICATE", "VALID")]
   
@@ -412,7 +412,7 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
     before <- sum(toBeChecked$VALID)
 
     toBeChecked <- toBeChecked %>%
-      dplyr::left_join(checkMatrixIsPositiveDefinite(table=toBeChecked, parameters=parameters), by="REPLICATE")
+      dplyr::left_join(check_matrix_is_positive_definite(table=toBeChecked, parameters=parameters), by="REPLICATE")
     
     toBeChecked <- toBeChecked %>%
       dplyr::mutate(VALID=.data$VALID & .data$POSITIVE_DEFINITE) %>%
@@ -438,7 +438,7 @@ flagSampledParameterRows <- function(table, minMax, settings, parameters) {
 #' @importFrom purrr map_df flatten_int
 #' @importFrom tibble tibble
 #' @keywords internal
-checkMatrixIsPositiveDefinite <- function(table, parameters) {
+check_matrix_is_positive_definite <- function(table, parameters) {
   # Remove THETA_ columns
   table <- table %>%
     dplyr::select(-dplyr::starts_with("THETA_"))
@@ -460,8 +460,8 @@ checkMatrixIsPositiveDefinite <- function(table, parameters) {
       model <- update_parameters(model=model, row=row)
       omegaMatrix <- rxode_matrix(model=model, type="omega")
       sigmaMatrix <- rxode_matrix(model=model, type="sigma")
-      omegaMatrixOK <- ifelse(length(omegaMatrix) == 0, TRUE, isMatrixPositiveDefinite(omegaMatrix))
-      sigmaMatrixOK <- ifelse(length(sigmaMatrix) == 0, TRUE, isMatrixPositiveDefinite(sigmaMatrix))
+      omegaMatrixOK <- ifelse(length(omegaMatrix) == 0, TRUE, is_matrix_positive_definite(omegaMatrix))
+      sigmaMatrixOK <- ifelse(length(sigmaMatrix) == 0, TRUE, is_matrix_positive_definite(sigmaMatrix))
       return(tibble::tibble(REPLICATE=replicate, POSITIVE_DEFINITE=omegaMatrixOK && sigmaMatrixOK))
     })
   return(retValue)
@@ -472,7 +472,7 @@ checkMatrixIsPositiveDefinite <- function(table, parameters) {
 #' @param matrix matrix to check
 #' @param tol tolerance when checking the eigenvalues
 #' @export
-isMatrixPositiveDefinite <- function(matrix, tol=1e-06) {
+is_matrix_positive_definite <- function(matrix, tol=1e-06) {
   eS <- eigen(matrix, symmetric=TRUE)
   ev <- eS$values
   if (!all(ev >= -tol * abs(ev[1L]))) {

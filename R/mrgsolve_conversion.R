@@ -38,7 +38,7 @@ mrgsolve_compartment <- function(model) {
 #' @param type either omega or sigma
 #' @return named matrix or character(0) if matrix is empty
 #' @export
-mrgsolveMatrix <- function(model, type="omega") {
+mrgsolve_matrix <- function(model, type="omega") {
   matrix <- rxode_matrix(model, type=type)
   if (nrow(matrix) == 0) {
     return(character(0))
@@ -62,12 +62,12 @@ mrgsolveMatrix <- function(model, type="omega") {
 #' @param model Campsis model
 #' @return MAIN block
 #' @export
-mrgsolveMain <- function(model) {
+mrgsolve_main <- function(model) {
   records <- model@model
   properties <- model@compartments@properties
   retValue <- "[MAIN]"
   record <- records %>% get_by_name("MAIN")
-  retValue <- mrgsolveBlock(record, init="[MAIN]")
+  retValue <- mrgsolve_block(record, init="[MAIN]")
   if (properties %>% length() > 0) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
@@ -85,7 +85,7 @@ mrgsolveMain <- function(model) {
 #' @param x any record line
 #' @return same line with comments translated to C/C++
 #' @keywords internal
-convertAnyComment <- function(x) {
+convert_any_comment <- function(x) {
   return(sub(pattern="#", replacement="//", x=x))
 }
 
@@ -98,7 +98,7 @@ convertAnyComment <- function(x) {
 #' @param capture 'capture' instead of 'double'
 #' @return translated record for mrgsolve
 #' @export
-mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
+mrgsolve_block <- function(record, init=NULL, capture=FALSE) {
   retValue <- init
   if (is.null(record)) {
     return(retValue)
@@ -119,7 +119,7 @@ mrgsolveBlock <- function(record, init=NULL, capture=FALSE) {
 #' @param model Campsis model
 #' @return ODE block
 #' @export
-mrgsolveOde <- function(model) {
+mrgsolve_ode <- function(model) {
   records <- model@model
   odeRecord <- records %>% get_by_name("ODE")
   
@@ -127,7 +127,7 @@ mrgsolveOde <- function(model) {
   if (!is.null(odeRecord)) {
     odeRecord <- odeRecord %>% campsismod::replace_all(pattern=VariablePattern("t"), replacement="SOLVERTIME")
   }
-  retValue <- mrgsolveBlock(odeRecord, init="[ODE]")
+  retValue <- mrgsolve_block(odeRecord, init="[ODE]")
   return(retValue)
 }
 
@@ -136,13 +136,13 @@ mrgsolveOde <- function(model) {
 #' @param model Campsis model
 #' @return TABLE block if at least one line in error record, character(0) otherwise
 #' @export
-mrgsolveTable <- function(model) {
+mrgsolve_table <- function(model) {
   records <- model@model
   errorRecord <- records %>% get_by_name("ERROR")
   if (is.null(errorRecord)) {
     return(character(0))
   }
-  retValue <- mrgsolveBlock(errorRecord, init="[TABLE]", capture=TRUE)
+  retValue <- mrgsolve_block(errorRecord, init="[TABLE]", capture=TRUE)
   return(retValue)
 }
 
@@ -152,9 +152,9 @@ mrgsolveTable <- function(model) {
 #' @param model Campsis model
 #' @return CAPTURE block or character(0) if no variable in outvars
 #' @export
-mrgsolveCapture <- function(outvars, model) {
+mrgsolve_capture <- function(outvars, model) {
   # Get rid of variables that are already in error block (and thus already captured in TABLE)
-  outvars <- convertOutvarsToCapture(outvars, model=model)
+  outvars <- convert_outvars_to_capture(outvars, model=model)
   
   if (is.null(outvars) || outvars %>% length()==0) {
     return(character(0))
@@ -171,7 +171,7 @@ mrgsolveCapture <- function(outvars, model) {
 #' @importFrom purrr keep map_chr
 #' @return all variables to capture
 #' @keywords internal
-convertOutvarsToCapture <- function(outvars, model) {
+convert_outvars_to_capture <- function(outvars, model) {
   # List all variables that are already exported into mrgsolve TABLE block by pmxmod
   error <- model@model %>% get_by_name("ERROR")
   list <- NULL

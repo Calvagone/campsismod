@@ -28,7 +28,7 @@ reference:
   - auto_detect_nonmem
   - read.campsis
   - read.model
-  - addSuffix
+  - add_suffix
 
 - title: "Code records"
   contents:
@@ -36,7 +36,7 @@ reference:
   - MainRecord
   - OdeRecord
   - ErrorRecord
-  - getRecordName
+  - get_record_name
   
 - title: "Statement type"
   contents:
@@ -83,7 +83,7 @@ reference:
   - InfusionRate
   - InitialCondition
   - LagTime
-  - getPrefix
+  - get_prefix
   
 - title: "Model parameters replication"
   contents:
@@ -125,14 +125,14 @@ reference:
   
 - title: "Mrgsolve export"
   contents:
-  - mrgsolveBlock
-  - mrgsolveCapture
+  - mrgsolve_block
+  - mrgsolve_capture
   - mrgsolve_compartment
-  - mrgsolveMain
-  - mrgsolveMatrix
-  - mrgsolveOde
+  - mrgsolve_main
+  - mrgsolve_matrix
+  - mrgsolve_ode
   - mrgsolve_param
-  - mrgsolveTable
+  - mrgsolve_table
   
 - title: "RxODE export"
   contents:
@@ -223,7 +223,7 @@ reference:
 - title: "Advanced use"
   contents:
   - updateCompartments
-  - isMatrixPositiveDefinite
+  - is_matrix_positive_definite
   - get_omega_block
   - get_omega_indexes
   - has_off_diagonal_omegas

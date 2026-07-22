@@ -50,20 +50,20 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
     table <- tibble::tibble(REPLICATE=seq_len(n))
   } else {
     # Sample parameters in variance-covariance matrix from a multivariate normal distribution
-    table <- sampleFromMultivariateNormalDistribution(parameters=object@parameters, n=n, settings=settings)
+    table <- sample_from_multivariate_normal_distribution(parameters=object@parameters, n=n, settings=settings)
   }
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
   if (settings@wishart) {
     omegas <- object@parameters %>% select("omega")
     if (omegas %>% length() > 0) {
-      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, settings=settings)
+      sampledOmegas <- sample_from_inverse_chi_squared_or_wishart(parameters=omegas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledOmegas, by="REPLICATE")
     }
     sigmas <- object@parameters %>% select("sigma")
     if (sigmas %>% length() > 0) {
-      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, settings=settings)
+      sampledSigmas <- sample_from_inverse_chi_squared_or_wishart(parameters=sigmas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledSigmas, by="REPLICATE")
     }
