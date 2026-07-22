@@ -428,7 +428,7 @@ setGeneric("maxIndex", function(object) {
 })
 
 #_______________________________________________________________________________
-#----                        rxode_conversion.R                             ----
+#----                           Other methods                               ----
 #_______________________________________________________________________________
 
 #' Get the OMEGA/SIGMA matrix for rxode2.
@@ -450,4 +450,27 @@ rxodeMatrix <- function(model, type) {
 setGeneric("rxodeMatrix", function(model, type) {
   lifecycle::deprecate_warn("1.4.0", "rxodeMatrix()", "rxode_matrix()")
   rxode_matrix(model = model, type = type)
+})
+
+#' Update compartments list from the persisted records.
+#' Exported especially for package \code{campsistrans}.
+#' However, this method should not be called.
+#' 
+#' `updateCompartments()` is deprecated in favor of `update_compartments()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams update_compartments
+#' @return an updated Campsis model, with an updated compartments list
+#' @export
+#' @rdname updateCompartments
+updateCompartments <- function(model) {
+  lifecycle::deprecate_warn("1.4.0", "updateCompartments()", "update_compartments()")
+  update_compartments(model = model)
+}
+
+setGeneric("updateCompartments", function(model) {
+  lifecycle::deprecate_warn("1.4.0", "updateCompartments()", "update_compartments()")
+  update_compartments(model = model)
 })
