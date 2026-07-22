@@ -282,46 +282,46 @@ setMethod("find", signature=c("statements_record", "model_statement"), definitio
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("main_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("main_record"), definition=function(x) {
   return("MAIN")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("ode_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("ode_record"), definition=function(x) {
   return("ODE")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("f_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("f_record"), definition=function(x) {
   return("F")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("lag_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("lag_record"), definition=function(x) {
   return("LAG")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("duration_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("duration_record"), definition=function(x) {
   return("DURATION")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("rate_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("rate_record"), definition=function(x) {
   return("RATE")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("init_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("init_record"), definition=function(x) {
   return("INIT")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("error_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("error_record"), definition=function(x) {
   return("ERROR")
 })
 
@@ -370,7 +370,7 @@ setMethod("show", signature=c("code_record"), definition=function(object) {
 #' @return a record delimiter line
 #' @keywords internal
 writeRecordDelimiter <- function(object) {
-  recordDelimiter <- paste0("[", object %>% getName(), "]")
+  recordDelimiter <- paste0("[", object %>% get_name(), "]")
   recordDelimiter <- recordDelimiter %>% appendComment(object=object, dest="campsis")
   return(recordDelimiter)
 }

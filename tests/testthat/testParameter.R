@@ -9,7 +9,7 @@ test_that("Working THETA parameter", {
   expect_equal(theta1@name, "CL")
   expect_equal(theta1@index, 1)
   expect_equal(theta1@fix, TRUE)
-  expect_equal(theta1 %>% getName, "THETA_CL")
+  expect_equal(theta1 %>% get_name, "THETA_CL")
 })
 
 test_that("THETA parameter, default name", {

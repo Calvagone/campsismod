@@ -29,11 +29,11 @@ Bioavailability <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("compartment_bioavailability"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("compartment_bioavailability"), definition = function(x) {
   return(paste0("BIOAVAILABILITY (", "CMT=", x@compartment, ")"))
 })
 

@@ -35,11 +35,11 @@ Equation <- function(lhs, rhs="", comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("equation"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("equation"), definition = function(x) {
   return(paste0("EQUATION (", x@lhs, ")"))
 })
 

@@ -50,10 +50,10 @@ setGeneric("add", function(object, x, ...) {
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
   if (methods::validObject(x)) {
     if (!is(x, object@type)) {
-      stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
+      stop(paste0("Element '", x %>% get_name(), "' does not extend type '", object@type, "'."))
     
     } else if(object %>% contains(x)) {
-      stop(paste0("Element '", x %>% getName(), "' is already present."))
+      stop(paste0("Element '", x %>% get_name(), "' is already present."))
     
     } else {
       if (is.null(pos)) {
@@ -113,7 +113,7 @@ setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function
     index <- object %>% index_of(x)
     object@list[[index]] <- x
   } else {
-    stop(paste("Element", x %>% getName(), "does not exist."))
+    stop(paste("Element", x %>% get_name(), "does not exist."))
   }
   return(object)
 })
@@ -153,7 +153,7 @@ setGeneric("index_of", function(object, x) {
 #' @rdname index_of
 setMethod("index_of", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   logicalVector <- object@list %>% purrr::map_lgl(.f=function(.x) {
-    retValue <- .x %>% getName() == x %>% getName()
+    retValue <- .x %>% get_name() == x %>% get_name()
     return(ifelse(is.na(retValue), FALSE, retValue))
   })
   index <- which(logicalVector)
@@ -188,7 +188,7 @@ setMethod("get_by_name", signature=c("pmx_list", "character"), definition=functi
   if (is.na(name)) {
     return(NULL)
   }
-  return(object@list %>% purrr::detect(~(!is.na(.x %>% getName()) && .x %>% getName()==name)))
+  return(object@list %>% purrr::detect(~(!is.na(.x %>% get_name()) && .x %>% get_name()==name)))
 })
 
 #_______________________________________________________________________________
@@ -248,7 +248,7 @@ setMethod("delete", signature=c("pmx_list", "pmx_element"), definition=function(
     object@list <- object@list[-index]
     return(object)
   } else {
-    stop(paste("Element", x %>% getName(), "does not exist."))
+    stop(paste("Element", x %>% get_name(), "does not exist."))
   }
 })
 
@@ -286,7 +286,7 @@ setGeneric("find", function(object, x) {
 
 #' @rdname find
 setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  return(object %>% get_by_name(x %>% getName()))
+  return(object %>% get_by_name(x %>% get_name()))
 })
 
 #_______________________________________________________________________________
@@ -309,7 +309,7 @@ setGeneric("get_names", function(object) {
 
 #' @rdname get_names
 setMethod("get_names", signature=c("pmx_list"), definition=function(object) {
-  return(object@list %>% purrr::map_chr(~.x %>% getName()))
+  return(object@list %>% purrr::map_chr(~.x %>% get_name()))
 })
 
 #_______________________________________________________________________________

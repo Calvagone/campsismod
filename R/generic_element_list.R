@@ -13,7 +13,7 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                           getName                                     ----
+#----                           get_name                                    ----
 #_______________________________________________________________________________
 
 #' Get element name.
@@ -21,11 +21,11 @@ setClass(
 #' @param x element to know the name
 #' @return the name of this element
 #' @export
-#' @rdname getName
-getName <- function(x) {
+#' @rdname get_name
+get_name <- function(x) {
   stop("No default function is provided")
 }
 
-setGeneric("getName", function(x) {
-  standardGeneric("getName")
+setGeneric("get_name", function(x) {
+  standardGeneric("get_name")
 })

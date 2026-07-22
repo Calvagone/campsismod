@@ -193,12 +193,12 @@ setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definiti
     find(parameter)
   
   if (is.null(parameter_)) {
-    stop("Parameter ", parameter %>% getName(), " not found in model")
+    stop("Parameter ", parameter %>% get_name(), " not found in model")
   }
   
   # Define variance-covariance matrix (single value)
   varcov <- matrix((value/100*abs(parameter_@value))^2, nrow=1, ncol=1)
-  name <- parameter_ %>% getName()
+  name <- parameter_ %>% get_name()
   dimnames(varcov) <- list(name, name)
   
   # Remove last value if it exists
@@ -227,7 +227,7 @@ setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definiti
 matchSingleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && !is.na(x@name)) {
-    existingParam <- object %>% get_by_name(x %>% getName())
+    existingParam <- object %>% get_by_name(x %>% get_name())
     if (existingParam %>% length() == 1) {
       x@index <- existingParam@index   # Copy index!
     }
@@ -245,7 +245,7 @@ matchSingleArrayParameter <- function(object, x) {
 matchDoubleArrayParameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
-    existingParam <- object %>% get_by_name(x %>% getName())
+    existingParam <- object %>% get_by_name(x %>% get_name())
     if (existingParam %>% length() == 1) {
       x@index <- existingParam@index   # Copy index!
       x@index2 <- existingParam@index2 # Copy index2!
@@ -329,7 +329,7 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
     
     # Retrieve the corresponding indexes in the matrix
     indexesToRemove <- varcovParams %>%
-      purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% getName()))
+      purrr::map_int(.f=~which(colnames(object@varcov) == .x %>% get_name()))
     
     # Update variance-covariance matrix
     if (length(indexesToRemove) > 0) {
@@ -404,7 +404,7 @@ varcovToJSON <- function(parameters) {
   
   parametersList <- parameters@list
   parameterNames <- parametersList %>%
-    purrr::map_chr(~.x %>% getName())
+    purrr::map_chr(~.x %>% get_name())
   
   json <- list()
   
@@ -821,7 +821,7 @@ setMethod("set_min_max", signature=c("parameters", "character", "numeric", "nume
         # Special case for covariance
         if (is(x, "double_array_parameter") && !(x %>% isDiag()) && min >= 0) {
           x@min <- -max
-          cat(sprintf("Info: min value of %s (covariance) set to -max value\n", x %>% getName()))
+          cat(sprintf("Info: min value of %s (covariance) set to -max value\n", x %>% get_name()))
         }
       }
       return(x)

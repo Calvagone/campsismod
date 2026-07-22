@@ -34,11 +34,11 @@ Ode <- function(lhs, rhs="", comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("ode"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("ode"), definition = function(x) {
   return(paste0("ODE (", x@lhs, ")"))
 })
 

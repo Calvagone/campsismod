@@ -29,11 +29,11 @@ UnknownStatement <- function(line, comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("unknown_statement"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("unknown_statement"), definition = function(x) {
   return(as.character(NA)) # unknown statement non-identifiable 
 })
 

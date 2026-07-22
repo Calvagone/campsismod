@@ -26,11 +26,11 @@ LineBreak <- function() {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("line_break"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("line_break"), definition = function(x) {
   return(as.character(NA)) # line_break non-identifiable 
 })
 

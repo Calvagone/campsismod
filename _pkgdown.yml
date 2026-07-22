@@ -110,7 +110,7 @@ reference:
   
 - title: "Generic list element"
   contents:
-  - getName
+  - get_name
 
 - title: "Generic methods"
   contents:

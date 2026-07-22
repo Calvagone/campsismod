@@ -34,12 +34,12 @@ IfStatement <- function(condition, equation, comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("if_statement"), definition = function(x) {
-  return(paste0("IF (", x@condition, ") ", x@equation %>% getName()))
+#' @rdname get_name
+setMethod("get_name", signature = c("if_statement"), definition = function(x) {
+  return(paste0("IF (", x@condition, ") ", x@equation %>% get_name()))
 })
 
 #_______________________________________________________________________________

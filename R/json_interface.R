@@ -180,8 +180,8 @@ jsonToCampsisModel <- function(object, json) {
   if (length(varcov) > 0) {
     # Find all possible parameter names and initialize the matrix
     rowNames <- varcov %>%
-      purrr::map(~c(findVarcovParameter(ref=.x$ref1, model=model) %>% getName(),
-                    findVarcovParameter(ref=.x$ref2, model=model) %>% getName())) %>%
+      purrr::map(~c(findVarcovParameter(ref=.x$ref1, model=model) %>% get_name(),
+                    findVarcovParameter(ref=.x$ref2, model=model) %>% get_name())) %>%
       purrr::flatten_chr() %>%
       unique()
     
@@ -190,8 +190,8 @@ jsonToCampsisModel <- function(object, json) {
     
     # Fill in with values
     for (entry in varcov) {
-      ref1Name <- findVarcovParameter(ref=entry$ref1, model=model) %>% getName()
-      ref2Name <- findVarcovParameter(ref=entry$ref2, model=model) %>% getName()
+      ref1Name <- findVarcovParameter(ref=entry$ref1, model=model) %>% get_name()
+      ref2Name <- findVarcovParameter(ref=entry$ref2, model=model) %>% get_name()
       matrix[ref1Name, ref2Name] <- entry$cov
       matrix[ref2Name, ref1Name] <- entry$cov
     }

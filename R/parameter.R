@@ -362,11 +362,11 @@ setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("theta"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
   } else {
@@ -374,8 +374,8 @@ setMethod("getName", signature=c("theta"), definition=function(x) {
   }
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("omega"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("OMEGA", "_", x@index, "_", x@index2))
   } else {
@@ -383,8 +383,8 @@ setMethod("getName", signature=c("omega"), definition=function(x) {
   }
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("sigma"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("SIGMA", "_", x@index, "_", x@index2))
   } else {
@@ -451,7 +451,7 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 #' @importFrom tibble tibble
 #' @rdname get_uncertainty
 setMethod("get_uncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
-  name <- object %>% getName()
+  name <- object %>% get_name()
   if (varcov %>% length() > 0) {
     standardisedParameter <- object %>% standardise(...)
     if (name %in% colnames(varcov)) {
@@ -509,7 +509,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       retValue@value <- object@value ^ 2
     
     } else if (type == "covar") {
-      stop(paste0("Type of parameter ", object %>% getName(), " can't be 'covar'"))
+      stop(paste0("Type of parameter ", object %>% get_name(), " can't be 'covar'"))
     
     } else if (type == "cv") {
       retValue@value <- log(object@value^2+1)
@@ -534,7 +534,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       omega2 <- parameters %>% get_by_index(Omega(index=object@index2, index2=object@index2)) %>% standardise()
       retValue@value <- object@value*sqrt(omega1@value)*sqrt(omega2@value)
     } else {
-      stop(paste0("Type of parameter ", object %>% getName(), " must be 'covar' or 'cor'"))
+      stop(paste0("Type of parameter ", object %>% get_name(), " must be 'covar' or 'cor'"))
     }
     retValue@type <- "covar"
   }

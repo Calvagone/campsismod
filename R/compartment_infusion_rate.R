@@ -28,11 +28,11 @@ InfusionRate <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("compartment_infusion_rate"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("compartment_infusion_rate"), definition = function(x) {
   return(paste0("RATE (", "CMT=", x@compartment, ")"))
 })
 

@@ -28,11 +28,11 @@ Comment <- function(x) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("comment"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("comment"), definition = function(x) {
   return(paste0("COMMENT (", x@comment, ")"))
 })
 

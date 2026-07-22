@@ -5,10 +5,10 @@ source(paste0("", "testUtils.R"))
 
 # options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
-test_that("Methods 'getName', 'getPrefix', 'show' and 'to_string' work as expected on initial conditions", {
+test_that("Methods 'get_name', 'getPrefix', 'show' and 'to_string' work as expected on initial conditions", {
   model <- model_suite$testing$pk$`1cpt_fo`
   init <- InitialCondition(1, "1000")
-  expect_equal(getName(init), "INIT (CMT=1)")
+  expect_equal(get_name(init), "INIT (CMT=1)")
   expect_equal(getPrefix(init), "")
   expect_equal(capture_output(show(init)), "INIT (CMT=1): 1000")
   expect_equal(to_string(init, dest="rxode2", model=model), "A_ABS(0)=1000")

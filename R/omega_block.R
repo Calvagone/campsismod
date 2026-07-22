@@ -36,11 +36,11 @@ setMethod("add", signature=c("omega_block", "double_array_parameter"), definitio
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("omega_block"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("omega_block"), definition=function(x) {
   return(paste0("Omega block ", x@block_index))
 })
 
@@ -143,7 +143,7 @@ setMethod("length", signature=c("omega_block"), definition=function(x) {
 
 getBlockLabel <- function(object) {
   omegaNames <- object@on_diag_omegas@list %>%
-    purrr::map_chr(.f=~.x %>% getName())
+    purrr::map_chr(.f=~.x %>% get_name())
   retValue <- sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / "))
   return(retValue)
 }

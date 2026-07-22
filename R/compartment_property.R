@@ -75,7 +75,7 @@ setMethod("replace_all", signature=c("compartment_property", "pattern", "charact
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment_property"), definition=function(object) {
-  cat(paste0(object %>% getName(), ": ", object@rhs))
+  cat(paste0(object %>% get_name(), ": ", object@rhs))
 })
 
 #_______________________________________________________________________________

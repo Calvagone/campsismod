@@ -130,7 +130,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
       onDiagElements <- block@on_diag_omegas
       assertthat::assert_that(!hasOffDiagonalOmegas(block))
       elem <- onDiagElements@list[[1]]
-      variable <- elem %>% getName()
+      variable <- elem %>% get_name()
       minMax <- minMaxDefault(elem) %>%
         dplyr::mutate(name=variable)
       msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse chi-squared distribution")
@@ -147,7 +147,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
 
       minMax <- params@list %>%
         purrr::map_df(~minMaxDefault(.x)) %>%
-        dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% getName()))
+        dplyr::mutate(name=params@list %>% purrr::map_chr(~.x %>% get_name()))
       
       msg <- getSamplingMessageTemplate(what=blockLabel, from="scaled inverse Wishart distribution")
       wishartCorrection <- settings@wishart_correction
@@ -357,7 +357,7 @@ getMappingMatrix <- function(parameters, type) {
         retValue[i, j] <- ""
       } else {
         retValue[i, j] <- parameter %>%
-          getName()
+          get_name()
       }
     }
   }

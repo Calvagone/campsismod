@@ -28,11 +28,11 @@ InitialCondition <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("compartment_initial_condition"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("compartment_initial_condition"), definition=function(x) {
   return(paste0("INIT (", "CMT=", x@compartment, ")"))
 })
 
@@ -59,7 +59,7 @@ setMethod("getRecordName", signature = c("compartment_initial_condition"), defin
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment_initial_condition"), definition=function(object) {
-  cat(paste0(object %>% getName(), ": ", object@rhs))
+  cat(paste0(object %>% get_name(), ": ", object@rhs))
 })
 
 #_______________________________________________________________________________

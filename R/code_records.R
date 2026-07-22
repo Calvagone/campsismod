@@ -48,7 +48,7 @@ setMethod("add", signature=c("code_records", "code_records"), definition=functio
 #' 
 appendCodeRecords <- function(records1, records2) {
   for (record in (records2)@list) {
-    baseRecord <- records1 %>% get_by_name(record %>% getName())
+    baseRecord <- records1 %>% get_by_name(record %>% get_name())
     if (baseRecord %>% length() == 0) {
       records1 <- records1 %>% add(record)
     } else {
@@ -265,7 +265,7 @@ addProperties <- function(compartments, records, name, init) {
     cmtName <- equation@lhs
     compartment <- compartments@list %>% purrr::detect(~.x %>% to_string() == cmtName)
     if (is.null(compartment)) {
-      stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% getName()))
+      stop(paste0("Compartment undefined: '", cmtName, "' in record ", record %>% get_name()))
     }
     property <- init
     property@compartment <- compartment@index
@@ -294,7 +294,7 @@ setMethod("move", signature=c("code_records", "model_statement", "pmx_position")
   statement <- object %>%
     find(x)
   if (is.null(statement)) {
-    stop(paste("Statement", x %>% getName(), "not found in model"))
+    stop(paste("Statement", x %>% get_name(), "not found in model"))
   }
   
   # Delete statement
@@ -329,7 +329,7 @@ setMethod("move", signature=c("code_records", "code_record", "pmx_position"), de
   record <- object %>%
     find(x)
   if (is.null(record)) {
-    stop(paste("Record", x %>% getName(), "not found in model"))
+    stop(paste("Record", x %>% get_name(), "not found in model"))
   }
   object <- object %>%
     move(x=record@statements, to=to, ...)
@@ -498,7 +498,7 @@ setMethod("show", signature=c("code_records"), definition=function(object) {
 
 #' @rdname sort
 setMethod("sort", signature=c("code_records"), definition=function(x, decreasing=FALSE, ...) {
-  names <- x@list %>% purrr::map_chr(~.x %>% getName())
+  names <- x@list %>% purrr::map_chr(~.x %>% get_name())
 
   # Reorder
   names <- factor(names, levels=getRecordNames(), labels=getRecordNames())

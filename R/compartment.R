@@ -33,11 +33,11 @@ Compartment <- function(index, name=NA) {
 }
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("compartment"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("compartment"), definition=function(x) {
   return(paste0("A", "_", x@index))
 })
 
