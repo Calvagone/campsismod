@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test parsing of record delimiters")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("Parsing non standard record delimiters works as expected", {
   folder <- paste0(testFolder, "custom/", "non_standard_record_delimiters/")

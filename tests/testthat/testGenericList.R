@@ -2,7 +2,7 @@ library(testthat)
 
 context("Test the generic list")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("get_by_index method works well", {
   model <- model_suite$testing$nonmem$advan4_trans4
@@ -26,6 +26,6 @@ test_that("Generic methods should throw an error when the call is incorrect", {
   expect_error(get_by_index (""), regexp=msg)
   expect_error(sort(""), regexp=msg)
   expect_error(default(""), regexp=msg)
-  expect_error(get_name(""), regexp=msg)
+  expect_error(get_name(""), regexp="No 'get_name' method defined for class 'character'")
 })
 

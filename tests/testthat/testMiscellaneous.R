@@ -1,7 +1,7 @@
 library(testthat)
 
 context("Test various methods of the campsismod package that are not tested elsewhere")
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 # options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 

@@ -2,7 +2,7 @@ library(testthat)
 
 context("Test generic method add_suffix")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("Add suffix to parameters is working as expected", {
   

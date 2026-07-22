@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test all methods from the code records class")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("Check records can be added correctly into the Campsis model", {
   

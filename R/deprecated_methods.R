@@ -341,6 +341,28 @@ setGeneric("fixOmega", function(object) {
   fix_omega(object = object)
 })
 
+#' Is diagonal.
+#' 
+#' 
+#' `isDiag()` is deprecated in favor of `is_diag()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams is_diag
+#' @return logical value
+#' @export
+#' @rdname isDiag
+isDiag <- function(object) {
+  lifecycle::deprecate_warn("1.4.0", "isDiag()", "is_diag()")
+  is_diag(object = object)
+}
+
+setGeneric("isDiag", function(object) {
+  lifecycle::deprecate_warn("1.4.0", "isDiag()", "is_diag()")
+  is_diag(object = object)
+})
+
 #' Min index.
 #' 
 #' 

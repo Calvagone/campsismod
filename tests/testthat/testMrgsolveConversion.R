@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test the conversion to mrgsolve")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("Export method works (2-cpt model, comments)", {
   regFilename = "2_cpt_model_abs_comments"

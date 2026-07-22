@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test read/write methods on Campsis model")
 
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 advanFilename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))

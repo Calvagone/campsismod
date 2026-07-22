@@ -2,7 +2,7 @@
 library(testthat)
 
 context("Test the replication of the Campsis model")
-source(paste0("", "testUtils.R"))
+source(file.path(getwd(), test_path(), "testUtils.R"))
 
 # options(campsismod.options=list(SKIP_PERFORMANCE_TESTS=TRUE))
 
