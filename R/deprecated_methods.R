@@ -387,7 +387,6 @@ setGeneric("isDiag", function(object) {
 
 #' Min index.
 #' 
-#' 
 #' `minIndex()` is deprecated in favor of `min_index()`.
 #' 
 #' @description
@@ -409,7 +408,6 @@ setGeneric("minIndex", function(object) {
 
 #' Max index.
 #' 
-#' 
 #' `maxIndex()` is deprecated in favor of `max_index()`.
 #' 
 #' @description
@@ -427,4 +425,29 @@ maxIndex <- function(object) {
 setGeneric("maxIndex", function(object) {
   lifecycle::deprecate_warn("1.4.0", "maxIndex()", "max_index()")
   max_index(object = object)
+})
+
+#_______________________________________________________________________________
+#----                        rxode_conversion.R                             ----
+#_______________________________________________________________________________
+
+#' Get the OMEGA/SIGMA matrix for rxode2.
+#' 
+#' `rxodeMatrix()` is deprecated in favor of `rxode_matrix()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams rxode_matrix
+#' @return omega/sigma named matrix
+#' @export
+#' @rdname rxodeMatrix
+rxodeMatrix <- function(model, type) {
+  lifecycle::deprecate_warn("1.4.0", "rxodeMatrix()", "rxode_matrix()")
+  rxode_matrix(model = model, type = type)
+}
+
+setGeneric("rxodeMatrix", function(model, type) {
+  lifecycle::deprecate_warn("1.4.0", "rxodeMatrix()", "rxode_matrix()")
+  rxode_matrix(model = model, type = type)
 })
