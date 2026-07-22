@@ -229,7 +229,7 @@ test_that("Replicate a model that has IOV works as expected (+ check performance
   # Check performances on exporting the OMEGA matrices
   start <- Sys.time()
   matrices <- models %>%
-    purrr::map(~rxodeMatrix(.x))
+    purrr::map(~rxode_matrix(.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
   if (!skipPerformanceTests()) {
@@ -297,7 +297,7 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   expectedBlock1@start_index <- 0L
   expectedBlock1@block_index <- 1L
   
-  expect_equal(expectedBlock1 %>% getOmegaIndexes(), c(1, 2))
+  expect_equal(expectedBlock1 %>% get_omega_indexes(), c(1, 2))
   
   # Create all blocks automatically
   blocks <- OmegaBlocks() %>% add(parameters)
@@ -310,8 +310,8 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   
   expect_true(block1 %>% length()==2)
   expect_true(block2 %>% length()==1)
-  expect_true(block1 %>% hasOffDiagonalOmegas())
-  expect_true(!block2 %>% hasOffDiagonalOmegas())
+  expect_true(block1 %>% has_off_diagonal_omegas())
+  expect_true(!block2 %>% has_off_diagonal_omegas())
   
   expect_true(block1@start_index==0)
   expect_true(block2@start_index==2)
@@ -321,9 +321,9 @@ test_that("OMEGA's are correctly converted to block of OMEGA's (unfixed omegas, 
   
   # Generic functions not called correctly
   msg <- "No default function is provided"
-  expect_error(getOmegaIndexes(""), regexp=msg)
-  expect_error(hasOffDiagonalOmegas(""), regexp=msg)
-  expect_error(shiftOmegaIndexes(""), regexp=msg)
+  expect_error(get_omega_indexes(""), regexp=msg)
+  expect_error(has_off_diagonal_omegas(""), regexp=msg)
+  expect_error(shift_omega_indexes(""), regexp=msg)
 })
 
 test_that("Method 'show' called on replication settings works as expected", {
@@ -421,10 +421,10 @@ test_that("Checking for positive definiteness works as expected", {
   
   # Omega matrix in replicate 9 of repModelB is not positive definite
   model9 <- repModelB %>% export(dest=CampsisModel(), index=9)
-  expect_false(isMatrixPositiveDefinite(rxodeMatrix(model9, type="omega")))
+  expect_false(isMatrixPositiveDefinite(rxode_matrix(model9, type="omega")))
   
   # Omega matrix in replicate 9 of repModelA is positive definite
   model9 <- repModelA %>% export(dest=CampsisModel(), index=9)
-  expect_true(isMatrixPositiveDefinite(rxodeMatrix(model9, type="omega")))
+  expect_true(isMatrixPositiveDefinite(rxode_matrix(model9, type="omega")))
 })
 

@@ -308,7 +308,7 @@ setMethod("export_to_json", signature=c("sigma"), definition=function(object, ..
 })
 
 #_______________________________________________________________________________
-#----                               isDiag                                  ----
+#----                               is_diag                                 ----
 #_______________________________________________________________________________
 
 #' Is diagonal.
@@ -316,20 +316,20 @@ setMethod("export_to_json", signature=c("sigma"), definition=function(object, ..
 #' @param object generic object
 #' @return logical value
 #' @export
-#' @rdname isDiag
-isDiag <- function(object) TRUE
+#' @rdname is_diag
+is_diag <- function(object) TRUE
 
-setGeneric("isDiag", function(object) {
-  standardGeneric("isDiag")
+setGeneric("is_diag", function(object) {
+  standardGeneric("is_diag")
 })
 
-#' @rdname isDiag
-setMethod("isDiag", signature(object = "double_array_parameter"), function(object) {
+#' @rdname is_diag
+setMethod("is_diag", signature(object = "double_array_parameter"), function(object) {
   return(object@index==object@index2)
 })
 
 #_______________________________________________________________________________
-#----                            getNONMEMName                              ----
+#----                           get_nonmem_name                             ----
 #_______________________________________________________________________________
 
 #' Get NONMEM name.
@@ -337,27 +337,27 @@ setMethod("isDiag", signature(object = "double_array_parameter"), function(objec
 #' @param object generic object
 #' @return the NONMEM name associated with this object
 #' @export
-#' @rdname getNONMEMName
-getNONMEMName <- function(object) {
+#' @rdname get_nonmem_name
+get_nonmem_name <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getNONMEMName", function(object) {
-  standardGeneric("getNONMEMName")
+setGeneric("get_nonmem_name", function(object) {
+  standardGeneric("get_nonmem_name")
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("theta"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("theta"), definition=function(object) {
   return(paste0("THETA(", object@index, ")"))
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("omega"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("omega"), definition=function(object) {
   return(paste0("OMEGA(", object@index, ",", object@index2, ")"))
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("sigma"), definition=function(object) {
   return(paste0("SIGMA(", object@index, ",", object@index2, ")"))
 })
 
@@ -393,7 +393,7 @@ setMethod("get_name", signature=c("sigma"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                         getNameInModel                                ----
+#----                         get_name_in_model                                ----
 #_______________________________________________________________________________
 
 #' Get the name of the given parameter in the Campsis model.
@@ -401,17 +401,17 @@ setMethod("get_name", signature=c("sigma"), definition=function(x) {
 #' @param x element to know the name
 #' @return the name of this parameter
 #' @export
-#' @rdname getNameInModel 
-getNameInModel <- function(x) {
+#' @rdname get_name_in_model 
+get_name_in_model <- function(x) {
   stop("No default function is provided")
 }
 
-setGeneric("getNameInModel", function(x) {
-  standardGeneric("getNameInModel")
+setGeneric("get_name_in_model", function(x) {
+  standardGeneric("get_name_in_model")
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
   } else {
@@ -419,8 +419,8 @@ setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
   }
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
       stop("You should not call this method with different indexes!")
@@ -431,8 +431,8 @@ setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
   }
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
       stop("You should not call this method with different indexes!")

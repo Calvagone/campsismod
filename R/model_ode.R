@@ -60,5 +60,5 @@ setMethod("to_string", signature=c("ode"), definition=function(object, ...) {
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

@@ -28,7 +28,7 @@ setClass(
 #' @param dest destination engine, string
 #' @return single character string followed by comment
 #' @keywords internal
-appendComment <- function(str, object, dest) {
+append_comment <- function(str, object, dest) {
   comment <- object@comment
   if (is.na(comment)) {
     return(str)

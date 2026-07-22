@@ -5,8 +5,8 @@
 #' @param extra_params extra parameter names to be added. By default, they will be assigned a zero value.
 #' @return character vector, 1 parameter per line. First one is header [PARAM].
 #' @export
-mrgsolveParam <- function(model, extra_params=character(0)) {
-  params <- rxodeParams(model)
+mrgsolve_param <- function(model, extra_params=character(0)) {
+  params <- rxode_params(model)
   retValue <- "[PARAM] @annotated"
   for (index in seq_along(params)) {
     param <- params[index]
@@ -23,7 +23,7 @@ mrgsolveParam <- function(model, extra_params=character(0)) {
 #' @param model Campsis model
 #' @return character vector, each value is a line
 #' @export
-mrgsolveCompartment <- function(model) {
+mrgsolve_compartment <- function(model) {
   compartments <- model@compartments
   retValue <- "[CMT] @annotated"
   for (compartment in compartments@list) {
@@ -39,7 +39,7 @@ mrgsolveCompartment <- function(model) {
 #' @return named matrix or character(0) if matrix is empty
 #' @export
 mrgsolveMatrix <- function(model, type="omega") {
-  matrix <- rxodeMatrix(model, type=type)
+  matrix <- rxode_matrix(model, type=type)
   if (nrow(matrix) == 0) {
     return(character(0))
   }

@@ -92,7 +92,7 @@ test_that("Export function on a replicated Campsis model should be fast", {
   # Check performances on exporting the OMEGA matrices
   start <- Sys.time()
   matrices <- models %>%
-    purrr::map(~rxodeMatrix(.x))
+    purrr::map(~rxode_matrix(.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
   
@@ -107,5 +107,5 @@ test_that("Export function on a replicated Campsis model should be fast", {
   # Check error message is given is OMEGA is missing
   model1 <- models[[1]] %>%
     delete(Omega(index=1, index2=1))
-  expect_error(rxodeMatrix(model1), regexp="At least one OMEGA is missing")
+  expect_error(rxode_matrix(model1), regexp="At least one OMEGA is missing")
 })

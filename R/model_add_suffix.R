@@ -51,15 +51,15 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
   # Add suffix to all parameters and update model code accordingly
   for (parameter in object@list) {
     name <- parameter@name
-    if (is.na(name) && is(parameter, "double_array_parameter") && !parameter %>% isDiag()) {
+    if (is.na(name) && is(parameter, "double_array_parameter") && !parameter %>% is_diag()) {
       # Do nothing except adding the parameter
       retValue <- retValue %>% add(parameter)
     } else if (is.na(name)) {
-      stop(paste0("Please give a name to ", parameter %>% getNameInModel()))
+      stop(paste0("Please give a name to ", parameter %>% get_name_in_model()))
     } else {
-      oldName <- parameter %>% getNameInModel()
+      oldName <- parameter %>% get_name_in_model()
       parameter@name <- paste0(name, separator, suffix)
-      newName <- parameter %>% getNameInModel()
+      newName <- parameter %>% get_name_in_model()
       retValue <- retValue %>% add(parameter)
       if (!is.null(model)) {
         model <- model %>% replace_all(pattern=oldName, replacement=newName)

@@ -67,5 +67,5 @@ setMethod("to_string", signature=c("if_statement"), definition=function(object, 
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

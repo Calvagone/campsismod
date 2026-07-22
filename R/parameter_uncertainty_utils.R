@@ -14,7 +14,7 @@ minMaxDefault <- function(parameter) {
   if (is(parameter, "theta")) {
     return(tibble::tibble(min=ifelse(minNA, -Inf, min), max=ifelse(maxNA, Inf, max)))
   } else if (is(parameter, "double_array_parameter")) {
-    if (parameter %>% isDiag()) {
+    if (parameter %>% is_diag()) {
       return(tibble::tibble(min=ifelse(minNA, 0, min), max=ifelse(maxNA, Inf, max)))
     } else {
       return(tibble::tibble(min=ifelse(minNA, -Inf, min), max=ifelse(maxNA, Inf, max)))
@@ -128,7 +128,7 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
     }
     if (length(block) == 1) {
       onDiagElements <- block@on_diag_omegas
-      assertthat::assert_that(!hasOffDiagonalOmegas(block))
+      assertthat::assert_that(!has_off_diagonal_omegas(block))
       elem <- onDiagElements@list[[1]]
       variable <- elem %>% get_name()
       minMax <- minMaxDefault(elem) %>%
@@ -139,9 +139,9 @@ sampleFromInverseChiSquaredOrWishart <- function(parameters, n, settings) {
     } else {
       params <- Parameters()
       params@list <- c(block@on_diag_omegas@list, block@off_diag_omegas@list)
-      mat <- rxodeMatrix(params, type=type)
+      mat <- rxode_matrix(params, type=type)
 
-      size <- params@list %>% purrr::keep(~isDiag(.x)) %>% length()
+      size <- params@list %>% purrr::keep(~is_diag(.x)) %>% length()
       mappingMat <- getMappingMatrix(parameters=params, type=type)
       allColnames <- as.vector(mappingMat)
 
@@ -343,7 +343,7 @@ getSamplingMessageTemplate <- function(what, from) {
 #' @keywords internal
 #' 
 getMappingMatrix <- function(parameters, type) {
-  size <- parameters@list %>% purrr::keep(~isDiag(.x)) %>% length()
+  size <- parameters@list %>% purrr::keep(~is_diag(.x)) %>% length()
   retValue <- matrix(rep(0, size*size), nrow=size)
   for (i in 1:size) {
     for (j in 1:size) {
@@ -457,9 +457,9 @@ checkMatrixIsPositiveDefinite <- function(table, parameters) {
         dplyr::select(-c("REPLICATE", "VALID"))
       model <- CampsisModel()
       model@parameters <- parameters
-      model <- updateParameters(model=model, row=row)
-      omegaMatrix <- rxodeMatrix(model=model, type="omega")
-      sigmaMatrix <- rxodeMatrix(model=model, type="sigma")
+      model <- update_parameters(model=model, row=row)
+      omegaMatrix <- rxode_matrix(model=model, type="omega")
+      sigmaMatrix <- rxode_matrix(model=model, type="sigma")
       omegaMatrixOK <- ifelse(length(omegaMatrix) == 0, TRUE, isMatrixPositiveDefinite(omegaMatrix))
       sigmaMatrixOK <- ifelse(length(sigmaMatrix) == 0, TRUE, isMatrixPositiveDefinite(sigmaMatrix))
       return(tibble::tibble(REPLICATE=replicate, POSITIVE_DEFINITE=omegaMatrixOK && sigmaMatrixOK))

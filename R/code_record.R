@@ -100,7 +100,7 @@ setClass(
 #' @param code code record
 #' @export
 MainRecord <- function(code=character()) {
-  return(new("main_record", statements=parseStatements(code)))
+  return(new("main_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -125,7 +125,7 @@ setClass(
 #' @return an ODE code record
 #' @export
 OdeRecord <- function(code=character()) {
-  return(new("ode_record", statements=parseStatements(code)))
+  return(new("ode_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -227,7 +227,7 @@ setClass(
 #' @return an ERROR code record
 #' @export
 ErrorRecord <- function(code=character()) {
-  return(new("error_record", statements=parseStatements(code)))
+  return(new("error_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -371,6 +371,6 @@ setMethod("show", signature=c("code_record"), definition=function(object) {
 #' @keywords internal
 writeRecordDelimiter <- function(object) {
   recordDelimiter <- paste0("[", object %>% get_name(), "]")
-  recordDelimiter <- recordDelimiter %>% appendComment(object=object, dest="campsis")
+  recordDelimiter <- recordDelimiter %>% append_comment(object=object, dest="campsis")
   return(recordDelimiter)
 }

@@ -50,9 +50,9 @@ test_that("is_empty_line is working well", {
   expect_false(is_empty_line("\tA"))
 })
 
-test_that("extractLhs and extractRhs with comment works well", {
-  expect_equal(extractLhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), "KA=THETA_KA*exp(ETA_KA) ")
-  expect_equal(extractRhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), " Comment")
+test_that("extract_lhs and extract_rhs with comment works well", {
+  expect_equal(extract_lhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), "KA=THETA_KA*exp(ETA_KA) ")
+  expect_equal(extract_rhs("KA=THETA_KA*exp(ETA_KA) # Comment", split="#"), " Comment")
 })
 
 test_that("is_if_statement works well", {

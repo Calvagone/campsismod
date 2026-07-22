@@ -109,7 +109,7 @@ extractTextBetweenBrackets <- function(x) {
 #' @param split character where to split
 #' @return right-hand side expression
 #' @export
-extractRhs <- function(x, split="=") {
+extract_rhs <- function(x, split="=") {
   assert_single_character_string(x)
   tmp <- strsplit(x=x, split=split)[[1]]
   # Remove lhs and collapse (in case of several =)
@@ -123,7 +123,7 @@ extractRhs <- function(x, split="=") {
 #' @param split character where to split
 #' @return left-hand-side expression, not trimmed
 #' @export
-extractLhs <- function(x, split="=") {
+extract_lhs <- function(x, split="=") {
   assert_single_character_string(x)
   tmp <- strsplit(x=x, split=split)[[1]]
   lhs <- tmp[1]

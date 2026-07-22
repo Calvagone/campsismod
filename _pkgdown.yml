@@ -56,11 +56,11 @@ reference:
   - Sigma
   - add_rse
   - as.data.frame
-  - getNameInModel
-  - getNONMEMName
+  - get_name_in_model
+  - get_nonmem_name
   - get_uncertainty
   - get_var_cov
-  - isDiag
+  - is_diag
   - maxIndex
   - minIndex
   - read.allparameters
@@ -127,18 +127,18 @@ reference:
   contents:
   - mrgsolveBlock
   - mrgsolveCapture
-  - mrgsolveCompartment
+  - mrgsolve_compartment
   - mrgsolveMain
   - mrgsolveMatrix
   - mrgsolveOde
-  - mrgsolveParam
+  - mrgsolve_param
   - mrgsolveTable
   
 - title: "RxODE export"
   contents:
-  - rxodeCode
-  - rxodeMatrix
-  - rxodeParams
+  - rxode_code
+  - rxode_matrix
+  - rxode_params
   
 - title: "Exported classes"
   contents:
@@ -194,8 +194,8 @@ reference:
 
 - title: "Parsing utilities"
   contents:
-  - extractLhs
-  - extractRhs
+  - extract_lhs
+  - extract_rhs
   - extractTextBetweenBrackets
   - get_record_delimiter
   - has_comment
@@ -206,8 +206,8 @@ reference:
   - is_ode
   - is_record_delimiter
   - is_strict_record_delimiter
-  - parseIfStatement
-  - parseStatements
+  - parse_if_statement
+  - parse_statements
   - trim
 
 - title: "Replace occurrences"
@@ -224,12 +224,12 @@ reference:
   contents:
   - updateCompartments
   - isMatrixPositiveDefinite
-  - getOmegaBlock
-  - getOmegaIndexes
-  - hasOffDiagonalOmegas
+  - get_omega_block
+  - get_omega_indexes
+  - has_off_diagonal_omegas
   - OmegaBlock
   - OmegaBlocks
-  - shiftOmegaIndexes
+  - shift_omega_indexes
 
 - title: "Other exported methods"
   contents:

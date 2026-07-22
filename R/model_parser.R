@@ -4,7 +4,7 @@
 #' @param code character vector containing all statements (text form)
 #' @return a list of Campsis statements
 #' 
-parseStatements <- function(code) {
+parse_statements <- function(code) {
   statements <- ModelStatements()
   
   for (index in seq_along(code)) {
@@ -12,8 +12,8 @@ parseStatements <- function(code) {
     has_comment <- has_comment(line) 
     comment <- as.character(NA)
     if (has_comment) {
-      comment <- extractRhs(line, split="#") %>% trim()
-      line_ <- extractLhs(line, split="#")
+      comment <- extract_rhs(line, split="#") %>% trim()
+      line_ <- extract_lhs(line, split="#")
     } else {
       line_ <- line
     }
@@ -26,16 +26,16 @@ parseStatements <- function(code) {
       
     } else if (is_ode(line_)) {
       lhs <- extractTextBetweenBrackets(line_)
-      rhs <- extractRhs(line_) %>% trim()
+      rhs <- extract_rhs(line_) %>% trim()
       statements <- statements %>% add(Ode(lhs, rhs, comment=comment))
     
     } else if (is_equation(line_)) {
-      lhs <- extractLhs(line_) %>% trim()
-      rhs <- extractRhs(line_) %>% trim()
+      lhs <- extract_lhs(line_) %>% trim()
+      rhs <- extract_rhs(line_) %>% trim()
       statements <- statements %>% add(Equation(lhs, rhs, comment=comment))
       
     } else if (is_if_statement(line_)) {
-      statements <- statements %>% add(parseIfStatement(line_, comment=comment))
+      statements <- statements %>% add(parse_if_statement(line_, comment=comment))
       
     } else  {
       statements <- statements %>% add(UnknownStatement(line_, comment=comment))
@@ -51,7 +51,7 @@ parseStatements <- function(code) {
 #' @param comment any comment, NA by default
 #' @return an IF statement object
 #' 
-parseIfStatement <- function(line, comment=as.character(NA)) {
+parse_if_statement <- function(line, comment=as.character(NA)) {
   # Trim input
   line <- line %>% trim()
   

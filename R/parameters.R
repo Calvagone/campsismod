@@ -107,10 +107,10 @@ appendParameters <- function(params1, params2) {
   getParameterNamesInModel <- function(parameters) {
     retValue <- parameters@list %>%
       purrr::map_chr(.f=function(parameter) {
-        if (is(parameter, "double_array_parameter") && !isDiag(parameter)) {
+        if (is(parameter, "double_array_parameter") && !is_diag(parameter)) {
           return(NA)
         } else {
-          return(parameter %>% getNameInModel())
+          return(parameter %>% get_name_in_model())
         }
       }) %>%
       purrr::discard(~is.na(.x))
@@ -375,7 +375,7 @@ toJSONParamReference <- function(param, parameters) {
     } else {
       stop("Either omega or sigma")
     }
-    if (param %>% isDiag()) {
+    if (param %>% is_diag()) {
       json$name <- param@name
     } else {
       emptyParam1@index <- param@index
@@ -795,7 +795,7 @@ setMethod("set_min_max", signature=c("parameters", "parameter", "numeric", "nume
     find(parameter)
   
   if (is.null(parameter_)) {
-    stop("Parameter ", parameter %>% getNameInModel(), " not found in model")
+    stop("Parameter ", parameter %>% get_name_in_model(), " not found in model")
   }
   
   # Replace old values
@@ -819,7 +819,7 @@ setMethod("set_min_max", signature=c("parameters", "character", "numeric", "nume
         x@max <- max
         
         # Special case for covariance
-        if (is(x, "double_array_parameter") && !(x %>% isDiag()) && min >= 0) {
+        if (is(x, "double_array_parameter") && !(x %>% is_diag()) && min >= 0) {
           x@min <- -max
           cat(sprintf("Info: min value of %s (covariance) set to -max value\n", x %>% get_name()))
         }

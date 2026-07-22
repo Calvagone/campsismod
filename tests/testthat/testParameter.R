@@ -32,22 +32,22 @@ test_that("Check incorrect length of parameter", {
 test_that("isDial method", {
   
   omega2_2 <- Omega(name="CL", index=2, index2=2, fix=TRUE, value=0.2)
-  expect_true(isDiag(omega2_2))
+  expect_true(is_diag(omega2_2))
 
   omega1_2 <- Omega(name="CL", index=1, index2=2, fix=TRUE, value=0.2)
-  expect_false(isDiag(omega1_2))
+  expect_false(is_diag(omega1_2))
 })
 
-test_that("getNONMEMName method", {
+test_that("get_nonmem_name method", {
   
   theta1 <- Theta(name="CL", index=1)
-  expect_equal(theta1 %>% getNONMEMName(), "THETA(1)")
+  expect_equal(theta1 %>% get_nonmem_name(), "THETA(1)")
   
   omega1_2 <- Omega(name="CL", index=1, index2=2)
-  expect_equal(omega1_2 %>% getNONMEMName(), "OMEGA(1,2)")
+  expect_equal(omega1_2 %>% get_nonmem_name(), "OMEGA(1,2)")
   
   sigma1_2 <- Sigma(name="CL", index=1, index2=2)
-  expect_equal(sigma1_2 %>% getNONMEMName(), "SIGMA(1,2)")
+  expect_equal(sigma1_2 %>% get_nonmem_name(), "SIGMA(1,2)")
 })
 
 test_that("OMEGA index2 can't be NA", {

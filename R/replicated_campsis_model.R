@@ -123,7 +123,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
     dplyr::filter(.data$REPLICATE==index) %>%
     dplyr::select(-c("REPLICATE"))
   
-  retValue <- updateParameters(model=object@original_model, row=row)
+  retValue <- update_parameters(model=object@original_model, row=row)
   return(retValue)
 })
 
@@ -135,7 +135,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @importFrom assertthat assert_that
 #' @keywords internal
 #' 
-updateParameters <- function(model, row) {
+update_parameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
   sampledParameterNames <- names(row)
   sampledParameterValues <- as.numeric(row)
@@ -153,7 +153,7 @@ updateParameters <- function(model, row) {
   }
   
   # Update OMEGA's according that are same
-  model <- updateOMEGAs(model)
+  model <- update_omegas(model)
   
   # Reset varcov
   model@parameters@varcov <- matrix(numeric(0), nrow=0, ncol=0)
@@ -173,7 +173,7 @@ updateParameters <- function(model, row) {
 #' @importFrom purrr map_lgl
 #' @keywords internal
 #' 
-updateOMEGAs <- function(model) {
+update_omegas <- function(model) {
   isOmega <- model@parameters@list %>%
     purrr::map_lgl(~is(.x, "omega"))
   

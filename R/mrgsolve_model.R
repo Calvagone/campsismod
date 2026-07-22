@@ -24,8 +24,8 @@ setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=fu
   return(
     new(
       "mrgsolve_model",
-      param = mrgsolveParam(object, extra_params=extra_params),
-      cmt = mrgsolveCompartment(object),
+      param = mrgsolve_param(object, extra_params=extra_params),
+      cmt = mrgsolve_compartment(object),
       main = mrgsolveMain(object),
       ode = mrgsolveOde(object),
       omega = mrgsolveMatrix(object, type="omega"),

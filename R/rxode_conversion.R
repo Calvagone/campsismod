@@ -5,7 +5,7 @@
 #' @param model Campsis model
 #' @return corresponding model code for rxode2
 #' @export
-rxodeCode <- function(model) {
+rxode_code <- function(model) {
   records <- model@model
   properties <- model@compartments@properties
   propertiesCode <- NULL
@@ -36,7 +36,7 @@ rxodeCode <- function(model) {
 #' @param model Campsis model
 #' @return named vector with THETA values
 #' @export
-rxodeParams <- function(model) {
+rxode_params <- function(model) {
   type <- "theta"
   params <- model@parameters
   if (params %>% length() == 0) {
@@ -60,7 +60,7 @@ rxodeParams <- function(model) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
       retValue[i] <- param@value
-      names[i] <- param %>% getNameInModel()
+      names[i] <- param %>% get_name_in_model()
     }
   }
   names(retValue) <- names
@@ -74,7 +74,7 @@ rxodeParams <- function(model) {
 #' @param type either omega or sigma
 #' @return omega/sigma named matrix
 #' @export
-rxodeMatrix <- function(model, type="omega") {
+rxode_matrix <- function(model, type="omega") {
   
   if (is(model, "campsis_model")) {
     subset <- model@parameters %>%
@@ -105,7 +105,7 @@ rxodeMatrix <- function(model, type="omega") {
     matrix[elem@index, elem@index2] <- elem@value
     matrix[elem@index2, elem@index] <- elem@value
     if (elem@index==elem@index2) {
-      names[elem@index] <- elem %>% getNameInModel()
+      names[elem@index] <- elem %>% get_name_in_model()
     }
   }
   

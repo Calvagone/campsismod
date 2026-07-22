@@ -364,12 +364,12 @@ addContentToRecord <- function(record, content) {
   content <- content %>% removeTrailingLineBreaks()
   
   if (is(record, "properties_record")) {
-    record@statements <- parseStatements(content)
+    record@statements <- parse_statements(content)
     # Because properties records are transient and will not be part of the final model
     # We validate here the content
     methods::validObject(record, complete=TRUE)
   } else if (is(record, "statements_record")) {
-    record@statements <- parseStatements(content)
+    record@statements <- parse_statements(content)
   } else {
     stop("Record must be either a 'properties_record' or a 'statements_record'")
   }
@@ -408,7 +408,7 @@ read.model <- function(file=NULL, text=NULL) {
       # Extract a possible comment
       comment <- as.character(NA)
       if (has_comment(line)) {
-        comment <- extractRhs(line, split="#") %>% trim()
+        comment <- extract_rhs(line, split="#") %>% trim()
       }
       
       # Create empty record and add it to list
