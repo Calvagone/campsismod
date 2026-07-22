@@ -159,7 +159,7 @@ test_that("Fix omega method is working", {
   
   # Fix OMEGA
   model_fixed <- model_not_fixed
-  model_fixed@parameters <- model_fixed@parameters %>% fixOmega()
+  model_fixed@parameters <- model_fixed@parameters %>% fix_omega()
   
   expect_equal(original_model, model_fixed)
 })
@@ -324,7 +324,7 @@ test_that("Add all method works well", {
 
 test_that("Max index on empty list works and returns an integer", {
   parameters <- Parameters()
-  index <- parameters %>% maxIndex()
+  index <- parameters %>% max_index()
   expect_true(is.integer(index))
   expect_equal(index, 0)
 })

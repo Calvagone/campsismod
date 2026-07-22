@@ -25,7 +25,7 @@ parse_statements <- function(code) {
       statements <- statements %>% add(Comment(comment))
       
     } else if (is_ode(line_)) {
-      lhs <- extractTextBetweenBrackets(line_)
+      lhs <- extract_text_between_brackets(line_)
       rhs <- extract_rhs(line_) %>% trim()
       statements <- statements %>% add(Ode(lhs, rhs, comment=comment))
     

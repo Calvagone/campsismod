@@ -285,7 +285,7 @@ setMethod("export_to_json", signature=c("campsis_model"), definition=function(ob
   json$code <- lines
   json$parameters <- export_to_json(object@parameters)@data
   if (length(object@parameters@varcov) > 0) {
-    json$varcov <- varcovToJSON(parameters=object@parameters)
+    json$varcov <- varcov_to_json(parameters=object@parameters)
   }
   return(JSONElement(json))
 })
@@ -371,7 +371,7 @@ read.campsis <- function(file) {
     parameters <- read.allparameters(folder=folder)
     model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
     model <- model %>%
-      updateCompartments()
+      update_compartments()
     
   } else if (file.exists(file)) {
     if (!endsWith(file, ".json")) {
@@ -407,7 +407,7 @@ read.pmxmod <- function(file) {
 #' @param model Campsis model
 #' @return an updated Campsis model, with an updated compartments list
 #' @export
-updateCompartments <- function(model) {
+update_compartments <- function(model) {
   if (!is(model, "campsis_model")) {
     stop("model is not a Campsis model")   
   }

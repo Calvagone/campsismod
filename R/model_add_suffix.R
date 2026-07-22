@@ -185,7 +185,7 @@ setMethod("add_suffix", signature=c("campsis_model", "character", "character"), 
   properties <- model@compartments@properties
   
   # Update compartment (properties will be lost)
-  model <- model %>% updateCompartments()
+  model <- model %>% update_compartments()
   
   # Re-assign properties
   model@compartments@properties <- properties

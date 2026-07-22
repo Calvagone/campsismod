@@ -44,17 +44,17 @@ rxode_params <- function(model) {
     names(retValue) <- character(0)
     return(retValue) # Must be named numeric, otherwise rxode2 complains
   }
-  maxIndex <- params %>% select("theta") %>% maxIndex()
+  max_index <- params %>% select("theta") %>% max_index()
   
   # Careful, as.numeric(NA) is important...
   # If values are all integers, rxode2 gives a strange error message:
   # Error in rxSolveSEXP(object, .ctl, .nms, .xtra, params, events, inits,  : 
   # when specifying 'thetaMat', 'omega', or 'sigma' the parameters cannot be a 'data.frame'/'matrix'
   
-  retValue <- rep(as.numeric(NA), maxIndex)
-  names <- rep("", maxIndex)
+  retValue <- rep(as.numeric(NA), max_index)
+  names <- rep("", max_index)
   
-  for (i in seq_len(maxIndex)) {
+  for (i in seq_len(max_index)) {
     param <- params %>% get_by_index(Theta(index=i))
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
@@ -95,10 +95,10 @@ rxode_matrix <- function(model, type="omega") {
     standardise()
   
   # Retrieve max index
-  maxIndex <- subset %>%
-    maxIndex()
-  matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
-  names <- rep("", maxIndex)
+  max_index <- subset %>%
+    max_index()
+  matrix <- matrix(0L, nrow=max_index, ncol=max_index)
+  names <- rep("", max_index)
   
   # Fill in matrix
   for (elem in subset@list) {

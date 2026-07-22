@@ -315,3 +315,72 @@ setGeneric("addSuffix", function(object, suffix, separator, ...) {
   lifecycle::deprecate_warn("1.4.0", "addSuffix()", "add_suffix()")
   add_suffix(object = object, suffix = suffix, separator = separator, ...)
 })
+
+#_______________________________________________________________________________
+#----                           parameters.R                                ----
+#_______________________________________________________________________________
+
+#' Fix omega matrix for SAME OMEGA parameters that have NA values due to imperfections in Pharmpy import.
+#' 
+#' `fixOmega()` is deprecated in favor of `fix_omega()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams fix_omega
+#' @return the parameter that matches
+#' @export
+#' @rdname fixOmega
+fixOmega <- function(object) {
+  lifecycle::deprecate_warn("1.4.0", "fixOmega()", "fix_omega()")
+  fix_omega(object = object)
+}
+
+setGeneric("fixOmega", function(object) {
+  lifecycle::deprecate_warn("1.4.0", "fixOmega()", "fix_omega()")
+  fix_omega(object = object)
+})
+
+#' Min index.
+#' 
+#' 
+#' `minIndex()` is deprecated in favor of `min_index()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams min_index
+#' @return min index
+#' @export
+#' @rdname minIndex
+minIndex <- function(object) {
+  lifecycle::deprecate_warn("1.4.0", "minIndex()", "min_index()")
+  min_index(object = object)
+}
+
+setGeneric("minIndex", function(object) {
+  lifecycle::deprecate_warn("1.4.0", "minIndex()", "min_index()")
+  min_index(object = object)
+})
+
+#' Max index.
+#' 
+#' 
+#' `maxIndex()` is deprecated in favor of `max_index()`.
+#' 
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' @inheritParams max_index
+#' @return max index
+#' @export
+#' @rdname maxIndex
+maxIndex <- function(object) {
+  lifecycle::deprecate_warn("1.4.0", "maxIndex()", "max_index()")
+  max_index(object = object)
+}
+
+setGeneric("maxIndex", function(object) {
+  lifecycle::deprecate_warn("1.4.0", "maxIndex()", "max_index()")
+  max_index(object = object)
+})

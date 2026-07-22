@@ -94,7 +94,7 @@ is_if_statement <- function(x) {
 #' @param x character value
 #' @return text between brackets (trimmed)
 #' @export
-extractTextBetweenBrackets <- function(x) {
+extract_text_between_brackets <- function(x) {
   assert_single_character_string(x)
   retValue <- gsub("[\\(\\)]", "", regmatches(x, gregexpr("\\(.*?\\)", x))[[1]])
   if (length(retValue) == 0) {

@@ -169,7 +169,7 @@ json_to_campsis_model <- function(object, json) {
   
   # Update compartments
   model <- model %>%
-    updateCompartments()
+    update_compartments()
   
   # Sort model parameters
   model <- model %>%

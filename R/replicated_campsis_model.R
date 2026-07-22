@@ -109,13 +109,13 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
   }
   
   # Get the index of the last replicate
-  maxIndex <- object@replicated_parameters %>%
+  max_index <- object@replicated_parameters %>%
     dplyr::pull("REPLICATE") %>%
     max()
   
   # Check the user-given index is in range
-  if (index < 1 || index > maxIndex) {
-    stop(sprintf("Index must be in the range [1, %i]", maxIndex))
+  if (index < 1 || index > max_index) {
+    stop(sprintf("Index must be in the range [1, %i]", max_index))
   }
   
   # Find row

@@ -14,9 +14,9 @@ test_that("is_ode method is working well", {
   expect_true(is_ode("d/dt (A_OUTPUT) = K*A_CENTRAL"))
 })
 
-test_that("extractTextBetweenBrackets method is working well", {
-  expect_equal(extractTextBetweenBrackets("d/dt(A_DEPOT)=-KA*A_DEPOT"), "A_DEPOT")
-  expect_error(extractTextBetweenBrackets(c("d/dt(A_DEPOT)=-KA*A_DEPOT", "X=1")))
+test_that("extract_text_between_brackets method is working well", {
+  expect_equal(extract_text_between_brackets("d/dt(A_DEPOT)=-KA*A_DEPOT"), "A_DEPOT")
+  expect_error(extract_text_between_brackets(c("d/dt(A_DEPOT)=-KA*A_DEPOT", "X=1")))
 })
 
 test_that("is_equation is working well", {

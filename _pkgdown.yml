@@ -61,14 +61,14 @@ reference:
   - get_uncertainty
   - get_var_cov
   - is_diag
-  - maxIndex
-  - minIndex
+  - max_index
+  - min_index
   - read.allparameters
   - read.parameters
   - read.varcov
   - set_min_max
-  - writeParameters
-  - writeVarcov
+  - write_parameters
+  - write_varcov
   
 - title: "Compartments"
   contents:
@@ -116,7 +116,7 @@ reference:
   contents:
   - export
   - disable
-  - fixOmega
+  - fix_omega
   - read
   - select
   - standardise
@@ -196,7 +196,7 @@ reference:
   contents:
   - extract_lhs
   - extract_rhs
-  - extractTextBetweenBrackets
+  - extract_text_between_brackets
   - get_record_delimiter
   - has_comment
   - is_comment
@@ -222,7 +222,7 @@ reference:
   
 - title: "Advanced use"
   contents:
-  - updateCompartments
+  - update_compartments
   - is_matrix_positive_definite
   - get_omega_block
   - get_omega_indexes

@@ -8,15 +8,15 @@ validateParametersByType <- function(object, type, emptyParameter) {
   if (params %>% length() == 0) {
     return(character())
   }
-  maxIndex <- params %>% maxIndex()
-  minIndex <- params %>% minIndex()
-  if (is.na(minIndex)) {
+  max_index <- params %>% max_index()
+  min_index <- params %>% min_index()
+  if (is.na(min_index)) {
     return(paste0("At least one ", type %>% toupper(), " index is NA"))
   }
-  if (minIndex != 1) {
+  if (min_index != 1) {
     return(paste0("First ", type %>% toupper(), " index is different than 1"))
   }
-  for (i in seq_len(maxIndex)) {
+  for (i in seq_len(max_index)) {
     search <- emptyParameter
     if (is(emptyParameter, "double_array_parameter")) {
       search@index <- i
@@ -73,8 +73,8 @@ Parameters <- function() {
 #' @rdname add
 setMethod("add", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
   if (is.na(x@index)) {
-    maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
-    x@index <- as.integer(maxIndex + 1)
+    max_index <- object %>% select(as.character(class(x))) %>% max_index()
+    x@index <- as.integer(max_index + 1)
   }
   return(methods::callNextMethod(object, x))
 })
@@ -82,16 +82,16 @@ setMethod("add", signature=c("parameters", "single_array_parameter"), definition
 #' @rdname add
 setMethod("add", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
   if (is.na(x@index) && is.na(x@index2)) {
-    maxIndex <- object %>% select(as.character(class(x))) %>% maxIndex()
-    x@index <- as.integer(maxIndex + 1)
-    x@index2 <- as.integer(maxIndex + 1)
+    max_index <- object %>% select(as.character(class(x))) %>% max_index()
+    x@index <- as.integer(max_index + 1)
+    x@index2 <- as.integer(max_index + 1)
   }
   return(methods::callNextMethod(object, x))
 })
 
 #' @rdname add
 setMethod("add", signature=c("parameters", "parameters"), definition=function(object, x) {
-  return(object %>% appendParameters(x))
+  return(object %>% append_parameters(x))
 })
 
 #' Append parameters.
@@ -103,8 +103,8 @@ setMethod("add", signature=c("parameters", "parameters"), definition=function(ob
 #' @importFrom assertthat are_equal
 #' @keywords internal
 #' 
-appendParameters <- function(params1, params2) {
-  getParameterNamesInModel <- function(parameters) {
+append_parameters <- function(params1, params2) {
+  get_parameter_names_in_model <- function(parameters) {
     retValue <- parameters@list %>%
       purrr::map_chr(.f=function(parameter) {
         if (is(parameter, "double_array_parameter") && !is_diag(parameter)) {
@@ -116,17 +116,17 @@ appendParameters <- function(params1, params2) {
       purrr::discard(~is.na(.x))
     return(retValue)
   }
-  paramNames1 <- getParameterNamesInModel(params1)
-  paramNames2 <- getParameterNamesInModel(params2)
+  paramNames1 <- get_parameter_names_in_model(params1)
+  paramNames2 <- get_parameter_names_in_model(params2)
   
-  checkCollisionOnParams <- paramNames1 %in% paramNames2
-  if (any(checkCollisionOnParams)) {
-    stop(paste0("Model can't be appended because of duplicate parameter name(s): ", paste0(paramNames1[checkCollisionOnParams], collapse=", ")))
+  check_collision_on_params <- paramNames1 %in% paramNames2
+  if (any(check_collision_on_params)) {
+    stop(paste0("Model can't be appended because of duplicate parameter name(s): ", paste0(paramNames1[check_collision_on_params], collapse=", ")))
   }
   
-  thetaMax <- params1 %>% select("theta") %>% maxIndex()
-  omegaMax <- params1 %>% select("omega") %>% maxIndex()
-  sigmaMax <- params1 %>% select("sigma") %>% maxIndex()
+  thetaMax <- params1 %>% select("theta") %>% max_index()
+  omegaMax <- params1 %>% select("omega") %>% max_index()
+  sigmaMax <- params1 %>% select("sigma") %>% max_index()
 
   for (theta in (params2 %>% select("theta"))@list) {
     theta@index <- theta@index + thetaMax
@@ -146,12 +146,12 @@ appendParameters <- function(params1, params2) {
   # Merge variance-covariance matrices
   varcov1 <- params1@varcov
   varcov2 <- params2@varcov
-  params1@varcov <- appendVarcov(varcov1, varcov2)
+  params1@varcov <- append_varcov(varcov1, varcov2)
 
   return(params1 %>% sort())
 }
 
-appendVarcov <- function(varcov1, varcov2) {
+append_varcov <- function(varcov1, varcov2) {
   if (length(varcov1) == 0 && length(varcov2) > 0) {
     return(varcov2)
   
@@ -208,7 +208,7 @@ setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definiti
   }
   
   # Update variance-covariance matrix
-  object@varcov <- appendVarcov(object@varcov, varcov)
+  object@varcov <- append_varcov(object@varcov, varcov)
   
   return(object)
 })
@@ -224,7 +224,7 @@ setMethod("add_rse", signature=c("parameters", "parameter", "numeric"), definiti
 #' @param x single array parameter to match
 #' @return the same parameter is no match was found or the same parameter with updated index if a match was found
 #' @keywords internal
-matchSingleArrayParameter <- function(object, x) {
+match_single_array_parameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && !is.na(x@name)) {
     existingParam <- object %>% get_by_name(x %>% get_name())
@@ -242,7 +242,7 @@ matchSingleArrayParameter <- function(object, x) {
 #' @param x double array parameter to match
 #' @return the same parameter is no match was found or the same parameter with updated indexes if a match was found
 #' @keywords internal
-matchDoubleArrayParameter <- function(object, x) {
+match_double_array_parameter <- function(object, x) {
   # If index is NA, index will be the index of the replaced parameter
   if (is.na(x@index) && is.na(x@index2) && !is.na(x@name)) {
     existingParam <- object %>% get_by_name(x %>% get_name())
@@ -256,13 +256,13 @@ matchDoubleArrayParameter <- function(object, x) {
 
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
-  x <- matchSingleArrayParameter(object, x)
+  x <- match_single_array_parameter(object, x)
   return(methods::callNextMethod(object, x))
 })
 
 #' @rdname delete
 setMethod("delete", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
-  x <- matchDoubleArrayParameter(object, x)
+  x <- match_double_array_parameter(object, x)
   return(methods::callNextMethod(object, x))
 })
 
@@ -344,7 +344,7 @@ setMethod("disable", signature=c("parameters", "character"), definition=function
 #----                          export_to_json                               ----
 #_______________________________________________________________________________
 
-omegaSigmaJsonIndexFix <- function(json, parameters, type) {
+omega_sigma_json_index_fix <- function(json, parameters, type) {
   index <- json$index
   index2 <- json$index2
   if (index != index2) {
@@ -358,7 +358,7 @@ omegaSigmaJsonIndexFix <- function(json, parameters, type) {
   return(json)
 }
 
-toJSONParamReference <- function(param, parameters) {
+to_json_param_reference <- function(param, parameters) {
   json <- list()
   if (is(param, "theta")) {
     json$type <- "theta_ref"
@@ -393,7 +393,7 @@ toJSONParamReference <- function(param, parameters) {
   return(json)
 }
 
-varcovToJSON <- function(parameters) {
+varcov_to_json <- function(parameters) {
   varcov <- parameters@varcov
   assertthat::assert_that(nrow(varcov)==ncol(varcov))
   
@@ -429,8 +429,8 @@ varcovToJSON <- function(parameters) {
       columnParam <- parametersList[[colParamIndex]]
       varcovEntry <- list()
       varcovEntry$type <- "varcov_entry"
-      varcovEntry$ref1 <- toJSONParamReference(param=rowParam, parameters=parameters)
-      varcovEntry$ref2 <- toJSONParamReference(param=columnParam, parameters=parameters)
+      varcovEntry$ref1 <- to_json_param_reference(param=rowParam, parameters=parameters)
+      varcovEntry$ref2 <- to_json_param_reference(param=columnParam, parameters=parameters)
       varcovEntry$cov <- covValue
       json[[length(json) + 1]] <- varcovEntry
     }
@@ -449,7 +449,7 @@ setMethod("export_to_json", signature=c("parameters"), definition=function(objec
         if (pJson$type=="theta") {
           pJson$index <- NULL
         } else if (pJson$type=="omega" || pJson$type=="sigma") {
-          pJson <- omegaSigmaJsonIndexFix(json=pJson, parameters=object, type=pJson$type)
+          pJson <- omega_sigma_json_index_fix(json=pJson, parameters=object, type=pJson$type)
         } else {
           print(pJson$type)
           stop("Should never occur")
@@ -461,7 +461,7 @@ setMethod("export_to_json", signature=c("parameters"), definition=function(objec
 })
 
 #_______________________________________________________________________________
-#----                             fixOmega                                  ----
+#----                             fix_omega                                  ----
 #_______________________________________________________________________________
 
 #' Fix omega matrix for SAME OMEGA parameters that have NA values due to imperfections in Pharmpy import.
@@ -469,17 +469,17 @@ setMethod("export_to_json", signature=c("parameters"), definition=function(objec
 #' @param object generic object
 #' @return the parameter that matches
 #' @export
-#' @rdname fixOmega
-fixOmega <- function(object) {
+#' @rdname fix_omega
+fix_omega <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("fixOmega", function(object) {
-  standardGeneric("fixOmega")
+setGeneric("fix_omega", function(object) {
+  standardGeneric("fix_omega")
 })
 
-#' @rdname fixOmega
-setMethod("fixOmega", signature=c("parameters"), definition=function(object) {
+#' @rdname fix_omega
+setMethod("fix_omega", signature=c("parameters"), definition=function(object) {
   
   # First order parameters
   object <- object %>% sort()
@@ -583,7 +583,7 @@ setMethod("get_var_cov", signature=c("parameters"), definition=function(object) 
 })
 
 #_______________________________________________________________________________
-#----                                minIndex                               ----
+#----                               min_index                               ----
 #_______________________________________________________________________________
 
 #' Min index.
@@ -591,17 +591,17 @@ setMethod("get_var_cov", signature=c("parameters"), definition=function(object) 
 #' @param object generic object
 #' @return min index
 #' @export
-#' @rdname minIndex
-minIndex <- function(object) {
+#' @rdname min_index
+min_index <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("minIndex", function(object) {
-  standardGeneric("minIndex")
+setGeneric("min_index", function(object) {
+  standardGeneric("min_index")
 })
 
-#' @rdname minIndex
-setMethod("minIndex", signature=c("parameters"), definition=function(object) {
+#' @rdname min_index
+setMethod("min_index", signature=c("parameters"), definition=function(object) {
   if (object %>% length() == 0) {
     return(0)
   }
@@ -615,7 +615,7 @@ setMethod("minIndex", signature=c("parameters"), definition=function(object) {
 })
 
 #_______________________________________________________________________________
-#----                                maxIndex                               ----
+#----                                max_index                               ----
 #_______________________________________________________________________________
 
 #' Max index.
@@ -623,17 +623,17 @@ setMethod("minIndex", signature=c("parameters"), definition=function(object) {
 #' @param object generic object
 #' @return max index
 #' @export
-#' @rdname maxIndex
-maxIndex <- function(object) {
+#' @rdname max_index
+max_index <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("maxIndex", function(object) {
-  standardGeneric("maxIndex")
+setGeneric("max_index", function(object) {
+  standardGeneric("max_index")
 })
 
-#' @rdname maxIndex
-setMethod("maxIndex", signature=c("parameters"), definition=function(object) {
+#' @rdname max_index
+setMethod("max_index", signature=c("parameters"), definition=function(object) {
   if (object %>% length() == 0) {
     return(as.integer(0))
   }
@@ -759,13 +759,13 @@ read.allparameters <- function(folder) {
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "single_array_parameter"), definition=function(object, x) {
-  x <- matchSingleArrayParameter(object, x)
+  x <- match_single_array_parameter(object, x)
   return(methods::callNextMethod(object, x))
 })
 
 #' @rdname replace
 setMethod("replace", signature=c("parameters", "double_array_parameter"), definition=function(object, x) {
-  x <- matchDoubleArrayParameter(object, x)
+  x <- match_double_array_parameter(object, x)
   return(methods::callNextMethod(object, x))
 })
 
@@ -913,7 +913,7 @@ setMethod("standardise", signature=c("parameters"), definition=function(object, 
 #' @return TRUE if success
 #' @importFrom dplyr any_of select where 
 #' @importFrom utils write.csv
-writeParameters <- function(object, file, ...) {
+write_parameters <- function(object, file, ...) {
   df <- purrr::map_df(object@list, .f=as.data.frame, row.names=character(), optional=FALSE)
   
   # Get rid of specific columns if all NA
@@ -935,7 +935,7 @@ writeParameters <- function(object, file, ...) {
 #' @param file filename
 #' @return TRUE if success
 #' @importFrom utils write.csv
-writeVarcov <- function(object, file) {
+write_varcov <- function(object, file) {
   utils::write.csv(object, file=file)
   return(TRUE)
 }
@@ -947,14 +947,14 @@ setMethod("write", signature=c("parameters", "character"), definition=function(o
   sigma <- object %>% select("sigma")
   varcov <- object@varcov
   
-  theta %>% writeParameters(file=file.path(file, "theta.csv"),
+  theta %>% write_parameters(file=file.path(file, "theta.csv"),
                   defaultDf=data.frame(name=character(), index=integer(), value=numeric(), fix=logical()))
-  omega %>% writeParameters(file=file.path(file, "omega.csv"),
+  omega %>% write_parameters(file=file.path(file, "omega.csv"),
                   defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
-  sigma %>% writeParameters(file=file.path(file, "sigma.csv"),
+  sigma %>% write_parameters(file=file.path(file, "sigma.csv"),
                   defaultDf=data.frame(name=character(), index=integer(), index2=integer(), value=numeric(), fix=logical(), type=character()))
   
   if (length(varcov) > 0) {
-    varcov %>% writeVarcov(file=file.path(file, "varcov.csv"))
+    varcov %>% write_varcov(file=file.path(file, "varcov.csv"))
   }
 })
