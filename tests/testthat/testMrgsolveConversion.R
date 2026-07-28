@@ -24,7 +24,7 @@ test_that("Export method works (2-cpt model, comments)", {
   model <- model %>% add(InitialCondition(compartment=2, rhs="50"))
   
   mrgmod <- model %>% export(dest="mrgsolve")
-  mrgsolveNonRegTest(mrgmod, regFilename)
+  mrgsolve_non_reg_test(mrgmod, regFilename)
 })
 
 test_that("Export method works (2-cpt model, if-statements)", {
@@ -37,7 +37,7 @@ test_that("Export method works (2-cpt model, if-statements)", {
   model <- model %>% add(IfStatement("OCC==2", Equation("KA", "THETA_KA*0.5*exp(ETA_KA)")))
   model <- model %>% add(IfStatement("OCC==3", Equation("KA", "THETA_KA*0.1*exp(ETA_KA)")))
   mrgmod <- model %>% export(dest="mrgsolve")
-  mrgsolveNonRegTest(mrgmod, regFilename)
+  mrgsolve_non_reg_test(mrgmod, regFilename)
 })
 
 test_that("No table block exported if empty error block", {

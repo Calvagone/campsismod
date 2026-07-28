@@ -41,7 +41,7 @@ getUncertainty <- function(object, ...) {
   get_uncertainty(object = object, ...)
 }
 
-setGeneric("getUncertainty", function(object, name) {
+setGeneric("getUncertainty", function(object, ...) {
   lifecycle::deprecate_warn("1.4.0", "getUncertainty()", "get_uncertainty()")
   get_uncertainty(object = object, ...)
 })

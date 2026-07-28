@@ -8,6 +8,7 @@
 %   R/omega_block.R
 \name{get_name}
 \alias{get_name}
+\alias{get_name,ANY-method}
 \alias{get_name,unknown_statement-method}
 \alias{get_name,comment-method}
 \alias{get_name,line_break-method}
@@ -35,6 +36,8 @@
 \title{Get element name.}
 \usage{
 get_name(x)
+
+\S4method{get_name}{ANY}(x)
 
 \S4method{get_name}{unknown_statement}(x)
 

@@ -7,7 +7,7 @@ source(file.path(getwd(), test_path(), "testUtils.R"))
 
 test_that("Write/Read THETA's", {
   
-  file <- paste0(testFolder, "write/parameters/")
+  file <- paste0(TEST_FOLDER, "write/parameters/")
   
   # Read THETA's
   theta1 <- Theta(name="CL", index=1, value=5, fix=TRUE)
@@ -128,7 +128,7 @@ test_that("Disable method (VARCOV_OMEGA & VARCOV_SIGMA)", {
 })
 
 test_that("Disable method (IOV)", {
-  model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  model <- read.campsis(paste0(TEST_FOLDER, "custom/", "model1_omega_fixed"))
   model <- model %>% disable("IOV")
   
   omega4 <- model@parameters %>% get_by_index(Omega(index=4, index2=4))
@@ -144,7 +144,7 @@ test_that("Disable method (IOV)", {
 test_that("Fix omega method is working", {
   
   # 'Unfix' OMEGA matrix
-  original_model <- read.campsis(paste0(testFolder, "custom/", "model1_omega_fixed"))
+  original_model <- read.campsis(paste0(TEST_FOLDER, "custom/", "model1_omega_fixed"))
   list <- original_model@parameters@list %>% purrr::map(.f=function(x) {
     if (is(x, "omega")) {
       if(isTRUE(x@same)) {
@@ -166,7 +166,7 @@ test_that("Fix omega method is working", {
 
 test_that("Name column is optional", {
   
-  model <- read.campsis(paste0(testFolder, "custom/", "advan1_trans1_no_name"))
+  model <- read.campsis(paste0(TEST_FOLDER, "custom/", "advan1_trans1_no_name"))
   names <- (model@parameters %>% select("theta"))@list %>% purrr::map_chr(.f=~.x@name)
   expect_true(all(is.na(names)))
 })
@@ -333,7 +333,7 @@ test_that("Parameters encoded with locale 'French' (semi-colon used as delimiter
   
   # Model with parameters that were saved into CSV files on laptop with locale French
   # This model correspond to advan1_trans1
-  model <- read.campsis(paste0(testFolder, "custom/", "csv_locale_french"))
+  model <- read.campsis(paste0(TEST_FOLDER, "custom/", "csv_locale_french"))
 
   # Let's compare it with original model from model library
   expect_equal(model, model_suite$testing$nonmem$advan1_trans1)

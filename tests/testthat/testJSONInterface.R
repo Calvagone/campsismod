@@ -2,12 +2,12 @@ library(testthat)
 
 context("Test the JSON interface")
 
-testFolder <-  file.path(getwd(), test_path())
+TEST_FOLDER <-  file.path(getwd(), test_path())
 
 test_that("Import '1-cpt fo' Campsis model in JSON format", {
   
   # Import the 1-cpt PK model from JSON
-  model <- CampsisModel(json=file.path(testFolder, "json_examples", "1cpt_fo_model.json"))
+  model <- CampsisModel(json=file.path(TEST_FOLDER, "json_examples", "1cpt_fo_model.json"))
   expect_equal(model_suite$pk$`1cpt_fo`, model)
   
   # Export to JSON and re-import
@@ -22,7 +22,7 @@ test_that("Import '1-cpt fo' Campsis model in JSON format", {
   
   # Import the 1-cpt PK model with a correlation between CL and VC from JSON
   model <- load_from_json(CampsisModel(),
-                        file.path(testFolder, "json_examples", "1cpt_fo_model_cl_vc_cor.json"))
+                        file.path(TEST_FOLDER, "json_examples", "1cpt_fo_model_cl_vc_cor.json"))
   expectedModel <- model_suite$pk$`1cpt_fo` %>%
     add(Omega(name="CL_VC", index=3, index2=2, value=0.75, type="cor")) %>%
     campsismod::sort()

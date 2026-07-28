@@ -4,10 +4,12 @@
 \alias{getUncertainty}
 \title{Get uncertainty on the parameters.}
 \usage{
-getUncertainty(object, name)
+getUncertainty(object, ...)
 }
 \arguments{
 \item{object}{generic object}
+
+\item{...}{extra arguments}
 }
 \value{
 data frame with standard error (se) and relative standard error (rse%) columns

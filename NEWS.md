@@ -1,5 +1,6 @@
 # campsismod 1.4.0
 * Migrate campsismod to snake_case #122
+* Update pkgdown documentation #123
 
 # campsismod 1.3.2
 * Update model suite #120

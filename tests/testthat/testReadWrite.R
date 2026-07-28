@@ -10,7 +10,7 @@ advanFilename <- function(advan, trans, ext=".txt") {
 }
 
 writePath <- function(modelName) {
-  return(paste0(testFolder, "write/models/", modelName))
+  return(paste0(TEST_FOLDER, "write/models/", modelName))
 }
 
 test_that("Write/Read ADVAN1 TRANS1", {

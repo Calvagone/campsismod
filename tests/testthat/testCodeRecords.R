@@ -29,10 +29,10 @@ test_that("Write/Read methods", {
   
   # Write model
   # Warning is well provided: model not provided, compartment characteristics will be lost
-  expect_warning(model1 %>% write(file=paste0(testFolder, "write/records/records1.mod")))
+  expect_warning(model1 %>% write(file=paste0(TEST_FOLDER, "write/records/records1.mod")))
   
   # Read model
-  model2 <- read.model(file=paste0(testFolder, "write/records/records1.mod"))
+  model2 <- read.model(file=paste0(TEST_FOLDER, "write/records/records1.mod"))
   
   expect_equal(model1, model2)
 })

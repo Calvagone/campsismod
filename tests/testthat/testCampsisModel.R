@@ -132,7 +132,7 @@ test_that("Add effect compartment model to PK model using add method", {
   
   pkpd <- pk %>% add(pd)
   
-  campsisNonRegTest(pkpd, regFilename)
+  campsis_non_reg_test(pkpd, regFilename)
 })
 
 test_that("Valid object method works depending on complete argument", {

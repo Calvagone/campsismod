@@ -84,7 +84,7 @@ test_that("Export function on a replicated Campsis model should be fast", {
     purrr::map(~repModel %>% export(dest=CampsisModel(), index=.x))
   end <- Sys.time()
   duration <- as.numeric(end - start)
-  if (!skipPerformanceTests()) {
+  if (!skip_performance_tests()) {
     expect_true(duration < 30) # 30 seconds (about 6 seconds on my machine)
   }
   
@@ -96,7 +96,7 @@ test_that("Export function on a replicated Campsis model should be fast", {
   end <- Sys.time()
   duration <- as.numeric(end - start)
   
-  if (!skipPerformanceTests()) {
+  if (!skip_performance_tests()) {
     expect_true(duration < 15) # (about 3 seconds on my machine)
   }
   

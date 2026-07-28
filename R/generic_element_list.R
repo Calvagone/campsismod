@@ -30,6 +30,7 @@ setGeneric("get_name", function(x) {
   standardGeneric("get_name")
 })
 
+#' @rdname get_name
 setMethod("get_name", signature(x = "ANY"), function(x) {
   # Check if a explicit, non-ANY method exists for 'getName'
   if (isGeneric("getName")) {

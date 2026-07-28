@@ -25,7 +25,7 @@ test_that("Export method works (2-cpt model, comments)", {
   
   # Code comparison
   rxmod <- model %>% export(dest="rxode2")
-  rxodeNonRegTest(rxmod, regFilename)
+  rxode_non_reg_test(rxmod, regFilename)
   
   # Theta vector comparison
   expect_equal(c(THETA_KA=1, THETA_CL=5, THETA_V2=80, THETA_V3=20, THETA_Q=4), rxmod@theta)
@@ -55,9 +55,9 @@ test_that("Export method works (2-cpt model, if-statements)", {
   
   # Code comparison
   rxmod <- model %>% export(dest="rxode2")
-  rxodeNonRegTest(rxmod, regFilename)
+  rxode_non_reg_test(rxmod, regFilename)
   
   # RxODE still accepted temporarily
   rxmod <- model %>% export(dest="RxODE")
-  rxodeNonRegTest(rxmod, regFilename)
+  rxode_non_reg_test(rxmod, regFilename)
 })

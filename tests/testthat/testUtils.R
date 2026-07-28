@@ -2,74 +2,74 @@
 # setwd("C:/prj/campsismod/")
 # roxygen2::roxygenise()
 # setwd("C:/prj/campsismod/tests/")
-# testFolder <<- "C:/prj/campsismod/tests/testthat/"
+# TEST_FOLDER <<- "C:/prj/campsismod/tests/testthat/"
 
-testFolder <- ""
-overwriteNonRegressionFiles <- FALSE
+TEST_FOLDER <- ""
+OVERWRITE_NON_REG_FILES <- FALSE
 
-toFile <- function(code, path) {
+to_file <- function(code, path) {
   fileConn <- file(path)
   writeLines(code, fileConn)
   close(fileConn)
 }
 
-campsisNonRegPath <- function(regFilename) {
-  return(paste0(testFolder, "non_regression/campsis/", regFilename))
+campsis_non_reg_path <- function(regFilename) {
+  return(paste0(TEST_FOLDER, "non_regression/campsis/", regFilename))
 }
 
-mrgsolveNonRegPath <- function(regFilename) {
-  return(paste0(testFolder, "non_regression/mrgsolve/", regFilename, ".txt"))
+mrgsolve_non_reg_path <- function(regFilename) {
+  return(paste0(TEST_FOLDER, "non_regression/mrgsolve/", regFilename, ".txt"))
 }
 
-rxodeNonRegPath <- function(regFilename) {
-  return(paste0(testFolder, "non_regression/rxode/", regFilename, ".txt"))
+rxode_non_reg_path <- function(regFilename) {
+  return(paste0(TEST_FOLDER, "non_regression/rxode/", regFilename, ".txt"))
 }
 
-campsisNonRegTest <- function(model, regFilename) {
-  if (overwriteNonRegressionFiles) {
-    model %>% write(file=campsisNonRegPath(regFilename))
+campsis_non_reg_test <- function(model, regFilename) {
+  if (OVERWRITE_NON_REG_FILES) {
+    model %>% write(file=campsis_non_reg_path(regFilename))
   }
-  expectedModel <- read.campsis(file=campsisNonRegPath(regFilename))
+  expectedModel <- read.campsis(file=campsis_non_reg_path(regFilename))
   expect_equal(model, expectedModel)
 }
 
-mrgsolveNonRegTest <- function(mrgmod, regFilename) {
+mrgsolve_non_reg_test <- function(mrgmod, regFilename) {
   mrgmodCode <- mrgmod %>% to_string()
-  if (overwriteNonRegressionFiles) {
-    toFile(mrgmodCode, mrgsolveNonRegPath(regFilename))
+  if (OVERWRITE_NON_REG_FILES) {
+    to_file(mrgmodCode, mrgsolve_non_reg_path(regFilename))
   }
-  expectedMrgmodCode <- readLines(con=mrgsolveNonRegPath(regFilename)) %>% paste0(collapse="\n")
+  expectedMrgmodCode <- readLines(con=mrgsolve_non_reg_path(regFilename)) %>% paste0(collapse="\n")
   expect_equal(mrgmodCode, expectedMrgmodCode)
 }
 
-rxodeNonRegTest <- function(rxmod, regFilename) {
+rxode_non_reg_test <- function(rxmod, regFilename) {
   rxmodCode <- rxmod@code %>% paste0(collapse="\n")
-  if (overwriteNonRegressionFiles) {
-    toFile(rxmodCode, rxodeNonRegPath(regFilename))
+  if (OVERWRITE_NON_REG_FILES) {
+    to_file(rxmodCode, rxode_non_reg_path(regFilename))
   }
-  expectedRxmodCode <- readLines(con=rxodeNonRegPath(regFilename)) %>% paste0(collapse="\n")
+  expectedRxmodCode <- readLines(con=rxode_non_reg_path(regFilename)) %>% paste0(collapse="\n")
   expect_equal(rxmodCode, expectedRxmodCode)
 }
 
-readCampsisModelNoParams <- function(file) {
+read_campsis_model_no_params <- function(file) {
   # Only first warning is actually checked
   model <- expect_warning(read.campsis(file),
                           regexp="No file '(theta|omega|sigma)\\.csv' could be found")
   return(model)
 }
 
-onCran <- function() {
+on_cran <- function() {
   # Copied from testthat:::on_cran() 
-  return(!interactive() && !envVarIsTrue("NOT_CRAN"))
+  return(!interactive() && !env_var_is_true("NOT_CRAN"))
 }
 
-envVarIsTrue <- function(x) {
+env_var_is_true <- function(x) {
   return(isTRUE(as.logical(Sys.getenv(x, "false"))))
 }
 
-skipPerformanceTests <- function() {
+skip_performance_tests <- function() {
   # On CRAN, default value is TRUE
   # FALSE otherwise
-  return(get_campsismod_option(name="SKIP_PERFORMANCE_TESTS", default=onCran()))
+  return(get_campsismod_option(name="SKIP_PERFORMANCE_TESTS", default=on_cran()))
 }
 

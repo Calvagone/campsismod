@@ -86,7 +86,7 @@ test_that("Add suffix to a Campsis model is working as expected", {
   modelAB <- modelA %>%
     add(modelB)
 
-  expectedModelPath <- paste0(testFolder, "custom/", "model_suffix_ab")
+  expectedModelPath <- paste0(TEST_FOLDER, "custom/", "model_suffix_ab")
   # modelAB %>% write(expectedModelPath)
   
   expectedModel <- read.campsis(expectedModelPath)
