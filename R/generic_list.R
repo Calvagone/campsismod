@@ -17,7 +17,7 @@ setClass(
   ),
   prototype=prototype(list=list()),
   validity=function(object) {
-    check <- expectOne(object, "type")
+    check <- expect_one(object, "type")
     for (elem in object@list) {
       methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
     }

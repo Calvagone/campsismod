@@ -70,6 +70,6 @@ envVarIsTrue <- function(x) {
 skipPerformanceTests <- function() {
   # On CRAN, default value is TRUE
   # FALSE otherwise
-  return(getCampsismodOption(name="SKIP_PERFORMANCE_TESTS", default=onCran()))
+  return(get_campsismod_option(name="SKIP_PERFORMANCE_TESTS", default=onCran()))
 }
 

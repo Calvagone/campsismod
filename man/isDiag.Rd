@@ -18,3 +18,4 @@ logical value
 \details{
 `isDiag()` is deprecated in favor of `is_diag()`.
 }
+\keyword{internal}

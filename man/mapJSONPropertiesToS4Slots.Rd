@@ -15,3 +15,4 @@ a JSON object ready to be serialised
 \details{
 `mapJSONPropertiesToS4Slots()` is deprecated in favor of `map_json_properties_to_s4_slots()`.
 }
+\keyword{internal}

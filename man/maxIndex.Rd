@@ -18,3 +18,4 @@ max index
 \details{
 `maxIndex()` is deprecated in favor of `max_index()`.
 }
+\keyword{internal}

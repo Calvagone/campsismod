@@ -20,3 +20,4 @@ Campsis dataset
 \details{
 `mapS4SlotsToJSONProperties()` is deprecated in favor of `map_s4_slots_to_json_properties()`.
 }
+\keyword{internal}

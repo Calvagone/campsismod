@@ -18,3 +18,4 @@ min index
 \details{
 `minIndex()` is deprecated in favor of `min_index()`.
 }
+\keyword{internal}

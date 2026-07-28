@@ -16,7 +16,7 @@ setClass(
   contains = "pmx_element",
   prototype = prototype(comment=as.character(NA)),
   validity = function(object) {
-    return(expectOne(object, c("comment")))
+    return(expect_one(object, c("comment")))
   }
 )
 

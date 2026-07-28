@@ -20,3 +20,4 @@ index of this element
 \details{
 `getByIndex()` is deprecated in favor of `get_by_index()`.
 }
+\keyword{internal}

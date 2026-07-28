@@ -17,7 +17,7 @@ setClass(
   ),
   contains = "model_statement",
   validity = function(object) {
-    return(expectOne(object, "condition"))
+    return(expect_one(object, "condition"))
   }
 )
 

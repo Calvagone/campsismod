@@ -88,9 +88,7 @@ reference:
 - title: "Model parameters replication"
   contents:
   - AutoReplicationSettings
-
   - ManualReplicationSettings
-
   - replicate
   
 - title: "Generic list"
@@ -116,7 +114,9 @@ reference:
   contents:
   - export
   - disable
+  - export_to_json
   - fix_omega
+  - load_from_json
   - read
   - select
   - standardise
@@ -134,7 +134,7 @@ reference:
   - mrgsolve_param
   - mrgsolve_table
   
-- title: "RxODE export"
+- title: "rxode2 export"
   contents:
   - rxode_code
   - rxode_matrix
@@ -163,6 +163,7 @@ reference:
   - f_record-class
   - if_statement-class
   - init_record-class
+  - json_element-class
   - lag_record-class
   - line_break-class
   - main_record-class
@@ -222,16 +223,20 @@ reference:
   
 - title: "Advanced use"
   contents:
-  - update_compartments
-  - is_matrix_positive_definite
-  - get_omega_block
-  - get_omega_indexes
-  - has_off_diagonal_omegas
+  - JSONElement
   - OmegaBlock
   - OmegaBlocks
+  - assert_single_character_string
+  - is_matrix_positive_definite
+  - get_campsismod_option
+  - get_omega_block
+  - get_omega_indexes
+  - has_exact_method
+  - has_off_diagonal_omegas
+  - json_to_parameter
+  - process_extra_arg
+  - map_json_properties_to_s4_slots
+  - map_s4_slots_to_json_properties
+  - update_compartments
   - shift_omega_indexes
 
-- title: "Other exported methods"
-  contents:
-  - assert_single_character_string
-  - process_extra_arg

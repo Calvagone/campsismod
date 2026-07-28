@@ -18,3 +18,4 @@ character vector with all the element names of this list
 \details{
 `getNames()` is deprecated in favor of `get_names()`.
 }
+\keyword{internal}

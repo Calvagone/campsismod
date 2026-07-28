@@ -20,3 +20,4 @@ character value/vector
 \details{
 `toString()` is deprecated in favor of `to_string()`.
 }
+\keyword{internal}

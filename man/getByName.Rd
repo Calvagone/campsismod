@@ -20,3 +20,4 @@ the element that was found or NULL if no element was found with the same name
 \details{
 `getByName()` is deprecated in favor of `get_by_name()`.
 }
+\keyword{internal}

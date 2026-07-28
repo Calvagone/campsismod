@@ -20,3 +20,4 @@ omega/sigma named matrix
 \details{
 `rxodeMatrix()` is deprecated in favor of `rxode_matrix()`.
 }
+\keyword{internal}

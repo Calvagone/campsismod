@@ -16,10 +16,10 @@ setClass(
   ),
   prototype=prototype(after=TRUE),
   validity=function(object) {
-    check1 <- expectOne(object, "undefined")
-    check2 <- expectOne(object, "by_index")
-    check3 <- expectOne(object, "by_element")
-    check4 <- expectOne(object, "after")
+    check1 <- expect_one(object, "undefined")
+    check2 <- expect_one(object, "by_index")
+    check3 <- expect_one(object, "by_element")
+    check4 <- expect_one(object, "after")
     return(c(check1, check2, check3, check4))
   }
 )
@@ -39,7 +39,7 @@ setClass(
   ),
   contains="pmx_position",
   validity=function(object) {
-    check <- expectOne(object, "index")
+    check <- expect_one(object, "index")
     return(check)
   }
 )

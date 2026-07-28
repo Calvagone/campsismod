@@ -27,3 +27,4 @@ updated object of the same class as the provided object, unless 'model' was spec
 \details{
 `addSuffix()` is deprecated in favor of `add_suffix()`.
 }
+\keyword{internal}

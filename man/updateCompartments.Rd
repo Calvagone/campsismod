@@ -20,3 +20,4 @@ an updated Campsis model, with an updated compartments list
 \details{
 `updateCompartments()` is deprecated in favor of `update_compartments()`.
 }
+\keyword{internal}

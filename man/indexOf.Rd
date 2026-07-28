@@ -20,3 +20,4 @@ index of this element
 \details{
 `indexOf()` is deprecated in favor of `index_of()`.
 }
+\keyword{internal}

@@ -24,3 +24,4 @@ the loaded S4 object
 \details{
 `replaceAll()` is deprecated in favor of `replace_all()`.
 }
+\keyword{internal}

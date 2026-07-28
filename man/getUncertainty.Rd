@@ -18,3 +18,4 @@ data frame with standard error (se) and relative standard error (rse%) columns
 \details{
 `getUncertainty()` is deprecated in favor of `get_uncertainty()`.
 }
+\keyword{internal}

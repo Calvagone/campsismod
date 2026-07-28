@@ -13,6 +13,7 @@
 #' @return the corresponding compartment index
 #' @export
 #' @rdname getCompartmentIndex
+#' @keywords internal
 getCompartmentIndex <- function(object, name) {
   lifecycle::deprecate_warn("1.4.0", "getCompartmentIndex()", "get_compartment_index()")
   get_compartment_index(object = object, name = name)
@@ -34,6 +35,7 @@ setGeneric("getCompartmentIndex", function(object, name) {
 #' @return data frame with standard error (se) and relative standard error (rse%) columns 
 #' @export
 #' @rdname getUncertainty
+#' @keywords internal
 getUncertainty <- function(object, ...) {
   lifecycle::deprecate_warn("1.4.0", "getUncertainty()", "get_uncertainty()")
   get_uncertainty(object = object, ...)
@@ -55,6 +57,7 @@ setGeneric("getUncertainty", function(object, name) {
 #' @return the loaded S4 object
 #' @export
 #' @rdname loadFromJSON
+#' @keywords internal
 loadFromJSON <- function(object, json) {
   lifecycle::deprecate_warn("1.4.0", "loadFromJSON()", "load_from_json()")
   load_from_json(object = object, json = json)
@@ -76,6 +79,7 @@ setGeneric("loadFromJSON", function(object, json) {
 #' @return the loaded S4 object
 #' @export
 #' @rdname replaceAll
+#' @keywords internal
 replaceAll <- function(object, pattern, replacement, ...) {
   lifecycle::deprecate_warn("1.4.0", "replaceAll()", "replace_all()")
   replace_all(object = object, pattern = pattern, replacement = replacement, ...)
@@ -97,6 +101,7 @@ setGeneric("replaceAll", function(object, pattern, replacement, ...) {
 #' @return character value/vector
 #' @export
 #' @rdname toString
+#' @keywords internal
 toString <- function(object, ...) {
   lifecycle::deprecate_warn("1.4.0", "toString()", "to_string()")
   to_string(object = object, ...)
@@ -122,6 +127,7 @@ setGeneric("toString", function(object, ...) {
 #' @return index of this element
 #' @export
 #' @rdname indexOf
+#' @keywords internal
 indexOf <- function(object, x) {
   lifecycle::deprecate_warn("1.4.0", "indexOf()", "index_of()")
   index_of(object = object, x = x)
@@ -143,6 +149,7 @@ setGeneric("indexOf", function(object, x) {
 #' @return the element that was found or NULL if no element was found with the same name
 #' @export
 #' @rdname getByName
+#' @keywords internal
 getByName <- function(object, name) {
   lifecycle::deprecate_warn("1.4.0", "getByName()", "get_by_name()")
   get_by_name(object = object, name = name)
@@ -164,6 +171,7 @@ setGeneric("getByName", function(object, name) {
 #' @return character vector with all the element names of this list
 #' @export
 #' @rdname getName
+#' @keywords internal
 getName <- function(x) {
   lifecycle::deprecate_warn("1.4.0", "getName()", "get_name()")
   get_name(x = x)
@@ -185,6 +193,7 @@ setGeneric("getName", function(x) {
 #' @return character vector with all the element names of this list
 #' @export
 #' @rdname getNames
+#' @keywords internal
 getNames <- function(object) {
   lifecycle::deprecate_warn("1.4.0", "getNames()", "get_names()")
   get_names(object = object)
@@ -206,6 +215,7 @@ setGeneric("getNames", function(object) {
 #' @return index of this element
 #' @export
 #' @rdname getByIndex
+#' @keywords internal
 getByIndex <- function(object, x) {
   lifecycle::deprecate_warn("1.4.0", "getByIndex()", "get_by_index()")
   get_by_index(object = object, x = x)
@@ -231,6 +241,7 @@ setGeneric("getByIndex", function(object, x) {
 #' @return requested argument value
 #' @export
 #' @rdname processExtraArg
+#' @keywords internal
 processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
   lifecycle::deprecate_warn("1.4.0", "processExtraArg()", "process_extra_arg()")
   process_extra_arg(args = args, name = name, default = default, mandatory = mandatory)
@@ -251,6 +262,7 @@ processExtraArg <- function(args, name, default=NULL, mandatory=FALSE) {
 #' @return a JSON object ready to be serialised
 #' @export
 #' @rdname mapJSONPropertiesToS4Slots
+#' @keywords internal
 mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
   lifecycle::deprecate_warn("1.4.0", "mapJSONPropertiesToS4Slots()", "map_json_properties_to_s4_slots()")
   map_json_properties_to_s4_slots(object = object, json = json, discard_type = discard_type)
@@ -267,6 +279,7 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
 #' @return Campsis dataset
 #' @export
 #' @rdname mapS4SlotsToJSONProperties
+#' @keywords internal
 mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ignore=NULL) {
   lifecycle::deprecate_warn("1.4.0", "mapS4SlotsToJSONProperties()", "map_s4_slots_to_json_properties()")
   map_s4_slots_to_json_properties(object = object, add_type = add_type, optional = optional, ignore = ignore)
@@ -282,7 +295,7 @@ mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ign
 #' @inheritParams json_to_parameter
 #' @return Campsis parameter
 #' @export
-#' 
+#' @keywords internal
 jsonToParameter <- function(x, index=NULL, index2=NULL) {
   lifecycle::deprecate_warn("1.4.0", "jsonToParameter()", "json_to_parameter()")
   json_to_parameter(x = x, index = index, index2 = index2)
@@ -306,6 +319,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
 #' @return updated object of the same class as the provided object, unless 'model' was specified, in that case the model is returned
 #' @export
 #' @rdname addSuffix
+#' @keywords internal
 addSuffix <- function(object, suffix, separator, ...) {
   lifecycle::deprecate_warn("1.4.0", "addSuffix()", "add_suffix()")
   add_suffix(object = object, suffix = suffix, separator = separator, ...)
@@ -331,6 +345,7 @@ setGeneric("addSuffix", function(object, suffix, separator, ...) {
 #' @return the parameter that matches
 #' @export
 #' @rdname fixOmega
+#' @keywords internal
 fixOmega <- function(object) {
   lifecycle::deprecate_warn("1.4.0", "fixOmega()", "fix_omega()")
   fix_omega(object = object)
@@ -353,6 +368,7 @@ setGeneric("fixOmega", function(object) {
 #' @return the name of this parameter
 #' @export
 #' @rdname getNameInModel
+#' @keywords internal
 getNameInModel <- function(x) {
   lifecycle::deprecate_warn("1.4.0", "getNameInModel()", "get_name_in_model()")
   get_name_in_model(x = x)
@@ -375,6 +391,7 @@ setGeneric("getNameInModel", function(x) {
 #' @return logical value
 #' @export
 #' @rdname isDiag
+#' @keywords internal
 isDiag <- function(object) {
   lifecycle::deprecate_warn("1.4.0", "isDiag()", "is_diag()")
   is_diag(object = object)
@@ -396,6 +413,7 @@ setGeneric("isDiag", function(object) {
 #' @return min index
 #' @export
 #' @rdname minIndex
+#' @keywords internal
 minIndex <- function(object) {
   lifecycle::deprecate_warn("1.4.0", "minIndex()", "min_index()")
   min_index(object = object)
@@ -417,6 +435,7 @@ setGeneric("minIndex", function(object) {
 #' @return max index
 #' @export
 #' @rdname maxIndex
+#' @keywords internal
 maxIndex <- function(object) {
   lifecycle::deprecate_warn("1.4.0", "maxIndex()", "max_index()")
   max_index(object = object)
@@ -442,6 +461,7 @@ setGeneric("maxIndex", function(object) {
 #' @return omega/sigma named matrix
 #' @export
 #' @rdname rxodeMatrix
+#' @keywords internal
 rxodeMatrix <- function(model, type) {
   lifecycle::deprecate_warn("1.4.0", "rxodeMatrix()", "rxode_matrix()")
   rxode_matrix(model = model, type = type)
@@ -465,6 +485,7 @@ setGeneric("rxodeMatrix", function(model, type) {
 #' @return an updated Campsis model, with an updated compartments list
 #' @export
 #' @rdname updateCompartments
+#' @keywords internal
 updateCompartments <- function(model) {
   lifecycle::deprecate_warn("1.4.0", "updateCompartments()", "update_compartments()")
   update_compartments(model = model)

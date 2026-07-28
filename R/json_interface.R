@@ -248,7 +248,7 @@ find_varcov_parameter <- function(ref, model) {
 #' @param json JSON data
 #' @param diag_names parameter names on the diagonal, character vector
 #' @return the corresponding Campsis parameter
-#' 
+#' @keywords internal
 json_to_off_diag_parameter <- function(json, diag_names) {
   name <- json$name
   name2 <- json$name2
@@ -261,7 +261,7 @@ json_to_off_diag_parameter <- function(json, diag_names) {
 #' 
 #' @param x JSON data, OMEGA or SIGMA parameter
 #' @return updated JSON data with updated 'name' field and removed 'name2' field
-#' 
+#' @keywords internal
 process_json_double_array_parameter <- function(x) {
   if (!is.null(x$name2)) {
     x$name <- paste0(x$name, "_", x$name2)
@@ -339,7 +339,7 @@ open_json <- function(json, schema=NULL) {
   }
   
   # Validate content against schema
-  if (getCampsismodOption(name="VALIDATE_JSON", default=TRUE)) {
+  if (get_campsismod_option(name="VALIDATE_JSON", default=TRUE)) {
     obj <- jsonvalidate::json_schema$new(schema)
     obj$validate(rawJson, error=TRUE)
   }

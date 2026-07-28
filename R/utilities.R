@@ -251,7 +251,7 @@ is_rxode <- function(dest) {
 #' @return global options for Campsismod
 #' @export
 #' @keywords internal
-getCampsismodOptions <- function() {
+get_campsismod_options <- function() {
   return(getOption("campsismod.options"))
 }
 
@@ -262,8 +262,8 @@ getCampsismodOptions <- function() {
 #' @param default default value if option not found
 #' @return option value
 #' @export
-getCampsismodOption <- function(name, default) {
-  option <- getCampsismodOptions()
+get_campsismod_option <- function(name, default) {
+  option <- get_campsismod_options()
   if (is.null(option)) {
     return(default)
   } else {

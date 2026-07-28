@@ -17,7 +17,7 @@ setClass(
   contains = "pmx_element",
   prototype = prototype(name=as.character(NA)),
   validity = function(object) {
-    return(expectOneForAll(object, c("name", "index")))
+    return(expect_one_for_all(object, c("name", "index")))
   }
 )
 

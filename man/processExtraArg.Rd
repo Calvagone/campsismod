@@ -24,3 +24,4 @@ requested argument value
 \details{
 `processExtraArg()` is deprecated in favor of `process_extra_arg()`.
 }
+\keyword{internal}

@@ -20,3 +20,4 @@ the loaded S4 object
 \details{
 `loadFromJSON()` is deprecated in favor of `load_from_json()`.
 }
+\keyword{internal}

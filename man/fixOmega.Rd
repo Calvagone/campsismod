@@ -18,3 +18,4 @@ the parameter that matches
 \details{
 `fixOmega()` is deprecated in favor of `fix_omega()`.
 }
+\keyword{internal}

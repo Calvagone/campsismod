@@ -18,7 +18,7 @@ setClass(
   contains = "model_statement",
   prototype = prototype(rhs=""),
   validity = function(object) {
-    return(expectOne(object, c("lhs", "rhs")))
+    return(expect_one(object, c("lhs", "rhs")))
   }
 )
 

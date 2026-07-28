@@ -22,3 +22,4 @@ Campsis parameter
 \details{
 `jsonToParameter()` is deprecated in favor of `json_to_parameter()`.
 }
+\keyword{internal}

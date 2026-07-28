@@ -20,3 +20,4 @@ the corresponding compartment index
 \details{
 `getCompartmentIndex()` is deprecated in favor of `get_compartment_index()`.
 }
+\keyword{internal}

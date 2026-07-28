@@ -32,7 +32,7 @@ setClass(
                         value=as.numeric(NA), min=as.numeric(NA), max=as.numeric(NA), fix=FALSE,
                         label=as.character(NA), unit=as.character(NA), comment=as.character(NA)),
   validity = function(object) {
-    check <- expectOneForAll(object, c("name", "index", "fix", "value", "label", "comment"))
+    check <- expect_one_for_all(object, c("name", "index", "fix", "value", "label", "comment"))
     return(check)
   }
 )
@@ -70,7 +70,7 @@ setClass(
   contains = "single_array_parameter",
   prototype = prototype(type="var"),
   validity = function(object) {
-    check1 <- expectOne(object, "type")
+    check1 <- expect_one(object, "type")
     check2 <-
       if (object@type %in% c("var", "sd", "covar", "cor", "cv", "cv%")) {
         character()
@@ -151,7 +151,7 @@ setClass(
   contains = "double_array_parameter",
   prototype = prototype(same=as.logical(NA), index2=as.integer(NA)),
   validity = function(object) {
-    return(expectOne(object, "same"))
+    return(expect_one(object, "same"))
   }
 )
 

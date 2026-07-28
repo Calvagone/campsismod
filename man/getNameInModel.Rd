@@ -18,3 +18,4 @@ the name of this parameter
 \details{
 `getNameInModel()` is deprecated in favor of `get_name_in_model()`.
 }
+\keyword{internal}

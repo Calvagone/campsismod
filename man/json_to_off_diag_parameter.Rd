@@ -17,3 +17,4 @@ the corresponding Campsis parameter
 \description{
 Convert JSON correlation parameter (OMEGA or SIGMA) into a Campsis parameter.
 }
+\keyword{internal}
