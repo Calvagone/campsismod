@@ -3,7 +3,7 @@ library(testthat)
 
 context("Test utilities on the Campsis model")
 
-source(file.path(getwd(), test_path(), "testUtils.R"))
+source(file.path(getwd(), test_path(), "test-utils.R"))
 
 test_that("Method 'add' works as expected", {
   

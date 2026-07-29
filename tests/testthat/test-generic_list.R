@@ -2,7 +2,7 @@ library(testthat)
 
 context("Test the generic list")
 
-source(file.path(getwd(), test_path(), "testUtils.R"))
+source(file.path(getwd(), test_path(), "test-utils.R"))
 
 test_that("get_by_index method works well", {
   model <- model_suite$testing$nonmem$advan4_trans4
