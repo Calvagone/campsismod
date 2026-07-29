@@ -1,10 +1,4 @@
 
-# setwd("C:/prj/campsismod/")
-# roxygen2::roxygenise()
-# setwd("C:/prj/campsismod/tests/")
-# TEST_FOLDER <<- "C:/prj/campsismod/tests/testthat/"
-
-TEST_FOLDER <- ""
 OVERWRITE_NON_REG_FILES <- FALSE
 
 to_file <- function(code, path) {
@@ -14,15 +8,15 @@ to_file <- function(code, path) {
 }
 
 campsis_non_reg_path <- function(regFilename) {
-  return(paste0(TEST_FOLDER, "non_regression/campsis/", regFilename))
+  return(file.path(getwd(), test_path(), "non_regression", "campsis", regFilename))
 }
 
 mrgsolve_non_reg_path <- function(regFilename) {
-  return(paste0(TEST_FOLDER, "non_regression/mrgsolve/", regFilename, ".txt"))
+  return(file.path(getwd(), test_path(), "non_regression", "mrgsolve", paste0(regFilename, ".txt")))
 }
 
 rxode_non_reg_path <- function(regFilename) {
-  return(paste0(TEST_FOLDER, "non_regression/rxode/", regFilename, ".txt"))
+  return(file.path(getwd(), test_path(), "non_regression", "rxode", paste0(regFilename, ".txt")))
 }
 
 campsis_non_reg_test <- function(model, regFilename) {

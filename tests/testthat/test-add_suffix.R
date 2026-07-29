@@ -2,7 +2,7 @@ library(testthat)
 
 context("Test generic method add_suffix")
 
-source(file.path(getwd(), test_path(), "test-utils.R"))
+TEST_FOLDER <- file.path(getwd(), test_path())
 
 test_that("Add suffix to parameters is working as expected", {
   
@@ -86,7 +86,7 @@ test_that("Add suffix to a Campsis model is working as expected", {
   modelAB <- modelA %>%
     add(modelB)
 
-  expectedModelPath <- paste0(TEST_FOLDER, "custom/", "model_suffix_ab")
+  expectedModelPath <- file.path(TEST_FOLDER, "custom", "model_suffix_ab")
   # modelAB %>% write(expectedModelPath)
   
   expectedModel <- read.campsis(expectedModelPath)

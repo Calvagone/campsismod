@@ -3,14 +3,12 @@ library(testthat)
 
 context("Test read/write methods on Campsis model")
 
-source(file.path(getwd(), test_path(), "test-utils.R"))
-
-advanFilename <- function(advan, trans, ext=".txt") {
+advan_filename <- function(advan, trans, ext=".txt") {
   return(paste0("advan", advan, "_trans", trans, ext))
 }
 
-writePath <- function(modelName) {
-  return(paste0(TEST_FOLDER, "write/models/", modelName))
+write_path <- function(modelName) {
+  return(file.path(getwd(), test_path(), "write", "models", modelName))
 }
 
 test_that("Write/Read ADVAN1 TRANS1", {
@@ -18,10 +16,10 @@ test_that("Write/Read ADVAN1 TRANS1", {
   model <- model_suite$testing$nonmem[[modelName]]
   
   # write
-  model %>% write(file=writePath(modelName))
+  model %>% write(file=write_path(modelName))
   
   # read
-  model2 <- read.campsis(file=writePath(modelName))
+  model2 <- read.campsis(file=write_path(modelName))
 
   # Check equality  
   expect_equal(model, model2)
@@ -32,10 +30,10 @@ test_that("Write/Read ADVAN3 TRANS4 with variance-covariance matrix", {
   model <- model_suite$testing$other[[modelName]]
   
   # write
-  model %>% write(file=writePath(modelName))
+  model %>% write(file=write_path(modelName))
   
   # read
-  model2 <- read.campsis(file=writePath(modelName))
+  model2 <- read.campsis(file=write_path(modelName))
   
   # Check equality  
   expect_equal(model, model2)
@@ -56,10 +54,10 @@ test_that("Write/Read ADVAN4 TRANS4 with various compartment properties", {
   model <- model %>% sort()
   
   # Write
-  model %>% write(file=writePath(modelName))
+  model %>% write(file=write_path(modelName))
   prop <- model@compartments@properties
   # Read
-  model2 <- read.campsis(file=writePath(modelName))
+  model2 <- read.campsis(file=write_path(modelName))
   prop2 <- model2@compartments@properties
   
   # Check equality  
@@ -76,10 +74,10 @@ test_that("Model parameters can be annotated and persisted (fields label, unit, 
     replace(Sigma(name="RUV_FIX", value=1, fix=TRUE, label="Proportional error", comment="Fixed epsilon, multiplied by THETA_PROP_RUV in model code."))
   
   # Write
-  model %>% write(file=writePath(modelName))
+  model %>% write(file=write_path(modelName))
   
   # Read
-  model2 <- read.campsis(file=writePath(modelName))
+  model2 <- read.campsis(file=write_path(modelName))
   
   # Check equality  
   expect_equal(model, model2)
@@ -95,10 +93,10 @@ test_that("Model parameters with min and max values can be persisted correctly",
     set_min_max(Sigma("RUV_FIX"), min=1, max=1)
   
   # Write
-  model %>% write(file=writePath(modelName))
+  model %>% write(file=write_path(modelName))
   
   # Read
-  model2 <- read.campsis(file=writePath(modelName))
+  model2 <- read.campsis(file=write_path(modelName))
   
   # Check equality  
   expect_equal(model, model2)
