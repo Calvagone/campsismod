@@ -26,22 +26,22 @@ LineBreak <- function() {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("line_break"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("line_break"), definition = function(x) {
   return(as.character(NA)) # line_break non-identifiable 
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("line_break"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
+#' @rdname to_string
+setMethod("to_string", signature=c("line_break"), definition=function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || is_rxode(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- ""
   } else {
     UnsupportedDestException()

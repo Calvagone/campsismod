@@ -1,6 +1,6 @@
 
 #_______________________________________________________________________________
-#----                             addSuffix                                 ----
+#----                             add_suffix                                ----
 #_______________________________________________________________________________
 
 #' Generic function to add a suffix to various objects like parameters, code records,
@@ -14,16 +14,16 @@
 #' @param ... extra arguments like 'model' if the changes need to be reflected in the model 
 #' @return updated object of the same class as the provided object, unless 'model' was specified, in that case the model is returned
 #' @export
-#' @rdname addSuffix
-addSuffix <- function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+add_suffix <- function(object, suffix, separator, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
+setGeneric("add_suffix", function(object, suffix, separator=NULL, ...) {
   if (!is.character(suffix) && length(suffix) != 1) {
     stop("suffix must be a single character value")
   }
-  if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=suffix))) {
+  if (!(grepl(pattern=paste0("^", variable_pattern_no_start_str(), "$"), x=suffix))) {
     stop(paste0("suffix '", suffix, "' is not a valid suffix"))
   }
   if (is.null(separator)) {
@@ -32,16 +32,16 @@ setGeneric("addSuffix", function(object, suffix, separator=NULL, ...) {
     if (!is.character(separator) && length(separator) != 1) {
       stop("separator must be a single character value")
     }
-    if (!(grepl(pattern=paste0("^", variablePatternNoStartStr(), "$"), x=separator))) {
+    if (!(grepl(pattern=paste0("^", variable_pattern_no_start_str(), "$"), x=separator))) {
       stop(paste0("separator '", separator, "' is not a valid separator"))
     }
   }
-  standardGeneric("addSuffix")
+  standardGeneric("add_suffix")
 })
 
-#' @rdname addSuffix
+#' @rdname add_suffix
 #' @importFrom assertthat are_equal
-setMethod("addSuffix", signature=c("parameters", "character", "character"), definition=function(object, suffix, separator, ...) {
+setMethod("add_suffix", signature=c("parameters", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
@@ -51,18 +51,18 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
   # Add suffix to all parameters and update model code accordingly
   for (parameter in object@list) {
     name <- parameter@name
-    if (is.na(name) && is(parameter, "double_array_parameter") && !parameter %>% isDiag()) {
+    if (is.na(name) && is(parameter, "double_array_parameter") && !parameter %>% is_diag()) {
       # Do nothing except adding the parameter
       retValue <- retValue %>% add(parameter)
     } else if (is.na(name)) {
-      stop(paste0("Please give a name to ", parameter %>% getNameInModel()))
+      stop(paste0("Please give a name to ", parameter %>% get_name_in_model()))
     } else {
-      oldName <- parameter %>% getNameInModel()
+      oldName <- parameter %>% get_name_in_model()
       parameter@name <- paste0(name, separator, suffix)
-      newName <- parameter %>% getNameInModel()
+      newName <- parameter %>% get_name_in_model()
       retValue <- retValue %>% add(parameter)
       if (!is.null(model)) {
-        model <- model %>% replaceAll(pattern=oldName, replacement=newName)
+        model <- model %>% replace_all(pattern=oldName, replacement=newName)
       }
     }
   }
@@ -85,14 +85,14 @@ setMethod("addSuffix", signature=c("parameters", "character", "character"), defi
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("code_records", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("code_records", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
   # Collect all equation names
   equationNames <- object@list %>%
-    purrr::map(~getRecordEquationNames(.x)) %>%
+    purrr::map(~get_record_equation_names(.x)) %>%
     purrr::flatten_chr()
   
   # Get rid of duplicates
@@ -105,13 +105,13 @@ setMethod("addSuffix", signature=c("code_records", "character", "character"), de
   for (equationName in equationNames) {
     replacementStr <- paste0(equationName, separator, suffix)
     retValue <- retValue %>% 
-      replaceAll(pattern=VariablePattern(equationName), replacement=replacementStr)
+      replace_all(pattern=VariablePattern(equationName), replacement=replacementStr)
     
     # Update properties as well (rhs)
     if (!is.null(model)) {
       for (index in seq_len(model@compartments@properties %>% length())) {
         model@compartments@properties@list[[index]]@rhs <- model@compartments@properties@list[[index]]@rhs %>%
-          replaceAll(pattern=VariablePattern(equationName), replacement=replacementStr)
+          replace_all(pattern=VariablePattern(equationName), replacement=replacementStr)
       }
     }
   }
@@ -125,17 +125,17 @@ setMethod("addSuffix", signature=c("code_records", "character", "character"), de
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("code_record", "character", "character"), definition=function(object, suffix, separator, ...) {
-  retValue <- addSuffix(object=CodeRecords() %>% add(object), suffix=suffix, separator=separator, ...)
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("code_record", "character", "character"), definition=function(object, suffix, separator, ...) {
+  retValue <- add_suffix(object=CodeRecords() %>% add(object), suffix=suffix, separator=separator, ...)
   if (is(retValue, "code_records")) {
     retValue <- retValue@list[[1]]
   }
   return(retValue)
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("compartments", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("compartments", "character", "character"), definition=function(object, suffix, separator, ...) {
   args <- list(...)
   model <- args[["model"]]
   
@@ -145,14 +145,14 @@ setMethod("addSuffix", signature=c("compartments", "character", "character"), de
   # Update compartments
   for (index in seq_len(retValue %>% length())) {
     compartment <- retValue@list[[index]]
-    oldName <- compartment %>% toString()
+    oldName <- compartment %>% to_string()
     replacementName <- paste0(oldName, separator, suffix)
     compartment@name <- gsub(pattern="^A_", replacement="", x=replacementName)
     retValue <- retValue %>%
       replace(compartment) # Replacement done by index for compartments
     if (!is.null(model)) {
       model <- model %>% 
-        replaceAll(pattern=oldName, replacement=replacementName)
+        replace_all(pattern=oldName, replacement=replacementName)
     }
   }
   
@@ -165,27 +165,27 @@ setMethod("addSuffix", signature=c("compartments", "character", "character"), de
   }
 })
 
-#' @rdname addSuffix
-setMethod("addSuffix", signature=c("campsis_model", "character", "character"), definition=function(object, suffix, separator, ...) {
+#' @rdname add_suffix
+setMethod("add_suffix", signature=c("campsis_model", "character", "character"), definition=function(object, suffix, separator, ...) {
   model <- object
   
   # Add suffix to parameters
   parameters <- model@parameters
-  model <- parameters %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- parameters %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Add suffix to equations
   records <- model@model
-  model <- records %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- records %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Add suffix to ODE compartments
   compartments <- model@compartments
-  model <- compartments %>% addSuffix(suffix=suffix, separator=separator, model=model)
+  model <- compartments %>% add_suffix(suffix=suffix, separator=separator, model=model)
   
   # Save properties
   properties <- model@compartments@properties
   
   # Update compartment (properties will be lost)
-  model <- model %>% updateCompartments()
+  model <- model %>% update_compartments()
   
   # Re-assign properties
   model@compartments@properties <- properties

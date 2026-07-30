@@ -29,21 +29,21 @@ Bioavailability <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("compartment_bioavailability"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("compartment_bioavailability"), definition = function(x) {
   return(paste0("BIOAVAILABILITY (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             getPrefix                                ----
+#----                             get_prefix                                ----
 #_______________________________________________________________________________
 
-#' @rdname getPrefix
-setMethod("getPrefix", signature = c("compartment_bioavailability"), definition = function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="rxode2")
+#' @rdname get_prefix
+setMethod("get_prefix", signature = c("compartment_bioavailability"), definition = function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("F")
   } else {
@@ -52,10 +52,10 @@ setMethod("getPrefix", signature = c("compartment_bioavailability"), definition 
 })
 
 #_______________________________________________________________________________
-#----                           getRecordName                               ----
+#----                           get_record_name                               ----
 #_______________________________________________________________________________
 
-#' @rdname getRecordName
-setMethod("getRecordName", signature = c("compartment_bioavailability"), definition = function(object) {
+#' @rdname get_record_name
+setMethod("get_record_name", signature = c("compartment_bioavailability"), definition = function(object) {
   return("F")
 })

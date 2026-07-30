@@ -32,7 +32,7 @@ setClass(
                         value=as.numeric(NA), min=as.numeric(NA), max=as.numeric(NA), fix=FALSE,
                         label=as.character(NA), unit=as.character(NA), comment=as.character(NA)),
   validity = function(object) {
-    check <- expectOneForAll(object, c("name", "index", "fix", "value", "label", "comment"))
+    check <- expect_one_for_all(object, c("name", "index", "fix", "value", "label", "comment"))
     return(check)
   }
 )
@@ -70,7 +70,7 @@ setClass(
   contains = "single_array_parameter",
   prototype = prototype(type="var"),
   validity = function(object) {
-    check1 <- expectOne(object, "type")
+    check1 <- expect_one(object, "type")
     check2 <-
       if (object@type %in% c("var", "sd", "covar", "cor", "cv", "cv%")) {
         character()
@@ -151,7 +151,7 @@ setClass(
   contains = "double_array_parameter",
   prototype = prototype(same=as.logical(NA), index2=as.integer(NA)),
   validity = function(object) {
-    return(expectOne(object, "same"))
+    return(expect_one(object, "same"))
   }
 )
 
@@ -275,19 +275,19 @@ setMethod("as.data.frame", signature("sigma", "character", "logical"), function(
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("theta"), definition=function(object, ...) {
-  json <- mapS4SlotsToJSONProperties(object, optional=c("min", "max", "label", "comment", "unit"))
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("theta"), definition=function(object, ...) {
+  json <- map_s4_slots_to_json_properties(object, optional=c("min", "max", "label", "comment", "unit"))
   assertthat::assert_that(!is.null(json$name), msg="All THETAs must be named")
   return(JSONElement(json))
 })
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...) {
-  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"), ignore="same")
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("omega"), definition=function(object, ...) {
+  json <- map_s4_slots_to_json_properties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"), ignore="same")
   json$var_type <- json$type
   json$type <- "omega"
   if (json$index==json$index2) {
@@ -296,9 +296,9 @@ setMethod("exportToJSON", signature=c("omega"), definition=function(object, ...)
   return(JSONElement(json))
 })
 
-#' @rdname exportToJSON
-setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...) {
-  json <- mapS4SlotsToJSONProperties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"))
+#' @rdname export_to_json
+setMethod("export_to_json", signature=c("sigma"), definition=function(object, ...) {
+  json <- map_s4_slots_to_json_properties(object, add_type=FALSE, optional=c("min", "max", "label", "comment"))
   json$var_type <- json$type
   json$type <- "sigma"
   if (json$index==json$index2) {
@@ -308,7 +308,7 @@ setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...)
 })
 
 #_______________________________________________________________________________
-#----                               isDiag                                  ----
+#----                               is_diag                                 ----
 #_______________________________________________________________________________
 
 #' Is diagonal.
@@ -316,20 +316,20 @@ setMethod("exportToJSON", signature=c("sigma"), definition=function(object, ...)
 #' @param object generic object
 #' @return logical value
 #' @export
-#' @rdname isDiag
-isDiag <- function(object) TRUE
+#' @rdname is_diag
+is_diag <- function(object) TRUE
 
-setGeneric("isDiag", function(object) {
-  standardGeneric("isDiag")
+setGeneric("is_diag", function(object) {
+  standardGeneric("is_diag")
 })
 
-#' @rdname isDiag
-setMethod("isDiag", signature(object = "double_array_parameter"), function(object) {
+#' @rdname is_diag
+setMethod("is_diag", signature(object = "double_array_parameter"), function(object) {
   return(object@index==object@index2)
 })
 
 #_______________________________________________________________________________
-#----                            getNONMEMName                              ----
+#----                           get_nonmem_name                             ----
 #_______________________________________________________________________________
 
 #' Get NONMEM name.
@@ -337,36 +337,36 @@ setMethod("isDiag", signature(object = "double_array_parameter"), function(objec
 #' @param object generic object
 #' @return the NONMEM name associated with this object
 #' @export
-#' @rdname getNONMEMName
-getNONMEMName <- function(object) {
+#' @rdname get_nonmem_name
+get_nonmem_name <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getNONMEMName", function(object) {
-  standardGeneric("getNONMEMName")
+setGeneric("get_nonmem_name", function(object) {
+  standardGeneric("get_nonmem_name")
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("theta"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("theta"), definition=function(object) {
   return(paste0("THETA(", object@index, ")"))
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("omega"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("omega"), definition=function(object) {
   return(paste0("OMEGA(", object@index, ",", object@index2, ")"))
 })
 
-#' @rdname getNONMEMName
-setMethod("getNONMEMName", signature=c("sigma"), definition=function(object) {
+#' @rdname get_nonmem_name
+setMethod("get_nonmem_name", signature=c("sigma"), definition=function(object) {
   return(paste0("SIGMA(", object@index, ",", object@index2, ")"))
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("theta"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
   } else {
@@ -374,8 +374,8 @@ setMethod("getName", signature=c("theta"), definition=function(x) {
   }
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("omega"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("OMEGA", "_", x@index, "_", x@index2))
   } else {
@@ -383,8 +383,8 @@ setMethod("getName", signature=c("omega"), definition=function(x) {
   }
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("sigma"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("SIGMA", "_", x@index, "_", x@index2))
   } else {
@@ -393,7 +393,7 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                         getNameInModel                                ----
+#----                         get_name_in_model                                ----
 #_______________________________________________________________________________
 
 #' Get the name of the given parameter in the Campsis model.
@@ -401,17 +401,17 @@ setMethod("getName", signature=c("sigma"), definition=function(x) {
 #' @param x element to know the name
 #' @return the name of this parameter
 #' @export
-#' @rdname getNameInModel 
-getNameInModel <- function(x) {
+#' @rdname get_name_in_model 
+get_name_in_model <- function(x) {
   stop("No default function is provided")
 }
 
-setGeneric("getNameInModel", function(x) {
-  standardGeneric("getNameInModel")
+setGeneric("get_name_in_model", function(x) {
+  standardGeneric("get_name_in_model")
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("theta"), definition=function(x) {
   if (is.na(x@name)) {
     return(paste0("THETA", "_", x@index))
   } else {
@@ -419,8 +419,8 @@ setMethod("getNameInModel", signature=c("theta"), definition=function(x) {
   }
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("omega"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
       stop("You should not call this method with different indexes!")
@@ -431,8 +431,8 @@ setMethod("getNameInModel", signature=c("omega"), definition=function(x) {
   }
 })
 
-#' @rdname getNameInModel 
-setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
+#' @rdname get_name_in_model 
+setMethod("get_name_in_model", signature=c("sigma"), definition=function(x) {
   if (is.na(x@name)) {
     if (x@index != x@index2) {
       stop("You should not call this method with different indexes!")
@@ -444,14 +444,14 @@ setMethod("getNameInModel", signature=c("sigma"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                           getUncertainty                              ----
+#----                           get_uncertainty                             ----
 #_______________________________________________________________________________
 
 #' @param varcov variance covariance matrix
 #' @importFrom tibble tibble
-#' @rdname getUncertainty
-setMethod("getUncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
-  name <- object %>% getName()
+#' @rdname get_uncertainty
+setMethod("get_uncertainty", signature=c("parameter"), definition=function(object, varcov, ...) {
+  name <- object %>% get_name()
   if (varcov %>% length() > 0) {
     standardisedParameter <- object %>% standardise(...)
     if (name %in% colnames(varcov)) {
@@ -463,24 +463,24 @@ setMethod("getUncertainty", signature=c("parameter"), definition=function(object
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                          load_from_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("theta", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToS4Slots(object, json)
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("theta", "json_element"), definition=function(object, json) {
+  object <- map_json_properties_to_s4_slots(object, json)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("omega", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("omega", "json_element"), definition=function(object, json) {
+  object <- map_json_properties_to_s4_slots(object, json, discard_type=FALSE)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("sigma", "json_element"), definition=function(object, json) {
-  object <- mapJSONPropertiesToS4Slots(object, json, discard_type=FALSE)
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("sigma", "json_element"), definition=function(object, json) {
+  object <- map_json_properties_to_s4_slots(object, json, discard_type=FALSE)
   return(object)
 })
 
@@ -509,7 +509,7 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       retValue@value <- object@value ^ 2
     
     } else if (type == "covar") {
-      stop(paste0("Type of parameter ", object %>% getName(), " can't be 'covar'"))
+      stop(paste0("Type of parameter ", object %>% get_name(), " can't be 'covar'"))
     
     } else if (type == "cv") {
       retValue@value <- log(object@value^2+1)
@@ -530,11 +530,11 @@ setMethod("standardise", signature=c("double_array_parameter"), definition=funct
       }
       # Retrieve both omega's on the diagonal related to index and index2
       # Make sure to standardise them to variances first
-      omega1 <- parameters %>% getByIndex(Omega(index=object@index, index2=object@index)) %>% standardise()
-      omega2 <- parameters %>% getByIndex(Omega(index=object@index2, index2=object@index2)) %>% standardise()
+      omega1 <- parameters %>% get_by_index(Omega(index=object@index, index2=object@index)) %>% standardise()
+      omega2 <- parameters %>% get_by_index(Omega(index=object@index2, index2=object@index2)) %>% standardise()
       retValue@value <- object@value*sqrt(omega1@value)*sqrt(omega2@value)
     } else {
-      stop(paste0("Type of parameter ", object %>% getName(), " must be 'covar' or 'cor'"))
+      stop(paste0("Type of parameter ", object %>% get_name(), " must be 'covar' or 'cor'"))
     }
     retValue@type <- "covar"
   }

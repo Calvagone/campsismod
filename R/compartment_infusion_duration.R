@@ -28,21 +28,21 @@ InfusionDuration <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("compartment_infusion_duration"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("compartment_infusion_duration"), definition = function(x) {
   return(paste0("DURATION (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             getPrefix                                ----
+#----                             get_prefix                                ----
 #_______________________________________________________________________________
 
-#' @rdname getPrefix
-setMethod("getPrefix", signature = c("compartment_infusion_duration"), definition = function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="rxode2")
+#' @rdname get_prefix
+setMethod("get_prefix", signature = c("compartment_infusion_duration"), definition = function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
   if (dest=="mrgsolve") {
     return("D")
   } else {
@@ -51,10 +51,10 @@ setMethod("getPrefix", signature = c("compartment_infusion_duration"), definitio
 })
 
 #_______________________________________________________________________________
-#----                           getRecordName                               ----
+#----                           get_record_name                               ----
 #_______________________________________________________________________________
 
-#' @rdname getRecordName
-setMethod("getRecordName", signature = c("compartment_infusion_duration"), definition = function(object) {
+#' @rdname get_record_name
+setMethod("get_record_name", signature = c("compartment_infusion_duration"), definition = function(object) {
   return("DURATION")
 })

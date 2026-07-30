@@ -17,7 +17,7 @@ setClass(
   ),
   prototype=prototype(list=list()),
   validity=function(object) {
-    check <- expectOne(object, "type")
+    check <- expect_one(object, "type")
     for (elem in object@list) {
       methods::validObject(elem, complete=TRUE) # TEST=FALSE (default) raises error
     }
@@ -50,10 +50,10 @@ setGeneric("add", function(object, x, ...) {
 setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(object, x, pos=NULL) {
   if (methods::validObject(x)) {
     if (!is(x, object@type)) {
-      stop(paste0("Element '", x %>% getName(), "' does not extend type '", object@type, "'."))
+      stop(paste0("Element '", x %>% get_name(), "' does not extend type '", object@type, "'."))
     
     } else if(object %>% contains(x)) {
-      stop(paste0("Element '", x %>% getName(), "' is already present."))
+      stop(paste0("Element '", x %>% get_name(), "' is already present."))
     
     } else {
       if (is.null(pos)) {
@@ -62,7 +62,7 @@ setMethod("add", signature=c("pmx_list", "pmx_element"), definition=function(obj
       if (pos@by_index) {
         index <- pos@index
       } else if (pos@by_element) {
-        index <- object %>% indexOf(pos@element)
+        index <- object %>% index_of(pos@element)
       } else {
         stop("Element position can only by index or by position")
       }
@@ -110,10 +110,10 @@ setGeneric("replace", function(object, x) {
 #' @rdname replace
 setMethod("replace", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   if (object %>% contains(x)) {
-    index <- object %>% indexOf(x)
+    index <- object %>% index_of(x)
     object@list[[index]] <- x
   } else {
-    stop(paste("Element", x %>% getName(), "does not exist."))
+    stop(paste("Element", x %>% get_name(), "does not exist."))
   }
   return(object)
 })
@@ -132,7 +132,7 @@ setMethod("replace", signature=c("pmx_list", "list"), definition=function(object
 })
 
 #_______________________________________________________________________________
-#----                             indexOf                                   ----
+#----                             index_of                                  ----
 #_______________________________________________________________________________
 
 #' Get the index of an element in list.
@@ -141,19 +141,19 @@ setMethod("replace", signature=c("pmx_list", "list"), definition=function(object
 #' @param x element to know the index
 #' @return index of this element
 #' @export
-#' @rdname indexOf
-indexOf <- function(object, x) {
+#' @rdname index_of
+index_of <- function(object, x) {
   stop("No default function is provided")
 }
 
-setGeneric("indexOf", function(object, x) {
-  standardGeneric("indexOf")
+setGeneric("index_of", function(object, x) {
+  standardGeneric("index_of")
 })
 
-#' @rdname indexOf
-setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
+#' @rdname index_of
+setMethod("index_of", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
   logicalVector <- object@list %>% purrr::map_lgl(.f=function(.x) {
-    retValue <- .x %>% getName() == x %>% getName()
+    retValue <- .x %>% get_name() == x %>% get_name()
     return(ifelse(is.na(retValue), FALSE, retValue))
   })
   index <- which(logicalVector)
@@ -164,7 +164,7 @@ setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function
 })
 
 #_______________________________________________________________________________
-#----                           getByName                                   ----
+#----                          get_by_name                                  ----
 #_______________________________________________________________________________
 
 #' Get an element from a list by name.
@@ -174,21 +174,21 @@ setMethod("indexOf", signature=c("pmx_list", "pmx_element"), definition=function
 #' @param name element name to search for
 #' @return the element that was found or NULL if no element was found with the same name
 #' @export
-#' @rdname getByName
-getByName <- function(object, name) {
+#' @rdname get_by_name
+get_by_name <- function(object, name) {
   stop("No default function is provided")
 }
 
-setGeneric("getByName", function(object, name) {
-  standardGeneric("getByName")
+setGeneric("get_by_name", function(object, name) {
+  standardGeneric("get_by_name")
 })
 
-#' @rdname getByName
-setMethod("getByName", signature=c("pmx_list", "character"), definition=function(object, name) {
+#' @rdname get_by_name
+setMethod("get_by_name", signature=c("pmx_list", "character"), definition=function(object, name) {
   if (is.na(name)) {
     return(NULL)
   }
-  return(object@list %>% purrr::detect(~(!is.na(.x %>% getName()) && .x %>% getName()==name)))
+  return(object@list %>% purrr::detect(~(!is.na(.x %>% get_name()) && .x %>% get_name()==name)))
 })
 
 #_______________________________________________________________________________
@@ -243,12 +243,12 @@ setGeneric("delete", function(object, x) {
 
 #' @rdname delete
 setMethod("delete", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  index <- object %>% indexOf(x)
+  index <- object %>% index_of(x)
   if (index %>% length() > 0) {
     object@list <- object@list[-index]
     return(object)
   } else {
-    stop(paste("Element", x %>% getName(), "does not exist."))
+    stop(paste("Element", x %>% get_name(), "does not exist."))
   }
 })
 
@@ -286,11 +286,11 @@ setGeneric("find", function(object, x) {
 
 #' @rdname find
 setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(object, x) {
-  return(object %>% getByName(x %>% getName()))
+  return(object %>% get_by_name(x %>% get_name()))
 })
 
 #_______________________________________________________________________________
-#----                            getNames                                   ----
+#----                            get_names                                  ----
 #_______________________________________________________________________________
 
 #' Get element names from list.
@@ -298,18 +298,18 @@ setMethod("find", signature=c("pmx_list", "pmx_element"), definition=function(ob
 #' @param object list object
 #' @return character vector with all the element names of this list
 #' @export
-#' @rdname getNames
-getNames <- function(object) {
+#' @rdname get_names
+get_names <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getNames", function(object) {
-  standardGeneric("getNames")
+setGeneric("get_names", function(object) {
+  standardGeneric("get_names")
 })
 
-#' @rdname getNames
-setMethod("getNames", signature=c("pmx_list"), definition=function(object) {
-  return(object@list %>% purrr::map_chr(~.x %>% getName()))
+#' @rdname get_names
+setMethod("get_names", signature=c("pmx_list"), definition=function(object) {
+  return(object@list %>% purrr::map_chr(~.x %>% get_name()))
 })
 
 #_______________________________________________________________________________
@@ -327,7 +327,7 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 })
 
 #_______________________________________________________________________________
-#----                           getByIndex                                  ----
+#----                          get_by_index                                 ----
 #_______________________________________________________________________________
 
 #' Get element by index.
@@ -336,17 +336,17 @@ setMethod("length", signature=c("pmx_list"), definition=function(x) {
 #' @param x element index
 #' @return element from the list whose index matches with provided index
 #' @export
-#' @rdname getByIndex
-getByIndex <- function(object, x) {
+#' @rdname get_by_index
+get_by_index <- function(object, x) {
   stop("No default function is provided")
 }
 
-setGeneric("getByIndex", function(object, x) {
-  standardGeneric("getByIndex")
+setGeneric("get_by_index", function(object, x) {
+  standardGeneric("get_by_index")
 })
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(object, x) {
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("pmx_list", "integer"), definition=function(object, x) {
   len <- object %>% length()
   assertthat::assert_that(len > 0, msg="x must be greater than 0")
   if (x > len) {
@@ -355,9 +355,9 @@ setMethod("getByIndex", signature=c("pmx_list", "integer"), definition=function(
   return(object@list[[x]])
 })
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("pmx_list", "numeric"), definition=function(object, x) {
-  return(getByIndex(object, x=as.integer(x)))
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("pmx_list", "numeric"), definition=function(object, x) {
+  return(get_by_index(object, x=as.integer(x)))
 })
 
 

@@ -13,7 +13,7 @@ setClass(
   ),
   contains = "model_statement",
   validity = function(object) {
-    return(expectOne(object, "line"))
+    return(expect_one(object, "line"))
   }
 )
 
@@ -29,33 +29,33 @@ UnknownStatement <- function(line, comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("unknown_statement"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("unknown_statement"), definition = function(x) {
   return(as.character(NA)) # unknown statement non-identifiable 
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("unknown_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@line <- object@line %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+#' @rdname replace_all
+setMethod("replace_all", signature=c("unknown_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@line <- object@line %>% replace_all(pattern=pattern, replacement=replacement, ...)
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("unknown_statement"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("unknown_statement"), definition=function(object, ...) {
   args <- list(...)
-  dest <- processExtraArg(args=args, name="dest", default="campsis")
-  show <- processExtraArg(args=args, name="show", default=FALSE)
+  dest <- process_extra_arg(args=args, name="dest", default="campsis")
+  show <- process_extra_arg(args=args, name="show", default=FALSE)
 
   if (dest=="campsis") {
     if (show) {
@@ -63,10 +63,10 @@ setMethod("toString", signature=c("unknown_statement"), definition=function(obje
     } else {
       retValue <- object@line
     }
-  } else if (isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
+  } else if (is_rxode(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- object@line
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

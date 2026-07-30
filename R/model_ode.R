@@ -34,31 +34,31 @@ Ode <- function(lhs, rhs="", comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("ode"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("ode"), definition = function(x) {
   return(paste0("ODE (", x@lhs, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("ode"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  model <- processExtraArg(args=list(...), name="model", default=CampsisModel())
+#' @rdname to_string
+setMethod("to_string", signature=c("ode"), definition=function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
+  model <- process_extra_arg(args=list(...), name="model", default=CampsisModel())
   
-  if (dest=="campsis" || isRxODE(dest)) {
+  if (dest=="campsis" || is_rxode(dest)) {
     retValue <- paste0("d/dt(", object@lhs, ")", "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0("dxdt_", object@lhs, "=", object@rhs, ";")
   } else if (dest=="NONMEM") {
-    retValue <- paste0("DADT(", model %>% getCompartmentIndex(gsub("A_", "", object@lhs)), ")", "=", object@rhs)
+    retValue <- paste0("DADT(", model %>% get_compartment_index(gsub("A_", "", object@lhs)), ")", "=", object@rhs)
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

@@ -5,7 +5,7 @@
 #' @param model Campsis model
 #' @return corresponding model code for rxode2
 #' @export
-rxodeCode <- function(model) {
+rxode_code <- function(model) {
   records <- model@model
   properties <- model@compartments@properties
   propertiesCode <- NULL
@@ -13,7 +13,7 @@ rxodeCode <- function(model) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
       compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-      equation <- property %>% toString(model=model, dest="rxode2")
+      equation <- property %>% to_string(model=model, dest="rxode2")
       propertiesCode <- propertiesCode %>% append(equation)
     }
   }
@@ -22,7 +22,7 @@ rxodeCode <- function(model) {
   code <- NULL
   for (record in records@list) {
     for (statement in record@statements@list) {
-      code <- code %>% append(statement %>% toString(dest="rxode2"))
+      code <- code %>% append(statement %>% to_string(dest="rxode2"))
     }
     if (is(record, "ode_record")) {
       code <- code %>% append(propertiesCode)
@@ -36,7 +36,7 @@ rxodeCode <- function(model) {
 #' @param model Campsis model
 #' @return named vector with THETA values
 #' @export
-rxodeParams <- function(model) {
+rxode_params <- function(model) {
   type <- "theta"
   params <- model@parameters
   if (params %>% length() == 0) {
@@ -44,23 +44,23 @@ rxodeParams <- function(model) {
     names(retValue) <- character(0)
     return(retValue) # Must be named numeric, otherwise rxode2 complains
   }
-  maxIndex <- params %>% select("theta") %>% maxIndex()
+  max_index <- params %>% select("theta") %>% max_index()
   
   # Careful, as.numeric(NA) is important...
   # If values are all integers, rxode2 gives a strange error message:
   # Error in rxSolveSEXP(object, .ctl, .nms, .xtra, params, events, inits,  : 
   # when specifying 'thetaMat', 'omega', or 'sigma' the parameters cannot be a 'data.frame'/'matrix'
   
-  retValue <- rep(as.numeric(NA), maxIndex)
-  names <- rep("", maxIndex)
+  retValue <- rep(as.numeric(NA), max_index)
+  names <- rep("", max_index)
   
-  for (i in seq_len(maxIndex)) {
-    param <- params %>% getByIndex(Theta(index=i))
+  for (i in seq_len(max_index)) {
+    param <- params %>% get_by_index(Theta(index=i))
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
       retValue[i] <- param@value
-      names[i] <- param %>% getNameInModel()
+      names[i] <- param %>% get_name_in_model()
     }
   }
   names(retValue) <- names
@@ -74,7 +74,7 @@ rxodeParams <- function(model) {
 #' @param type either omega or sigma
 #' @return omega/sigma named matrix
 #' @export
-rxodeMatrix <- function(model, type="omega") {
+rxode_matrix <- function(model, type="omega") {
   
   if (is(model, "campsis_model")) {
     subset <- model@parameters %>%
@@ -95,17 +95,17 @@ rxodeMatrix <- function(model, type="omega") {
     standardise()
   
   # Retrieve max index
-  maxIndex <- subset %>%
-    maxIndex()
-  matrix <- matrix(0L, nrow=maxIndex, ncol=maxIndex)
-  names <- rep("", maxIndex)
+  max_index <- subset %>%
+    max_index()
+  matrix <- matrix(0L, nrow=max_index, ncol=max_index)
+  names <- rep("", max_index)
   
   # Fill in matrix
   for (elem in subset@list) {
     matrix[elem@index, elem@index2] <- elem@value
     matrix[elem@index2, elem@index] <- elem@value
     if (elem@index==elem@index2) {
-      names[elem@index] <- elem %>% getNameInModel()
+      names[elem@index] <- elem %>% get_name_in_model()
     }
   }
   

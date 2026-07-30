@@ -43,27 +43,27 @@ setMethod("replicate", signature = c("campsis_model", "integer", "auto_replicati
   }
 
   # Get variance-covariance matrix
-  varcov <- object %>% getVarCov()
+  varcov <- object %>% get_var_cov()
 
   if (varcov %>% length() == 0) {
     # No variance-covariance matrix is detected
     table <- tibble::tibble(REPLICATE=seq_len(n))
   } else {
     # Sample parameters in variance-covariance matrix from a multivariate normal distribution
-    table <- sampleFromMultivariateNormalDistribution(parameters=object@parameters, n=n, settings=settings)
+    table <- sample_from_multivariate_normal_distribution(parameters=object@parameters, n=n, settings=settings)
   }
   
   # Sample parameters (possibly OMEGA and SIGMA) from inverse chi-squared or Wishart distribution
   if (settings@wishart) {
     omegas <- object@parameters %>% select("omega")
     if (omegas %>% length() > 0) {
-      sampledOmegas <- sampleFromInverseChiSquaredOrWishart(parameters=omegas, n=n, settings=settings)
+      sampledOmegas <- sample_from_inverse_chi_squared_or_wishart(parameters=omegas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledOmegas, by="REPLICATE")
     }
     sigmas <- object@parameters %>% select("sigma")
     if (sigmas %>% length() > 0) {
-      sampledSigmas <- sampleFromInverseChiSquaredOrWishart(parameters=sigmas, n=n, settings=settings)
+      sampledSigmas <- sample_from_inverse_chi_squared_or_wishart(parameters=sigmas, n=n, settings=settings)
       table <- table %>%
         dplyr::left_join(sampledSigmas, by="REPLICATE")
     }
@@ -109,13 +109,13 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
   }
   
   # Get the index of the last replicate
-  maxIndex <- object@replicated_parameters %>%
+  max_index <- object@replicated_parameters %>%
     dplyr::pull("REPLICATE") %>%
     max()
   
   # Check the user-given index is in range
-  if (index < 1 || index > maxIndex) {
-    stop(sprintf("Index must be in the range [1, %i]", maxIndex))
+  if (index < 1 || index > max_index) {
+    stop(sprintf("Index must be in the range [1, %i]", max_index))
   }
   
   # Find row
@@ -123,7 +123,7 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
     dplyr::filter(.data$REPLICATE==index) %>%
     dplyr::select(-c("REPLICATE"))
   
-  retValue <- updateParameters(model=object@original_model, row=row)
+  retValue <- update_parameters(model=object@original_model, row=row)
   return(retValue)
 })
 
@@ -135,12 +135,12 @@ setMethod("export", signature=c("replicated_campsis_model", "campsis_model"), de
 #' @importFrom assertthat assert_that
 #' @keywords internal
 #' 
-updateParameters <- function(model, row) {
+update_parameters <- function(model, row) {
   assertthat::assert_that(nrow(row) == 1, msg="Only one row is expected.")
   sampledParameterNames <- names(row)
   sampledParameterValues <- as.numeric(row)
   parameters <- model@parameters
-  parameterNames <- parameters %>% getNames()
+  parameterNames <- parameters %>% get_names()
 
   for (index in seq_along(sampledParameterNames)) {
     sampledParameterName <- sampledParameterNames[index]
@@ -153,7 +153,7 @@ updateParameters <- function(model, row) {
   }
   
   # Update OMEGA's according that are same
-  model <- updateOMEGAs(model)
+  model <- update_omegas(model)
   
   # Reset varcov
   model@parameters@varcov <- matrix(numeric(0), nrow=0, ncol=0)
@@ -173,7 +173,7 @@ updateParameters <- function(model, row) {
 #' @importFrom purrr map_lgl
 #' @keywords internal
 #' 
-updateOMEGAs <- function(model) {
+update_omegas <- function(model) {
   isOmega <- model@parameters@list %>%
     purrr::map_lgl(~is(.x, "omega"))
   
@@ -232,7 +232,7 @@ setMethod("show", signature=c("replicated_campsis_model"), definition=function(o
   
   model <- object@original_model
   parameters <- model@parameters
-  parameterNames <- parameters %>% getNames()
+  parameterNames <- parameters %>% get_names()
   
   samplingData <- object@replicated_parameters %>%
     tidyr::pivot_longer(cols=-c("REPLICATE"), names_to="Parameter", values_to="Value")
@@ -246,7 +246,7 @@ setMethod("show", signature=c("replicated_campsis_model"), definition=function(o
   correspondingIndexes <- match(x=sampledParameterNames, table=parameterNames)
   sampledParameters@list <- sampledParameters@list[correspondingIndexes]
 
-  parameterInfo <- tibble::tibble(Parameter=sampledParameters %>% getNames(),
+  parameterInfo <- tibble::tibble(Parameter=sampledParameters %>% get_names(),
                                   Value=sampledParameters@list %>% purrr::map_dbl(~.x@value)) %>%
     dplyr::mutate(Parameter=factor(.data$Parameter, levels=sampledParameterNames)) # Natural order
   

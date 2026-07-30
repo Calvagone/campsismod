@@ -55,15 +55,15 @@ VariablePattern <- function(x) {
 }
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("character", "variable_pattern", "character"), definition=function(object, pattern, replacement, ...) {
+#' @rdname replace_all
+setMethod("replace_all", signature=c("character", "variable_pattern", "character"), definition=function(object, pattern, replacement, ...) {
   return(gsub(paste0("([^a-zA-Z0-9_]|^)(", pattern, ")([^a-zA-Z0-9_]|$)"), replacement=paste0("\\1", replacement, "\\3"), x=object))
 })
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("character", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+#' @rdname replace_all
+setMethod("replace_all", signature=c("character", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
   return(gsub(pattern, replacement=replacement, x=object))
 })

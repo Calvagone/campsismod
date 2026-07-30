@@ -28,29 +28,29 @@ InitialCondition <- function(compartment, rhs="") {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("compartment_initial_condition"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("compartment_initial_condition"), definition=function(x) {
   return(paste0("INIT (", "CMT=", x@compartment, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             getPrefix                                ----
+#----                             get_prefix                                ----
 #_______________________________________________________________________________
 
-#' @rdname getPrefix
-setMethod("getPrefix", signature = c("compartment_initial_condition"), definition = function(object, ...) {
+#' @rdname get_prefix
+setMethod("get_prefix", signature = c("compartment_initial_condition"), definition = function(object, ...) {
   return("")
 })
 
 #_______________________________________________________________________________
-#----                           getRecordName                               ----
+#----                           get_record_name                               ----
 #_______________________________________________________________________________
 
-#' @rdname getRecordName
-setMethod("getRecordName", signature = c("compartment_initial_condition"), definition = function(object) {
+#' @rdname get_record_name
+setMethod("get_record_name", signature = c("compartment_initial_condition"), definition = function(object) {
   return("INIT")
 })
 
@@ -59,25 +59,25 @@ setMethod("getRecordName", signature = c("compartment_initial_condition"), defin
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment_initial_condition"), definition=function(object) {
-  cat(paste0(object %>% getName(), ": ", object@rhs))
+  cat(paste0(object %>% get_name(), ": ", object@rhs))
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("compartment_initial_condition"), definition=function(object, ...) {
-  model <- processExtraArg(args=list(...), name="model", mandatory=TRUE)
-  dest <- processExtraArg(args=list(...), name="dest", mandatory=TRUE)
+#' @rdname to_string
+setMethod("to_string", signature=c("compartment_initial_condition"), definition=function(object, ...) {
+  model <- process_extra_arg(args=list(...), name="model", mandatory=TRUE)
+  dest <- process_extra_arg(args=list(...), name="dest", mandatory=TRUE)
   
   compartmentIndex <- object@compartment
   compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
   
-  if (isRxODE(dest)) {
-    return(paste0(compartment %>% toString(), "(0)=", object@rhs))
+  if (is_rxode(dest)) {
+    return(paste0(compartment %>% to_string(), "(0)=", object@rhs))
   } else if (dest=="mrgsolve") {
-    return(paste0(compartment %>% toString(), "_0=", object@rhs))
+    return(paste0(compartment %>% to_string(), "_0=", object@rhs))
   } else {
     stop("Only rxode2 (previously RxODE) and mrgsolve are currently supported")
   }

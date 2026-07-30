@@ -18,10 +18,10 @@ setMethod("export", signature=c("campsis_model", "rxode_type"), definition=funct
   return(
     new(
       "rxode_model",
-      code = rxodeCode(object),
-      theta = rxodeParams(object),
-      omega = rxodeMatrix(object, type = "omega"),
-      sigma = rxodeMatrix(object, type = "sigma")
+      code = rxode_code(object),
+      theta = rxode_params(object),
+      omega = rxode_matrix(object, type = "omega"),
+      sigma = rxode_matrix(object, type = "sigma")
     )
   )
 })

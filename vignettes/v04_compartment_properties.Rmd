@@ -35,7 +35,7 @@ model_
 This is strictly equal as doing (if you prefer working with compartment names):
 
 ```{r}
-model <- model %>% delete(InitialCondition(compartment= model %>% getCompartmentIndex("CENTRAL")))
+model <- model %>% delete(InitialCondition(compartment= model %>% get_compartment_index("CENTRAL")))
 ```
 
 We can now add a fixed rate for all infusions that go into the central compartment:
@@ -91,7 +91,7 @@ Check the existence of a compartment:
 ```{r}
 model %>% contains(Compartment(1)) 
 # Or equivalenty:
-model %>% contains(Compartment(model %>% getCompartmentIndex("CENTRAL")))
+model %>% contains(Compartment(model %>% get_compartment_index("CENTRAL")))
 ```
 
 Check the existence of a property:

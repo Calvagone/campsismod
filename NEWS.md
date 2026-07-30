@@ -1,17 +1,21 @@
+# campsismod 1.4.0
+* Migrate campsismod to snake_case #122
+* Update pkgdown documentation #123
+
 # campsismod 1.3.2
 * Update model suite #120
 
 # campsismod 1.3.1
 * Use straight single quotes, not directed ones, for the whole DESCRIPTION file #115
 * Add R-universe badge to README #116
-* Review method mapJSONPropertiesToS4Slots #117
+* Review method map_json_properties_to_s4_slots #117
 * Add 'json' argument to CampsisModel constructor #118
 
 # campsismod 1.3.0
 * JSON-based interface to import Campsis models #113
 
 # campsismod 1.2.3
-* Method 'replaceAll' not working with unknown statements #108
+* Method 'replace_all' not working with unknown statements #108
 
 # campsismod 1.2.2
 * Skip performance tests on CRAN #105
@@ -25,16 +29,16 @@
 # campsismod 1.2.0
 
 * Add min/max columns to THETA's #24
-* Method 'addSuffix' does not preserve the variance-covariance matrix #81
+* Method 'add_suffix' does not preserve the variance-covariance matrix #81
 * Method 'add' does not merge variance-covariance matrices #82
-* Method 'addRSE' to quickly add relative standard error on parameter #83
+* Method 'add_rse' to quickly add relative standard error on parameter #83
 * Implement generic method 'move' #84
 * Generate parameter uncertainty in campsismod rather than in campsis #85
 * Error when printing the model in the console #88
 * Allow manual import of sampled parameters for model replication #89
 * Get rid of plyr package #90
 * Quality: increase code coverage #91
-* Method 'addRSE' can't be used to replace an existing value #92
+* Method 'add_rse' can't be used to replace an existing value #92
 * Issue when the model is replicated only once #93
 * Implement show method on replication setting object #95
 * Check OMEGA and SIGMA matrix for positive definiteness #96
@@ -48,7 +52,7 @@
 
 # campsismod 1.1.1
 
-* Function 'replaceAll' not replacing occurrences in compartment properties #74
+* Function 'replace_all' not replacing occurrences in compartment properties #74
 
 # campsismod 1.1.0
 
@@ -57,7 +61,7 @@
 
 # campsismod 1.0.0
 
-* New method 'addSuffix' to combine several models #61
+* New method 'add_suffix' to combine several models #61
 * Code review: extra parameters to mrgsolve model #62
 
 # campsismod 0.9.1

@@ -16,7 +16,7 @@ setClass(
   contains = "pmx_element",
   prototype = prototype(comment=as.character(NA)),
   validity = function(object) {
-    return(expectOne(object, c("comment")))
+    return(expect_one(object, c("comment")))
   }
 )
 
@@ -28,7 +28,7 @@ setClass(
 #' @param dest destination engine, string
 #' @return single character string followed by comment
 #' @keywords internal
-appendComment <- function(str, object, dest) {
+append_comment <- function(str, object, dest) {
   comment <- object@comment
   if (is.na(comment)) {
     return(str)
@@ -63,14 +63,14 @@ UnsupportedDestException <- function() {
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("model_statement"), definition=function(object) {
-  cat(object %>% toString(show=TRUE))
+  cat(object %>% to_string(show=TRUE))
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+#' @rdname replace_all
+setMethod("replace_all", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
   return(object)
 })

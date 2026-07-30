@@ -100,7 +100,7 @@ setClass(
 #' @param code code record
 #' @export
 MainRecord <- function(code=character()) {
-  return(new("main_record", statements=parseStatements(code)))
+  return(new("main_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -125,7 +125,7 @@ setClass(
 #' @return an ODE code record
 #' @export
 OdeRecord <- function(code=character()) {
-  return(new("ode_record", statements=parseStatements(code)))
+  return(new("ode_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -227,7 +227,7 @@ setClass(
 #' @return an ERROR code record
 #' @export
 ErrorRecord <- function(code=character()) {
-  return(new("error_record", statements=parseStatements(code)))
+  return(new("error_record", statements=parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -282,46 +282,46 @@ setMethod("find", signature=c("statements_record", "model_statement"), definitio
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("main_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("main_record"), definition=function(x) {
   return("MAIN")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("ode_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("ode_record"), definition=function(x) {
   return("ODE")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("f_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("f_record"), definition=function(x) {
   return("F")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("lag_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("lag_record"), definition=function(x) {
   return("LAG")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("duration_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("duration_record"), definition=function(x) {
   return("DURATION")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("rate_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("rate_record"), definition=function(x) {
   return("RATE")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("init_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("init_record"), definition=function(x) {
   return("INIT")
 })
 
-#' @rdname getName
-setMethod("getName", signature=c("error_record"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("error_record"), definition=function(x) {
   return("ERROR")
 })
 
@@ -345,12 +345,12 @@ setMethod("replace", signature=c("statements_record", "model_statement"), defini
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+#' @rdname replace_all
+setMethod("replace_all", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   return(object)
 })
 
@@ -359,7 +359,7 @@ setMethod("replaceAll", signature=c("code_record", "pattern", "character"), defi
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("code_record"), definition=function(object) {
-  cat(writeRecordDelimiter(object), "\n", sep="")
+  cat(write_record_delimiter(object), "\n", sep="")
   show(object@statements)
 })
 
@@ -369,8 +369,8 @@ setMethod("show", signature=c("code_record"), definition=function(object) {
 #' @param object code record
 #' @return a record delimiter line
 #' @keywords internal
-writeRecordDelimiter <- function(object) {
-  recordDelimiter <- paste0("[", object %>% getName(), "]")
-  recordDelimiter <- recordDelimiter %>% appendComment(object=object, dest="campsis")
+write_record_delimiter <- function(object) {
+  recordDelimiter <- paste0("[", object %>% get_name(), "]")
+  recordDelimiter <- recordDelimiter %>% append_comment(object=object, dest="campsis")
   return(recordDelimiter)
 }
