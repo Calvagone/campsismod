@@ -1,16 +1,15 @@
-
 #' Assert the given character vector is a single character string.
-#' 
+#'
 #' @param x single character string
 #' @return no return value
 #' @importFrom assertthat assert_that
 #' @export
 assert_single_character_string <- function(x) {
-  assertthat::assert_that(is.character(x) && length(x)==1, msg="x must be a single character string")
+  assertthat::assert_that(is.character(x) && length(x) == 1, msg = "x must be a single character string")
 }
 
 #' Process extra arguments.
-#' 
+#'
 #' @param args arguments list
 #' @param name argument name to retrieve
 #' @param default default value if argument is not present
@@ -18,7 +17,7 @@ assert_single_character_string <- function(x) {
 #' @return requested argument value
 #' @importFrom utils hasName
 #' @export
-process_extra_arg <- function(args, name, default=NULL, mandatory=FALSE) {
+process_extra_arg <- function(args, name, default = NULL, mandatory = FALSE) {
   if (utils::hasName(args, name)) {
     retValue <- args[[name]]
   } else {
@@ -31,49 +30,49 @@ process_extra_arg <- function(args, name, default=NULL, mandatory=FALSE) {
 }
 
 #' Say if line(s) in record is/are ODE or not.
-#' 
+#'
 #' @param x character vector
 #' @return logical vector
 #' @export
 is_ode <- function(x) {
-  return(grepl(pattern="^d/dt\\s*\\(.*\\)\\s*=", x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern = "^d/dt\\s*\\(.*\\)\\s*=", x = trim(x), ignore.case = TRUE))
 }
 
 #' Return the variable pattern (string form).
-#' 
+#'
 #' @return pattern (regular expression)
 #' @keywords internal
-#' 
+#'
 variable_pattern_str <- function() {
   return("[a-zA-Z_][a-zA-Z0-9_]*")
 }
 
 #' Return the variable pattern (string form), without the first character.
-#' 
+#'
 #' @return pattern (regular expression)
 #' @keywords internal
-#' 
+#'
 variable_pattern_no_start_str <- function() {
   return("[a-zA-Z0-9_]*")
 }
 
 #' Say if line in record is an equation not.
-#' 
+#'
 #' @param x character value
 #' @return logical value
 #' @export
 is_equation <- function(x) {
   assert_single_character_string(x)
-  parts <- strsplit(x, split="=")[[1]]
+  parts <- strsplit(x, split = "=")[[1]]
   if (length(parts) == 1) {
     return(FALSE)
   }
   variable <- parts[1] %>% trim()
-  return(grepl(pattern=paste0("^", variable_pattern_str(), "$"), x=variable))
+  return(grepl(pattern = paste0("^", variable_pattern_str(), "$"), x = variable))
 }
 
 #' Return the IF-statement pattern (string form).
-#' 
+#'
 #' @return pattern (regular expression)
 #' @keywords internal
 if_statement_pattern_str <- function() {
@@ -81,16 +80,16 @@ if_statement_pattern_str <- function() {
 }
 
 #' Say if line in record is an IF-statement.
-#' 
+#'
 #' @param x character value
 #' @return logical value
 #' @export
 is_if_statement <- function(x) {
-  return(grepl(pattern=paste0("^", if_statement_pattern_str()), x=trim(x), ignore.case=TRUE))
+  return(grepl(pattern = paste0("^", if_statement_pattern_str()), x = trim(x), ignore.case = TRUE))
 }
 
 #' Extract text between brackets.
-#' 
+#'
 #' @param x character value
 #' @return text between brackets (trimmed)
 #' @export
@@ -104,73 +103,73 @@ extract_text_between_brackets <- function(x) {
 }
 
 #' Extract right-hand-side expression.
-#' 
+#'
 #' @param x character value
 #' @param split character where to split
 #' @return right-hand side expression
 #' @export
-extract_rhs <- function(x, split="=") {
+extract_rhs <- function(x, split = "=") {
   assert_single_character_string(x)
-  tmp <- strsplit(x=x, split=split)[[1]]
+  tmp <- strsplit(x = x, split = split)[[1]]
   # Remove lhs and collapse (in case of several =)
-  rhs <- paste0(tmp[-1], collapse="=")
+  rhs <- paste0(tmp[-1], collapse = "=")
   return(rhs)
 }
 
 #' Extract left-hand-side expression.
-#' 
+#'
 #' @param x character value
 #' @param split character where to split
 #' @return left-hand-side expression, not trimmed
 #' @export
-extract_lhs <- function(x, split="=") {
+extract_lhs <- function(x, split = "=") {
   assert_single_character_string(x)
-  tmp <- strsplit(x=x, split=split)[[1]]
+  tmp <- strsplit(x = x, split = split)[[1]]
   lhs <- tmp[1]
   return(lhs)
 }
 
 #' Trim character vector. Remove all leading and trailing spaces.
-#' 
+#'
 #' @param x character vector
 #' @return character vector without leading and trailing spaces
 #' @importFrom assertthat assert_that
 #' @export
 trim <- function(x) {
-  assertthat::assert_that(is.character(x), msg="x must be a character vector")
+  assertthat::assert_that(is.character(x), msg = "x must be a character vector")
   return(gsub("^\\s+|\\s+$", "", x))
 }
 
 #' Check if string contains Campsis-style comments.
-#' 
+#'
 #' @param x character vector
 #' @return logical value
 #' @export
 has_comment <- function(x) {
-  return(grepl("#", x=x, fixed=TRUE))
+  return(grepl("#", x = x, fixed = TRUE))
 }
 
 #' Check if string is a Campsis comment (i.e. not an equation).
-#' 
+#'
 #' @param x character vector
 #' @return logical value
 #' @export
 is_comment <- function(x) {
-  return(grepl("^\\s*#", x=x))
+  return(grepl("^\\s*#", x = x))
 }
 
 #' Check if string is an empty line.
-#' 
+#'
 #' @param x character vector
 #' @return logical value
 #' @export
 is_empty_line <- function(x) {
-  return(grepl("^\\s*$", x=x))
+  return(grepl("^\\s*$", x = x))
 }
 
-#' Is strict record delimiter. A strict record delimiter is any line starting 
+#' Is strict record delimiter. A strict record delimiter is any line starting
 #' with [...] and followed by nothing but spaces or a possible comment.
-#' 
+#'
 #' @param line any line, single character value
 #' @return a logical value
 #' @export
@@ -179,7 +178,7 @@ is_strict_record_delimiter <- function(line) {
 }
 
 #' Is record delimiter. A record delimiter is any line starting with [...].
-#' 
+#'
 #' @param line any line, single character value
 #' @return a logical value
 #' @export
@@ -188,16 +187,16 @@ is_record_delimiter <- function(line) {
 }
 
 #' Get record delimiter.
-#' 
+#'
 #' @param line any line, single character value
 #' @return the record delimiter between brackets
 #' @export
 get_record_delimiter <- function(line) {
-  return(gsub("\\[(.*)\\](.*)","\\1", line) %>% trim())
+  return(gsub("\\[(.*)\\](.*)", "\\1", line) %>% trim())
 }
 
 #' Get record equation names
-#' 
+#'
 #' @param record any code record
 #' @return a character vector with the equation names
 #' @export
@@ -213,7 +212,7 @@ get_record_equation_names <- function(record) {
 }
 
 #' Check is vector has NA's only.
-#' 
+#'
 #' @param x any vector
 #' @return TRUE if all values are NA, FALSE otherwise
 #' @export
@@ -223,7 +222,7 @@ all_na <- function(x) {
 }
 
 #' Remove given column(s) if it has only NA's.
-#' 
+#'
 #' @param x any data frame
 #' @param column column name(s)
 #' @return updated data frame
@@ -236,7 +235,7 @@ remove_na_column <- function(x, column) {
 
 #' Check if the destination engine is RxODE or rxode2.
 #' Note that rxode2 is the successor of RxODE.
-#' 
+#'
 #' @param dest destination engine
 #' @return TRUE if RxODE or rxode2, FALSE otherwise
 #' @export

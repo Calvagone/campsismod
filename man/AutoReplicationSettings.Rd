@@ -33,7 +33,7 @@ single integer value (the same degrees of freedom for all SIGMA blocks) or integ
 replication settings
 }
 \description{
-By default, all model parameters are sampled from a multivariate normal 
+By default, all model parameters are sampled from a multivariate normal
 distribution, whose characteristics are specified by the variance-covariance matrix.
 OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
 by setting the \code{wishart} argument to \code{TRUE}. In that case, THETAs are still sampled

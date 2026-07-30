@@ -2,24 +2,24 @@
 #----                        compartments class                             ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartments class.
-#' 
+#'
 #' @slot properties compartment properties of the compartments defined in this class
 #' @export
 setClass(
   "compartments",
   representation(
-    properties="compartment_properties"
+    properties = "compartment_properties"
   ),
   contains = "pmx_list",
-  prototype = prototype(type="compartment", properties=new("compartment_properties"))
+  prototype = prototype(type = "compartment", properties = new("compartment_properties"))
 )
 
-#' 
+#'
 #' Create a list of compartments
-#' 
-#' @return an empty list of compartments  
+#'
+#' @return an empty list of compartments
 #' @export
 Compartments <- function() {
   return(new("compartments"))
@@ -31,31 +31,33 @@ Compartments <- function() {
 
 #' @rdname add
 setMethod("add", signature = c("compartments", "compartment_property"), definition = function(object, x) {
-  object@properties <- object@properties %>% add(x) 
+  object@properties <- object@properties %>% add(x)
   return(object)
 })
 
 #' @rdname add
-setMethod("add", signature=c("compartments", "compartments"), definition=function(object, x) {
+setMethod("add", signature = c("compartments", "compartments"), definition = function(object, x) {
   return(object %>% appendCompartments(x))
 })
 
 #' Append compartments.
-#' 
+#'
 #' @param compartments1 base set of compartments
 #' @param compartments2 extra set of compartments to be appended
 #' @return the resulting set of compartments
 #' @keywords internal
-#' 
+#'
 appendCompartments <- function(compartments1, compartments2) {
-  
-  cmtNames1 <- compartments1@list %>% purrr::map_chr(~.x %>% to_string())
-  cmtNames2 <- compartments2@list %>% purrr::map_chr(~.x %>% to_string())
+  cmtNames1 <- compartments1@list %>% purrr::map_chr(~ .x %>% to_string())
+  cmtNames2 <- compartments2@list %>% purrr::map_chr(~ .x %>% to_string())
   cmtMax <- compartments1 %>% length()
-  
+
   checkCollisionOnCmts <- cmtNames1 %in% cmtNames2
   if (any(checkCollisionOnCmts)) {
-    stop(paste0("Model can't be appended because of duplicate compartment name(s): ", paste0(cmtNames1[checkCollisionOnCmts], collapse=", ")))
+    stop(paste0(
+      "Model can't be appended because of duplicate compartment name(s): ",
+      paste0(cmtNames1[checkCollisionOnCmts], collapse = ", ")
+    ))
   }
   for (compartment in compartments2@list) {
     compartment@index <- compartment@index + cmtMax
@@ -73,7 +75,7 @@ appendCompartments <- function(compartments1, compartments2) {
 #_______________________________________________________________________________
 
 #' @rdname delete
-setMethod("delete", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+setMethod("delete", signature = c("compartments", "compartment_property"), definition = function(object, x) {
   object@properties <- object@properties %>% delete(x)
   return(object)
 })
@@ -83,7 +85,7 @@ setMethod("delete", signature=c("compartments", "compartment_property"), definit
 #_______________________________________________________________________________
 
 #' @rdname find
-setMethod("find", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+setMethod("find", signature = c("compartments", "compartment_property"), definition = function(object, x) {
   return(object@properties %>% find(x))
 })
 
@@ -92,8 +94,8 @@ setMethod("find", signature=c("compartments", "compartment_property"), definitio
 #_______________________________________________________________________________
 
 #' @rdname get_compartment_index
-setMethod("get_compartment_index", signature=c("compartments", "character"), definition=function(object, name) {
-  compartment <- object@list %>% purrr::detect(~.x@name == name)
+setMethod("get_compartment_index", signature = c("compartments", "character"), definition = function(object, name) {
+  compartment <- object@list %>% purrr::detect(~ .x@name == name)
   if (compartment %>% length() == 0) {
     stop(paste0("Compartment ", name, " not found."))
   }
@@ -105,7 +107,7 @@ setMethod("get_compartment_index", signature=c("compartments", "character"), def
 #_______________________________________________________________________________
 
 #' @rdname replace
-setMethod("replace", signature=c("compartments", "compartment_property"), definition=function(object, x) {
+setMethod("replace", signature = c("compartments", "compartment_property"), definition = function(object, x) {
   object@properties <- object@properties %>% replace(x)
   return(object)
 })
@@ -114,7 +116,7 @@ setMethod("replace", signature=c("compartments", "compartment_property"), defini
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("compartments"), definition=function(object) {
+setMethod("show", signature = c("compartments"), definition = function(object) {
   cat("Compartments:\n")
   for (element in object@list) {
     show(element)
@@ -127,9 +129,8 @@ setMethod("show", signature=c("compartments"), definition=function(object) {
 #_______________________________________________________________________________
 
 #' @rdname sort
-setMethod("sort", signature=c("compartments"), definition=function(x, decreasing=FALSE, ...) {
+setMethod("sort", signature = c("compartments"), definition = function(x, decreasing = FALSE, ...) {
   # Sort compartment properties
   x@properties <- x@properties %>% sort()
   return(x)
 })
-

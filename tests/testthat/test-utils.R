@@ -1,4 +1,3 @@
-
 OVERWRITE_NON_REG_FILES <- FALSE
 
 to_file <- function(code, path) {
@@ -21,9 +20,9 @@ rxode_non_reg_path <- function(regFilename) {
 
 campsis_non_reg_test <- function(model, regFilename) {
   if (OVERWRITE_NON_REG_FILES) {
-    model %>% write(file=campsis_non_reg_path(regFilename))
+    model %>% write(file = campsis_non_reg_path(regFilename))
   }
-  expectedModel <- read.campsis(file=campsis_non_reg_path(regFilename))
+  expectedModel <- read.campsis(file = campsis_non_reg_path(regFilename))
   expect_equal(model, expectedModel)
 }
 
@@ -32,28 +31,27 @@ mrgsolve_non_reg_test <- function(mrgmod, regFilename) {
   if (OVERWRITE_NON_REG_FILES) {
     to_file(mrgmodCode, mrgsolve_non_reg_path(regFilename))
   }
-  expectedMrgmodCode <- readLines(con=mrgsolve_non_reg_path(regFilename)) %>% paste0(collapse="\n")
+  expectedMrgmodCode <- readLines(con = mrgsolve_non_reg_path(regFilename)) %>% paste0(collapse = "\n")
   expect_equal(mrgmodCode, expectedMrgmodCode)
 }
 
 rxode_non_reg_test <- function(rxmod, regFilename) {
-  rxmodCode <- rxmod@code %>% paste0(collapse="\n")
+  rxmodCode <- rxmod@code %>% paste0(collapse = "\n")
   if (OVERWRITE_NON_REG_FILES) {
     to_file(rxmodCode, rxode_non_reg_path(regFilename))
   }
-  expectedRxmodCode <- readLines(con=rxode_non_reg_path(regFilename)) %>% paste0(collapse="\n")
+  expectedRxmodCode <- readLines(con = rxode_non_reg_path(regFilename)) %>% paste0(collapse = "\n")
   expect_equal(rxmodCode, expectedRxmodCode)
 }
 
 read_campsis_model_no_params <- function(file) {
   # Only first warning is actually checked
-  model <- expect_warning(read.campsis(file),
-                          regexp="No file '(theta|omega|sigma)\\.csv' could be found")
+  model <- expect_warning(read.campsis(file), regexp = "No file '(theta|omega|sigma)\\.csv' could be found")
   return(model)
 }
 
 on_cran <- function() {
-  # Copied from testthat:::on_cran() 
+  # Copied from testthat:::on_cran()
   return(!interactive() && !env_var_is_true("NOT_CRAN"))
 }
 
@@ -64,6 +62,5 @@ env_var_is_true <- function(x) {
 skip_performance_tests <- function() {
   # On CRAN, default value is TRUE
   # FALSE otherwise
-  return(get_campsismod_option(name="SKIP_PERFORMANCE_TESTS", default=on_cran()))
+  return(get_campsismod_option(name = "SKIP_PERFORMANCE_TESTS", default = on_cran()))
 }
-

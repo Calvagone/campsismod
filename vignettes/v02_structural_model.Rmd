@@ -36,7 +36,7 @@ Equations are described by 3 fields:
 Example:
 
 ```{r}
-equation <- Equation("KA", "THETA_KA * exp(ETA_KA)", comment="This is my KA parameter")
+equation <- Equation("KA", "THETA_KA * exp(ETA_KA)", comment = "This is my KA parameter")
 ```
 
 The equivalent text form is:
@@ -56,7 +56,7 @@ Similarly, Ordinary differential equations (ODE's) are described by 3 fields as 
 Example:
 
 ```{r}
-ode <- Ode("A_DEPOT", "-KA * A_DEPOT", comment="This is my depot compartment")
+ode <- Ode("A_DEPOT", "-KA * A_DEPOT", comment = "This is my depot compartment")
 ```
 
 The equivalent text form is:
@@ -106,7 +106,7 @@ If-statements allow a variable to take different values according to different s
 Example:
 
 ```{r}
-ifStatement <- IfStatement("COV==1", Equation("COV_EFFECT", "0.2"), comment="This is an if statement")
+ifStatement <- IfStatement("COV==1", Equation("COV_EFFECT", "0.2"), comment = "This is an if statement")
 ```
 
 The equivalent text form is:
@@ -121,9 +121,9 @@ A common use of the if-statements is to add covariate effects into the model. He
 main <- MainRecord()
 main <- main %>%
   add(Equation("COV_EFFECT", "0")) %>% # Initialisation
-  add(IfStatement("COV==1", Equation("COV_EFFECT", "0.1"))) %>%  # Covariate value is 1 in dataset
-  add(IfStatement("COV==2", Equation("COV_EFFECT", "0.2"))) %>%  # Covariate value is 2 in dataset
-  add(IfStatement("COV==3", Equation("COV_EFFECT", "0.3")))      # Covariate value is 3 in dataset
+  add(IfStatement("COV==1", Equation("COV_EFFECT", "0.1"))) %>% # Covariate value is 1 in dataset
+  add(IfStatement("COV==2", Equation("COV_EFFECT", "0.2"))) %>% # Covariate value is 2 in dataset
+  add(IfStatement("COV==3", Equation("COV_EFFECT", "0.3"))) # Covariate value is 3 in dataset
 ```
 
 The equivalent text would then be:

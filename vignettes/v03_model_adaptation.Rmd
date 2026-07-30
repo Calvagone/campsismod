@@ -37,7 +37,7 @@ By default, this new equation has been appended to the model parameters, in the 
 Now, we would like to define the plasma concentration. This can be done by adding an equation into the `ODE` code record. To do that, we'll use the argument `pos` to define the position of this equation. It can be inserted, for instance, right after the ordinary differential equation:
 
 ```{r}
-model <- model %>% add(Equation("CP", "A_CENTRAL/V"), pos=Position(Ode("A_CENTRAL")))
+model <- model %>% add(Equation("CP", "A_CENTRAL/V"), pos = Position(Ode("A_CENTRAL")))
 model
 ```
 
@@ -47,7 +47,7 @@ Say we want to add a proportional error model on the concentration with a coeffi
 We therefore need to add a new parameter SIGMA into the model:
 
 ```{r}
-model <- model %>% add(Sigma("PROP", value=20, type="cv%"))
+model <- model %>% add(Sigma("PROP", value = 20, type = "cv%"))
 ```
 
 Then, we need to add a new `ERROR` code record with the appropriate equations:
@@ -65,13 +65,13 @@ Let's now simulate a few individuals and show `OBS_CP`.
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)
-dataset <- Dataset(3) %>% add(Observations(seq(0,24,by=3)))
-results <- model %>% simulate(dataset=dataset, seed=0)
+dataset <- Dataset(3) %>% add(Observations(seq(0, 24, by = 3)))
+results <- model %>% simulate(dataset = dataset, seed = 0)
 spaghettiPlot(results, "OBS_CP")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename="resources/minimalist_example_obs_cp.png", width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = "resources/minimalist_example_obs_cp.png", width = 7, height = 3, dpi = 100)
 ```
 
 ![](resources/minimalist_example_obs_cp.png)

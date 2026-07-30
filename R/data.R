@@ -1,8 +1,7 @@
-
 #' Campsis model suite.
 #'
 #' A library of models of all kinds, ready to be simulated in Campsis. These model
-#' templates are sorted into the following categories: pharmacokinetic (PK), pharmacodynamic (PD), 
+#' templates are sorted into the following categories: pharmacokinetic (PK), pharmacodynamic (PD),
 #' target-mediated drug disposition (TMDD), NONMEM, literature  and other (custom models).
 #'
 #' @format A list with all the models:

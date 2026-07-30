@@ -3,7 +3,7 @@
 #_______________________________________________________________________________
 
 checkNonODERecord <- function(object) {
-  hasODE <- object@statements@list %>% purrr::map_lgl(~is(.x, "ode")) %>% any()
+  hasODE <- object@statements@list %>% purrr::map_lgl(~ is(.x, "ode")) %>% any()
   errors <- character(0)
   if (hasODE) {
     errors <- errors %>% append("ODE detected in non ODE record")
@@ -11,15 +11,15 @@ checkNonODERecord <- function(object) {
   return(errors)
 }
 
-#' 
+#'
 #' Code record class. See this code record as an abstract class.
 #' 2 implementations are possible:
 #' - properties record (lag, duration, rate & bioavailability properties)
 #' - statements record (main, ode & error records)
-#' 
+#'
 #' @slot comment a comment, single character value
 #' @slot statements model statements
-#' 
+#'
 setClass(
   "code_record",
   representation(
@@ -27,7 +27,7 @@ setClass(
     statements = "model_statements"
   ),
   contains = "pmx_element",
-  prototype = prototype(statements=ModelStatements(), comment=as.character(NA)),
+  prototype = prototype(statements = ModelStatements(), comment = as.character(NA)),
   validity = function(object) {
     return(TRUE)
   }
@@ -37,18 +37,17 @@ setClass(
 #----                      statements_record class                           ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Properties record class.
-#' 
+#'
 setClass(
   "properties_record",
-  representation(
-  ),
+  representation(),
   contains = "code_record",
   validity = function(object) {
-    hasODE <- object@statements@list %>% purrr::map_lgl(~is(.x, "ode")) %>% any()
-    hasUnknownStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "unknown_statement")) %>% any()
-    hasIfStatement <- object@statements@list %>% purrr::map_lgl(~is(.x, "if_statement")) %>% any()
+    hasODE <- object@statements@list %>% purrr::map_lgl(~ is(.x, "ode")) %>% any()
+    hasUnknownStatement <- object@statements@list %>% purrr::map_lgl(~ is(.x, "unknown_statement")) %>% any()
+    hasIfStatement <- object@statements@list %>% purrr::map_lgl(~ is(.x, "if_statement")) %>% any()
     errors <- character(0)
     if (hasODE) {
       errors <- errors %>% append("ODE detected in properties record")
@@ -67,14 +66,13 @@ setClass(
 #----                      statements_record class                          ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Statements record class.
-#' 
+#'
 #' @export
 setClass(
   "statements_record",
-  representation(
-  ),
+  representation(),
   contains = "code_record"
 )
 
@@ -82,64 +80,61 @@ setClass(
 #----                           MAIN record                                 ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Main record class.
-#' 
+#'
 #' @export
 setClass(
   "main_record",
-  representation(
-  ),
+  representation(),
   contains = "statements_record",
   validity = checkNonODERecord
 )
 
-#' 
+#'
 #' Create MAIN code record.
-#' 
+#'
 #' @param code code record
 #' @export
-MainRecord <- function(code=character()) {
-  return(new("main_record", statements=parse_statements(code)))
+MainRecord <- function(code = character()) {
+  return(new("main_record", statements = parse_statements(code)))
 }
 
 #_______________________________________________________________________________
 #----                            ODE record                                 ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' ODE record class.
-#' 
+#'
 #' @export
 setClass(
   "ode_record",
-  representation(
-  ),
+  representation(),
   contains = "statements_record"
 )
 
-#' 
+#'
 #' Create ODE code record.
-#' 
+#'
 #' @param code code record
 #' @return an ODE code record
 #' @export
-OdeRecord <- function(code=character()) {
-  return(new("ode_record", statements=parse_statements(code)))
+OdeRecord <- function(code = character()) {
+  return(new("ode_record", statements = parse_statements(code)))
 }
 
 #_______________________________________________________________________________
 #----                              F record                                 ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Bioavailability record class.
-#' 
+#'
 #' @export
 setClass(
   "f_record",
-  representation(
-  ),
+  representation(),
   contains = "properties_record"
 )
 
@@ -147,14 +142,13 @@ setClass(
 #----                              LAG record                               ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Lag record class.
-#' 
+#'
 #' @export
 setClass(
   "lag_record",
-  representation(
-  ),
+  representation(),
   contains = "properties_record"
 )
 
@@ -162,14 +156,13 @@ setClass(
 #----                           DURATION record                             ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' (Infusion)-duration record class.
-#' 
+#'
 #' @export
 setClass(
   "duration_record",
-  representation(
-  ),
+  representation(),
   contains = "properties_record"
 )
 
@@ -177,14 +170,13 @@ setClass(
 #----                             RATE record                               ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' (Infusion)-rate record class.
-#' 
+#'
 #' @export
 setClass(
   "rate_record",
-  representation(
-  ),
+  representation(),
   contains = "properties_record"
 )
 
@@ -192,14 +184,13 @@ setClass(
 #----                             INIT record                               ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Init record class.
-#' 
+#'
 #' @export
 setClass(
   "init_record",
-  representation(
-  ),
+  representation(),
   contains = "properties_record"
 )
 
@@ -207,27 +198,25 @@ setClass(
 #----                           ERROR record                                ----
 #_______________________________________________________________________________
 
-
-#' 
+#'
 #' Error record class.
-#' 
+#'
 #' @export
 setClass(
   "error_record",
-  representation(
-  ),
+  representation(),
   contains = "statements_record",
   validity = checkNonODERecord
 )
 
-#' 
+#'
 #' Create ERROR code record.
-#' 
+#'
 #' @param code code record
 #' @return an ERROR code record
 #' @export
-ErrorRecord <- function(code=character()) {
-  return(new("error_record", statements=parse_statements(code)))
+ErrorRecord <- function(code = character()) {
+  return(new("error_record", statements = parse_statements(code)))
 }
 
 #_______________________________________________________________________________
@@ -236,13 +225,13 @@ ErrorRecord <- function(code=character()) {
 
 #' @param pos position where x needs to be added in list
 #' @rdname add
-setMethod("add", signature=c("code_record", "model_statement"), definition=function(object, x, pos=NULL) {
-  object@statements <- object@statements %>% add(x, pos=pos)
+setMethod("add", signature = c("code_record", "model_statement"), definition = function(object, x, pos = NULL) {
+  object@statements <- object@statements %>% add(x, pos = pos)
   return(object)
 })
 
 #' @rdname add
-setMethod("add", signature=c("code_record", "code_record"), definition=function(object, x) {
+setMethod("add", signature = c("code_record", "code_record"), definition = function(object, x) {
   object@statements <- object@statements %>% add(x@statements)
   return(object)
 })
@@ -252,7 +241,7 @@ setMethod("add", signature=c("code_record", "code_record"), definition=function(
 #_______________________________________________________________________________
 
 #' @rdname contains
-setMethod("contains", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+setMethod("contains", signature = c("statements_record", "model_statement"), definition = function(object, x) {
   return(!is.null(object@statements %>% find(x)))
 })
 
@@ -261,13 +250,13 @@ setMethod("contains", signature=c("statements_record", "model_statement"), defin
 #_______________________________________________________________________________
 
 #' @rdname delete
-setMethod("delete", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+setMethod("delete", signature = c("statements_record", "model_statement"), definition = function(object, x) {
   object@statements <- object@statements %>% delete(x)
   return(object)
 })
 
 #' @rdname delete
-setMethod("delete", signature=c("statements_record", "integer"), definition=function(object, x) {
+setMethod("delete", signature = c("statements_record", "integer"), definition = function(object, x) {
   object@statements <- object@statements %>% delete(x)
   return(object)
 })
@@ -277,7 +266,7 @@ setMethod("delete", signature=c("statements_record", "integer"), definition=func
 #_______________________________________________________________________________
 
 #' @rdname find
-setMethod("find", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+setMethod("find", signature = c("statements_record", "model_statement"), definition = function(object, x) {
   return(object@statements %>% find(x))
 })
 
@@ -286,42 +275,42 @@ setMethod("find", signature=c("statements_record", "model_statement"), definitio
 #_______________________________________________________________________________
 
 #' @rdname get_name
-setMethod("get_name", signature=c("main_record"), definition=function(x) {
+setMethod("get_name", signature = c("main_record"), definition = function(x) {
   return("MAIN")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("ode_record"), definition=function(x) {
+setMethod("get_name", signature = c("ode_record"), definition = function(x) {
   return("ODE")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("f_record"), definition=function(x) {
+setMethod("get_name", signature = c("f_record"), definition = function(x) {
   return("F")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("lag_record"), definition=function(x) {
+setMethod("get_name", signature = c("lag_record"), definition = function(x) {
   return("LAG")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("duration_record"), definition=function(x) {
+setMethod("get_name", signature = c("duration_record"), definition = function(x) {
   return("DURATION")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("rate_record"), definition=function(x) {
+setMethod("get_name", signature = c("rate_record"), definition = function(x) {
   return("RATE")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("init_record"), definition=function(x) {
+setMethod("get_name", signature = c("init_record"), definition = function(x) {
   return("INIT")
 })
 
 #' @rdname get_name
-setMethod("get_name", signature=c("error_record"), definition=function(x) {
+setMethod("get_name", signature = c("error_record"), definition = function(x) {
   return("ERROR")
 })
 
@@ -330,7 +319,7 @@ setMethod("get_name", signature=c("error_record"), definition=function(x) {
 #_______________________________________________________________________________
 
 #' @rdname length
-setMethod("length", signature=c("statements_record"), definition=function(x) {
+setMethod("length", signature = c("statements_record"), definition = function(x) {
   return(x@statements %>% length())
 })
 
@@ -339,7 +328,7 @@ setMethod("length", signature=c("statements_record"), definition=function(x) {
 #_______________________________________________________________________________
 
 #' @rdname replace
-setMethod("replace", signature=c("statements_record", "model_statement"), definition=function(object, x) {
+setMethod("replace", signature = c("statements_record", "model_statement"), definition = function(object, x) {
   object@statements <- object@statements %>% replace(x)
   return(object)
 })
@@ -349,28 +338,33 @@ setMethod("replace", signature=c("statements_record", "model_statement"), defini
 #_______________________________________________________________________________
 
 #' @rdname replace_all
-setMethod("replace_all", signature=c("code_record", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@statements@list <- object@statements@list %>% purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
-  return(object)
-})
+setMethod(
+  "replace_all",
+  signature = c("code_record", "pattern", "character"),
+  definition = function(object, pattern, replacement, ...) {
+    object@statements@list <- object@statements@list %>%
+      purrr::map(~ .x %>% replace_all(pattern = pattern, replacement = replacement, ...))
+    return(object)
+  }
+)
 
 #_______________________________________________________________________________
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("code_record"), definition=function(object) {
-  cat(write_record_delimiter(object), "\n", sep="")
+setMethod("show", signature = c("code_record"), definition = function(object) {
+  cat(write_record_delimiter(object), "\n", sep = "")
   show(object@statements)
 })
 
-#' 
+#'
 #' Write record delimiter line.
-#' 
+#'
 #' @param object code record
 #' @return a record delimiter line
 #' @keywords internal
 write_record_delimiter <- function(object) {
   recordDelimiter <- paste0("[", object %>% get_name(), "]")
-  recordDelimiter <- recordDelimiter %>% append_comment(object=object, dest="campsis")
+  recordDelimiter <- recordDelimiter %>% append_comment(object = object, dest = "campsis")
   return(recordDelimiter)
 }

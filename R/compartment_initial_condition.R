@@ -2,16 +2,15 @@
 #----               compartment_initial_condition class                     ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartment initial condition class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_initial_condition",
-  representation(
-  ),
+  representation(),
   contains = "compartment_property",
-  validity=function(object) {
+  validity = function(object) {
     return(TRUE)
   }
 )
@@ -23,8 +22,8 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return an initial condition property
 #' @export
-InitialCondition <- function(compartment, rhs="") {
-  return(new("compartment_initial_condition", compartment=as.integer(compartment), rhs=rhs))
+InitialCondition <- function(compartment, rhs = "") {
+  return(new("compartment_initial_condition", compartment = as.integer(compartment), rhs = rhs))
 }
 
 #_______________________________________________________________________________
@@ -32,7 +31,7 @@ InitialCondition <- function(compartment, rhs="") {
 #_______________________________________________________________________________
 
 #' @rdname get_name
-setMethod("get_name", signature=c("compartment_initial_condition"), definition=function(x) {
+setMethod("get_name", signature = c("compartment_initial_condition"), definition = function(x) {
   return(paste0("INIT (", "CMT=", x@compartment, ")"))
 })
 
@@ -58,7 +57,7 @@ setMethod("get_record_name", signature = c("compartment_initial_condition"), def
 #----                               show                                    ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("compartment_initial_condition"), definition=function(object) {
+setMethod("show", signature = c("compartment_initial_condition"), definition = function(object) {
   cat(paste0(object %>% get_name(), ": ", object@rhs))
 })
 
@@ -67,19 +66,18 @@ setMethod("show", signature=c("compartment_initial_condition"), definition=funct
 #_______________________________________________________________________________
 
 #' @rdname to_string
-setMethod("to_string", signature=c("compartment_initial_condition"), definition=function(object, ...) {
-  model <- process_extra_arg(args=list(...), name="model", mandatory=TRUE)
-  dest <- process_extra_arg(args=list(...), name="dest", mandatory=TRUE)
-  
+setMethod("to_string", signature = c("compartment_initial_condition"), definition = function(object, ...) {
+  model <- process_extra_arg(args = list(...), name = "model", mandatory = TRUE)
+  dest <- process_extra_arg(args = list(...), name = "dest", mandatory = TRUE)
+
   compartmentIndex <- object@compartment
-  compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-  
+  compartment <- model@compartments %>% find(Compartment(index = compartmentIndex))
+
   if (is_rxode(dest)) {
     return(paste0(compartment %>% to_string(), "(0)=", object@rhs))
-  } else if (dest=="mrgsolve") {
+  } else if (dest == "mrgsolve") {
     return(paste0(compartment %>% to_string(), "_0=", object@rhs))
   } else {
     stop("Only rxode2 (previously RxODE) and mrgsolve are currently supported")
   }
 })
-

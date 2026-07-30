@@ -1,11 +1,10 @@
-
 #_______________________________________________________________________________
 #----                          equation class                               ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Equation class. Any statement in the form A = B.
-#' 
+#'
 #' @slot lhs left-hand side expression
 #' @slot rhs right-hand side expression
 #' @export
@@ -16,22 +15,22 @@ setClass(
     rhs = "character"
   ),
   contains = "model_statement",
-  prototype = prototype(rhs=""),
+  prototype = prototype(rhs = ""),
   validity = function(object) {
     return(expect_one(object, c("lhs", "rhs")))
   }
 )
 
-#' 
+#'
 #' Create a new equation.
-#' 
+#'
 #' @param lhs left-hand side variable corresponding to the assigned variable name
 #' @param rhs right-hand side expression corresponding to a formula
 #' @param comment comment if any, single character string
 #' @return an equation
 #' @export
-Equation <- function(lhs, rhs="", comment=as.character(NA)) {
-  return(new("equation", lhs=lhs, rhs=rhs, comment=comment))
+Equation <- function(lhs, rhs = "", comment = as.character(NA)) {
+  return(new("equation", lhs = lhs, rhs = rhs, comment = comment))
 }
 
 #_______________________________________________________________________________
@@ -48,26 +47,30 @@ setMethod("get_name", signature = c("equation"), definition = function(x) {
 #_______________________________________________________________________________
 
 #' @rdname replace_all
-setMethod("replace_all", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@lhs <- object@lhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
-  object@rhs <- object@rhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
-  return(object)
-})
+setMethod(
+  "replace_all",
+  signature = c("equation", "pattern", "character"),
+  definition = function(object, pattern, replacement, ...) {
+    object@lhs <- object@lhs %>% replace_all(pattern = pattern, replacement = replacement, ...)
+    object@rhs <- object@rhs %>% replace_all(pattern = pattern, replacement = replacement, ...)
+    return(object)
+  }
+)
 
 #_______________________________________________________________________________
 #----                             to_string                                 ----
 #_______________________________________________________________________________
 
 #' @rdname to_string
-setMethod("to_string", signature=c("equation"), definition=function(object, ...) {
+setMethod("to_string", signature = c("equation"), definition = function(object, ...) {
   args <- list(...)
-  dest <- process_extra_arg(args=args, name="dest", default="campsis")
-  init <- process_extra_arg(args=args, name="init", default=TRUE)
-  capture <- process_extra_arg(args=args, name="capture", default=FALSE)
-  
-  if (dest=="campsis" || is_rxode(dest) || dest=="NONMEM") {
+  dest <- process_extra_arg(args = args, name = "dest", default = "campsis")
+  init <- process_extra_arg(args = args, name = "init", default = TRUE)
+  capture <- process_extra_arg(args = args, name = "capture", default = FALSE)
+
+  if (dest == "campsis" || is_rxode(dest) || dest == "NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)
-  } else if (dest=="mrgsolve") {
+  } else if (dest == "mrgsolve") {
     retValue <- paste0(object@lhs, "=", object@rhs, ";")
     if (init) {
       retValue <- paste0("double ", retValue)

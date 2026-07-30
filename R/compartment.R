@@ -2,9 +2,9 @@
 #----                         compartment class                             ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartment class.
-#' 
+#'
 #' @slot name compartment name (without prefix)
 #' @slot index compartment index
 #' @export
@@ -15,21 +15,21 @@ setClass(
     index = "integer"
   ),
   contains = "pmx_element",
-  prototype = prototype(name=as.character(NA)),
+  prototype = prototype(name = as.character(NA)),
   validity = function(object) {
     return(expect_one_for_all(object, c("name", "index")))
   }
 )
 
-#' 
+#'
 #' Create a compartment.
-#' 
+#'
 #' @param index compartment index
 #' @param name compartment name (without prefix)
-#' @return an empty list of compartments  
+#' @return an empty list of compartments
 #' @export
-Compartment <- function(index, name=NA) {
-  return(new("compartment", index=as.integer(index), name=as.character(name)))
+Compartment <- function(index, name = NA) {
+  return(new("compartment", index = as.integer(index), name = as.character(name)))
 }
 
 #_______________________________________________________________________________
@@ -37,7 +37,7 @@ Compartment <- function(index, name=NA) {
 #_______________________________________________________________________________
 
 #' @rdname get_name
-setMethod("get_name", signature=c("compartment"), definition=function(x) {
+setMethod("get_name", signature = c("compartment"), definition = function(x) {
   return(paste0("A", "_", x@index))
 })
 
@@ -45,7 +45,7 @@ setMethod("get_name", signature=c("compartment"), definition=function(x) {
 #----                               show                                    ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("compartment"), definition=function(object) {
+setMethod("show", signature = c("compartment"), definition = function(object) {
   cat(paste0(object %>% to_string(), " (CMT=", object@index, ")"))
 })
 
@@ -54,11 +54,10 @@ setMethod("show", signature=c("compartment"), definition=function(object) {
 #_______________________________________________________________________________
 
 #' @rdname to_string
-setMethod("to_string", signature=c("compartment"), definition=function(object, ...) {
+setMethod("to_string", signature = c("compartment"), definition = function(object, ...) {
   if (is.na(object@name)) {
     return(paste0("A", "_", object@index))
   } else {
     return(paste0("A", "_", object@name))
   }
 })
-

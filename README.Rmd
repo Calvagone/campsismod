@@ -55,7 +55,7 @@ model <- model_suite$pk$`2cpt_fo`
 The model can be exported to files using `write`.
 
 ```{r message=FALSE, results='hide'}
-model %>% write(file="path_to_model_folder")
+model %>% write(file = "path_to_model_folder")
 ```
 
 In this case, the model code will be contained in the `model.campsis` file. Parameters (THETA, OMEGA and SIGMA) will be stored in their respective CSV file. 
@@ -67,7 +67,7 @@ list.files("path_to_model_folder")
 Alternatively, the model can also be exported in JSON format into a single file:
 
 ```{r message=FALSE, results='hide'}
-model %>% write(file="my_model.json")
+model %>% write(file = "my_model.json")
 ```
 
 ### Read and show Campsis model
@@ -75,13 +75,13 @@ model %>% write(file="my_model.json")
 The model can be loaded from the previously created folder:
 
 ```{r}
-model <- read.campsis(file="path_to_model_folder")
+model <- read.campsis(file = "path_to_model_folder")
 ```
 
 Or, from the previously created JSON file:
 
 ```{r}
-model <- read.campsis(file="my_model.json")
+model <- read.campsis(file = "my_model.json")
 ```
 
 The model can then be output in the console using `show`: 
@@ -95,11 +95,11 @@ show(model)
 library(campsis)
 
 dataset <- Dataset(5) %>%
-  add(Bolus(time=0, amount=1000, ii=12, addl=2)) %>%
-  add(Observations(times=0:36))
+  add(Bolus(time = 0, amount = 1000, ii = 12, addl = 2)) %>%
+  add(Observations(times = 0:36))
 
-rxode <- model %>% simulate(dataset=dataset, dest="rxode2", seed=0)
-mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=0)
+rxode <- simulate(model = model, dataset = dataset, dest = "rxode2", seed = 0)
+mrgsolve <- simulate(model = model, dataset = dataset, dest = "mrgsolve", seed = 0)
 ```
 
 ```{r, eval=EXPORT_PNG}
@@ -111,7 +111,7 @@ file_vignette <- "vignettes/resources/results_rxode.png"
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = file_vignette, width = 7, height = 3, dpi = 100)
 ```
 
 ```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}
@@ -129,7 +129,7 @@ file_vignette <- "vignettes/resources/results_mrgsolve.png"
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename=file_vignette, width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = file_vignette, width = 7, height = 3, dpi = 100)
 ```
 
 ```{r, eval=EXPORT_PNG, echo=EXPORT_PNG, results='hide'}

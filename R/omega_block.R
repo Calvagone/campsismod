@@ -1,4 +1,3 @@
-
 #_______________________________________________________________________________
 #----                           omega_block class                           ----
 #_______________________________________________________________________________
@@ -6,12 +5,12 @@
 setClass(
   "omega_block",
   representation(
-    block_index="integer",
-    start_index="integer",
-    on_diag_omegas="parameters",
-    off_diag_omegas="parameters"
+    block_index = "integer",
+    start_index = "integer",
+    on_diag_omegas = "parameters",
+    off_diag_omegas = "parameters"
   ),
-  contains="pmx_element"
+  contains = "pmx_element"
 )
 
 #' Create a block of OMEGA's.
@@ -26,7 +25,7 @@ OmegaBlock <- function() {
 #_______________________________________________________________________________
 
 #' @rdname add
-setMethod("add", signature=c("omega_block", "double_array_parameter"), definition=function(object, x) {
+setMethod("add", signature = c("omega_block", "double_array_parameter"), definition = function(object, x) {
   if (x %>% is_diag()) {
     object@on_diag_omegas <- object@on_diag_omegas %>% add(x)
   } else {
@@ -40,7 +39,7 @@ setMethod("add", signature=c("omega_block", "double_array_parameter"), definitio
 #_______________________________________________________________________________
 
 #' @rdname get_name
-setMethod("get_name", signature=c("omega_block"), definition=function(x) {
+setMethod("get_name", signature = c("omega_block"), definition = function(x) {
   return(paste0("Omega block ", x@block_index))
 })
 
@@ -49,7 +48,7 @@ setMethod("get_name", signature=c("omega_block"), definition=function(x) {
 #_______________________________________________________________________________
 
 #' Get the indexes of the omegas.
-#' 
+#'
 #' @param object omega block
 #' @return a list of integers
 #' @export
@@ -63,10 +62,10 @@ setGeneric("get_omega_indexes", function(object) {
 })
 
 #' @rdname get_omega_indexes
-setMethod("get_omega_indexes", signature=c("omega_block"), definition=function(object) {
+setMethod("get_omega_indexes", signature = c("omega_block"), definition = function(object) {
   # Careful: don't use parameters1 %>% add(parameters2) because it will shift indexes in parameters2
   omegas <- object@on_diag_omegas@list %>% append(object@off_diag_omegas@list)
-  retValue <- omegas %>% purrr::map(.f=~c(.x@index, .x@index2)) %>% purrr::flatten_int() %>% unique()
+  retValue <- omegas %>% purrr::map(.f = ~ c(.x@index, .x@index2)) %>% purrr::flatten_int() %>% unique()
   return(retValue)
 })
 
@@ -75,7 +74,7 @@ setMethod("get_omega_indexes", signature=c("omega_block"), definition=function(o
 #_______________________________________________________________________________
 
 #' Has off-diagonal omegas.
-#' 
+#'
 #' @param object omega block
 #' @return TRUE or FALSE
 #' @export
@@ -89,7 +88,7 @@ setGeneric("has_off_diagonal_omegas", function(object) {
 })
 
 #' @rdname has_off_diagonal_omegas
-setMethod("has_off_diagonal_omegas", signature=c("omega_block"), definition=function(object) {
+setMethod("has_off_diagonal_omegas", signature = c("omega_block"), definition = function(object) {
   return(object@off_diag_omegas %>% length() > 0)
 })
 
@@ -98,7 +97,7 @@ setMethod("has_off_diagonal_omegas", signature=c("omega_block"), definition=func
 #_______________________________________________________________________________
 
 #' Shift OMEGA indexes.
-#' 
+#'
 #' @param object omega block
 #' @return same block but shifted
 #' @export
@@ -118,9 +117,9 @@ shiftOmega <- function(omega, x) {
 }
 
 #' @rdname shift_omega_indexes
-setMethod("shift_omega_indexes", signature=c("omega_block"), definition=function(object) {
-  object@on_diag_omegas@list <- object@on_diag_omegas@list %>% purrr::map(.f=~shiftOmega(.x, -object@start_index))
-  object@off_diag_omegas@list <- object@off_diag_omegas@list %>% purrr::map(.f=~shiftOmega(.x, -object@start_index))
+setMethod("shift_omega_indexes", signature = c("omega_block"), definition = function(object) {
+  object@on_diag_omegas@list <- object@on_diag_omegas@list %>% purrr::map(.f = ~ shiftOmega(.x, -object@start_index))
+  object@off_diag_omegas@list <- object@off_diag_omegas@list %>% purrr::map(.f = ~ shiftOmega(.x, -object@start_index))
   return(object)
 })
 
@@ -129,11 +128,11 @@ setMethod("shift_omega_indexes", signature=c("omega_block"), definition=function
 #_______________________________________________________________________________
 
 #' Return the number of OMEGA's on the diagonal.
-#' 
+#'
 #' @param x omega block
 #' @return a number
 #' @rdname length
-setMethod("length", signature=c("omega_block"), definition=function(x) {
+setMethod("length", signature = c("omega_block"), definition = function(x) {
   return(length(x@on_diag_omegas))
 })
 
@@ -143,11 +142,11 @@ setMethod("length", signature=c("omega_block"), definition=function(x) {
 
 getBlockLabel <- function(object) {
   omegaNames <- object@on_diag_omegas@list %>%
-    purrr::map_chr(.f=~.x %>% get_name())
-  retValue <- sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / "))
+    purrr::map_chr(.f = ~ .x %>% get_name())
+  retValue <- sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse = " / "))
   return(retValue)
 }
 
-setMethod("show", signature=c("omega_block"), definition=function(object) {
+setMethod("show", signature = c("omega_block"), definition = function(object) {
   cat(getBlockLabel(object))
 })

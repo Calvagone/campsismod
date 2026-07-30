@@ -2,14 +2,13 @@
 #----                         pmx_element class                             ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' PMX element class.
-#' 
+#'
 #' @export
 setClass(
   "pmx_element",
-  representation(
-  )
+  representation()
 )
 
 #_______________________________________________________________________________
@@ -17,7 +16,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' Get element name.
-#' 
+#'
 #' @param x element to know the name
 #' @return the name of this element
 #' @export
@@ -49,7 +48,7 @@ setGeneric("getName", function(x) {
 
 setMethod("getName", signature(x = "ANY"), function(x) {
   .Deprecated("get_name", msg = "'getName' is deprecated. Use 'get_name' instead.")
-  
+
   # Check if a explicit, non-ANY method exists for 'get_name'
   if (isGeneric("get_name")) {
     m <- selectMethod("get_name", signature(class(x)), optional = TRUE)
