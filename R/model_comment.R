@@ -28,25 +28,25 @@ Comment <- function(x) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("comment"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("comment"), definition = function(x) {
   return(paste0("COMMENT (", x@comment, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("comment"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve" || dest=="NONMEM") {
+#' @rdname to_string
+setMethod("to_string", signature=c("comment"), definition=function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || is_rxode(dest) || dest=="mrgsolve" || dest=="NONMEM") {
     retValue <- ""
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

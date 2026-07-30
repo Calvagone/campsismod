@@ -8,7 +8,7 @@
 #' @importFrom methods getGeneric findMethods isGeneric
 #' @export
 #' 
-hasExactMethod <- function(generic, signature, where=topenv(parent.frame())) {
+has_exact_method <- function(generic, signature, where=topenv(parent.frame())) {
   if (!methods::isGeneric(generic, where = where))
     return(FALSE)
   gen <- methods::getGeneric(generic, where=where)
@@ -25,7 +25,7 @@ hasExactMethod <- function(generic, signature, where=topenv(parent.frame())) {
 #' @return a S4 object
 #' @export
 #' 
-mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
+map_json_properties_to_s4_slots <- function(object, json, discard_type=TRUE) {
   json <- json@data
   properties <- names(json)
   if (discard_type) {
@@ -38,10 +38,10 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
     
     if (isList && !is.null(value$type)) {
       # Recursion
-      if (hasExactMethod(generic="loadFromJSON", signature=c(value$type, "json_element"))) {
-        value <- loadFromJSON(object=new(value$type), json=JSONElement(value))
+      if (has_exact_method(generic="load_from_json", signature=c(value$type, "json_element"))) {
+        value <- load_from_json(object=new(value$type), json=JSONElement(value))
       } else {
-        value <- mapJSONPropertiesToS4Slots(object=new(value$type),
+        value <- map_json_properties_to_s4_slots(object=new(value$type),
                                             json=JSONElement(value), discard_type=TRUE)
       }
     } else {
@@ -66,7 +66,7 @@ mapJSONPropertiesToS4Slots <- function(object, json, discard_type=TRUE) {
 #' @return a JSON object ready to be serialised
 #' @export
 #' 
-mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ignore=NULL) {
+map_s4_slots_to_json_properties <- function(object, add_type=TRUE, optional=NULL, ignore=NULL) {
   if (!isS4(object)) {
     stop("Input must be an S4 object.")
   }
@@ -86,13 +86,13 @@ mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ign
     
     if (isS4(value)) {
       # Recursive call for nested S4
-      json[[property]] <- mapS4SlotsToJSONProperties(value, add_type=TRUE)
+      json[[property]] <- map_s4_slots_to_json_properties(value, add_type=TRUE)
       
     } else if (is.list(value)) {
       # Handle lists: check if elements are S4
       json[[property]] <- lapply(value, function(v) {
         if (isS4(v)) {
-          mapS4SlotsToJSONProperties(v, add_type=TRUE)
+          map_s4_slots_to_json_properties(v, add_type=TRUE)
         } else {
           v
         }
@@ -124,7 +124,7 @@ mapS4SlotsToJSONProperties <- function(object, add_type=TRUE, optional=NULL, ign
 #' @importFrom purrr keep imap map flatten_chr
 #' @keywords internal
 #' 
-jsonToCampsisModel <- function(object, json) {
+json_to_campsis_model <- function(object, json) {
 
   json <- json@data
   model <- object
@@ -149,11 +149,11 @@ jsonToCampsisModel <- function(object, json) {
     purrr::keep(~.x$type=="sigma" && !is.null(.x$name2))
 
   thetas <- jsonThetas %>%
-    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
+    purrr::imap(~json_to_parameter(x=.x, index=.y, index2=.y))
   omegas <- jsonOmegasOnDiag %>%
-    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
+    purrr::imap(~json_to_parameter(x=.x, index=.y, index2=.y))
   sigmas <- jsonSigmasOnDiag %>%
-    purrr::imap(~jsonToParameter(x=.x, index=.y, index2=.y))
+    purrr::imap(~json_to_parameter(x=.x, index=.y, index2=.y))
   
   omegaNames <- omegas %>%
     purrr::map(~.x@name)
@@ -161,15 +161,15 @@ jsonToCampsisModel <- function(object, json) {
     purrr::map(~.x@name)
   
   omegasOffDiag <- jsonOmegasOffDiag %>%
-    purrr::map(~jsonToOffDiagParameter(json=.x, diag_names=omegaNames))
+    purrr::map(~json_to_off_diag_parameter(json=.x, diag_names=omegaNames))
   sigmasOffDiag <- jsonSigmasOffDiag %>%
-    purrr::map(~jsonToOffDiagParameter(json=.x, diag_names=sigmaNames))
+    purrr::map(~json_to_off_diag_parameter(json=.x, diag_names=sigmaNames))
   
   model@parameters@list <- c(thetas, omegas, omegasOffDiag, sigmas, sigmasOffDiag)
   
   # Update compartments
   model <- model %>%
-    updateCompartments()
+    update_compartments()
   
   # Sort model parameters
   model <- model %>%
@@ -180,8 +180,8 @@ jsonToCampsisModel <- function(object, json) {
   if (length(varcov) > 0) {
     # Find all possible parameter names and initialize the matrix
     rowNames <- varcov %>%
-      purrr::map(~c(findVarcovParameter(ref=.x$ref1, model=model) %>% getName(),
-                    findVarcovParameter(ref=.x$ref2, model=model) %>% getName())) %>%
+      purrr::map(~c(find_varcov_parameter(ref=.x$ref1, model=model) %>% get_name(),
+                    find_varcov_parameter(ref=.x$ref2, model=model) %>% get_name())) %>%
       purrr::flatten_chr() %>%
       unique()
     
@@ -190,8 +190,8 @@ jsonToCampsisModel <- function(object, json) {
     
     # Fill in with values
     for (entry in varcov) {
-      ref1Name <- findVarcovParameter(ref=entry$ref1, model=model) %>% getName()
-      ref2Name <- findVarcovParameter(ref=entry$ref2, model=model) %>% getName()
+      ref1Name <- find_varcov_parameter(ref=entry$ref1, model=model) %>% get_name()
+      ref2Name <- find_varcov_parameter(ref=entry$ref2, model=model) %>% get_name()
       matrix[ref1Name, ref2Name] <- entry$cov
       matrix[ref2Name, ref1Name] <- entry$cov
     }
@@ -201,7 +201,7 @@ jsonToCampsisModel <- function(object, json) {
   return(model)
 }
 
-findVarcovDoubleArrayParameter <- function(ref, model, type) {
+find_varcov_double_array_parameter <- function(ref, model, type) {
   if (type=="omega") {
     paramRef = Omega()
   } else if (type=="sigma") {
@@ -225,13 +225,13 @@ findVarcovDoubleArrayParameter <- function(ref, model, type) {
   return(retValue)
 }
 
-findVarcovParameter <- function(ref, model) {
+find_varcov_parameter <- function(ref, model) {
   if (ref$type=="theta_ref") {
     retValue <- model %>% find(Theta(name=ref$name))
   } else if (ref$type=="omega_ref") {
-    retValue <- findVarcovDoubleArrayParameter(ref=ref, model=model, type="omega")
+    retValue <- find_varcov_double_array_parameter(ref=ref, model=model, type="omega")
   } else if (ref$type=="sigma_ref") {
-    retValue <- findVarcovDoubleArrayParameter(ref=ref, model=model, type="sigma")
+    retValue <- find_varcov_double_array_parameter(ref=ref, model=model, type="sigma")
   }
   if (is.null(retValue)) {
     if (is.null(ref$name2)) {
@@ -248,21 +248,21 @@ findVarcovParameter <- function(ref, model) {
 #' @param json JSON data
 #' @param diag_names parameter names on the diagonal, character vector
 #' @return the corresponding Campsis parameter
-#' 
-jsonToOffDiagParameter <- function(json, diag_names) {
+#' @keywords internal
+json_to_off_diag_parameter <- function(json, diag_names) {
   name <- json$name
   name2 <- json$name2
   index <- which(diag_names==name)
   index2 <- which(diag_names==name2)
-  return(jsonToParameter(x=json, index=index, index2=index2))
+  return(json_to_parameter(x=json, index=index, index2=index2))
 }
 
 #' Process JSON double array parameter.
 #' 
 #' @param x JSON data, OMEGA or SIGMA parameter
 #' @return updated JSON data with updated 'name' field and removed 'name2' field
-#' 
-processJSONDoubleArrayParameter <- function(x) {
+#' @keywords internal
+process_json_double_array_parameter <- function(x) {
   if (!is.null(x$name2)) {
     x$name <- paste0(x$name, "_", x$name2)
     x$name2 <- NULL
@@ -278,7 +278,7 @@ processJSONDoubleArrayParameter <- function(x) {
 #' @return Campsis parameter
 #' @export
 #' 
-jsonToParameter <- function(x, index=NULL, index2=NULL) {
+json_to_parameter <- function(x, index=NULL, index2=NULL) {
   if (x$type=="theta") {
     if (is.null(index)) {
       theta <- Theta()
@@ -286,10 +286,10 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
       theta <- Theta(index=index)
     }
     x$type <- NULL
-    return(loadFromJSON(object=theta, JSONElement(x)))
+    return(load_from_json(object=theta, JSONElement(x)))
     
   } else if (x$type=="omega") {
-    x <- processJSONDoubleArrayParameter(x)
+    x <- process_json_double_array_parameter(x)
     if (is.null(index)) {
       omega <- Omega()
     } else {
@@ -297,10 +297,10 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     }
     x$type <- x$var_type
     x$var_type <- NULL
-    return(loadFromJSON(object=omega, JSONElement(x)))
+    return(load_from_json(object=omega, JSONElement(x)))
     
   } else if (x$type=="sigma")  {
-    x <- processJSONDoubleArrayParameter(x)
+    x <- process_json_double_array_parameter(x)
     if (is.null(index)) {
       sigma <- Sigma()
     } else {
@@ -308,7 +308,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
     }
     x$type <- x$var_type
     x$var_type <- NULL
-    return(loadFromJSON(object=sigma, JSONElement(x)))
+    return(load_from_json(object=sigma, JSONElement(x)))
     
   } else {
     stop("Unknown parameter type")
@@ -326,7 +326,7 @@ jsonToParameter <- function(x, index=NULL, index2=NULL) {
 #' @importFrom jsonvalidate json_schema
 #' @keywords internal
 #' 
-openJSON <- function(json, schema=NULL) {
+open_json <- function(json, schema=NULL) {
   if (is.list(json)) {
     return(JSONElement(json)) # Don't go further if data is already parsed
   }
@@ -339,7 +339,7 @@ openJSON <- function(json, schema=NULL) {
   }
   
   # Validate content against schema
-  if (getCampsismodOption(name="VALIDATE_JSON", default=TRUE)) {
+  if (get_campsismod_option(name="VALIDATE_JSON", default=TRUE)) {
     obj <- jsonvalidate::json_schema$new(schema)
     obj$validate(rawJson, error=TRUE)
   }

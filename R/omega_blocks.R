@@ -22,8 +22,8 @@ OmegaBlocks <- function() {
 #----                                add                                    ----
 #_______________________________________________________________________________
 
-addOmega <- function(object, x) {
-  block <- object %>% getOmegaBlock(x)
+add_omega <- function(object, x) {
+  block <- object %>% get_omega_block(x)
   newBlock <- FALSE
   if (is.null(block)) {
     block <- OmegaBlock()
@@ -55,14 +55,14 @@ setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(
   
   off_diag_omegas <- x # Init
   on_diag_omegas <- x # Init
-  off_diag_omegas@list <- off_diag_omegas@list %>% purrr::keep(~!isDiag(.x))
-  on_diag_omegas@list <- on_diag_omegas@list %>% purrr::keep(~isDiag(.x))
+  off_diag_omegas@list <- off_diag_omegas@list %>% purrr::keep(~!is_diag(.x))
+  on_diag_omegas@list <- on_diag_omegas@list %>% purrr::keep(~is_diag(.x))
 
   for (omega in off_diag_omegas@list) {
-    retValue <- retValue %>% addOmega(omega)
+    retValue <- retValue %>% add_omega(omega)
   }
   for (omega in on_diag_omegas@list) {
-    retValue <- retValue %>% addOmega(omega)
+    retValue <- retValue %>% add_omega(omega)
   }
   
   # Sort all blocks (see method below)
@@ -73,14 +73,14 @@ setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(
   for (block in retValue@list) {
       block@start_index <- cumulatedIndex
       cumulatedIndex <- cumulatedIndex + block %>% length()
-      block <- block %>% shiftOmegaIndexes()
+      block <- block %>% shift_omega_indexes()
       retValue <- retValue %>% replace(block)
   }
   return(retValue)
 })
 
 #_______________________________________________________________________________
-#----                            getOmegaBlock                              ----
+#----                            get_omega_block                              ----
 #_______________________________________________________________________________
 
 #' Get the right block of OMEGA's.
@@ -89,19 +89,19 @@ setMethod("add", signature=c("omega_blocks", "parameters"), definition=function(
 #' @param x omega param
 #' @return the corresponding OMEGA block or NULL if not found
 #' @export
-#' @rdname getOmegaBlock
-getOmegaBlock <- function(object, x) {
+#' @rdname get_omega_block
+get_omega_block <- function(object, x) {
   stop("No default function is provided")
 }
 
-setGeneric("getOmegaBlock", function(object, x) {
-  standardGeneric("getOmegaBlock")
+setGeneric("get_omega_block", function(object, x) {
+  standardGeneric("get_omega_block")
 })
 
-#' @rdname getOmegaBlock
-setMethod("getOmegaBlock", signature=c("omega_blocks", "double_array_parameter"), definition=function(object, x) {
+#' @rdname get_omega_block
+setMethod("get_omega_block", signature=c("omega_blocks", "double_array_parameter"), definition=function(object, x) {
   for (block in object@list) {
-    indexes <- block %>% getOmegaIndexes()
+    indexes <- block %>% get_omega_indexes()
     if (x@index %in% indexes || x@index2 %in% indexes) {
       return(block)
     }
@@ -115,7 +115,7 @@ setMethod("getOmegaBlock", signature=c("omega_blocks", "double_array_parameter")
 
 #' @rdname sort
 setMethod("sort", signature=c("omega_blocks"), definition=function(x, decreasing=FALSE, ...) {
-  temp <- x@list %>% purrr::map_int(.f=~.x %>% getOmegaIndexes() %>% min())
+  temp <- x@list %>% purrr::map_int(.f=~.x %>% get_omega_indexes() %>% min())
   x@list <- x@list[order(temp)]
   return(x)
 })

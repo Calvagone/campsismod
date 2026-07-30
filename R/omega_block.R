@@ -27,7 +27,7 @@ OmegaBlock <- function() {
 
 #' @rdname add
 setMethod("add", signature=c("omega_block", "double_array_parameter"), definition=function(object, x) {
-  if (x %>% isDiag()) {
+  if (x %>% is_diag()) {
     object@on_diag_omegas <- object@on_diag_omegas %>% add(x)
   } else {
     object@off_diag_omegas <- object@off_diag_omegas %>% add(x)
@@ -36,16 +36,16 @@ setMethod("add", signature=c("omega_block", "double_array_parameter"), definitio
 })
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("omega_block"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("omega_block"), definition=function(x) {
   return(paste0("Omega block ", x@block_index))
 })
 
 #_______________________________________________________________________________
-#----                           getOmegaIndexes                             ----
+#----                           get_omega_indexes                             ----
 #_______________________________________________________________________________
 
 #' Get the indexes of the omegas.
@@ -53,17 +53,17 @@ setMethod("getName", signature=c("omega_block"), definition=function(x) {
 #' @param object omega block
 #' @return a list of integers
 #' @export
-#' @rdname getOmegaIndexes
-getOmegaIndexes <- function(object) {
+#' @rdname get_omega_indexes
+get_omega_indexes <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getOmegaIndexes", function(object) {
-  standardGeneric("getOmegaIndexes")
+setGeneric("get_omega_indexes", function(object) {
+  standardGeneric("get_omega_indexes")
 })
 
-#' @rdname getOmegaIndexes
-setMethod("getOmegaIndexes", signature=c("omega_block"), definition=function(object) {
+#' @rdname get_omega_indexes
+setMethod("get_omega_indexes", signature=c("omega_block"), definition=function(object) {
   # Careful: don't use parameters1 %>% add(parameters2) because it will shift indexes in parameters2
   omegas <- object@on_diag_omegas@list %>% append(object@off_diag_omegas@list)
   retValue <- omegas %>% purrr::map(.f=~c(.x@index, .x@index2)) %>% purrr::flatten_int() %>% unique()
@@ -71,7 +71,7 @@ setMethod("getOmegaIndexes", signature=c("omega_block"), definition=function(obj
 })
 
 #_______________________________________________________________________________
-#----                       hasOffDiagonalOmegas                            ----
+#----                       has_off_diagonal_omegas                            ----
 #_______________________________________________________________________________
 
 #' Has off-diagonal omegas.
@@ -79,22 +79,22 @@ setMethod("getOmegaIndexes", signature=c("omega_block"), definition=function(obj
 #' @param object omega block
 #' @return TRUE or FALSE
 #' @export
-#' @rdname hasOffDiagonalOmegas
-hasOffDiagonalOmegas <- function(object) {
+#' @rdname has_off_diagonal_omegas
+has_off_diagonal_omegas <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("hasOffDiagonalOmegas", function(object) {
-  standardGeneric("hasOffDiagonalOmegas")
+setGeneric("has_off_diagonal_omegas", function(object) {
+  standardGeneric("has_off_diagonal_omegas")
 })
 
-#' @rdname hasOffDiagonalOmegas
-setMethod("hasOffDiagonalOmegas", signature=c("omega_block"), definition=function(object) {
+#' @rdname has_off_diagonal_omegas
+setMethod("has_off_diagonal_omegas", signature=c("omega_block"), definition=function(object) {
   return(object@off_diag_omegas %>% length() > 0)
 })
 
 #_______________________________________________________________________________
-#----                         shiftOmegaIndexes                             ----
+#----                         shift_omega_indexes                             ----
 #_______________________________________________________________________________
 
 #' Shift OMEGA indexes.
@@ -102,13 +102,13 @@ setMethod("hasOffDiagonalOmegas", signature=c("omega_block"), definition=functio
 #' @param object omega block
 #' @return same block but shifted
 #' @export
-#' @rdname shiftOmegaIndexes
-shiftOmegaIndexes <- function(object) {
+#' @rdname shift_omega_indexes
+shift_omega_indexes <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("shiftOmegaIndexes", function(object) {
-  standardGeneric("shiftOmegaIndexes")
+setGeneric("shift_omega_indexes", function(object) {
+  standardGeneric("shift_omega_indexes")
 })
 
 shiftOmega <- function(omega, x) {
@@ -117,8 +117,8 @@ shiftOmega <- function(omega, x) {
   return(omega)
 }
 
-#' @rdname shiftOmegaIndexes
-setMethod("shiftOmegaIndexes", signature=c("omega_block"), definition=function(object) {
+#' @rdname shift_omega_indexes
+setMethod("shift_omega_indexes", signature=c("omega_block"), definition=function(object) {
   object@on_diag_omegas@list <- object@on_diag_omegas@list %>% purrr::map(.f=~shiftOmega(.x, -object@start_index))
   object@off_diag_omegas@list <- object@off_diag_omegas@list %>% purrr::map(.f=~shiftOmega(.x, -object@start_index))
   return(object)
@@ -143,7 +143,7 @@ setMethod("length", signature=c("omega_block"), definition=function(x) {
 
 getBlockLabel <- function(object) {
   omegaNames <- object@on_diag_omegas@list %>%
-    purrr::map_chr(.f=~.x %>% getName())
+    purrr::map_chr(.f=~.x %>% get_name())
   retValue <- sprintf("BLOCK(%i) - %s", length(omegaNames), omegaNames %>% paste(collapse=" / "))
   return(retValue)
 }

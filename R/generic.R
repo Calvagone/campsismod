@@ -1,5 +1,5 @@
 #_______________________________________________________________________________
-#----                               addRSE                                  ----
+#----                               add_rse                                  ----
 #_______________________________________________________________________________
 
 #' Add relative standard error (RSE) to the specified parameter.
@@ -10,16 +10,16 @@
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname addRSE
-addRSE <- function(object, parameter, value, ...) {
+#' @rdname add_rse
+add_rse <- function(object, parameter, value, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("addRSE", function(object, parameter, value, ...) {
-  standardGeneric("addRSE")
+setGeneric("add_rse", function(object, parameter, value, ...) {
+  standardGeneric("add_rse")
 })
 #_______________________________________________________________________________
-#----                         autoDetectNONMEM                              ----
+#----                        auto_detect_nonmem                             ----
 #_______________________________________________________________________________
 
 #' Auto-detect special variables from NONMEM as compartment properties.
@@ -30,13 +30,13 @@ setGeneric("addRSE", function(object, parameter, value, ...) {
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname autoDetectNONMEM
-autoDetectNONMEM <- function(object, ...) {
+#' @rdname auto_detect_nonmem
+auto_detect_nonmem <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("autoDetectNONMEM", function(object, ...) {
-  standardGeneric("autoDetectNONMEM")
+setGeneric("auto_detect_nonmem", function(object, ...) {
+  standardGeneric("auto_detect_nonmem")
 })
 
 #_______________________________________________________________________________
@@ -93,7 +93,7 @@ setGeneric("export", function(object, dest, ...) {
 })
 
 #_______________________________________________________________________________
-#----                          getCompartmentIndex                          ----
+#----                         get_compartment_index                         ----
 #_______________________________________________________________________________
 
 #' Get the compartment index for the specified compartment name.
@@ -102,17 +102,17 @@ setGeneric("export", function(object, dest, ...) {
 #' @param name compartment name
 #' @return the corresponding compartment index
 #' @export
-#' @rdname getCompartmentIndex
-getCompartmentIndex <- function(object, name) {
+#' @rdname get_compartment_index
+get_compartment_index <- function(object, name) {
   stop("No default function is provided")
 }
 
-setGeneric("getCompartmentIndex", function(object, name) {
-  standardGeneric("getCompartmentIndex")
+setGeneric("get_compartment_index", function(object, name) {
+  standardGeneric("get_compartment_index")
 })
 
 #_______________________________________________________________________________
-#----                           getUncertainty                              ----
+#----                           get_uncertainty                             ----
 #_______________________________________________________________________________
 
 #' Get uncertainty on the parameters.
@@ -121,17 +121,17 @@ setGeneric("getCompartmentIndex", function(object, name) {
 #' @param ... extra arguments
 #' @return data frame with standard error (se) and relative standard error (rse%) columns 
 #' @export
-#' @rdname getUncertainty
-getUncertainty <- function(object, ...) {
+#' @rdname get_uncertainty
+get_uncertainty <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("getUncertainty", function(object, ...) {
-  standardGeneric("getUncertainty")
+setGeneric("get_uncertainty", function(object, ...) {
+  standardGeneric("get_uncertainty")
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
 #' Export the given object to a JSON object, ready to be written to files.
@@ -140,17 +140,17 @@ setGeneric("getUncertainty", function(object, ...) {
 #' @param ... extra arguments, unused
 #' @return the loaded S4 object
 #' @export
-#' @rdname exportToJSON
-exportToJSON <- function(object, ...) {
+#' @rdname export_to_json
+export_to_json <- function(object, ...) {
   stop(sprintf("No default function is provided for 'object': %s", class(object)))
 }
 
-setGeneric("exportToJSON", function(object, ...) {
-  standardGeneric("exportToJSON")
+setGeneric("export_to_json", function(object, ...) {
+  standardGeneric("export_to_json")
 })
 
 #_______________________________________________________________________________
-#----                             getVarCov                                 ----
+#----                            get_var_cov                                ----
 #_______________________________________________________________________________
 
 #' Get variance-covariance matrix.
@@ -158,17 +158,17 @@ setGeneric("exportToJSON", function(object, ...) {
 #' @param object generic object
 #' @return a variance-covariance matrix (data frame) or NULL if no matrix present
 #' @export
-#' @rdname getVarCov
-getVarCov <- function(object) {
+#' @rdname get_var_cov
+get_var_cov <- function(object) {
   stop("No default function is provided")
 }
 
-setGeneric("getVarCov", function(object) {
-  standardGeneric("getVarCov")
+setGeneric("get_var_cov", function(object) {
+  standardGeneric("get_var_cov")
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                          load_from_json                               ----
 #_______________________________________________________________________________
 
 #' Fill-in S4 object from the JSON content.
@@ -177,13 +177,13 @@ setGeneric("getVarCov", function(object) {
 #' @param json JSON (usually a list)
 #' @return the loaded S4 object
 #' @export
-#' @rdname loadFromJSON
-loadFromJSON <- function(object, json) {
+#' @rdname load_from_json
+load_from_json <- function(object, json) {
   stop(sprintf("No default function is provided for 'object': %s, 'json': %s", class(object), class(json)))
 }
 
-setGeneric("loadFromJSON", function(object, json) {
-  standardGeneric("loadFromJSON")
+setGeneric("load_from_json", function(object, json) {
+  standardGeneric("load_from_json")
 })
 
 #_______________________________________________________________________________
@@ -226,7 +226,7 @@ setGeneric("read", function(file, ...) {
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
 #' Replace all occurrences in object.
@@ -237,12 +237,12 @@ setGeneric("read", function(file, ...) {
 #' @param ... extra arguments
 #' @return the same object with all occurrences replaced
 #' @export
-replaceAll <- function(object, pattern, replacement, ...) {
+replace_all <- function(object, pattern, replacement, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("replaceAll", function(object, pattern, replacement, ...) {
-  standardGeneric("replaceAll")
+setGeneric("replace_all", function(object, pattern, replacement, ...) {
+  standardGeneric("replace_all")
 })
 
 #_______________________________________________________________________________
@@ -295,7 +295,7 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 })
 
 #_______________________________________________________________________________
-#----                            setMinMax                                  ----
+#----                           set_min_max                                 ----
 #_______________________________________________________________________________
 
 #' Set the minimum and maximum value on a model parameter.
@@ -307,15 +307,15 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 #' @param ... extra arguments, unused
 #' @return updated object
 #' @export
-#' @rdname setMinMax
-setMinMax <- function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+set_min_max <- function(object, parameter, min, max, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("setMinMax", function(object, parameter, min, max, ...) {
+setGeneric("set_min_max", function(object, parameter, min, max, ...) {
   min <- as.numeric(min)
   max <- as.numeric(max)
-  standardGeneric("setMinMax")
+  standardGeneric("set_min_max")
 })
 
 #_______________________________________________________________________________
@@ -338,22 +338,22 @@ setGeneric("standardise", function(object, ...) {
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' ToString generic method.
+#' to_string generic method.
 #' 
 #' @param object generic object
-#' @param ... extra arguments needed for toString conversion
+#' @param ... extra arguments needed for to_string conversion
 #' @return character value/vector
 #' @export
-#' @rdname toString
-toString <- function(object, ...) {
+#' @rdname to_string
+to_string <- function(object, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("toString", function(object, ...) {
-  standardGeneric("toString")
+setGeneric("to_string", function(object, ...) {
+  standardGeneric("to_string")
 })
 
 #_______________________________________________________________________________

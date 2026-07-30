@@ -17,7 +17,7 @@ setClass(
   contains = "pmx_element",
   prototype = prototype(name=as.character(NA)),
   validity = function(object) {
-    return(expectOneForAll(object, c("name", "index")))
+    return(expect_one_for_all(object, c("name", "index")))
   }
 )
 
@@ -33,11 +33,11 @@ Compartment <- function(index, name=NA) {
 }
 
 #_______________________________________________________________________________
-#----                              getName                                  ----
+#----                              get_name                                  ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature=c("compartment"), definition=function(x) {
+#' @rdname get_name
+setMethod("get_name", signature=c("compartment"), definition=function(x) {
   return(paste0("A", "_", x@index))
 })
 
@@ -46,15 +46,15 @@ setMethod("getName", signature=c("compartment"), definition=function(x) {
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("compartment"), definition=function(object) {
-  cat(paste0(object %>% toString(), " (CMT=", object@index, ")"))
+  cat(paste0(object %>% to_string(), " (CMT=", object@index, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("compartment"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("compartment"), definition=function(object, ...) {
   if (is.na(object@name)) {
     return(paste0("A", "_", object@index))
   } else {

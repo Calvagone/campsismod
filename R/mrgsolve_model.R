@@ -24,24 +24,24 @@ setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=fu
   return(
     new(
       "mrgsolve_model",
-      param = mrgsolveParam(object, extra_params=extra_params),
-      cmt = mrgsolveCompartment(object),
-      main = mrgsolveMain(object),
-      ode = mrgsolveOde(object),
-      omega = mrgsolveMatrix(object, type="omega"),
-      sigma = mrgsolveMatrix(object, type="sigma"),
-      table = mrgsolveTable(object),
-      capture = mrgsolveCapture(outvars, model=object)
+      param = mrgsolve_param(object, extra_params=extra_params),
+      cmt = mrgsolve_compartment(object),
+      main = mrgsolve_main(object),
+      ode = mrgsolve_ode(object),
+      omega = mrgsolve_matrix(object, type="omega"),
+      sigma = mrgsolve_matrix(object, type="sigma"),
+      table = mrgsolve_table(object),
+      capture = mrgsolve_capture(outvars, model=object)
     )
   )
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("mrgsolve_model"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("mrgsolve_model"), definition=function(object, ...) {
   cpp <- NULL
   if (!is.null(object@param)) {
     cpp <- cpp %>% append(object@param)

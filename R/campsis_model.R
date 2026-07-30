@@ -28,7 +28,7 @@ CampsisModel <- function(json=NULL) {
     model <- new("campsis_model")
   } else {
     schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-    model <-  loadFromJSON(CampsisModel(), openJSON(json=json, schema=schema))
+    model <-  load_from_json(CampsisModel(), open_json(json=json, schema=schema))
   }
   return(model)
 }
@@ -66,7 +66,7 @@ setMethod("add", signature=c("campsis_model", "code_record"), definition=functio
 #' @rdname add
 setMethod("add", signature=c("campsis_model", "model_statement"), definition=function(object, x, pos=NULL) {
   if (is(x, "ode")) {
-    object@compartments <- object@compartments %>% addODECompartment(ode=x)
+    object@compartments <- object@compartments %>% add_ode_compartment(ode=x)
   }
   object@model <- object@model %>% add(x, pos=pos)
   return(object)
@@ -106,23 +106,23 @@ appendModel <- function(model1, model2) {
 }
 
 #_______________________________________________________________________________
-#----                             addRSE                                    ----
+#----                             add_rse                                    ----
 #_______________________________________________________________________________
 
-#' @rdname addRSE
-setMethod("addRSE", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
+#' @rdname add_rse
+setMethod("add_rse", signature=c("campsis_model", "parameter", "numeric"), definition=function(object, parameter, value, ...) {
   object@parameters <- object@parameters %>%
-    addRSE(parameter=parameter, value=value, ...)
+    add_rse(parameter=parameter, value=value, ...)
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                         autoDetectNONMEM                              ----
+#----                        auto_detect_nonmem                             ----
 #_______________________________________________________________________________
 
-#' @rdname autoDetectNONMEM
-setMethod("autoDetectNONMEM", signature=c("campsis_model"), definition=function(object, ...) {
-  main <- object@model %>% getByName("MAIN")
+#' @rdname auto_detect_nonmem
+setMethod("auto_detect_nonmem", signature=c("campsis_model"), definition=function(object, ...) {
+  main <- object@model %>% get_by_name("MAIN")
   numberOfCmts <- object@compartments %>% length()
   
   for (cmtIndex in seq_len(numberOfCmts)) {
@@ -228,7 +228,7 @@ setClass(
 
 #' @rdname export
 setMethod("export", signature=c("campsis_model", "character"), definition=function(object, dest, ...) {
-  if (isRxODE(dest)) {
+  if (is_rxode(dest)) {
     return(object %>% export(new("rxode_type")))
   } else if (dest=="mrgsolve") {
     return(object %>% export(new("mrgsolve_type"), ...))
@@ -267,12 +267,12 @@ setMethod("find", signature=c("campsis_model", "model_statement"), definition=fu
 })
 
 #_______________________________________________________________________________
-#----                           exportToJSON                                ----
+#----                          export_to_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname exportToJSON
+#' @rdname export_to_json
 #' @importFrom utils capture.output
-setMethod("exportToJSON", signature=c("campsis_model"), definition=function(object, ...) {
+setMethod("export_to_json", signature=c("campsis_model"), definition=function(object, ...) {
   # Delete error record if empty
   errorRecord <- object %>%
     find(ErrorRecord())
@@ -280,57 +280,57 @@ setMethod("exportToJSON", signature=c("campsis_model"), definition=function(obje
     object <- object %>%
       delete(ErrorRecord())
   }
-  lines <- capture.output(show(object@model %>% addPropertiesRecords(model=object)))
+  lines <- capture.output(show(object@model %>% add_properties_records(model=object)))
   json <- list()
   json$code <- lines
-  json$parameters <- exportToJSON(object@parameters)@data
+  json$parameters <- export_to_json(object@parameters)@data
   if (length(object@parameters@varcov) > 0) {
-    json$varcov <- varcovToJSON(parameters=object@parameters)
+    json$varcov <- varcov_to_json(parameters=object@parameters)
   }
   return(JSONElement(json))
 })
 
 #_______________________________________________________________________________
-#----                          getCompartmentIndex                          ----
+#----                         get_compartment_index                         ----
 #_______________________________________________________________________________
 
-#' @rdname getCompartmentIndex
-setMethod("getCompartmentIndex", signature=c("campsis_model", "character"), definition=function(object, name) {
-  return(object@compartments %>% getCompartmentIndex(name=name))
+#' @rdname get_compartment_index
+setMethod("get_compartment_index", signature=c("campsis_model", "character"), definition=function(object, name) {
+  return(object@compartments %>% get_compartment_index(name=name))
 })
 
 #_______________________________________________________________________________
-#----                          getUncertainty                               ----
+#----                          get_uncertainty                               ----
 #_______________________________________________________________________________
 
-#' @rdname getUncertainty
-setMethod("getUncertainty", signature=c("campsis_model"), definition=function(object, ...) {
-  return(object@parameters %>% getUncertainty(...))
+#' @rdname get_uncertainty
+setMethod("get_uncertainty", signature=c("campsis_model"), definition=function(object, ...) {
+  return(object@parameters %>% get_uncertainty(...))
 })
 
 #_______________________________________________________________________________
-#----                             getVarCov                                 ----
+#----                            get_var_cov                                ----
 #_______________________________________________________________________________
 
-#' @rdname getVarCov
-setMethod("getVarCov", signature=c("campsis_model"), definition=function(object) {
-  return(object@parameters %>% getVarCov())
+#' @rdname get_var_cov
+setMethod("get_var_cov", signature=c("campsis_model"), definition=function(object) {
+  return(object@parameters %>% get_var_cov())
 })
 
 #_______________________________________________________________________________
-#----                           loadFromJSON                                ----
+#----                          load_from_json                               ----
 #_______________________________________________________________________________
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("campsis_model", "json_element"), definition=function(object, json) {
-  object <- jsonToCampsisModel(object=object, json=json)
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("campsis_model", "json_element"), definition=function(object, json) {
+  object <- json_to_campsis_model(object=object, json=json)
   return(object)
 })
 
-#' @rdname loadFromJSON
-setMethod("loadFromJSON", signature=c("campsis_model", "character"), definition=function(object, json) {
+#' @rdname load_from_json
+setMethod("load_from_json", signature=c("campsis_model", "character"), definition=function(object, json) {
   schema <- system.file("extdata", "campsismod.schema.json", package="campsismod")
-  return(loadFromJSON(object=object, json=openJSON(json=json, schema=schema)))
+  return(load_from_json(object=object, json=open_json(json=json, schema=schema)))
 })
 
 #_______________________________________________________________________________
@@ -371,13 +371,13 @@ read.campsis <- function(file) {
     parameters <- read.allparameters(folder=folder)
     model <- new("campsis_model", model=records, parameters=parameters, compartments=Compartments())
     model <- model %>%
-      updateCompartments()
+      update_compartments()
     
   } else if (file.exists(file)) {
     if (!endsWith(file, ".json")) {
       stop("Only JSON model files can be opened.")
     }
-    model <- loadFromJSON(CampsisModel(), paste0(readLines(file), collapse="\n"))
+    model <- load_from_json(CampsisModel(), paste0(readLines(file), collapse="\n"))
   } else {
     stop("file is not a JSON model or a valid Campsis model folder")
   }
@@ -407,21 +407,21 @@ read.pmxmod <- function(file) {
 #' @param model Campsis model
 #' @return an updated Campsis model, with an updated compartments list
 #' @export
-updateCompartments <- function(model) {
+update_compartments <- function(model) {
   if (!is(model, "campsis_model")) {
     stop("model is not a Campsis model")   
   }
   records <- model@model
   
   # Get list of compartments
-  compartments <- records %>% getCompartments()
+  compartments <- records %>% get_compartments()
   
   # Extract characteristics
-  compartments <- compartments %>% addProperties(records, "F", init=Bioavailability(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "LAG", init=LagTime(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "DURATION", init=InfusionDuration(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "RATE", init=InfusionRate(0, rhs=""))
-  compartments <- compartments %>% addProperties(records, "INIT", init=InitialCondition(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "F", init=Bioavailability(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "LAG", init=LagTime(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "DURATION", init=InfusionDuration(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "RATE", init=InfusionRate(0, rhs=""))
+  compartments <- compartments %>% add_properties(records, "INIT", init=InitialCondition(0, rhs=""))
   
   # Remove properties records because information is found in properties
   records@list <- records@list %>% purrr::keep(~!is(.x, "properties_record"))
@@ -466,50 +466,50 @@ setMethod("replace", signature=c("campsis_model", "model_statement"), definition
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  # Call 'replaceAll' on each code record
+#' @rdname replace_all
+setMethod("replace_all", signature=c("campsis_model", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  # Call 'replace_all' on each code record
   object@model@list <- object@model@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   
-  # Call 'replaceAll' on each compartment property
+  # Call 'replace_all' on each compartment property
   object@compartments@properties@list <- object@compartments@properties@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=pattern, replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=pattern, replacement=replacement, ...))
   
   return(object)
 })
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
-  # Call 'replaceAll' on each code record
+#' @rdname replace_all
+setMethod("replace_all", signature=c("campsis_model", "character", "character"), definition=function(object, pattern, replacement, ...) {
+  # Call 'replace_all' on each code record
   object@model@list <- object@model@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=VariablePattern(pattern), replacement=replacement, ...))
   
-  # Call 'replaceAll' on each compartment property
+  # Call 'replace_all' on each compartment property
   object@compartments@properties@list <- object@compartments@properties@list %>%
-    purrr::map(~.x %>% replaceAll(pattern=VariablePattern(pattern), replacement=replacement, ...))
+    purrr::map(~.x %>% replace_all(pattern=VariablePattern(pattern), replacement=replacement, ...))
   
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                            setMinMax                                  ----
+#----                           set_min_max                                 ----
 #_______________________________________________________________________________
 
-#' @rdname setMinMax
-setMethod("setMinMax", signature=c("campsis_model", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+setMethod("set_min_max", signature=c("campsis_model", "parameter", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
   object@parameters <- object@parameters %>%
-    setMinMax(parameter=parameter, min=min, max=max, ...)
+    set_min_max(parameter=parameter, min=min, max=max, ...)
   return(object)
 })
 
-#' @rdname setMinMax
-setMethod("setMinMax", signature=c("campsis_model", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
+#' @rdname set_min_max
+setMethod("set_min_max", signature=c("campsis_model", "character", "numeric", "numeric"), definition=function(object, parameter, min, max, ...) {
   object@parameters <- object@parameters %>%
-    setMinMax(parameter=parameter, min=min, max=max, ...)
+    set_min_max(parameter=parameter, min=min, max=max, ...)
   return(object)
 })
 
@@ -518,7 +518,7 @@ setMethod("setMinMax", signature=c("campsis_model", "character", "numeric", "num
 #_______________________________________________________________________________
 
 setMethod("show", signature=c("campsis_model"), definition=function(object) {
-  show(object@model %>% addPropertiesRecords(model=object))
+  show(object@model %>% add_properties_records(model=object))
   cat("\n")
   show(object@parameters)
   cat("\n")
@@ -560,10 +560,10 @@ setMethod("standardise", signature=c("campsis_model"), definition=function(objec
 #' @rdname write
 setMethod("write", signature=c("campsis_model", "character"), definition=function(object, file, ...) {
   if (endsWith(file, ".json")) {
-    return(exportToJSON(object) %>% campsismod::write(file=file))
+    return(export_to_json(object) %>% campsismod::write(file=file))
   }
   
-  zip <- processExtraArg(args=list(...), name="zip", default=FALSE)
+  zip <- process_extra_arg(args=list(...), name="zip", default=FALSE)
   records <- object@model
   parameters <- object@parameters
 

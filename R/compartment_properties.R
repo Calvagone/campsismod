@@ -16,11 +16,11 @@ setClass(
 )
 
 #_______________________________________________________________________________
-#----                             getByIndex                                ----
+#----                             get_by_index                                ----
 #_______________________________________________________________________________
 
-#' @rdname getByIndex
-setMethod("getByIndex", signature=c("compartment_properties", "compartment_property"), definition=function(object, x) {
+#' @rdname get_by_index
+setMethod("get_by_index", signature=c("compartment_properties", "compartment_property"), definition=function(object, x) {
   retValue <- object@list %>% purrr::keep(~(.x@compartment==x@compartment & as.character(class(.x))==as.character(class(x))))
   
   if (length(retValue) > 0) {
@@ -41,7 +41,7 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
   assertthat::assert_that(length(args) > 0, msg=msg)
   type <- args[[1]]
   assertthat::assert_that(type %in% types, msg=msg)
-  object@list <- object@list %>% purrr::keep(~.x %>% getRecordName()==type)
+  object@list <- object@list %>% purrr::keep(~.x %>% get_record_name()==type)
   return(object)
 })
 
@@ -51,10 +51,10 @@ setMethod("select", signature=c("compartment_properties"), definition=function(o
 
 #' @rdname sort
 setMethod("sort", signature=c("compartment_properties"), definition=function(x, decreasing=FALSE, ...) {
-  names <- x@list %>% purrr::map_chr(~.x %>% getRecordName())
+  names <- x@list %>% purrr::map_chr(~.x %>% get_record_name())
   
   # Reorder
-  names <- factor(names, levels=getRecordNames(), labels=getRecordNames())
+  names <- factor(names, levels=get_record_names(), labels=get_record_names())
   order <- order(names)
   
   # Apply result to original list

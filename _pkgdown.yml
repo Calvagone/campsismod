@@ -25,10 +25,10 @@ reference:
 - title: "Campsis model"
   contents:
   - CampsisModel
-  - autoDetectNONMEM
+  - auto_detect_nonmem
   - read.campsis
   - read.model
-  - addSuffix
+  - add_suffix
 
 - title: "Code records"
   contents:
@@ -36,7 +36,7 @@ reference:
   - MainRecord
   - OdeRecord
   - ErrorRecord
-  - getRecordName
+  - get_record_name
   
 - title: "Statement type"
   contents:
@@ -54,27 +54,27 @@ reference:
   - Theta
   - Omega
   - Sigma
-  - addRSE
+  - add_rse
   - as.data.frame
-  - getNameInModel
-  - getNONMEMName
-  - getUncertainty
-  - getVarCov
-  - isDiag
-  - maxIndex
-  - minIndex
+  - get_name_in_model
+  - get_nonmem_name
+  - get_uncertainty
+  - get_var_cov
+  - is_diag
+  - max_index
+  - min_index
   - read.allparameters
   - read.parameters
   - read.varcov
-  - setMinMax
-  - writeParameters
-  - writeVarcov
+  - set_min_max
+  - write_parameters
+  - write_varcov
   
 - title: "Compartments"
   contents:
   - Compartment
   - Compartments
-  - getCompartmentIndex
+  - get_compartment_index
 
 - title: "Compartment properties"
   contents:
@@ -83,14 +83,12 @@ reference:
   - InfusionRate
   - InitialCondition
   - LagTime
-  - getPrefix
+  - get_prefix
   
 - title: "Model parameters replication"
   contents:
   - AutoReplicationSettings
-
   - ManualReplicationSettings
-
   - replicate
   
 - title: "Generic list"
@@ -98,10 +96,10 @@ reference:
   - add
   - delete
   - find
-  - indexOf
-  - getByIndex
-  - getByName
-  - getNames
+  - index_of
+  - get_by_index
+  - get_by_name
+  - get_names
   - move
   - replace
   - sort
@@ -110,35 +108,37 @@ reference:
   
 - title: "Generic list element"
   contents:
-  - getName
+  - get_name
 
 - title: "Generic methods"
   contents:
   - export
   - disable
-  - fixOmega
+  - export_to_json
+  - fix_omega
+  - load_from_json
   - read
   - select
   - standardise
-  - toString
+  - to_string
   - write
   
 - title: "Mrgsolve export"
   contents:
-  - mrgsolveBlock
-  - mrgsolveCapture
-  - mrgsolveCompartment
-  - mrgsolveMain
-  - mrgsolveMatrix
-  - mrgsolveOde
-  - mrgsolveParam
-  - mrgsolveTable
+  - mrgsolve_block
+  - mrgsolve_capture
+  - mrgsolve_compartment
+  - mrgsolve_main
+  - mrgsolve_matrix
+  - mrgsolve_ode
+  - mrgsolve_param
+  - mrgsolve_table
   
-- title: "RxODE export"
+- title: "rxode2 export"
   contents:
-  - rxodeCode
-  - rxodeMatrix
-  - rxodeParams
+  - rxode_code
+  - rxode_matrix
+  - rxode_params
   
 - title: "Exported classes"
   contents:
@@ -163,6 +163,7 @@ reference:
   - f_record-class
   - if_statement-class
   - init_record-class
+  - json_element-class
   - lag_record-class
   - line_break-class
   - main_record-class
@@ -194,25 +195,25 @@ reference:
 
 - title: "Parsing utilities"
   contents:
-  - extractLhs
-  - extractRhs
-  - extractTextBetweenBrackets
-  - getRecordDelimiter
-  - hasComment
-  - isComment
-  - isEmptyLine
-  - isEquation
-  - isIfStatement
-  - isODE
-  - isRecordDelimiter
-  - isStrictRecordDelimiter
-  - parseIfStatement
-  - parseStatements
+  - extract_lhs
+  - extract_rhs
+  - extract_text_between_brackets
+  - get_record_delimiter
+  - has_comment
+  - is_comment
+  - is_empty_line
+  - is_equation
+  - is_if_statement
+  - is_ode
+  - is_record_delimiter
+  - is_strict_record_delimiter
+  - parse_if_statement
+  - parse_statements
   - trim
 
 - title: "Replace occurrences"
   contents:
-  - replaceAll
+  - replace_all
   - Pattern
   - VariablePattern
 
@@ -222,16 +223,20 @@ reference:
   
 - title: "Advanced use"
   contents:
-  - updateCompartments
-  - isMatrixPositiveDefinite
-  - getOmegaBlock
-  - getOmegaIndexes
-  - hasOffDiagonalOmegas
+  - JSONElement
   - OmegaBlock
   - OmegaBlocks
-  - shiftOmegaIndexes
+  - assert_single_character_string
+  - is_matrix_positive_definite
+  - get_campsismod_option
+  - get_omega_block
+  - get_omega_indexes
+  - has_exact_method
+  - has_off_diagonal_omegas
+  - json_to_parameter
+  - process_extra_arg
+  - map_json_properties_to_s4_slots
+  - map_s4_slots_to_json_properties
+  - update_compartments
+  - shift_omega_indexes
 
-- title: "Other exported methods"
-  contents:
-  - assertSingleCharacterString
-  - processExtraArg

@@ -17,7 +17,7 @@ setClass(
   ),
   contains = "model_statement",
   validity = function(object) {
-    return(expectOne(object, "condition"))
+    return(expect_one(object, "condition"))
   }
 )
 
@@ -34,38 +34,38 @@ IfStatement <- function(condition, equation, comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("if_statement"), definition = function(x) {
-  return(paste0("IF (", x@condition, ") ", x@equation %>% getName()))
+#' @rdname get_name
+setMethod("get_name", signature = c("if_statement"), definition = function(x) {
+  return(paste0("IF (", x@condition, ") ", x@equation %>% get_name()))
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("if_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@condition <- object@condition %>% replaceAll(pattern=pattern, replacement=replacement, ...)
-  object@equation <- object@equation %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+#' @rdname replace_all
+setMethod("replace_all", signature=c("if_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@condition <- object@condition %>% replace_all(pattern=pattern, replacement=replacement, ...)
+  object@equation <- object@equation %>% replace_all(pattern=pattern, replacement=replacement, ...)
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("if_statement"), definition=function(object, ...) {
-  dest <- processExtraArg(args=list(...), name="dest", default="campsis")
-  if (dest=="campsis" || isRxODE(dest) || dest=="mrgsolve") {
-    retValue <- paste0("if (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))
+#' @rdname to_string
+setMethod("to_string", signature=c("if_statement"), definition=function(object, ...) {
+  dest <- process_extra_arg(args=list(...), name="dest", default="campsis")
+  if (dest=="campsis" || is_rxode(dest) || dest=="mrgsolve") {
+    retValue <- paste0("if (", object@condition, ") ", object@equation %>% to_string(dest=dest, init=FALSE))
   } else if (dest=="NONMEM") {
-    retValue <- paste0("IF (", object@condition, ") ", object@equation %>% toString(dest=dest, init=FALSE))
+    retValue <- paste0("IF (", object@condition, ") ", object@equation %>% to_string(dest=dest, init=FALSE))
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })

@@ -46,3 +46,5 @@ my_model.json
 /README_files/
 /pkgdown/
 .positai
+
+tests/testthat/Rplots.pdf

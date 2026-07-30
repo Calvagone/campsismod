@@ -18,7 +18,7 @@ setClass(
   contains = "model_statement",
   prototype = prototype(rhs=""),
   validity = function(object) {
-    return(expectOne(object, c("lhs", "rhs")))
+    return(expect_one(object, c("lhs", "rhs")))
   }
 )
 
@@ -35,37 +35,37 @@ Equation <- function(lhs, rhs="", comment=as.character(NA)) {
 }
 
 #_______________________________________________________________________________
-#----                            getName                                    ----
+#----                            get_name                                    ----
 #_______________________________________________________________________________
 
-#' @rdname getName
-setMethod("getName", signature = c("equation"), definition = function(x) {
+#' @rdname get_name
+setMethod("get_name", signature = c("equation"), definition = function(x) {
   return(paste0("EQUATION (", x@lhs, ")"))
 })
 
 #_______________________________________________________________________________
-#----                             replaceAll                                ----
+#----                             replace_all                                ----
 #_______________________________________________________________________________
 
-#' @rdname replaceAll
-setMethod("replaceAll", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  object@lhs <- object@lhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
-  object@rhs <- object@rhs %>% replaceAll(pattern=pattern, replacement=replacement, ...)
+#' @rdname replace_all
+setMethod("replace_all", signature=c("equation", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
+  object@lhs <- object@lhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
+  object@rhs <- object@rhs %>% replace_all(pattern=pattern, replacement=replacement, ...)
   return(object)
 })
 
 #_______________________________________________________________________________
-#----                             toString                                  ----
+#----                             to_string                                 ----
 #_______________________________________________________________________________
 
-#' @rdname toString
-setMethod("toString", signature=c("equation"), definition=function(object, ...) {
+#' @rdname to_string
+setMethod("to_string", signature=c("equation"), definition=function(object, ...) {
   args <- list(...)
-  dest <- processExtraArg(args=args, name="dest", default="campsis")
-  init <- processExtraArg(args=args, name="init", default=TRUE)
-  capture <- processExtraArg(args=args, name="capture", default=FALSE)
+  dest <- process_extra_arg(args=args, name="dest", default="campsis")
+  init <- process_extra_arg(args=args, name="init", default=TRUE)
+  capture <- process_extra_arg(args=args, name="capture", default=FALSE)
   
-  if (dest=="campsis" || isRxODE(dest) || dest=="NONMEM") {
+  if (dest=="campsis" || is_rxode(dest) || dest=="NONMEM") {
     retValue <- paste0(object@lhs, "=", object@rhs)
   } else if (dest=="mrgsolve") {
     retValue <- paste0(object@lhs, "=", object@rhs, ";")
@@ -77,5 +77,5 @@ setMethod("toString", signature=c("equation"), definition=function(object, ...) 
   } else {
     UnsupportedDestException()
   }
-  return(retValue %>% appendComment(object, dest))
+  return(retValue %>% append_comment(object, dest))
 })
