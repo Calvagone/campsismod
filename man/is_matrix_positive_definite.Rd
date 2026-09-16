@@ -2,15 +2,13 @@
 % Please edit documentation in R/parameter_uncertainty_utils.R
 \name{is_matrix_positive_definite}
 \alias{is_matrix_positive_definite}
-\title{Is matrix positive definite. Same check as \code{mvtnorm} does.}
+\title{Is matrix positive definite}
 \usage{
-is_matrix_positive_definite(matrix, tol = 1e-06)
+is_matrix_positive_definite(matrix)
 }
 \arguments{
 \item{matrix}{matrix to check}
-
-\item{tol}{tolerance when checking the eigenvalues}
 }
 \description{
-Is matrix positive definite. Same check as \code{mvtnorm} does.
+Is matrix positive definite
 }

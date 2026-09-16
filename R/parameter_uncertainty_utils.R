@@ -501,16 +501,15 @@ check_matrix_is_positive_definite <- function(table, parameters) {
   return(retValue)
 }
 
-#' Is matrix positive definite. Same check as \code{mvtnorm} does.
+#' Is matrix positive definite
 #'
 #' @param matrix matrix to check
-#' @param tol tolerance when checking the eigenvalues
 #' @export
-is_matrix_positive_definite <- function(matrix, tol = 1e-06) {
-  eS <- eigen(matrix, symmetric = TRUE)
-  ev <- eS$values
-  if (!all(ev >= -tol * abs(ev[1L]))) {
+is_matrix_positive_definite <- function(matrix) {
+  if (!is.matrix(matrix) || !is.numeric(matrix)) {
     return(FALSE)
   }
-  return(TRUE)
+  
+  # Try Cholesky decomposition; returns TRUE if successful, FALSE if non-PD
+  return(!inherits(try(chol(matrix), silent = TRUE), "try-error"))
 }
