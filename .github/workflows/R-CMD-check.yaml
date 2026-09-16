@@ -67,12 +67,19 @@ jobs:
             libxml2-devel \
             git
 
-      - name: Force R to use BLIS via FlexiBLAS or library symlink
+      - name: Force R to use BLIS
         run: |
-          # Symlink R's internal BLAS library to BLIS
-          ln -sf /usr/lib64/libblis.so /usr/lib64/R/lib/libRblas.so || true
+          BLIS_PATH=$(ldconfig -p | grep libblis.so | awk '{print $NF}' | head -n 1)
+          R_LIB_DIR=$(R RHOME)/lib
+          echo "Found BLIS at: $BLIS_PATH"
+          echo "Overwriting R's libRblas.so in: $R_LIB_DIR"
+          cp -f "$BLIS_PATH" "$R_LIB_DIR/libRblas.so"
 
       - uses: actions/checkout@v3
+
+      - name: Verify Active BLAS Backend
+        run: |
+          Rscript -e 'cat("Active BLAS:", sessionInfo()$BLAS, "\n")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -80,5 +87,7 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        env:
+          LD_PRELOAD: /usr/lib64/libblis.so
         with:
           upload-snapshots: true

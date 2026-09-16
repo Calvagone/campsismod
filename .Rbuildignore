@@ -16,3 +16,4 @@
 ^\.positai$
 ^\.claude$
 ^\.vscode$
+^air\.toml$
