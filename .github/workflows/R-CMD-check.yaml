@@ -60,8 +60,8 @@ jobs:
             R-devel \
             gcc \
             gcc-gfortran \
+            blis \
             blis-devel \
-            flexiblas-blis-serial \
             libcurl-devel \
             openssl-devel \
             libxml2-devel \
@@ -69,7 +69,8 @@ jobs:
 
       - name: Force R to use BLIS
         run: |
-          BLIS_PATH=$(ldconfig -p | grep libblis.so | awk '{print $NF}' | head -n 1)
+          # Find any installed shared BLIS library automatically
+          BLIS_PATH=$(find /usr/lib64 -name "libblis*.so*" | head -n 1)
           R_LIB_DIR=$(R RHOME)/lib
           echo "Found BLIS at: $BLIS_PATH"
           echo "Overwriting R's libRblas.so in: $R_LIB_DIR"
@@ -87,7 +88,5 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
-        env:
-          LD_PRELOAD: /usr/lib64/libblis.so
         with:
           upload-snapshots: true
