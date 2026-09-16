@@ -47,3 +47,38 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+  
+  # New dedicated job to check against BLIS
+  R-CMD-check-BLIS:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:44
+    steps:
+      - name: Install system dependencies & BLIS
+        run: |
+          dnf install -y \
+            R-devel \
+            gcc \
+            gcc-gfortran \
+            blis-devel \
+            flexiblas-blis \
+            libcurl-devel \
+            openssl-devel \
+            xml2-devel \
+            git
+
+      - name: Force R to use BLIS via FlexiBLAS or library symlink
+        run: |
+          # Symlink R's internal BLAS library to BLIS
+          ln -sf /usr/lib64/libblis.so /usr/lib64/R/lib/libRblas.so || true
+
+      - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true

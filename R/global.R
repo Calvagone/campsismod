@@ -7,6 +7,6 @@
 #' @keywords internal
 methods_global_functions <- function() {}
 
-#' @importFrom rlang .data :=
+#' @importFrom rlang .data
 #' @keywords internal
 rlang_global <- function() {}
