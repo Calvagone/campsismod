@@ -60,27 +60,28 @@ jobs:
             R-devel \
             gcc \
             gcc-gfortran \
-            blis \
             blis-devel \
+            flexiblas-blis-serial \
             libcurl-devel \
             openssl-devel \
             libxml2-devel \
             git
 
-      - name: Force R to use BLIS
+      - name: Set FlexiBLAS default to BLIS
         run: |
-          # Find any installed shared BLIS library automatically
-          BLIS_PATH=$(find /usr/lib64 -name "libblis*.so*" | head -n 1)
-          R_LIB_DIR=$(R RHOME)/lib
-          echo "Found BLIS at: $BLIS_PATH"
-          echo "Overwriting R's libRblas.so in: $R_LIB_DIR"
-          cp -f "$BLIS_PATH" "$R_LIB_DIR/libRblas.so"
+          # List available backends for logging
+          flexiblas list
+          
+          # Set default system BLAS backend to BLIS
+          flexiblas default BLIS-SERIAL || flexiblas default BLIS
 
       - uses: actions/checkout@v3
 
       - name: Verify Active BLAS Backend
         run: |
           Rscript -e 'cat("Active BLAS:", sessionInfo()$BLAS, "\n")'
+        env:
+          FLEXIBLAS: BLIS-SERIAL
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -88,5 +89,7 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        env:
+          FLEXIBLAS: BLIS-SERIAL
         with:
           upload-snapshots: true
