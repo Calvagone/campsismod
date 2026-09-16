@@ -61,10 +61,10 @@ jobs:
             gcc \
             gcc-gfortran \
             blis-devel \
-            flexiblas-blis \
+            flexiblas-blis-serial \
             libcurl-devel \
             openssl-devel \
-            xml2-devel \
+            libxml2-devel \
             git
 
       - name: Force R to use BLIS via FlexiBLAS or library symlink
