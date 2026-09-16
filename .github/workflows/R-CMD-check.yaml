@@ -65,6 +65,7 @@ jobs:
             libcurl-devel \
             openssl-devel \
             libxml2-devel \
+            glibc-langpack-en \
             git
 
       - name: Set FlexiBLAS default to BLIS

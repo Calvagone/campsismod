@@ -504,12 +504,17 @@ check_matrix_is_positive_definite <- function(table, parameters) {
 #' Is matrix positive definite
 #'
 #' @param matrix matrix to check
+#' @param tol absolute tolerance for eigenvalues (default: 1e-12)
 #' @export
-is_matrix_positive_definite <- function(matrix) {
+is_matrix_positive_definite <- function(matrix, tol = 1e-12) {
   if (!is.matrix(matrix) || !is.numeric(matrix)) {
     return(FALSE)
   }
-  
-  # Try Cholesky decomposition; returns TRUE if successful, FALSE if non-PD
-  return(!inherits(try(chol(matrix), silent = TRUE), "try-error"))
+
+  # Compute eigenvalues only (faster)
+  ev <- eigen(matrix, symmetric = TRUE, only.values = TRUE)$values
+
+  # Ensure all eigenvalues are strictly positive
+  # beyond the floating-point noise threshold of BLAS backends (1e-12)
+  return(all(ev > tol))
 }

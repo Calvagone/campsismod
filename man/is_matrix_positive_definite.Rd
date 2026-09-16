@@ -4,10 +4,12 @@
 \alias{is_matrix_positive_definite}
 \title{Is matrix positive definite}
 \usage{
-is_matrix_positive_definite(matrix)
+is_matrix_positive_definite(matrix, tol = 1e-12)
 }
 \arguments{
 \item{matrix}{matrix to check}
+
+\item{tol}{absolute tolerance for eigenvalues (default: 1e-12)}
 }
 \description{
 Is matrix positive definite
