@@ -46,7 +46,7 @@ model <- model_suite$pk$`2cpt_fo`
 The model can be exported to files using `write`.
 
 ``` r
-model %>% write(file="path_to_model_folder")
+model %>% write(file = "path_to_model_folder")
 ```
 
 In this case, the model code will be contained in the `model.campsis`
@@ -62,7 +62,7 @@ Alternatively, the model can also be exported in JSON format into a
 single file:
 
 ``` r
-model %>% write(file="my_model.json")
+model %>% write(file = "my_model.json")
 ```
 
 ### Read and show Campsis model
@@ -70,13 +70,13 @@ model %>% write(file="my_model.json")
 The model can be loaded from the previously created folder:
 
 ``` r
-model <- read.campsis(file="path_to_model_folder")
+model <- read.campsis(file = "path_to_model_folder")
 ```
 
 Or, from the previously created JSON file:
 
 ``` r
-model <- read.campsis(file="my_model.json")
+model <- read.campsis(file = "my_model.json")
 ```
 
 The model can then be output in the console using `show`:
@@ -144,11 +144,11 @@ show(model)
 library(campsis)
 
 dataset <- Dataset(5) %>%
-  add(Bolus(time=0, amount=1000, ii=12, addl=2)) %>%
-  add(Observations(times=0:36))
+  add(Bolus(time = 0, amount = 1000, ii = 12, addl = 2)) %>%
+  add(Observations(times = 0:36))
 
-rxode <- model %>% simulate(dataset=dataset, dest="rxode2", seed=0)
-mrgsolve <- model %>% simulate(dataset=dataset, dest="mrgsolve", seed=0)
+rxode <- simulate(model = model, dataset = dataset, dest = "rxode2", seed = 0)
+mrgsolve <- simulate(model = model, dataset = dataset, dest = "mrgsolve", seed = 0)
 ```
 
 ``` r
