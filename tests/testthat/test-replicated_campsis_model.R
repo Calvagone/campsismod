@@ -417,10 +417,10 @@ test_that("Checking for positive definiteness works as expected", {
     replicate(no_of_replicates, settings = settings_b)
 
   # Compare manually
-  # repModelA@replicated_parameters
-  # repModelB@replicated_parameters
+  # rep_model_a@replicated_parameters
+  # rep_model_b@replicated_parameters
 
-  # Check that at least one Omega matrix in repModelB is NOT positive definite
+  # Check that at least one Omega matrix in rep_model_b is NOT positive definite
   # (This confirms the distribution is capable of producing invalid matrices)
   is_pd_b <- sapply(seq_len(no_of_replicates), function(i) {
     m <- rep_model_b %>% export(dest = CampsisModel(), index = i)
@@ -428,7 +428,7 @@ test_that("Checking for positive definiteness works as expected", {
   })
   expect_true(any(!is_pd_b), label = "At least one replicate in B should be non-PD")
 
-  # Check that ALL Omega matrices in repModelA are positive definite
+  # Check that ALL Omega matrices in rep_model_a are positive definite
   # (This confirms that check_pos_def = TRUE successfully filtered them)
   is_pd_a <- sapply(seq_len(no_of_replicates), function(i) {
     m <- rep_model_a %>% export(dest = CampsisModel(), index = i)
