@@ -152,7 +152,7 @@ mrgsolve <- simulate(model = model, dataset = dataset, dest = "mrgsolve", seed =
 ```
 
 ``` r
-spaghettiPlot(rxode, "CONC")
+spaghetti_plot(rxode, "CONC")
 ```
 
 <figure>
@@ -162,7 +162,7 @@ alt="rxode2 simulation results" />
 </figure>
 
 ``` r
-spaghettiPlot(mrgsolve, "CONC")
+spaghetti_plot(mrgsolve, "CONC")
 ```
 
 <figure>
