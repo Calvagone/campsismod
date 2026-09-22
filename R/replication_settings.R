@@ -76,7 +76,7 @@ setClass(
 #' @param sdf the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
 #'  single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)
 #' @param checkMinMax logical, check for min/max values when sampling the parameters, default is TRUE
-#' @param checkPosDef logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
+#' @param check_pos_def logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)
 #' @param quiet logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.
 #' @return replication settings
 #' @export
@@ -85,7 +85,7 @@ AutoReplicationSettings <- function(
   odf = NA,
   sdf = NA,
   checkMinMax = TRUE,
-  checkPosDef = FALSE,
+  check_pos_def = FALSE,
   quiet = NA
 ) {
   return(new(
@@ -94,7 +94,7 @@ AutoReplicationSettings <- function(
     odf = as.integer(odf),
     sdf = as.integer(sdf),
     check_min_max = as.logical(checkMinMax),
-    check_pos_def = as.logical(checkPosDef),
+    check_pos_def = as.logical(check_pos_def),
     quiet = as.logical(quiet)
   ))
 }

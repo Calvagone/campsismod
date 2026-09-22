@@ -9,7 +9,7 @@ AutoReplicationSettings(
   odf = NA,
   sdf = NA,
   checkMinMax = TRUE,
-  checkPosDef = FALSE,
+  check_pos_def = FALSE,
   quiet = NA
 )
 }
@@ -25,7 +25,7 @@ single integer value (the same degrees of freedom for all SIGMA blocks) or integ
 
 \item{checkMinMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
 
-\item{checkPosDef}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
+\item{check_pos_def}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
 
 \item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }
