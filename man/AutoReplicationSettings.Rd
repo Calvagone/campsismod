@@ -8,7 +8,7 @@ AutoReplicationSettings(
   wishart = FALSE,
   odf = NA,
   sdf = NA,
-  checkMinMax = TRUE,
+  check_min_max = TRUE,
   check_pos_def = FALSE,
   quiet = NA
 )
@@ -23,7 +23,7 @@ single integer value (the same degrees of freedom for all OMEGA blocks) or integ
 \item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
 single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)}
 
-\item{checkMinMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
+\item{check_min_max}{logical, check for min/max values when sampling the parameters, default is TRUE}
 
 \item{check_pos_def}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
 
