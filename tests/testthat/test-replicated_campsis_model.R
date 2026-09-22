@@ -402,9 +402,9 @@ test_that("Checking for positive definiteness works as expected", {
     add(Omega(name = "VC_CL", index = 2, index2 = 3, value = 0.8, type = "cor")) %>%
     replace(Sigma(name = "RUV_FIX", value = 1, type = "var", fix = FALSE)) # Unfix the RUV_FIX just for the test
 
-  settingsA <- AutoReplicationSettings(wishart = FALSE, quiet = FALSE, check_pos_def = TRUE)
-  repModelA <- model %>%
-    replicate(no_of_replicates, settings = settingsA)
+  settings_a <- AutoReplicationSettings(wishart = FALSE, quiet = FALSE, check_pos_def = TRUE)
+  rep_model_a <- model %>%
+    replicate(no_of_replicates, settings = settings_a)
 
   set.seed(123)
 
@@ -412,9 +412,9 @@ test_that("Checking for positive definiteness works as expected", {
     add(Omega(name = "VC_CL", index = 2, index2 = 3, value = 0.8, type = "cor")) %>%
     replace(Sigma(name = "RUV_FIX", value = 1, type = "var", fix = FALSE)) # Unfix the RUV_FIX just for the test
 
-  settingsB <- AutoReplicationSettings(wishart = FALSE, quiet = FALSE, check_pos_def = FALSE)
-  repModelB <- model %>%
-    replicate(no_of_replicates, settings = settingsB)
+  settings_b <- AutoReplicationSettings(wishart = FALSE, quiet = FALSE, check_pos_def = FALSE)
+  rep_model_b <- model %>%
+    replicate(no_of_replicates, settings = settings_b)
 
   # Compare manually
   # repModelA@replicated_parameters
@@ -422,17 +422,17 @@ test_that("Checking for positive definiteness works as expected", {
 
   # Check that at least one Omega matrix in repModelB is NOT positive definite
   # (This confirms the distribution is capable of producing invalid matrices)
-  is_pd_B <- sapply(seq_len(no_of_replicates), function(i) {
-    m <- repModelB %>% export(dest = CampsisModel(), index = i)
+  is_pd_b <- sapply(seq_len(no_of_replicates), function(i) {
+    m <- rep_model_b %>% export(dest = CampsisModel(), index = i)
     is_matrix_positive_definite(rxode_matrix(m, type = "omega"))
   })
-  expect_true(any(!is_pd_B), label = "At least one replicate in B should be non-PD")
+  expect_true(any(!is_pd_b), label = "At least one replicate in B should be non-PD")
 
   # Check that ALL Omega matrices in repModelA are positive definite
   # (This confirms that check_pos_def = TRUE successfully filtered them)
-  is_pd_A <- sapply(seq_len(no_of_replicates), function(i) {
-    m <- repModelA %>% export(dest = CampsisModel(), index = i)
+  is_pd_a <- sapply(seq_len(no_of_replicates), function(i) {
+    m <- rep_model_a %>% export(dest = CampsisModel(), index = i)
     is_matrix_positive_definite(rxode_matrix(m, type = "omega"))
   })
-  expect_true(all(is_pd_A), label = "All replicates in A should be PD")
+  expect_true(all(is_pd_a), label = "All replicates in A should be PD")
 })
