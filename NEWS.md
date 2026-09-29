@@ -1,3 +1,6 @@
+# campsismod 1.4.1
+* Fix test failure on CRAN BLIS build #128
+
 # campsismod 1.4.0
 * Migrate campsismod to snake_case #122
 * Update pkgdown documentation #123

@@ -3,7 +3,7 @@
 #_______________________________________________________________________________
 
 #' Add relative standard error (RSE) to the specified parameter.
-#' 
+#'
 #' @param object model or parameters object
 #' @param parameter parameter object (Theta, Omega or Sigma)
 #' @param value RSE value, in percent
@@ -25,7 +25,7 @@ setGeneric("add_rse", function(object, parameter, value, ...) {
 #' Auto-detect special variables from NONMEM as compartment properties.
 #' Bioavailabilities, infusion durations/rates and lag times will be automatically
 #' detected.
-#' 
+#'
 #' @param object object that has NONMEM special variables to be identified
 #' @param ... extra arguments, unused
 #' @return updated object
@@ -44,7 +44,7 @@ setGeneric("auto_detect_nonmem", function(object, ...) {
 #_______________________________________________________________________________
 
 #' Disable.
-#' 
+#'
 #' @param object generic object
 #' @param x what needs to be disabled
 #' @param ... extra arguments needed for disabling
@@ -64,12 +64,11 @@ setGeneric("disable", function(object, x, ...) {
 #_______________________________________________________________________________
 
 #' Export type class.
-#' 
+#'
 #' @export
 setClass(
   "export_type",
-  representation(
-  )
+  representation()
 )
 
 #_______________________________________________________________________________
@@ -77,7 +76,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' Export function.
-#' 
+#'
 #' @param object generic object
 #' @param dest destination
 #' @param ... optional arguments
@@ -97,7 +96,7 @@ setGeneric("export", function(object, dest, ...) {
 #_______________________________________________________________________________
 
 #' Get the compartment index for the specified compartment name.
-#' 
+#'
 #' @param object generic object that contains compartments information
 #' @param name compartment name
 #' @return the corresponding compartment index
@@ -116,10 +115,10 @@ setGeneric("get_compartment_index", function(object, name) {
 #_______________________________________________________________________________
 
 #' Get uncertainty on the parameters.
-#' 
+#'
 #' @param object generic object
 #' @param ... extra arguments
-#' @return data frame with standard error (se) and relative standard error (rse%) columns 
+#' @return data frame with standard error (se) and relative standard error (rse%) columns
 #' @export
 #' @rdname get_uncertainty
 get_uncertainty <- function(object, ...) {
@@ -135,7 +134,7 @@ setGeneric("get_uncertainty", function(object, ...) {
 #_______________________________________________________________________________
 
 #' Export the given object to a JSON object, ready to be written to files.
-#' 
+#'
 #' @param object any object
 #' @param ... extra arguments, unused
 #' @return the loaded S4 object
@@ -154,7 +153,7 @@ setGeneric("export_to_json", function(object, ...) {
 #_______________________________________________________________________________
 
 #' Get variance-covariance matrix.
-#' 
+#'
 #' @param object generic object
 #' @return a variance-covariance matrix (data frame) or NULL if no matrix present
 #' @export
@@ -172,7 +171,7 @@ setGeneric("get_var_cov", function(object) {
 #_______________________________________________________________________________
 
 #' Fill-in S4 object from the JSON content.
-#' 
+#'
 #' @param object pre-initiated S4 object
 #' @param json JSON (usually a list)
 #' @return the loaded S4 object
@@ -191,7 +190,7 @@ setGeneric("load_from_json", function(object, json) {
 #_______________________________________________________________________________
 
 #' Move element 'x' from object to a certain place.
-#' 
+#'
 #' @param object generic object (e.g. model, code records, etc.)
 #' @param x element to move
 #' @param to destination (e.g. a position)
@@ -212,7 +211,7 @@ setGeneric("move", function(object, x, to, ...) {
 #_______________________________________________________________________________
 
 #' Generic read method to read data from a file or a folder.
-#' 
+#'
 #' @param file path to the file or folder to be read
 #' @param ... extra arguments
 #' @return the object representation of the data contained in the file
@@ -230,7 +229,7 @@ setGeneric("read", function(file, ...) {
 #_______________________________________________________________________________
 
 #' Replace all occurrences in object.
-#' 
+#'
 #' @param object generic object (e.g. model, code_record(s), etc.)
 #' @param pattern pattern to be replaced
 #' @param replacement replacement string
@@ -250,7 +249,7 @@ setGeneric("replace_all", function(object, pattern, replacement, ...) {
 #_______________________________________________________________________________
 
 #' Replicate generic object.
-#' 
+#'
 #' @param object generic object
 #' @param n number of replicates required
 #' @param settings settings for replication
@@ -262,7 +261,7 @@ replicate <- function(object, n, settings, ...) {
   stop("No default function is provided")
 }
 
-setGeneric("replicate", function(object, n, settings=NULL, ...) {
+setGeneric("replicate", function(object, n, settings = NULL, ...) {
   n <- as.integer(n)
   if (is.null(settings)) {
     settings <- AutoReplicationSettings()
@@ -275,7 +274,7 @@ setGeneric("replicate", function(object, n, settings=NULL, ...) {
 #_______________________________________________________________________________
 
 #' Get a subset of an object.
-#' 
+#'
 #' @param object generic object
 #' @param ... arguments to select
 #' @return subset of an object
@@ -290,8 +289,8 @@ setGeneric("select", function(object, ...) {
 })
 
 #' @rdname select
-setMethod("select", signature=c("data.frame"), definition=function(object, ...) {
-  return(return(dplyr::select(.data=object, ...)))
+setMethod("select", signature = c("data.frame"), definition = function(object, ...) {
+  return(return(dplyr::select(.data = object, ...)))
 })
 
 #_______________________________________________________________________________
@@ -299,7 +298,7 @@ setMethod("select", signature=c("data.frame"), definition=function(object, ...) 
 #_______________________________________________________________________________
 
 #' Set the minimum and maximum value on a model parameter.
-#' 
+#'
 #' @param object model or parameters object
 #' @param parameter parameter object (Theta, Omega or Sigma)
 #' @param min minimum value for this parameter when parameter uncertainty is enabled
@@ -323,7 +322,7 @@ setGeneric("set_min_max", function(object, parameter, min, max, ...) {
 #_______________________________________________________________________________
 
 #' Standardise.
-#' 
+#'
 #' @param object generic object
 #' @param ... extra arguments needed for standardisation
 #' @return standardised object
@@ -342,7 +341,7 @@ setGeneric("standardise", function(object, ...) {
 #_______________________________________________________________________________
 
 #' to_string generic method.
-#' 
+#'
 #' @param object generic object
 #' @param ... extra arguments needed for to_string conversion
 #' @return character value/vector
@@ -361,7 +360,7 @@ setGeneric("to_string", function(object, ...) {
 #_______________________________________________________________________________
 
 #' Write generic object to files.
-#' 
+#'
 #' @param object generic object
 #' @param file path of the output file or directory
 #' @param ... extra arguments

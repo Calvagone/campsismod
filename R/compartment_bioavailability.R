@@ -1,18 +1,16 @@
-
 #_______________________________________________________________________________
 #----                   compartment_bioavailability class                   ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartment bioavailability class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_bioavailability",
-  representation(
-  ),
+  representation(),
   contains = "compartment_property",
-  validity=function(object) {
+  validity = function(object) {
     return(TRUE)
   }
 )
@@ -24,8 +22,8 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return a bioavailability property
 #' @export
-Bioavailability <- function(compartment, rhs="") {
-  return(new("compartment_bioavailability", compartment=as.integer(compartment), rhs=rhs))
+Bioavailability <- function(compartment, rhs = "") {
+  return(new("compartment_bioavailability", compartment = as.integer(compartment), rhs = rhs))
 }
 
 #_______________________________________________________________________________
@@ -43,8 +41,8 @@ setMethod("get_name", signature = c("compartment_bioavailability"), definition =
 
 #' @rdname get_prefix
 setMethod("get_prefix", signature = c("compartment_bioavailability"), definition = function(object, ...) {
-  dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
-  if (dest=="mrgsolve") {
+  dest <- process_extra_arg(args = list(...), name = "dest", default = "rxode2")
+  if (dest == "mrgsolve") {
     return("F")
   } else {
     return("f")

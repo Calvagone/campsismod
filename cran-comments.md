@@ -3,6 +3,7 @@
 * ubuntu-latest (GitHub Actions), R 4.6.1
 * windows-latest (GitHub Actions), R 4.6.1
 * macos-latest (GitHub Actions), R 4.6.1
+* Fedora 44 docker container with BLIS (GitHub Actions), R 4.6.1 
 
 ## R CMD check results
 

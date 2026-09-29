@@ -47,3 +47,50 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+  
+  # New dedicated job to check against BLIS
+  R-CMD-check-BLIS:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:44
+    steps:
+      - name: Install system dependencies & BLIS
+        run: |
+          dnf install -y \
+            R-devel \
+            gcc \
+            gcc-gfortran \
+            blis-devel \
+            flexiblas-blis-serial \
+            libcurl-devel \
+            openssl-devel \
+            libxml2-devel \
+            glibc-langpack-en \
+            git
+
+      - name: Set FlexiBLAS default to BLIS
+        run: |
+          # List available backends for logging
+          flexiblas list
+          
+          # Set default system BLAS backend to BLIS
+          flexiblas default BLIS-SERIAL || flexiblas default BLIS
+
+      - uses: actions/checkout@v3
+
+      - name: Verify Active BLAS Backend
+        run: |
+          Rscript -e 'cat("Active BLAS:", sessionInfo()$BLAS, "\n")'
+        env:
+          FLEXIBLAS: BLIS-SERIAL
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        env:
+          FLEXIBLAS: BLIS-SERIAL
+        with:
+          upload-snapshots: true

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{is_strict_record_delimiter}
 \alias{is_strict_record_delimiter}
-\title{Is strict record delimiter. A strict record delimiter is any line starting 
+\title{Is strict record delimiter. A strict record delimiter is any line starting
 with [...] and followed by nothing but spaces or a possible comment.}
 \usage{
 is_strict_record_delimiter(line)
@@ -14,6 +14,6 @@ is_strict_record_delimiter(line)
 a logical value
 }
 \description{
-Is strict record delimiter. A strict record delimiter is any line starting 
+Is strict record delimiter. A strict record delimiter is any line starting
 with [...] and followed by nothing but spaces or a possible comment.
 }

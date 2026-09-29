@@ -16,6 +16,14 @@
       "args": ["-e", "roxygen2::roxygenise()"],
       "group": "build",
       "problemMatcher": []
+    },
+    {
+      "label": "📦 Check package (CRAN)",
+      "type": "process",
+      "command": "Rscript",
+      "args": ["-e", "devtools::check(args = c('--no-manual', '--as-cran'))"],
+      "group": "test",
+      "problemMatcher": []
     }
   ]
 }

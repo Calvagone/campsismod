@@ -41,9 +41,9 @@ model %>% find(Sigma("RUV_FIX"))
 These parameters can also alternatively be retrieved by their index(es). Use the specific method `get_by_index` created for that purpose:
 
 ```{r}
-model@parameters %>% get_by_index(Theta(index=5))
-model@parameters %>% get_by_index(Omega(index=1, index2=1))
-model@parameters %>% get_by_index(Sigma(index=1, index2=1))
+model@parameters %>% get_by_index(Theta(index = 5))
+model@parameters %>% get_by_index(Omega(index = 1, index2 = 1))
+model@parameters %>% get_by_index(Sigma(index = 1, index2 = 1))
 ```
 
 ### Access parameter values
@@ -59,11 +59,11 @@ For OMEGA and SIGMA parameters, be careful; the interpretation of this value dep
 For a quick access to the value as variance or covariance, the method `standardise` can be called first on the parameter itself. This is especially useful for values expressed in CV or in standard deviation.
 
 ```{r}
-theta <- Omega(name="TEST", index=1, index2=1, value=15, type="cv%")
+theta <- Omega(name = "TEST", index = 1, index2 = 1, value = 15, type = "cv%")
 theta@value # 15 is returned
 
 theta_standardised <- theta %>% standardise() # Conversion to variance
-theta_standardised 
+theta_standardised
 theta_standardised@value
 ```
 
@@ -72,8 +72,8 @@ theta_standardised@value
 Parameters can be replaced easily. Here are a few examples:
 
 ```{r}
-model <- model %>% replace(Theta("KA", value=2)) # Previous value for KA was 1
-model <- model %>% replace(Omega("CL", value=20, type="cv%")) # Previous value was a 25% CV
+model <- model %>% replace(Theta("KA", value = 2)) # Previous value for KA was 1
+model <- model %>% replace(Omega("CL", value = 20, type = "cv%")) # Previous value was a 25% CV
 model
 ```
 
@@ -89,7 +89,12 @@ model
 
 As expected, this model will not be valid anymore:
 ```{r}
-tryCatch({validObject(model, complete=TRUE)}, error=function(msg) {
-  print(msg)
-})
+tryCatch(
+  {
+    validObject(model, complete = TRUE)
+  },
+  error = function(msg) {
+    print(msg)
+  }
+)
 ```

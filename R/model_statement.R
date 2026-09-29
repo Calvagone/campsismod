@@ -1,11 +1,10 @@
-
 #_______________________________________________________________________________
 #----                       model_statement class                           ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Model statement class. Any statement in a code record.
-#' 
+#'
 #' @slot comment a comment associated to this model statement
 #' @export
 setClass(
@@ -14,15 +13,15 @@ setClass(
     comment = "character"
   ),
   contains = "pmx_element",
-  prototype = prototype(comment=as.character(NA)),
+  prototype = prototype(comment = as.character(NA)),
   validity = function(object) {
     return(expect_one(object, c("comment")))
   }
 )
 
-#' 
+#'
 #' Append comment.
-#' 
+#'
 #' @param str single character string
 #' @param object model statement
 #' @param dest destination engine, string
@@ -33,14 +32,14 @@ append_comment <- function(str, object, dest) {
   if (is.na(comment)) {
     return(str)
   } else {
-    if (dest=="mrgsolve") {
+    if (dest == "mrgsolve") {
       symbol <- "//"
-    } else if (dest=="NONMEM") {
+    } else if (dest == "NONMEM") {
       symbol <- ";"
     } else {
       symbol <- "#" # Both campsis and rxode2
     }
-    if (str=="") {
+    if (str == "") {
       return(paste0(symbol, " ", comment))
     } else {
       return(paste0(str, " ", symbol, " ", comment))
@@ -48,12 +47,12 @@ append_comment <- function(str, object, dest) {
   }
 }
 
-#' 
+#'
 #' Unknown destination engine exception.
 #'
 #' @keywords internal
 #' @return no return value
-#' 
+#'
 UnsupportedDestException <- function() {
   stop("Only rxode2 (previously RxODE), mrgsolve or campsis are supported")
 }
@@ -62,8 +61,8 @@ UnsupportedDestException <- function() {
 #----                                  show                                 ----
 #_______________________________________________________________________________
 
-setMethod("show", signature=c("model_statement"), definition=function(object) {
-  cat(object %>% to_string(show=TRUE))
+setMethod("show", signature = c("model_statement"), definition = function(object) {
+  cat(object %>% to_string(show = TRUE))
 })
 
 #_______________________________________________________________________________
@@ -71,6 +70,10 @@ setMethod("show", signature=c("model_statement"), definition=function(object) {
 #_______________________________________________________________________________
 
 #' @rdname replace_all
-setMethod("replace_all", signature=c("model_statement", "pattern", "character"), definition=function(object, pattern, replacement, ...) {
-  return(object)
-})
+setMethod(
+  "replace_all",
+  signature = c("model_statement", "pattern", "character"),
+  definition = function(object, pattern, replacement, ...) {
+    return(object)
+  }
+)

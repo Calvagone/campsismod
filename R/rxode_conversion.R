@@ -1,7 +1,5 @@
-
-
 #' Get code for rxode2
-#' 
+#'
 #' @param model Campsis model
 #' @return corresponding model code for rxode2
 #' @export
@@ -12,17 +10,17 @@ rxode_code <- function(model) {
   if (properties %>% length() > 0) {
     for (property in properties@list) {
       compartmentIndex <- property@compartment
-      compartment <- model@compartments %>% find(Compartment(index=compartmentIndex))
-      equation <- property %>% to_string(model=model, dest="rxode2")
+      compartment <- model@compartments %>% find(Compartment(index = compartmentIndex))
+      equation <- property %>% to_string(model = model, dest = "rxode2")
       propertiesCode <- propertiesCode %>% append(equation)
     }
   }
-  
+
   # All records to character vector
   code <- NULL
   for (record in records@list) {
     for (statement in record@statements@list) {
-      code <- code %>% append(statement %>% to_string(dest="rxode2"))
+      code <- code %>% append(statement %>% to_string(dest = "rxode2"))
     }
     if (is(record, "ode_record")) {
       code <- code %>% append(propertiesCode)
@@ -32,7 +30,7 @@ rxode_code <- function(model) {
 }
 
 #' Get the parameters vector for rxode2.
-#' 
+#'
 #' @param model Campsis model
 #' @return named vector with THETA values
 #' @export
@@ -45,17 +43,17 @@ rxode_params <- function(model) {
     return(retValue) # Must be named numeric, otherwise rxode2 complains
   }
   max_index <- params %>% select("theta") %>% max_index()
-  
+
   # Careful, as.numeric(NA) is important...
   # If values are all integers, rxode2 gives a strange error message:
-  # Error in rxSolveSEXP(object, .ctl, .nms, .xtra, params, events, inits,  : 
+  # Error in rxSolveSEXP(object, .ctl, .nms, .xtra, params, events, inits,  :
   # when specifying 'thetaMat', 'omega', or 'sigma' the parameters cannot be a 'data.frame'/'matrix'
-  
+
   retValue <- rep(as.numeric(NA), max_index)
   names <- rep("", max_index)
-  
+
   for (i in seq_len(max_index)) {
-    param <- params %>% get_by_index(Theta(index=i))
+    param <- params %>% get_by_index(Theta(index = i))
     if (length(param) == 0) {
       stop(paste0("Missing param ", i, "in ", type, " vector"))
     } else {
@@ -64,18 +62,17 @@ rxode_params <- function(model) {
     }
   }
   names(retValue) <- names
-  
+
   return(retValue)
 }
 
 #' Get the OMEGA/SIGMA matrix for rxode2.
-#' 
+#'
 #' @param model Campsis model or Campsis parameters
 #' @param type either omega or sigma
 #' @return omega/sigma named matrix
 #' @export
-rxode_matrix <- function(model, type="omega") {
-  
+rxode_matrix <- function(model, type = "omega") {
   if (is(model, "campsis_model")) {
     subset <- model@parameters %>%
       select(type)
@@ -86,34 +83,32 @@ rxode_matrix <- function(model, type="omega") {
     stop("model must be either a Campsis model or a parameters object")
   }
 
-  if (subset %>% length()==0) {
-    return(matrix(data=numeric(0), nrow=0, ncol=0))
+  if (subset %>% length() == 0) {
+    return(matrix(data = numeric(0), nrow = 0, ncol = 0))
   }
-  
+
   # Standardise parameters
   subset <- subset %>%
     standardise()
-  
+
   # Retrieve max index
   max_index <- subset %>%
     max_index()
-  matrix <- matrix(0L, nrow=max_index, ncol=max_index)
+  matrix <- matrix(0L, nrow = max_index, ncol = max_index)
   names <- rep("", max_index)
-  
+
   # Fill in matrix
   for (elem in subset@list) {
     matrix[elem@index, elem@index2] <- elem@value
     matrix[elem@index2, elem@index] <- elem@value
-    if (elem@index==elem@index2) {
+    if (elem@index == elem@index2) {
       names[elem@index] <- elem %>% get_name_in_model()
     }
   }
-  
-  assertthat::assert_that(all(names != ""),
-                          msg=sprintf("At least one %s is missing.", toupper(type)))
+
+  assertthat::assert_that(all(names != ""), msg = sprintf("At least one %s is missing.", toupper(type)))
 
   rownames(matrix) <- names
   colnames(matrix) <- names
   return(matrix)
 }
-

@@ -1,4 +1,3 @@
-
 setClass(
   "rxode_model",
   representation(
@@ -14,7 +13,7 @@ setClass(
 #_______________________________________________________________________________
 
 #' @rdname export
-setMethod("export", signature=c("campsis_model", "rxode_type"), definition=function(object, dest, ...) {
+setMethod("export", signature = c("campsis_model", "rxode_type"), definition = function(object, dest, ...) {
   return(
     new(
       "rxode_model",

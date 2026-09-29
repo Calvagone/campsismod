@@ -8,8 +8,8 @@ AutoReplicationSettings(
   wishart = FALSE,
   odf = NA,
   sdf = NA,
-  checkMinMax = TRUE,
-  checkPosDef = FALSE,
+  check_min_max = TRUE,
+  check_pos_def = FALSE,
   quiet = NA
 )
 }
@@ -23,9 +23,9 @@ single integer value (the same degrees of freedom for all OMEGA blocks) or integ
 \item{sdf}{the degrees of freedom for the scaled inverse chi-squared/Wishart distribution with regards to the SIGMAs,
 single integer value (the same degrees of freedom for all SIGMA blocks) or integer vector (one value per SIGMA block)}
 
-\item{checkMinMax}{logical, check for min/max values when sampling the parameters, default is TRUE}
+\item{check_min_max}{logical, check for min/max values when sampling the parameters, default is TRUE}
 
-\item{checkPosDef}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
+\item{check_pos_def}{logical, check for positive definiteness when sampling the OMEGA/SIGMA parameters from the variance-covariance matrix (i.e. when \code{wishart=FALSE}), default is FALSE (requires extra time)}
 
 \item{quiet}{logical, suppress info messages, default is NA. By default, messages will be printed out when the success rate of sampling the parameters is below 95\%.}
 }
@@ -33,7 +33,7 @@ single integer value (the same degrees of freedom for all SIGMA blocks) or integ
 replication settings
 }
 \description{
-By default, all model parameters are sampled from a multivariate normal 
+By default, all model parameters are sampled from a multivariate normal
 distribution, whose characteristics are specified by the variance-covariance matrix.
 OMEGAs and SIGMAs can be sampled from scaled inverse chi-squared or Wishart distributions
 by setting the \code{wishart} argument to \code{TRUE}. In that case, THETAs are still sampled

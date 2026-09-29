@@ -1,4 +1,3 @@
-
 setClass(
   "mrgsolve_model",
   representation(
@@ -20,28 +19,32 @@ setClass(
 #' @param outvars additional variables to capture
 #' @param extra_params extra parameter names to be added. By default, they will be assigned a zero value.
 #' @rdname export
-setMethod("export", signature=c("campsis_model", "mrgsolve_type"), definition=function(object, dest, outvars=NULL, extra_params=character(0)) {
-  return(
-    new(
-      "mrgsolve_model",
-      param = mrgsolve_param(object, extra_params=extra_params),
-      cmt = mrgsolve_compartment(object),
-      main = mrgsolve_main(object),
-      ode = mrgsolve_ode(object),
-      omega = mrgsolve_matrix(object, type="omega"),
-      sigma = mrgsolve_matrix(object, type="sigma"),
-      table = mrgsolve_table(object),
-      capture = mrgsolve_capture(outvars, model=object)
+setMethod(
+  "export",
+  signature = c("campsis_model", "mrgsolve_type"),
+  definition = function(object, dest, outvars = NULL, extra_params = character(0)) {
+    return(
+      new(
+        "mrgsolve_model",
+        param = mrgsolve_param(object, extra_params = extra_params),
+        cmt = mrgsolve_compartment(object),
+        main = mrgsolve_main(object),
+        ode = mrgsolve_ode(object),
+        omega = mrgsolve_matrix(object, type = "omega"),
+        sigma = mrgsolve_matrix(object, type = "sigma"),
+        table = mrgsolve_table(object),
+        capture = mrgsolve_capture(outvars, model = object)
+      )
     )
-  )
-})
+  }
+)
 
 #_______________________________________________________________________________
 #----                             to_string                                 ----
 #_______________________________________________________________________________
 
 #' @rdname to_string
-setMethod("to_string", signature=c("mrgsolve_model"), definition=function(object, ...) {
+setMethod("to_string", signature = c("mrgsolve_model"), definition = function(object, ...) {
   cpp <- NULL
   if (!is.null(object@param)) {
     cpp <- cpp %>% append(object@param)
@@ -66,7 +69,6 @@ setMethod("to_string", signature=c("mrgsolve_model"), definition=function(object
     cpp <- cpp %>% append("")
     cpp <- cpp %>% append(object@capture)
   }
-  cpp <- paste0(cpp, collapse="\n")
+  cpp <- paste0(cpp, collapse = "\n")
   return(cpp)
 })
-

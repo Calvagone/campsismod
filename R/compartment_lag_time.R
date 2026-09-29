@@ -1,18 +1,16 @@
-
 #_______________________________________________________________________________
 #----                     compartment_lag_time class                        ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartment lag time class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_lag_time",
-  representation(
-  ),
+  representation(),
   contains = "compartment_property",
-  validity=function(object) {
+  validity = function(object) {
     return(TRUE)
   }
 )
@@ -24,8 +22,8 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return a lag time property
 #' @export
-LagTime <- function(compartment, rhs="") {
-  return(new("compartment_lag_time", compartment=as.integer(compartment), rhs=rhs))
+LagTime <- function(compartment, rhs = "") {
+  return(new("compartment_lag_time", compartment = as.integer(compartment), rhs = rhs))
 }
 
 #_______________________________________________________________________________
@@ -43,8 +41,8 @@ setMethod("get_name", signature = c("compartment_lag_time"), definition = functi
 
 #' @rdname get_prefix
 setMethod("get_prefix", signature = c("compartment_lag_time"), definition = function(object, ...) {
-  dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
-  if (dest=="mrgsolve") {
+  dest <- process_extra_arg(args = list(...), name = "dest", default = "rxode2")
+  if (dest == "mrgsolve") {
     return("ALAG")
   } else {
     return("lag")

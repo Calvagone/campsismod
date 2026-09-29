@@ -27,7 +27,7 @@ Assume a very simple 1-compartment PK model with first-order eliminate rate `K`.
 
 This can be translated into the following Campsis model (
 ```{r echo=FALSE}
-xfun::embed_file('resources/campsis_npp_plugin.xml', text="download Notepad++ plugin for Campsis")
+xfun::embed_file('resources/campsis_npp_plugin.xml', text = "download Notepad++ plugin for Campsis")
 ```
 ):
 
@@ -51,13 +51,13 @@ Let's simulated this model in Campsis:
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)
-dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
-results <- model %>% simulate(dataset=dataset, seed=1)
+dataset <- Dataset(25) %>% add(Observations(seq(0, 24, by = 0.5)))
+results <- model %>% simulate(dataset = dataset, seed = 1)
 spaghettiPlot(results, "A_CENTRAL")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename="resources/minimalist_example_sim1.png", width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = "resources/minimalist_example_sim1.png", width = 7, height = 3, dpi = 100)
 ```
 
 ![](resources/minimalist_example_sim1.png)
@@ -85,27 +85,27 @@ model <- model %>% add(Ode("A_CENTRAL", "-K*A_CENTRAL"))
 We can init the central compartment as well on the fly:
 
 ```{r}
-model <- model %>% add(InitialCondition(compartment=1, "1000"))
+model <- model %>% add(InitialCondition(compartment = 1, "1000"))
 ```
 
 Finally, let's define our `THETA_K` and `ETA_K`:
 
 ```{r}
-model <- model %>% add(Theta("K", value=0.06))
-model <- model %>% add(Omega("K", value=15, type="cv%"))
+model <- model %>% add(Theta("K", value = 0.06))
+model <- model %>% add(Omega("K", value = 15, type = "cv%"))
 ```
 
 This model can simulated by Campsis as well. Powerful, isn't it?
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)
-dataset <- Dataset(25) %>% add(Observations(seq(0,24,by=0.5)))
-results <- model %>% simulate(dataset=dataset, seed=2)
+dataset <- Dataset(25) %>% add(Observations(seq(0, 24, by = 0.5)))
+results <- model %>% simulate(dataset = dataset, seed = 2)
 spaghettiPlot(results, "A_CENTRAL")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename="resources/minimalist_example_sim2.png", width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = "resources/minimalist_example_sim2.png", width = 7, height = 3, dpi = 100)
 ```
 
 ![](resources/minimalist_example_sim2.png)

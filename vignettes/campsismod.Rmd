@@ -29,7 +29,7 @@ show(model)
 A Campsis model can be persisted on your local drive as follows:
 
 ```{r}
-model %>% write(file="path_to_model_folder")
+model %>% write(file = "path_to_model_folder")
 list.files("path_to_model_folder")
 ```
 
@@ -41,7 +41,7 @@ To read a Campsis model from your local drive, use the `read.campsis` function.
 The exact same model should be retrieved.
 
 ```{r}
-model <- read.campsis(file="path_to_model_folder")
+model <- read.campsis(file = "path_to_model_folder")
 show(model)
 ```
 
@@ -53,7 +53,7 @@ The `MAIN` record is the part of the model where your model parameters are defin
 The following code exports the model to `rxode2`. Please note that this step is implicit in Campsis when you call the `simulate` method with your preferred simulation engine.
 
 ```{r}
-rxmod <- model %>% export(dest="rxode2")
+rxmod <- model %>% export(dest = "rxode2")
 rxmod
 ```
 
@@ -62,6 +62,6 @@ rxmod
 The following code exports the model to `mrgsolve` (text form).
 
 ```{r}
-mrgmod <- model %>% export(dest="mrgsolve")
+mrgmod <- model %>% export(dest = "mrgsolve")
 mrgmod
 ```

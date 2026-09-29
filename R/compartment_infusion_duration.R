@@ -2,16 +2,15 @@
 #----                   compartment_infusion_duration class                 ----
 #_______________________________________________________________________________
 
-#' 
+#'
 #' Compartment infusion duration class.
-#' 
+#'
 #' @export
 setClass(
   "compartment_infusion_duration",
-  representation(
-  ),
+  representation(),
   contains = "compartment_property",
-  validity=function(object) {
+  validity = function(object) {
     return(TRUE)
   }
 )
@@ -23,8 +22,8 @@ setClass(
 #' @param rhs right-hand side part of the equation
 #' @return an infusion duration property
 #' @export
-InfusionDuration <- function(compartment, rhs="") {
-  return(new("compartment_infusion_duration", compartment=as.integer(compartment), rhs=rhs))
+InfusionDuration <- function(compartment, rhs = "") {
+  return(new("compartment_infusion_duration", compartment = as.integer(compartment), rhs = rhs))
 }
 
 #_______________________________________________________________________________
@@ -42,8 +41,8 @@ setMethod("get_name", signature = c("compartment_infusion_duration"), definition
 
 #' @rdname get_prefix
 setMethod("get_prefix", signature = c("compartment_infusion_duration"), definition = function(object, ...) {
-  dest <- process_extra_arg(args=list(...), name="dest", default="rxode2")
-  if (dest=="mrgsolve") {
+  dest <- process_extra_arg(args = list(...), name = "dest", default = "rxode2")
+  if (dest == "mrgsolve") {
     return("D")
   } else {
     return("dur")

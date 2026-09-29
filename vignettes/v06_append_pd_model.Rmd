@@ -62,10 +62,10 @@ Let's now simulate our PK/PD model:
 
 ```{r, eval=EXPORT_PNG}
 library(campsis)
-dataset <- Dataset(25) %>% 
-  add(Bolus(time=0, amount=1000, compartment=1, ii=12, addl=2)) %>%
-  add(Observations(times=0:36))
-results <- pkpd_model %>% simulate(dataset=dataset, seed=1)
+dataset <- Dataset(25) %>%
+  add(Bolus(time = 0, amount = 1000, compartment = 1, ii = 12, addl = 2)) %>%
+  add(Observations(times = 0:36))
+results <- pkpd_model %>% simulate(dataset = dataset, seed = 1)
 shadedPlot(results, "CONC")
 ```
 
@@ -74,7 +74,7 @@ shadedPlot(results, "CONC")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename="resources/pkpd_model_concentration.png", width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = "resources/pkpd_model_concentration.png", width = 7, height = 3, dpi = 100)
 ```
 
 ![PK concentration](resources/pkpd_model_concentration.png)
@@ -84,7 +84,7 @@ shadedPlot(results, "EFFECT")
 ```
 
 ```{r, eval=EXPORT_PNG, echo=FALSE, results='hide'}
-ggplot2::ggsave(filename="resources/pkpd_model_effect.png", width=7, height=3, dpi=100)
+ggplot2::ggsave(filename = "resources/pkpd_model_effect.png", width = 7, height = 3, dpi = 100)
 ```
 
 ![Showing the delayed effect](resources/pkpd_model_effect.png)

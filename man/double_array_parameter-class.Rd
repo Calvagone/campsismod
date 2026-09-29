@@ -3,9 +3,9 @@
 \docType{class}
 \name{double_array_parameter-class}
 \alias{double_array_parameter-class}
-\title{Double-array parameter class. This parameter has 2 indexes. 
+\title{Double-array parameter class. This parameter has 2 indexes.
 It can thus be used to define correlations between parameters.}
 \description{
-Double-array parameter class. This parameter has 2 indexes. 
+Double-array parameter class. This parameter has 2 indexes.
 It can thus be used to define correlations between parameters.
 }

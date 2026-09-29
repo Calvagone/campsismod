@@ -192,63 +192,80 @@ exportClasses(statements_record)
 exportClasses(theta)
 exportClasses(unknown_statement)
 exportClasses(variable_pattern)
-importFrom(LaplacesDemon,rinvchisq)
-importFrom(LaplacesDemon,rinvwishart)
+importFrom(LaplacesDemon,
+  rinvchisq,
+  rinvwishart
+)
 importFrom(MASS,mvrnorm)
-importFrom(assertthat,are_equal)
-importFrom(assertthat,assert_that)
-importFrom(dplyr,across)
-importFrom(dplyr,any_of)
-importFrom(dplyr,bind_cols)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,filter)
-importFrom(dplyr,group_split)
-importFrom(dplyr,left_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,select)
-importFrom(dplyr,starts_with)
-importFrom(dplyr,where)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,facet_wrap)
-importFrom(ggplot2,geom_density)
-importFrom(ggplot2,geom_vline)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,theme_bw)
+importFrom(assertthat,
+  are_equal,
+  assert_that
+)
+importFrom(dplyr,
+  across,
+  any_of,
+  bind_cols,
+  bind_rows,
+  filter,
+  group_split,
+  left_join,
+  mutate,
+  select,
+  starts_with,
+  where
+)
+importFrom(ggplot2,
+  aes,
+  facet_wrap,
+  geom_density,
+  geom_vline,
+  ggplot,
+  theme_bw
+)
 importFrom(jsonlite,parse_json)
 importFrom(jsonvalidate,json_schema)
 importFrom(magrittr,`%>%`)
-importFrom(methods,"slot<-")
-importFrom(methods,callNextMethod)
-importFrom(methods,findMethods)
-importFrom(methods,getGeneric)
-importFrom(methods,is)
-importFrom(methods,isGeneric)
-importFrom(methods,new)
-importFrom(methods,selectMethod)
-importFrom(methods,show)
-importFrom(methods,signature)
-importFrom(methods,slot)
-importFrom(methods,slotNames)
-importFrom(methods,validObject)
-importFrom(purrr,discard)
-importFrom(purrr,flatten_chr)
-importFrom(purrr,flatten_int)
-importFrom(purrr,imap)
-importFrom(purrr,keep)
-importFrom(purrr,map)
-importFrom(purrr,map_chr)
-importFrom(purrr,map_dbl)
-importFrom(purrr,map_df)
-importFrom(purrr,map_lgl)
+importFrom(methods,
+  "slot<-",
+  callNextMethod,
+  findMethods,
+  getGeneric,
+  is,
+  isGeneric,
+  new,
+  selectMethod,
+  show,
+  signature,
+  slot,
+  slotNames,
+  validObject
+)
+importFrom(purrr,
+  discard,
+  flatten_chr,
+  flatten_int,
+  imap,
+  keep,
+  map,
+  map_chr,
+  map_dbl,
+  map_df,
+  map_lgl
+)
 importFrom(readr,read_delim)
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,`:=`)
-importFrom(tibble,as_tibble)
-importFrom(tibble,tibble)
+importFrom(rlang,
+  ":=",
+  .data
+)
+importFrom(tibble,
+  as_tibble,
+  tibble
+)
 importFrom(tidyr,pivot_longer)
-importFrom(utils,capture.output)
-importFrom(utils,hasName)
-importFrom(utils,read.csv)
-importFrom(utils,write.csv)
-importFrom(utils,write.table)
+importFrom(utils,
+  capture.output,
+  hasName,
+  read.csv,
+  write.csv,
+  write.table
+)
