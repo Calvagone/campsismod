@@ -1,9 +1,12 @@
 Type: Package
 Package: campsismod
 Title: Generic Implementation of a PK/PD Model
-Version: 1.4.1
-Authors@R: 
-    person("Nicolas", "Luyckx", , "nicolas.luyckx@calvagone.com", role = c("aut", "cre"))
+Version: 1.4.2
+Authors@R: c(
+    person("Nicolas", "Luyckx", email = "nicolas.luyckx@lynxsoft.be", role = c("aut", "cre")),
+    person("Calvagone", role = "cph")
+  )
+Maintainer: Nicolas Luyckx <nicolas.luyckx@lynxsoft.be>
 Description: A generic, easy-to-use and expandable implementation of a
     pharmacokinetic (PK) / pharmacodynamic (PD) model based on the S4
     class system. This package allows the user to read and write

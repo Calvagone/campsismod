@@ -1,3 +1,6 @@
+# campsismod 1.4.2
+* Update maintainer's email address
+
 # campsismod 1.4.1
 * Fix test failure on CRAN BLIS build #128
 
