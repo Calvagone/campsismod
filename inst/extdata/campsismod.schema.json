@@ -30,6 +30,19 @@
             ]
           }
         },
+        "covariates": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/numeric_covariate"
+              },
+              {
+                "$ref": "#/$defs/categorical_covariate"
+              }
+            ]
+          }
+        },
         "varcov": {
           "type": "array",
           "items": {
@@ -278,6 +291,80 @@
         "ref1",
         "ref2",
         "cov"
+      ]
+    },
+    "covariate": {
+      "title": "Base Covariate",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the covariate"
+        },
+        "default_value": {
+          "type": "number",
+          "description": "Default value of the covariate"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short description of the covariate"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the covariate"
+        }
+      },
+      "required": [
+        "name",
+        "default_value"
+      ]
+    },
+    "numeric_covariate": {
+      "title": "Numeric Covariate",
+      "allOf": [
+        {
+          "$ref": "#/$defs/covariate"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "numeric"
+            },
+            "unit": {
+              "type": "string",
+              "description": "Unit of the covariate"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        }
+      ]
+    },
+    "categorical_covariate": {
+      "title": "Categorical Covariate",
+      "allOf": [
+        {
+          "$ref": "#/$defs/covariate"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "categorical"
+            },
+            "categories": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              },
+              "description": "Mapping of category labels to numeric values"
+            }
+          },
+          "required": [
+            "type",
+            "categories"
+          ]
+        }
       ]
     }
   }
