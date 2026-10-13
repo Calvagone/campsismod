@@ -92,6 +92,8 @@ Collate:
     'compartments.R'
     'parameter.R'
     'parameters.R'
+    'covariate.R'
+    'covariates.R'
     'code_record.R'
     'code_records.R'
     'model_parser.R'

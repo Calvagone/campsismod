@@ -30,15 +30,15 @@
             ]
           }
         },
-        "covariates": {
+        "covariate_definitions": {
           "type": "array",
           "items": {
             "oneOf": [
               {
-                "$ref": "#/$defs/numeric_covariate"
+                "$ref": "#/$defs/numeric_covariate_definition"
               },
               {
-                "$ref": "#/$defs/categorical_covariate"
+                "$ref": "#/$defs/categorical_covariate_definition"
               }
             ]
           }
@@ -293,8 +293,8 @@
         "cov"
       ]
     },
-    "covariate": {
-      "title": "Base Covariate",
+    "covariate_definition": {
+      "title": "Base Covariate Definition",
       "type": "object",
       "properties": {
         "name": {
@@ -319,11 +319,11 @@
         "default_value"
       ]
     },
-    "numeric_covariate": {
-      "title": "Numeric Covariate",
+    "numeric_covariate_definition": {
+      "title": "Numeric Covariate Definition",
       "allOf": [
         {
-          "$ref": "#/$defs/covariate"
+          "$ref": "#/$defs/covariate_definition"
         },
         {
           "properties": {
@@ -341,11 +341,11 @@
         }
       ]
     },
-    "categorical_covariate": {
-      "title": "Categorical Covariate",
+    "categorical_covariate_definition": {
+      "title": "Categorical Covariate Definition",
       "allOf": [
         {
-          "$ref": "#/$defs/covariate"
+          "$ref": "#/$defs/covariate_definition"
         },
         {
           "properties": {

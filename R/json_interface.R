@@ -167,6 +167,13 @@ json_to_campsis_model <- function(object, json) {
 
   model@parameters@list <- c(thetas, omegas, omegasOffDiag, sigmas, sigmasOffDiag)
 
+  # Parse covariate definitions
+  jsonCovariateDefinitions <- json$covariate_definitions
+  if (!is.null(jsonCovariateDefinitions)) {
+    model@covariate_definitions@list <- jsonCovariateDefinitions %>%
+      purrr::map(~ json_to_covariate_definition(.x))
+  }
+
   # Update compartments
   model <- model %>%
     update_compartments()
@@ -314,6 +321,23 @@ json_to_parameter <- function(x, index = NULL, index2 = NULL) {
   } else {
     stop("Unknown parameter type")
   }
+}
+
+#' JSON to Campsis covariate definition.
+#'
+#' @param x JSON data
+#' @return Campsis covariate definition
+#' @export
+#'
+json_to_covariate_definition <- function(x) {
+  if (x$type == "numeric") {
+    covariate <- NumericCovariateDefinition()
+  } else if (x$type == "categorical") {
+    covariate <- CategoricalCovariateDefinition()
+  } else {
+    stop("Unknown covariate type")
+  }
+  return(load_from_json(object = covariate, JSONElement(x)))
 }
 
 
