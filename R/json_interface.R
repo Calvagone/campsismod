@@ -168,9 +168,9 @@ json_to_campsis_model <- function(object, json) {
   model@parameters@list <- c(thetas, omegas, omegasOffDiag, sigmas, sigmasOffDiag)
 
   # Parse covariate definitions
-  jsonCovariateDefinitions <- json$covariate_definitions
-  if (!is.null(jsonCovariateDefinitions)) {
-    model@covariate_definitions@list <- jsonCovariateDefinitions %>%
+  jsonCovariates <- json$covariates
+  if (!is.null(jsonCovariates)) {
+    model@covariates@list <- jsonCovariates %>%
       purrr::map(~ json_to_covariate_definition(.x))
   }
 

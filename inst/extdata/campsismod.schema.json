@@ -30,7 +30,7 @@
             ]
           }
         },
-        "covariate_definitions": {
+        "covariates": {
           "type": "array",
           "items": {
             "oneOf": [

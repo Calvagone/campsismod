@@ -7,7 +7,7 @@
 #' @slot model a list of code records
 #' @slot parameters model parameters
 #' @slot compartments model compartments
-#' @slot covariate_definitions model covariate definitions
+#' @slot covariates model covariate definitions
 #' @export
 setClass(
   "campsis_model",
@@ -15,13 +15,13 @@ setClass(
     model = "code_records",
     parameters = "parameters",
     compartments = "compartments",
-    covariate_definitions = "covariate_definitions"
+    covariates = "covariate_definitions"
   ),
   prototype = prototype(
     model = new("code_records"),
     parameters = new("parameters"),
     compartments = new("compartments"),
-    covariate_definitions = new("covariate_definitions")
+    covariates = new("covariate_definitions")
   )
 )
 
@@ -65,7 +65,7 @@ setMethod("add", signature = c("campsis_model", "parameter"), definition = funct
 
 #' @rdname add
 setMethod("add", signature = c("campsis_model", "covariate_definition"), definition = function(object, x) {
-  object@covariate_definitions <- object@covariate_definitions %>% add(x)
+  object@covariates <- object@covariates %>% add(x)
   return(object)
 })
 
@@ -117,7 +117,7 @@ appendModel <- function(model1, model2) {
   model1@compartments <- model1@compartments %>% add(model2@compartments)
 
   # Append covariate definitions
-  model1@covariate_definitions <- model1@covariate_definitions %>% add(model2@covariate_definitions)
+  model1@covariates <- model1@covariates %>% add(model2@covariates)
 
   return(model1)
 }
@@ -199,7 +199,7 @@ setMethod("delete", signature = c("campsis_model", "parameter"), definition = fu
 
 #' @rdname delete
 setMethod("delete", signature = c("campsis_model", "covariate_definition"), definition = function(object, x) {
-  object@covariate_definitions <- object@covariate_definitions %>% delete(x)
+  object@covariates <- object@covariates %>% delete(x)
   return(object)
 })
 
@@ -283,7 +283,7 @@ setMethod("find", signature = c("campsis_model", "parameter"), definition = func
 
 #' @rdname find
 setMethod("find", signature = c("campsis_model", "covariate_definition"), definition = function(object, x) {
-  return(object@covariate_definitions %>% find(x))
+  return(object@covariates %>% find(x))
 })
 
 #' @rdname find
@@ -314,8 +314,8 @@ setMethod("export_to_json", signature = c("campsis_model"), definition = functio
   json <- list()
   json$code <- lines
   json$parameters <- export_to_json(object@parameters)@data
-  if (length(object@covariate_definitions) > 0) {
-    json$covariate_definitions <- export_to_json(object@covariate_definitions)@data
+  if (length(object@covariates) > 0) {
+    json$covariates <- export_to_json(object@covariates)@data
   }
   if (length(object@parameters@varcov) > 0) {
     json$varcov <- varcov_to_json(parameters = object@parameters)
@@ -487,7 +487,7 @@ setMethod("replace", signature = c("campsis_model", "parameter"), definition = f
 
 #' @rdname replace
 setMethod("replace", signature = c("campsis_model", "covariate_definition"), definition = function(object, x) {
-  object@covariate_definitions <- object@covariate_definitions %>% replace(x)
+  object@covariates <- object@covariates %>% replace(x)
   return(object)
 })
 
@@ -595,7 +595,7 @@ setMethod("sort", signature = c("campsis_model"), definition = function(x, decre
   x@parameters <- x@parameters %>% sort()
 
   # Sort covariate definitions
-  x@covariate_definitions <- x@covariate_definitions %>% sort()
+  x@covariates <- x@covariates %>% sort()
 
   return(x)
 })

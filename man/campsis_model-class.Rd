@@ -16,6 +16,6 @@ Campsis model class.
 
 \item{\code{compartments}}{model compartments}
 
-\item{\code{covariate_definitions}}{model covariate definitions}
+\item{\code{covariates}}{model covariate definitions}
 }}
 
