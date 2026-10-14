@@ -46,3 +46,18 @@ setMethod("export_to_json", signature = c("covariate_definitions"), definition =
     })
   return(JSONElement(json))
 })
+
+#_______________________________________________________________________________
+#----                                  show                                 ----
+#_______________________________________________________________________________
+
+setMethod("show", signature = c("covariate_definitions"), definition = function(object) {
+  cat("Covariates:\n")
+  if (length(object) == 0) {
+    cat("None\n")
+  } else {
+    for (element in object@list) {
+      show(element)
+    }
+  }
+})

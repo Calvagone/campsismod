@@ -577,6 +577,10 @@ setMethod("show", signature = c("campsis_model"), definition = function(object) 
   show(object@parameters)
   cat("\n")
   show(object@compartments)
+  if (length(object@covariates) > 0) {
+    cat("\n")
+    show(object@covariates)
+  }
 })
 
 #_______________________________________________________________________________
