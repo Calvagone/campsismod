@@ -22,42 +22,6 @@ CovariateDefinitions <- function() {
 }
 
 #_______________________________________________________________________________
-#----                              add                                      ----
-#_______________________________________________________________________________
-
-#' @rdname add
-setMethod("add", signature = c("covariate_definitions", "covariate_definition"), definition = function(object, x) {
-  return(methods::callNextMethod(object, x))
-})
-
-#_______________________________________________________________________________
-#----                             find                                      ----
-#_______________________________________________________________________________
-
-#' @rdname find
-setMethod("find", signature = c("covariate_definitions", "covariate_definition"), definition = function(object, x) {
-  return(methods::callNextMethod(object, x))
-})
-
-#_______________________________________________________________________________
-#----                             delete                                    ----
-#_______________________________________________________________________________
-
-#' @rdname delete
-setMethod("delete", signature = c("covariate_definitions", "covariate_definition"), definition = function(object, x) {
-  return(methods::callNextMethod(object, x))
-})
-
-#_______________________________________________________________________________
-#----                             replace                                   ----
-#_______________________________________________________________________________
-
-#' @rdname replace
-setMethod("replace", signature = c("covariate_definitions", "covariate_definition"), definition = function(object, x) {
-  return(methods::callNextMethod(object, x))
-})
-
-#_______________________________________________________________________________
 #----                                 sort                                  ----
 #_______________________________________________________________________________
 
