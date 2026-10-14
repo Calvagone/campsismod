@@ -314,7 +314,7 @@ setMethod("export_to_json", signature = c("campsis_model"), definition = functio
   json <- list()
   json$code <- lines
   json$parameters <- export_to_json(object@parameters)@data
-  if (.hasSlot(object, "covariate_definitions") && length(object@covariate_definitions) > 0) {
+  if (length(object@covariate_definitions) > 0) {
     json$covariate_definitions <- export_to_json(object@covariate_definitions)@data
   }
   if (length(object@parameters@varcov) > 0) {
@@ -595,9 +595,7 @@ setMethod("sort", signature = c("campsis_model"), definition = function(x, decre
   x@parameters <- x@parameters %>% sort()
 
   # Sort covariate definitions
-  if (.hasSlot(x, "covariate_definitions")) {
-    x@covariate_definitions <- x@covariate_definitions %>% sort()
-  }
+  x@covariate_definitions <- x@covariate_definitions %>% sort()
 
   return(x)
 })
